@@ -1,0 +1,93 @@
+---
+/**
+ * Header Component
+ * 
+ * Responsive navigation header with:
+ * - Mobile: Logo + hamburger menu → Drawer-style dropdown
+ * - Desktop: Horizontal navigation bar
+ * - Glass morphism effect with floating hover animations
+ */
+import { user } from '../../data/user.config';
+import LanguageToggle from './LanguageToggle.astro';
+import { useI18n } from '../../utils/i18n';
+
+const { t } = useI18n();
+
+const links = [
+  { href: '/', label: t('nav.home') },
+  { href: '/blog', label: t('nav.blog') },
+  { href: '/archives', label: t('nav.archives') },
+  { href: '/projects', label: t('nav.projects') },
+  { href: '/links', label: t('nav.links') },
+  { href: '/about', label: t('nav.about') },
+];
+---
+<header class="sticky top-0 z-20 bg-[var(--md-sys-color-surface)]/80 backdrop-blur-xl supports-backdrop-blur:bg-[var(--md-sys-color-surface)]/60 border-b border-[var(--md-sys-color-outline)]/5 shadow-sm">
+  <div class="mx-auto max-w-1100px px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
+    <!-- Brand with avatar -->
+    <a 
+      href="/" 
+      class="text-lg sm:text-xl font-700 text-[var(--md-sys-color-primary)] hover:scale-105 transition-transform duration-200 flex items-center gap-2.5"
+    >
+      <img 
+        src="/avatar.png" 
+        alt={user.name}
+        class="w-8 h-8 rounded-full object-cover shadow-md ring-2 ring-[var(--md-sys-color-primary)]/20"
+      />
+      <span class="hidden sm:inline">{user.name}</span>
+    </a>
+
+    <!-- Desktop nav with pill-style links and glass morphism -->
+    <nav class="hidden lg:flex items-center gap-1.5 text-[var(--md-sys-color-on-surface-variant)]">
+      {links.map(l => (
+        <a 
+          href={l.href} 
+          class="px-3.5 py-2 rounded-full text-sm font-500 hover:bg-[var(--md-sys-color-primary-container)]/30 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 backdrop-blur-sm"
+        >
+          {l.label}
+        </a>
+      ))}
+      <div class="ml-2 flex items-center gap-2">
+        <LanguageToggle />
+        <slot />
+      </div>
+    </nav>
+
+    <!-- Mobile controls group -->
+    <div class="lg:hidden flex items-center gap-2">
+      <LanguageToggle />
+      <slot />
+      <button
+        id="menu-btn"
+        class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/40 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+        aria-label="Open menu"
+        aria-controls="mobile-menu"
+        aria-expanded="false"
+      >
+        <i class="i-carbon:menu text-[1.25rem] text-[var(--md-sys-color-on-surface)]"></i>
+      </button>
+    </div>
+  </div>
+
+  <!-- Mobile menu with glass morphism -->
+  <div id="mobile-menu" class="lg:hidden hidden bg-[var(--md-sys-color-surface)]/95 backdrop-blur-xl border-t border-[var(--md-sys-color-outline)]/10">
+    <nav class="mx-auto max-w-1100px px-4 sm:px-6 py-4 grid gap-1 text-[var(--md-sys-color-on-surface)]">
+      {links.map(l => (
+        <a 
+          href={l.href} 
+          class="px-4 py-2.5 rounded-lg text-sm font-500 hover:bg-[var(--md-sys-color-primary-container)]/30 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-md hover:translate-x-1 transition-all duration-300"
+        >
+          {l.label}
+        </a>
+      ))}
+  </nav>
+</header>
+
+<script>
+  import { initMobileMenu } from '../../scripts/interactions/mobile-menu';
+  import { initNavigationI18n } from '../../scripts/interactions/navigation-i18n';
+  
+  initMobileMenu();
+  initNavigationI18n();
+</script>
+

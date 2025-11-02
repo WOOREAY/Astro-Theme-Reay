@@ -1,0 +1,130 @@
+---
+/**
+ * Series Index Page
+ * Display all article series
+ */
+import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
+import SeriesCard from '../../../components/archives/SeriesCard.astro';
+import { getAllSeries } from '../../../utils/blog';
+
+// Data layer: Get all series
+const allSeries = await getAllSeries();
+---
+
+<ArchiveLayout
+  title="Series"
+  description={`Explore ${allSeries.length} topic series for systematic learning`}
+  showBackButton={true}
+  backUrl="/archives"
+>
+  <!-- Series statistics -->
+  <div class="series-summary">
+    <div class="summary-item">
+      <span class="summary-label">Total Series</span>
+      <span class="summary-value">{allSeries.length}</span>
+    </div>
+    <div class="summary-item">
+      <span class="summary-label">Total Posts</span>
+      <span class="summary-value">
+        {allSeries.reduce((sum, s) => sum + s.count, 0)}
+      </span>
+    </div>
+  </div>
+
+  <!-- Series list -->
+  {allSeries.length > 0 ? (
+    <div class="series-grid">
+      {allSeries.map(item => (
+        <SeriesCard 
+          series={item.series}
+          count={item.count}
+          posts={item.posts}
+        />
+      ))}
+    </div>
+  ) : (
+    <div class="empty-state">
+      <i class="i-carbon:folder-off"></i>
+      <h3>No Series Yet</h3>
+      <p>No series created yet. Start organizing your posts!</p>
+    </div>
+  )}
+</ArchiveLayout>
+
+<style>
+  .series-summary {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+    gap: 1.5rem;
+    margin-bottom: 2rem;
+  }
+
+  .summary-item {
+    display: flex;
+    flex-direction: column;
+    padding: 1.5rem;
+    background: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 12px;
+    text-align: center;
+  }
+
+  .summary-label {
+    font-size: 0.875rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin-bottom: 0.5rem;
+  }
+
+  .summary-value {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+  }
+
+  .series-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(320px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--md-sys-color-surface-container-lowest);
+    border-radius: 16px;
+    border: 1px dashed var(--md-sys-color-outline-variant);
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+
+  @media (max-width: 768px) {
+    .series-summary {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+
+    .series-grid {
+      grid-template-columns: 1fr;
+      gap: 1rem;
+    }
+  }
+</style>

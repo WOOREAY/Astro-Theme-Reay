@@ -1,0 +1,57 @@
+---
+/**
+ * Blog List Page
+ * Compose Layout and Components to form the page
+ * 
+ * Architecture:
+ * - Layout: DefaultLayout (provides page skeleton: Header + Footer + Container)
+ * - Components: BlogListHeader, BlogTimeline, EmptyBlogList
+ * - Page: responsible for data fetching and component composition
+ */
+import { getCollection } from 'astro:content';
+import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
+import BlogListHeader from '../../components/blog/BlogListHeader.astro';
+import BlogTimeline from '../../components/blog/BlogTimeline.astro';
+import EmptyBlogList from '../../components/blog/EmptyBlogList.astro';
+
+// Data layer: Get all blog posts (exclude drafts)
+const allPosts = await getCollection('blog', ({ data }) => {
+  return data.draft !== true;
+});
+
+// Data layer: Sort by publish date in descending order (newest first)
+// Handle missing publishDate cases by placing them at the end
+const sortedPosts = allPosts.sort((a, b) => {
+  const dateA = a.data.publishDate;
+  const dateB = b.data.publishDate;
+  
+  // If both have no date, maintain original order
+  if (!dateA && !dateB) return 0;
+  // If a has no date, b comes first
+  if (!dateA) return 1;
+  // If b has no date, a comes first
+  if (!dateB) return -1;
+  
+  // Both have dates, sort in descending order
+  return dateB.valueOf() - dateA.valueOf();
+});
+---
+
+<DefaultLayout 
+  title="Blog List" 
+  description="Explore all my blog posts, arranged in timeline order"
+>
+  <div class="min-h-screen py-12 px-4">
+    <div class="max-w-4xl mx-auto">
+      <!-- Component: Page header -->
+      <BlogListHeader totalPosts={sortedPosts.length} />
+
+      <!-- Component: Timeline list or empty state -->
+      {sortedPosts.length > 0 ? (
+        <BlogTimeline posts={sortedPosts} />
+      ) : (
+        <EmptyBlogList />
+      )}
+    </div>
+  </div>
+</DefaultLayout>

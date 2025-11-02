@@ -1,0 +1,140 @@
+---
+/**
+ * Background.astro
+ * 统一的背景组件
+ * 支持 MD3 渐变背景、自定义图片背景、可配置模糊效果
+ */
+import { backgroundConfig } from '../../data/theme.config';
+
+const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = backgroundConfig;
+
+// 模糊程度映射
+const blurMap = {
+  light: '4px',
+  medium: '8px',
+  heavy: '16px',
+};
+
+const blurValue = blur ? blurMap[blurIntensity] : '0px';
+
+// 构建背景样式
+let backgroundStyle = '';
+let useImage = false;
+
+if (type === 'gradient') {
+  if (gradient?.useMD3Colors) {
+    // 使用 MD3 调色板颜色的渐变
+    backgroundStyle = `
+      background: linear-gradient(
+        ${gradient.direction || '135deg'},
+        var(--md-sys-color-primary-container) 0%,
+        var(--md-sys-color-secondary-container) 25%,
+        var(--md-sys-color-tertiary-container) 50%,
+        var(--md-sys-color-primary-container) 75%,
+        var(--md-sys-color-secondary-container) 100%
+      );
+    `;
+  } else if (gradient?.colors && gradient.colors.length > 0) {
+    // 使用自定义渐变色
+    const colorStops = gradient.colors
+      .map((color, index) => {
+        const percentage = (index / (gradient.colors!.length - 1)) * 100;
+        return `${color} ${percentage}%`;
+      })
+      .join(', ');
+    backgroundStyle = `
+      background: linear-gradient(
+        ${gradient.direction || '135deg'},
+        ${colorStops}
+      );
+    `;
+  }
+} else if (type === 'image' && imageUrl) {
+  // 使用图片背景
+  useImage = true;
+  const opacity = imageStyle?.opacity ?? 1;
+  backgroundStyle = `
+    background-image: url('${imageUrl}');
+    background-size: ${imageStyle?.size || 'cover'};
+    background-position: ${imageStyle?.position || 'center'};
+    background-repeat: ${imageStyle?.repeat || 'no-repeat'};
+    background-attachment: fixed;
+  `;
+}
+---
+
+{type !== 'none' && (
+  <div 
+    class={`app-background ${useImage ? 'image-bg' : 'gradient-bg'}`}
+    style={backgroundStyle}
+  >
+    {blur && (
+      <div 
+        class="background-overlay" 
+        style={`backdrop-filter: blur(${blurValue}); -webkit-backdrop-filter: blur(${blurValue});`}
+      ></div>
+    )}
+  </div>
+)}
+
+<style>
+  .app-background {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    z-index: -2;
+    transition: opacity 0.5s ease;
+  }
+
+  /* 渐变背景 */
+  .gradient-bg {
+    opacity: 0.6; /* 增加渐变强度，从 0.4 提升到 0.6 */
+  }
+
+  /* 图片背景 */
+  .image-bg {
+    opacity: 1;
+  }
+
+  /* 模糊遮罩层 */
+  .background-overlay {
+    position: absolute;
+    inset: 0;
+    z-index: 1;
+    background: var(--md-sys-color-surface);
+    opacity: 0.3; /* 降低遮罩透明度，从 0.5 降到 0.3，让渐变更明显 */
+  }
+
+  /* 暗色模式下调整遮罩透明度 */
+  :global([data-theme='dark']) .background-overlay {
+    opacity: 0.5; /* 暗色模式也降低，从 0.7 降到 0.5 */
+  }
+
+  /* 渐变背景在暗色模式下调整 */
+  :global([data-theme='dark']) .gradient-bg {
+    opacity: 0.5; /* 暗色模式也提升，从 0.3 提升到 0.5 */
+  }
+
+  /* 图片背景的额外遮罩 */
+  .image-bg::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    background: var(--md-sys-color-surface);
+    opacity: 0.3;
+    z-index: 0;
+  }
+
+  :global([data-theme='dark']) .image-bg::before {
+    opacity: 0.5;
+  }
+
+  /* 性能优化 */
+  .app-background {
+    will-change: opacity;
+    transform: translateZ(0);
+    backface-visibility: hidden;
+  }
+</style>

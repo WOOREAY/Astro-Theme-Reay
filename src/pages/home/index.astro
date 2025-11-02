@@ -1,0 +1,57 @@
+---
+/**
+ * Home Page - Fullscreen scrolling display
+ * Layout: FullscreenLayout (fullscreen layout with fixed header)
+ * Components: 
+ *   - PageScrollContainer (fullscreen scroll container)
+ *   - FullpageSection (scroll sections)
+ *   - HeroSection, PostsSection, ProjectsSection, AboutSection, SiteInfoSection (section content)
+ */
+import FullscreenLayout from '../../layouts/home/FullscreenLayout.astro';
+import PageScrollContainer from '../../components/layout/PageScrollContainer.astro';
+import FullPageSection from '../../components/layout/FullPageSection.astro';
+import HeroSection from '../../components/home/HeroSection.astro';
+import PostsSection from '../../components/home/PostsSection.astro';
+import ProjectsSection from '../../components/home/ProjectsSection.astro';
+import AboutSection from '../../components/home/AboutSection.astro';
+import SiteInfoSection from '../../components/home/SiteInfoSection.astro';
+
+const sections = [
+  { id: 'hero', label: 'Hero' },
+  { id: 'posts', label: 'Posts' },
+  { id: 'projects', label: 'Projects' },
+  { id: 'about', label: 'About' },
+  { id: 'site', label: 'Site' },
+];
+---
+
+<FullscreenLayout title="Home">
+  <PageScrollContainer sections={sections}>
+    <!-- Section 1: Hero -->
+    <FullPageSection sectionId="hero">
+      <HeroSection />
+    </FullPageSection>
+
+    <!-- Section 2: Latest posts -->
+    <FullPageSection sectionId="posts">
+      <PostsSection />
+    </FullPageSection>
+
+    <!-- Section 3: Featured projects -->
+    <FullPageSection sectionId="projects">
+      <ProjectsSection />
+    </FullPageSection>
+
+    <!-- Section 4: Personal info -->
+    <FullPageSection sectionId="about">
+      <AboutSection />
+    </FullPageSection>
+
+    <!-- Section 5: Site info (includes Footer) -->
+    <FullPageSection sectionId="site">
+      <SiteInfoSection />
+    </FullPageSection>
+  </PageScrollContainer>
+</FullscreenLayout>
+
+

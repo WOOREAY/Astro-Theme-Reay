@@ -1,0 +1,92 @@
+---
+/**
+ * LanguageToggle.astro
+ * 语言切换按钮 (中文/English)
+ */
+import { languages, defaultLang } from '../../data/i18n.config';
+---
+
+<button
+  id="lang-toggle"
+  class="inline-flex items-center gap-1.5 px-3 py-1.5 rounded-full text-sm font-500 bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/40 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+  aria-label="切换语言"
+  title="切换语言 / Switch Language"
+>
+  <i class="i-carbon:language text-base"></i>
+  <span id="lang-label" class="hidden sm:inline">EN</span>
+</button>
+
+<script>
+  function initLanguageToggle() {
+    const langToggle = document.getElementById('lang-toggle');
+    const langLabel = document.getElementById('lang-label');
+    
+    if (!langToggle || !langLabel) return;
+
+    // 从 localStorage 读取语言设置，默认为英文
+    let currentLang = localStorage.getItem('language') || 'en';
+    
+    // 初始化显示
+    updateLanguageDisplay(currentLang);
+    
+    // 切换语言
+    langToggle.addEventListener('click', () => {
+      currentLang = currentLang === 'en' ? 'zh' : 'en';
+      localStorage.setItem('language', currentLang);
+      updateLanguageDisplay(currentLang);
+      
+      // 触发语言变更事件 - 不再重载页面
+      window.dispatchEvent(new CustomEvent('languagechange', { 
+        detail: { lang: currentLang } 
+      }));
+    });
+  }
+
+  function updateLanguageDisplay(lang: string) {
+    const langLabel = document.getElementById('lang-label');
+    if (langLabel) {
+      langLabel.textContent = lang === 'en' ? 'EN' : '中';
+    }
+    
+    // 设置 html lang 属性
+    document.documentElement.lang = lang === 'en' ? 'en' : 'zh-CN';
+  }
+
+  // 页面加载时初始化
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initLanguageToggle);
+  } else {
+    initLanguageToggle();
+  }
+
+  // 处理页面导航后的重新初始化
+  document.addEventListener('astro:after-swap', initLanguageToggle);
+</script>
+
+<style>
+  #lang-toggle {
+    position: relative;
+  }
+  
+  #lang-toggle::before {
+    content: '';
+    position: absolute;
+    inset: -2px;
+    border-radius: inherit;
+    padding: 2px;
+    background: linear-gradient(
+      135deg,
+      var(--md-sys-color-primary),
+      var(--md-sys-color-tertiary)
+    );
+    -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+    -webkit-mask-composite: xor;
+    mask-composite: exclude;
+    opacity: 0;
+    transition: opacity 0.3s;
+  }
+  
+  #lang-toggle:hover::before {
+    opacity: 0.5;
+  }
+</style>

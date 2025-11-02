@@ -1,0 +1,57 @@
+---
+/**
+ * PageScrollContainer.astro
+ * 全屏滚动容器组件
+ * - 负责管理全屏分页滚动的布局结构
+ * - 包含滚动指示器
+ */
+
+interface Props {
+  sections: Array<{
+    id: string;
+    label: string;
+  }>;
+}
+
+const { sections } = Astro.props;
+---
+
+<!-- 全屏分页滚动容器 - 添加padding-top避免被Header遮挡 -->
+<div id="fullpage-container" class="fullpage-wrapper">
+  <slot />
+</div>
+
+<!-- 分页指示器 -->
+<div class="fixed right-6 top-1/2 -translate-y-1/2 z-30 flex flex-col gap-3">
+  {sections.map((section, index) => (
+    <button 
+      class="section-dot w-3 h-3 rounded-full border-2 border-[var(--md-sys-color-on-surface-variant)] transition-all duration-300 hover:scale-125"
+      data-target={index.toString()}
+      aria-label={`跳转到${section.label}区域`}
+    ></button>
+  ))}
+</div>
+
+<style>
+  .fullpage-wrapper {
+    height: 100%;
+    /* height: calc(100dvh-4rem); */
+    overflow: hidden;
+    position: relative;
+  }
+
+  /* 激活的分页指示器 */
+  .section-dot.active {
+    background: var(--md-sys-color-primary);
+    border-color: var(--md-sys-color-primary);
+    width: 1rem;
+    height: 1rem;
+  }
+</style>
+
+<script>
+  import { initFullPageScroll } from '../../scripts/navigation/fullpage-scroll';
+  
+  // 初始化全屏滚动
+  initFullPageScroll();
+</script>

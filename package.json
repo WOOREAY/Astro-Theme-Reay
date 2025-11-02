@@ -1,0 +1,33 @@
+{
+  "name": "astro-theme-reay",
+  "type": "module",
+  "version": "0.0.1",
+  "scripts": {
+    "dev": "astro dev",
+    "build": "astro build",
+    "preview": "astro preview",
+    "astro": "astro",
+    "check": "astro check",
+    "lint": "astro check"
+  },
+  "dependencies": {
+    "@material/material-color-utilities": "^0.3.0",
+    "@shikijs/transformers": "^3.13.0",
+    "astro": "^5.14.5",
+    "marked": "^16.4.1",
+    "mdast-util-to-string": "^4.0.0",
+    "reading-time": "^1.5.0",
+    "rehype": "^13.0.2",
+    "rehype-autolink-headings": "^7.1.0",
+    "rehype-katex": "^7.0.1",
+    "rehype-slug": "^6.0.0",
+    "remark-gfm": "^4.0.1",
+    "remark-math": "^6.0.0"
+  },
+  "devDependencies": {
+    "@iconify-json/carbon": "^1.2.14",
+    "@iconify-json/uil": "^1.2.3",
+    "@unocss/astro": "^66.5.3",
+    "unocss": "^66.5.3"
+  }
+}

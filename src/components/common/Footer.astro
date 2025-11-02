@@ -1,0 +1,146 @@
+---
+/**
+ * Footer Component
+ * Site-wide footer with navigation, resources, and copyright info
+ */
+import { user, getUserContent } from '../../data/user.config';
+import { useI18n } from '../../utils/i18n';
+
+const { t, currentLang } = useI18n();
+const userContent = getUserContent(currentLang);
+
+const year = new Date().getFullYear();
+const startYear = 2024;
+const yearText = year === startYear ? `${year}` : `${startYear} - ${year}`;
+
+const quickLinks = [
+  { href: '/', label: 'nav.home', key: 'nav.home' },
+  { href: '/blog', label: 'nav.blog', key: 'nav.blog' },
+  { href: '/projects', label: 'nav.projects', key: 'nav.projects' },
+  { href: '/about', label: 'nav.about', key: 'nav.about' },
+];
+
+const resourceLinks = [
+  { href: '/rss.xml', label: 'RSS', external: false },
+  { href: '/sitemap-index.xml', label: 'Sitemap', external: false },
+];
+---
+<footer class="border-t border-[var(--md-sys-color-outline)]/10 bg-[var(--md-sys-color-surface)]/50 backdrop-blur-sm">
+  <div class="mx-auto max-w-1100px px-4 sm:px-6 py-8">
+    <!-- 主要内容区 -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-6">
+      <!-- 品牌与简介 -->
+      <div class="space-y-3">
+        <div class="flex items-center gap-2">
+          <img 
+            src={user.avatar} 
+            alt={user.name}
+            class="w-9 h-9 rounded-full object-cover shadow-md ring-2 ring-[var(--md-sys-color-primary)]/20"
+          />
+          <h3 class="text-base font-700 text-[var(--md-sys-color-on-surface)]">{user.name}</h3>
+        </div>
+        <p class="text-sm text-[var(--md-sys-color-on-surface-variant)] leading-relaxed" data-user-content="description">
+          {userContent.description}
+        </p>
+        <!-- 社交媒体 -->
+        <div class="flex items-center gap-2.5 mt-3">
+          {user.socials.map(social => (
+            <a 
+              href={social.url} 
+              target="_blank" 
+              rel="noopener noreferrer"
+              class="inline-flex items-center justify-center w-8 h-8 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/40 hover:text-[var(--md-sys-color-on-primary-container)] hover:-translate-y-0.5 transition-all duration-300 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+              aria-label={social.label}
+              title={social.label}
+            >
+              <i class={`${social.icon} text-base`}></i>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- 快捷链接 -->
+      <div>
+        <h4 class="text-sm font-600 text-[var(--md-sys-color-on-surface)] uppercase tracking-wider mb-3" data-i18n="footer.navigation">
+          {t('footer.navigation')}
+        </h4>
+        <nav class="flex flex-col gap-2">
+          {quickLinks.map(link => (
+            <a 
+              href={link.href}
+              class="text-sm text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] hover:translate-x-1 transition-all duration-200 w-fit"
+              data-i18n={link.key}
+            >
+              {t(link.key as any)}
+            </a>
+          ))}
+        </nav>
+      </div>
+
+      <!-- 资源与订阅 -->
+      <div>
+        <h4 class="text-sm font-600 text-[var(--md-sys-color-on-surface)] uppercase tracking-wider mb-3" data-i18n="footer.subscribe">
+          {t('footer.subscribe')}
+        </h4>
+        <nav class="flex flex-col gap-2">
+          {resourceLinks.map(link => (
+            <a 
+              href={link.href}
+              class="text-sm text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] hover:translate-x-1 transition-all duration-200 w-fit flex items-center gap-1.5"
+              target={link.external ? '_blank' : undefined}
+              rel={link.external ? 'noopener noreferrer' : undefined}
+            >
+              <i class="i-carbon:rss text-[0.875rem]"></i>
+              {link.label}
+            </a>
+          ))}
+        </nav>
+        <!-- 技术栈徽章 -->
+        <div class="flex flex-wrap gap-2 mt-4">
+          <a 
+            href="https://astro.build" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="px-2 py-0.5 rounded-full bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/30 text-xs font-500 text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] transition-all duration-200 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+          >
+            Astro
+          </a>
+          <a 
+            href="https://unocss.dev" 
+            target="_blank" 
+            rel="noopener noreferrer"
+            class="px-2 py-0.5 rounded-full bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/30 text-xs font-500 text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] transition-all duration-200 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+          >
+            UnoCSS
+          </a>
+        </div>
+      </div>
+    </div>
+
+    <!-- 底部版权信息 -->
+    <div class="mt-6 pt-5 border-t border-[var(--md-sys-color-outline)]/10 flex flex-col sm:flex-row items-center justify-between gap-2.5 text-xs text-[var(--md-sys-color-on-surface-variant)]">
+      <div class="flex items-center gap-1.5">
+        <span>&copy;</span>
+        <span>{yearText} {user.name}</span>
+      </div>
+      <div class="flex items-center gap-4">
+        <a 
+          href="https://m3.material.io/" 
+          target="_blank" 
+          rel="noopener noreferrer"
+          class="hover:text-[var(--md-sys-color-primary)] transition-colors opacity-70 hover:opacity-100"
+        >
+          Material Design 3
+        </a>
+      </div>
+    </div>
+  </div>
+</footer>
+
+<script>
+  import { initI18n } from '../../scripts/i18n-content-updater';
+  import { initUserContentI18n } from '../../scripts/i18n-user-content';
+  
+  initI18n();
+  initUserContentI18n();
+</script>

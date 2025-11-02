@@ -1,0 +1,528 @@
+---
+/**
+ * TableOfContents Component
+ * Article outline navigation with progress tracking
+ * Features: fixed height, internal scroll, progress indicator, auto-follow
+ */
+interface Props {
+  headings: Array<{ depth: number; text: string; slug: string }>;
+}
+
+const { headings } = Astro.props;
+
+if (!headings || headings.length === 0) {
+  return null;
+}
+---
+
+<aside class="toc-sidebar hidden lg:block w-64 xl:w-72 sticky top-24 self-start">
+  <div class="toc-container p-4 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 border border-[var(--md-sys-color-outline)]/20">
+    <div class="toc-header flex items-center justify-between mb-4">
+      <h2 class="toc-title text-sm font-600 uppercase tracking-wider text-[var(--md-sys-color-on-surface)]">
+        Table of Contents
+      </h2>
+      <div class="toc-progress-circle" data-toc-progress-circle>
+        <svg class="progress-ring" width="44" height="44">
+          <circle
+            class="progress-ring-bg"
+            stroke="var(--md-sys-color-outline)"
+            stroke-width="3"
+            fill="transparent"
+            r="18"
+            cx="22"
+            cy="22"
+          />
+          <circle
+            class="progress-ring-circle"
+            stroke="var(--md-sys-color-primary)"
+            stroke-width="3"
+            fill="transparent"
+            r="18"
+            cx="22"
+            cy="22"
+            data-progress-ring
+          />
+        </svg>
+        <div class="progress-text" data-toc-progress>0%</div>
+      </div>
+    </div>
+    
+    <nav class="toc-nav-wrapper relative">
+      <div class="toc-progress-indicator" data-toc-indicator>
+        <div class="toc-indicator-line"></div>
+      </div>
+      
+      <div class="toc-nav-scroll" data-toc-scroll>
+        <ul class="toc-list space-y-1">
+          {headings.map(({ depth, text, slug }) => (
+            <li 
+              class="toc-item"
+              style={`padding-left: ${(depth - 1) * 0.75}rem`}
+              data-toc-item
+            >
+              <a 
+                href={`#${slug}`}
+                class="toc-link block py-1.5 px-2 rounded text-sm text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] hover:bg-[var(--md-sys-color-primary-container)]/20 transition-all"
+                data-toc-link
+                data-heading-id={slug}
+              >
+                {text}
+              </a>
+            </li>
+          ))}
+        </ul>
+      </div>
+    </nav>
+  </div>
+</aside>
+
+<style>
+  /* TOC navigation container */
+  .toc-nav-wrapper {
+    position: relative;
+  }
+  
+  /* Scrollable area with adaptive height */
+  .toc-nav-scroll {
+    max-height: 65vh;
+    min-height: auto;
+    overflow-y: auto;
+    overflow-x: hidden;
+    padding-right: 0.5rem;
+    scroll-behavior: smooth;
+  }
+  
+  /* Auto-shrink when content is minimal */
+  .toc-nav-scroll:has(.toc-list) {
+    height: auto;
+  }
+  
+  /* Custom scrollbar styling */
+  .toc-nav-scroll::-webkit-scrollbar {
+    width: 4px;
+  }
+  
+  .toc-nav-scroll::-webkit-scrollbar-track {
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 2px;
+  }
+  
+  .toc-nav-scroll::-webkit-scrollbar-thumb {
+    background: var(--md-sys-color-outline);
+    border-radius: 2px;
+  }
+  
+  .toc-nav-scroll::-webkit-scrollbar-thumb:hover {
+    background: var(--md-sys-color-primary);
+  }
+  
+  /* Progress indicator container */
+  .toc-progress-indicator {
+    position: absolute;
+    left: 0;
+    top: 0;
+    width: 3px;
+    height: 100%;
+    pointer-events: none;
+    z-index: 10;
+    overflow: hidden;
+  }
+  
+  /* Progress indicator line */
+  .toc-indicator-line {
+    position: absolute;
+    left: 0;
+    width: 3px;
+    background: linear-gradient(
+      to bottom,
+      var(--md-sys-color-primary),
+      var(--md-sys-color-tertiary)
+    );
+    border-radius: 2px;
+    transition: transform 0.2s ease, height 0.2s ease;
+    box-shadow: 0 0 8px var(--md-sys-color-primary);
+    transform-origin: top;
+    will-change: transform, height;
+  }
+  
+  /* TOC item */
+  .toc-item {
+    position: relative;
+  }
+  
+  /* TOC link */
+  .toc-link {
+    position: relative;
+    transition: all 0.2s ease;
+  }
+  
+  /* Active state */
+  .toc-link.active {
+    color: var(--md-sys-color-primary);
+    background: var(--md-sys-color-primary-container)/30;
+    font-weight: 600;
+  }
+  
+  /* Visible links in viewport */
+  .toc-link.visible {
+    color: var(--md-sys-color-on-surface);
+    font-weight: 500;
+  }
+  
+  /* Circular progress indicator */
+  .toc-progress-circle {
+    position: relative;
+    width: 44px;
+    height: 44px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+  }
+  
+  .progress-ring {
+    position: absolute;
+    top: 0;
+    left: 0;
+    transform: rotate(-90deg);
+  }
+  
+  .progress-ring-bg {
+    opacity: 0.2;
+  }
+  
+  .progress-ring-circle {
+    stroke-dasharray: 113.097; /* 2 * PI * 18 */
+    stroke-dashoffset: 113.097;
+    transition: stroke-dashoffset 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    stroke-linecap: round;
+    will-change: stroke-dashoffset;
+  }
+  
+  .progress-text {
+    position: relative;
+    font-size: 10px;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    z-index: 1;
+  }
+  
+  /* Responsive adjustments */
+  @media (max-height: 900px) {
+    .toc-nav-scroll {
+      max-height: 60vh;
+    }
+  }
+  
+  @media (max-height: 700px) {
+    .toc-nav-scroll {
+      max-height: 50vh;
+    }
+  }
+  
+  @media (max-height: 500px) {
+    .toc-nav-scroll {
+      max-height: 40vh;
+    }
+  }
+</style>
+
+<script>
+  /**
+   * 增强型目录功能 - 完全重构版本
+   * 修复：
+   * 1. 目录滚动时指示线跟随
+   * 2. 底部标题指示线丢失
+   * 3. 进度更新更丝滑
+   * 4. 自适应高度
+   */
+  document.addEventListener('DOMContentLoaded', () => {
+    const tocLinks = document.querySelectorAll('[data-toc-link]');
+    const tocScroll = document.querySelector('[data-toc-scroll]') as HTMLElement;
+    const tocIndicator = document.querySelector('[data-toc-indicator]') as HTMLElement;
+    const tocProgressText = document.querySelector('[data-toc-progress]') as HTMLElement;
+    const tocProgressRing = document.querySelector('[data-progress-ring]') as SVGCircleElement;
+    const headings = Array.from(
+      document.querySelectorAll('.prose h2, .prose h3, .prose h4, .prose h5, .prose h6')
+    ).filter(h => h.id) as HTMLElement[];
+    
+    if (!tocLinks.length || !headings.length || !tocScroll) return;
+    
+    // 状态管理
+    let activeHeading: HTMLElement | null = null;
+    const visibleHeadings = new Map<HTMLElement, boolean>();
+    let isUpdating = false;
+    
+    // 常量
+    const CIRCLE_RADIUS = 18;
+    const CIRCLE_CIRCUMFERENCE = 2 * Math.PI * CIRCLE_RADIUS;
+    
+    /**
+     * 更新进度指示线位置和高度
+     * 直接更新，不使用 requestAnimationFrame（避免双重延迟）
+     */
+    function updateProgressIndicator() {
+      if (!tocIndicator || !tocScroll || isUpdating) return;
+      
+      const visibleLinks: HTMLElement[] = [];
+      
+      // 收集所有可见或激活的链接
+      tocLinks.forEach(link => {
+        if (link.classList.contains('visible') || link.classList.contains('active')) {
+          visibleLinks.push(link as HTMLElement);
+        }
+      });
+      
+      if (visibleLinks.length === 0) {
+        if (tocIndicator) {
+          tocIndicator.style.opacity = '0';
+        }
+        return;
+      }
+      
+      if (tocIndicator) {
+        tocIndicator.style.opacity = '1';
+      }
+      
+      const firstVisible = visibleLinks[0];
+      const lastVisible = visibleLinks[visibleLinks.length - 1];
+      
+      const scrollContainerRect = tocScroll.getBoundingClientRect();
+      
+      const firstRect = firstVisible.getBoundingClientRect();
+      const lastRect = lastVisible.getBoundingClientRect();
+      
+      let startY = firstRect.top - scrollContainerRect.top;
+      let endY = lastRect.bottom - scrollContainerRect.top;
+      
+      const containerHeight = tocScroll.clientHeight;
+      startY = Math.max(0, Math.min(startY, containerHeight));
+      endY = Math.max(0, Math.min(endY, containerHeight));
+      
+      const height = Math.max(0, endY - startY);
+      
+      const indicatorLine = tocIndicator.querySelector('.toc-indicator-line') as HTMLElement;
+      if (indicatorLine) {
+        indicatorLine.style.transform = `translateY(${startY}px)`;
+        indicatorLine.style.height = `${height}px`;
+      }
+    }
+    
+    /**
+     * Update reading progress
+     */
+    function updateReadingProgress() {
+      if (!tocProgressText || !tocProgressRing) return;
+      
+      const windowHeight = window.innerHeight;
+      const documentHeight = document.documentElement.scrollHeight - windowHeight;
+      const scrollTop = window.scrollY;
+      
+      if (documentHeight <= 0) {
+        tocProgressText.textContent = '100%';
+        tocProgressRing.style.strokeDashoffset = '0';
+        return;
+      }
+      
+      const progress = Math.max(0, Math.min(100, Math.round((scrollTop / documentHeight) * 100)));
+      tocProgressText.textContent = `${progress}%`;
+      
+      const offset = CIRCLE_CIRCUMFERENCE * (1 - progress / 100);
+      tocProgressRing.style.strokeDashoffset = offset.toString();
+    }
+    
+    /**
+     * Scroll TOC to active item
+     */
+    function scrollTocToActive() {
+      if (!tocScroll) return;
+      
+      const activeLink = document.querySelector('[data-toc-link].active') as HTMLElement;
+      if (!activeLink) return;
+      
+      const scrollRect = tocScroll.getBoundingClientRect();
+      const linkRect = activeLink.getBoundingClientRect();
+      
+      const linkTop = linkRect.top - scrollRect.top + tocScroll.scrollTop;
+      const linkHeight = linkRect.height;
+      
+      const targetScroll = linkTop - (tocScroll.clientHeight / 2) + (linkHeight / 2);
+      
+      tocScroll.scrollTo({
+        top: targetScroll,
+        behavior: 'smooth'
+      });
+    }
+    
+    /**
+     * 更新激活状态
+     */
+    function updateActiveHeading() {
+      if (isUpdating) return;
+      isUpdating = true;
+      
+      let newActiveHeading: HTMLElement | null = null;
+      let minDistance = Infinity;
+      
+      headings.forEach(heading => {
+        const rect = heading.getBoundingClientRect();
+        const distance = Math.abs(rect.top - window.innerHeight * 0.3);
+        
+        if (rect.top < window.innerHeight && rect.bottom > 0) {
+          if (distance < minDistance) {
+            minDistance = distance;
+            newActiveHeading = heading;
+          }
+        }
+      });
+      
+      if (!newActiveHeading) {
+        for (const [heading, isVisible] of visibleHeadings) {
+          if (isVisible) {
+            newActiveHeading = heading;
+            break;
+          }
+        }
+      }
+      
+      if (newActiveHeading && newActiveHeading !== activeHeading) {
+        activeHeading = newActiveHeading;
+        const id = activeHeading.getAttribute('id');
+        
+        tocLinks.forEach(link => link.classList.remove('active'));
+        
+        const activeLink = document.querySelector(`[data-toc-link][href="#${id}"]`);
+        if (activeLink) {
+          activeLink.classList.add('active');
+          scrollTocToActive();
+        }
+      }
+      
+      isUpdating = false;
+    }
+    
+    /**
+     * IntersectionObserver callback
+     */
+    const headingObserver = new IntersectionObserver(
+      (entries) => {
+        let shouldUpdate = false;
+        
+        entries.forEach((entry) => {
+          const heading = entry.target as HTMLElement;
+          const id = heading.getAttribute('id');
+          const tocLink = document.querySelector(`[data-toc-link][href="#${id}"]`);
+          
+          if (!tocLink) return;
+          
+          const wasVisible = visibleHeadings.get(heading);
+          visibleHeadings.set(heading, entry.isIntersecting);
+          
+          if (entry.isIntersecting) {
+            tocLink.classList.add('visible');
+          } else {
+            tocLink.classList.remove('visible');
+          }
+          
+          if (wasVisible !== entry.isIntersecting) {
+            shouldUpdate = true;
+          }
+        });
+        
+        if (shouldUpdate) {
+          updateActiveHeading();
+          updateProgressIndicator();
+        }
+      },
+      {
+        // 改进：使用更宽松的 rootMargin，确保底部标题也能被检测到
+        rootMargin: '-5% 0px -5% 0px',
+        threshold: [0, 0.25, 0.5, 0.75, 1.0]
+      }
+    );
+    
+    // 观察所有标题
+    headings.forEach((heading) => {
+      headingObserver.observe(heading);
+      visibleHeadings.set(heading, false);
+    });
+    
+    /**
+     * 页面滚动处理（使用 requestAnimationFrame 优化）
+     * 关键修复：在 rAF 回调中执行所有更新
+     */
+    let scrollTicking = false;
+    window.addEventListener('scroll', () => {
+      if (!scrollTicking) {
+        scrollTicking = true;
+        requestAnimationFrame(() => {
+          updateReadingProgress();
+          updateActiveHeading();
+          updateProgressIndicator();
+          scrollTicking = false;
+        });
+      }
+    }, { passive: true });
+    
+    /**
+     * 目录滚动处理
+     * 关键修复：目录滚动时立即更新指示线
+     */
+    let tocScrollTicking = false;
+    tocScroll.addEventListener('scroll', () => {
+      if (!tocScrollTicking) {
+        tocScrollTicking = true;
+        requestAnimationFrame(() => {
+          updateProgressIndicator();
+          tocScrollTicking = false;
+        });
+      }
+    }, { passive: true });
+    
+    /**
+     * 点击目录链接平滑滚动
+     */
+    tocLinks.forEach(link => {
+      link.addEventListener('click', (e) => {
+        e.preventDefault();
+        const href = link.getAttribute('href');
+        if (!href) return;
+        
+        const targetId = href.slice(1);
+        const targetHeading = document.getElementById(targetId);
+        
+        if (targetHeading) {
+          const yOffset = -100;
+          const y = targetHeading.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          
+          window.scrollTo({
+            top: y,
+            behavior: 'smooth'
+          });
+        }
+      });
+    });
+    
+    /**
+     * 窗口大小改变时重新计算
+     */
+    let resizeTicking = false;
+    window.addEventListener('resize', () => {
+      if (!resizeTicking) {
+        requestAnimationFrame(() => {
+          updateProgressIndicator();
+          resizeTicking = false;
+        });
+        resizeTicking = true;
+      }
+    }, { passive: true });
+    
+    /**
+     * 初始化
+     */
+    setTimeout(() => {
+      updateReadingProgress();
+      updateActiveHeading();
+      updateProgressIndicator();
+    }, 150);
+  });
+</script>

@@ -1,0 +1,125 @@
+---
+/**
+ * /about/index.astro
+ * About page - fully customizable category display system
+ */
+import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
+import AboutHeader from '../../components/about/AboutHeader.astro';
+import AboutIntro from '../../components/about/AboutIntro.astro';
+import Section from '../../components/about/Section.astro';
+import Timeline from '../../components/about/Timeline.astro';
+import SocialNetworks from '../../components/about/SocialNetworks.astro';
+import EducationTimeline from '../../components/about/EducationTimeline.astro';
+import ExperienceTimeline from '../../components/about/ExperienceTimeline.astro';
+import SiteInfo from '../../components/about/SiteInfo.astro';
+import { aboutConfig } from '../../data/user.config';
+import { useI18n } from '../../utils/i18n';
+import { getAllPosts } from '../../utils/blog';
+
+const { t } = useI18n();
+
+const { 
+  intro, 
+  sections,
+  timeline,
+  socialNetworks, 
+  education, 
+  experience,
+  site,
+} = aboutConfig;
+
+// Calculate actual site statistics
+const allPosts = await getAllPosts();
+const totalWords = allPosts.reduce((sum, post) => sum + (post.body?.length || 0), 0);
+
+// Update site stats with real data
+const siteWithStats = {
+  ...site,
+  stats: {
+    posts: allPosts.length,
+    words: totalWords,
+    visitors: site.stats.visitors, // This should be fetched from analytics if available
+  },
+};
+---
+
+<DefaultLayout title={`${t('aboutPage.title')} | Astro Theme Reay`} description={intro.description}>
+  <div class="about-page">
+    <!-- Page header -->
+    <AboutHeader title={t('aboutPage.title')} description={t('aboutPage.subtitle')} />
+
+    <!-- Personal introduction -->
+    <AboutIntro intro={intro} />
+
+    <!-- Dynamically render all custom categories -->
+    {sections.map((section) => (
+      <Section 
+        id={section.id}
+        title={section.title}
+        description={section.description}
+        icon={section.icon}
+        items={section.items}
+        columns={section.columns as 2 | 3 | 4 | 5}
+        compact={section.compact}
+        colorTheme={section.colorTheme as 'primary' | 'secondary' | 'tertiary' | 'accent'}
+      />
+    ))}
+
+    <!-- Growth timeline -->
+    {timeline && timeline.length > 0 && <Timeline events={timeline} />}
+
+    <!-- Social networks -->
+    {socialNetworks.length > 0 && <SocialNetworks socials={socialNetworks} />}
+
+    <!-- Education history -->
+    {education.length > 0 && <EducationTimeline education={education} />}
+
+    <!-- Work experience -->
+    {experience.length > 0 && <ExperienceTimeline experience={experience} />}
+
+    <!-- About this site - moved to bottom -->
+    <SiteInfo site={siteWithStats} />
+  </div>
+</DefaultLayout>
+
+<style>
+  .about-page {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 2rem 0;
+  }
+
+  @media (max-width: 768px) {
+    .about-page {
+      padding: 1.5rem 0;
+    }
+  }
+
+  /* Global animations */
+  .about-page > * {
+    opacity: 0;
+    transform: translateY(20px);
+    animation: fadeInUp 0.6s ease forwards;
+  }
+
+  .about-page > *:nth-child(1) { animation-delay: 0.1s; }
+  .about-page > *:nth-child(2) { animation-delay: 0.2s; }
+  .about-page > *:nth-child(3) { animation-delay: 0.3s; }
+  .about-page > *:nth-child(4) { animation-delay: 0.4s; }
+  .about-page > *:nth-child(5) { animation-delay: 0.5s; }
+  .about-page > *:nth-child(6) { animation-delay: 0.6s; }
+  .about-page > *:nth-child(7) { animation-delay: 0.7s; }
+  .about-page > *:nth-child(8) { animation-delay: 0.8s; }
+
+  @keyframes fadeInUp {
+    to {
+      opacity: 1;
+      transform: translateY(0);
+    }
+  }
+</style>
+
+<script>
+  import { initI18n } from '../../scripts/i18n-content-updater';
+  initI18n();
+</script>

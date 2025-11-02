@@ -1,0 +1,591 @@
+---
+/**
+ * Single Series Page
+ * Display all posts in a series
+ */
+import type { CollectionEntry } from 'astro:content';
+import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
+import { getAllSeries, getPostsBySeries, formatDate, getPostUrl } from '../../../utils/blog';
+
+export async function getStaticPaths() {
+  const series = await getAllSeries();
+  
+  return series.map(({ series: seriesName }) => ({
+    params: { series: seriesName },
+  }));
+}
+
+const { series } = Astro.params;
+
+// Data layer: Get all posts in this series
+const posts = await getPostsBySeries(series);
+const allSeries = await getAllSeries();
+const currentSeries = allSeries.find(s => s.series === series);
+
+// Calculate progress
+const totalPosts = posts.length;
+const completedPosts = totalPosts; // Simplified: assume all posts are completed
+const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100) : 0;
+---
+
+<ArchiveLayout
+  title={series}
+  description={`${series} series, ${posts.length} posts in total`}
+  showBackButton={true}
+  backUrl="/archives/series"
+>
+  <!-- Series info card -->
+  <div class="series-info-card">
+    <div class="series-header">
+      <div class="series-icon">
+        <i class="i-carbon:folder"></i>
+      </div>
+      <div class="series-details">
+        <h2 class="series-name">{series}</h2>
+        <div class="series-meta">
+          <span class="meta-item">
+            <i class="i-carbon:document"></i>
+            {posts.length} posts
+          </span>
+          <span class="meta-item">
+            <i class="i-carbon:time"></i>
+            About {posts.length * 5} min read
+          </span>
+          {currentSeries && allSeries.length > 0 && (
+            <span class="meta-item">
+              <i class="i-carbon:trophy"></i>
+              Rank #{allSeries.findIndex(s => s.series === series) + 1}
+            </span>
+          )}
+        </div>
+      </div>
+    </div>
+
+    <!-- Progress bar -->
+    <div class="series-progress">
+      <div class="progress-header">
+        <span class="progress-label">Reading Progress</span>
+        <span class="progress-percentage">{progress}%</span>
+      </div>
+      <div class="progress-bar">
+        <div class="progress-fill" style={`width: ${progress}%`}></div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Posts list -->
+  {posts.length > 0 ? (
+    <section class="posts-section">
+      <h3 class="section-title">
+        <i class="i-carbon:book"></i>
+        Chapters
+      </h3>
+      <div class="posts-list">
+        {posts.map((post, index) => (
+          <a href={getPostUrl(post)} class="post-card">
+            <div class="post-number">{(post.data.seriesOrder || index + 1).toString().padStart(2, '0')}</div>
+            <div class="post-content">
+              <h4 class="post-title">{post.data.title}</h4>
+              {post.data.description && (
+                <p class="post-description">{post.data.description}</p>
+              )}
+              <div class="post-footer">
+                <span class="post-date">
+                  <i class="i-carbon:calendar"></i>
+                  {formatDate(post.data.publishDate)}
+                </span>
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="post-tags">
+                    {post.data.tags.slice(0, 3).map(tag => (
+                      <span class="tag-badge">#{tag}</span>
+                    ))}
+                  </div>
+                )}
+              </div>
+            </div>
+            <div class="post-arrow">
+              <i class="i-carbon:arrow-right"></i>
+            </div>
+          </a>
+        ))}
+      </div>
+    </section>
+  ) : (
+    <div class="empty-state">
+      <i class="i-carbon:document-blank"></i>
+      <h3>Empty Series</h3>
+      <p>No posts in this series yet</p>
+    </div>
+  )}
+
+  <!-- Series navigation -->
+  {allSeries.length > 1 && (
+    <section class="series-nav-section">
+      <h3 class="section-title">
+        <i class="i-carbon:grid"></i>
+        Other Series
+      </h3>
+      <div class="series-nav-grid">
+        {allSeries
+          .filter(s => s.series !== series)
+          .slice(0, 4)
+          .map(s => (
+            <a href={`/archives/series/${s.series}`} class="series-nav-card">
+              <div class="nav-card-icon">
+                <i class="i-carbon:folder"></i>
+              </div>
+              <div class="nav-card-content">
+                <h4 class="nav-card-title">{s.series}</h4>
+                <p class="nav-card-count">{s.count} posts</p>
+              </div>
+              <i class="i-carbon:arrow-right nav-card-arrow"></i>
+            </a>
+          ))}
+      </div>
+    </section>
+  )}
+</ArchiveLayout>
+
+<script>
+  /**
+   * Save scroll position
+   * When clicking post links, save current page scroll position
+   */
+  function saveScrollPosition() {
+    const scrollPosition = {
+      x: window.scrollX,
+      y: window.scrollY,
+      path: window.location.pathname
+    };
+    sessionStorage.setItem('scrollPosition', JSON.stringify(scrollPosition));
+  }
+
+  // Restore scroll position
+  function restoreScrollPosition() {
+    const saved = sessionStorage.getItem('scrollPosition');
+    if (saved) {
+      try {
+        const { x, y, path } = JSON.parse(saved);
+        // Only restore scroll position for the same path
+        if (path === window.location.pathname) {
+          setTimeout(() => {
+            window.scrollTo(x, y);
+            sessionStorage.removeItem('scrollPosition');
+          }, 100);
+        }
+      } catch (e) {
+        console.error('Failed to restore scroll position:', e);
+      }
+    }
+  }
+
+  // Attach scroll save listeners to all post links
+  function attachScrollSaveListeners() {
+    document.querySelectorAll('a[href^="/blog/"]').forEach(link => {
+      link.addEventListener('click', saveScrollPosition);
+    });
+  }
+
+  // Execute on page load
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', () => {
+      restoreScrollPosition();
+      attachScrollSaveListeners();
+    });
+  } else {
+    restoreScrollPosition();
+    attachScrollSaveListeners();
+  }
+
+  // Support Astro View Transitions
+  document.addEventListener('astro:page-load', () => {
+    restoreScrollPosition();
+    attachScrollSaveListeners();
+  });
+</script>
+
+<style>
+  .series-info-card {
+    padding: 2rem;
+    background: linear-gradient(
+      135deg,
+      var(--md-sys-color-primary-container),
+      var(--md-sys-color-tertiary-container)
+    );
+    border-radius: 16px;
+    margin-bottom: 2rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .series-header {
+    display: flex;
+    align-items: center;
+    gap: 1.5rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .series-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 64px;
+    height: 64px;
+    border-radius: 16px;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+    font-size: 2rem;
+    flex-shrink: 0;
+  }
+
+  .series-details {
+    flex: 1;
+  }
+
+  .series-name {
+    font-size: 2rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-primary-container);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.2;
+  }
+
+  .series-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 1.25rem;
+  }
+
+  .meta-item {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.875rem;
+    color: var(--md-sys-color-on-primary-container);
+    opacity: 0.9;
+  }
+
+  .series-progress {
+    padding-top: 1.5rem;
+    border-top: 1px solid var(--md-sys-color-outline-variant);
+  }
+
+  .progress-header {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    margin-bottom: 0.75rem;
+  }
+
+  .progress-label {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .progress-percentage {
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-primary-container);
+  }
+
+  .progress-bar {
+    height: 8px;
+    background: var(--md-sys-color-surface-container);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+
+  .progress-fill {
+    height: 100%;
+    background: linear-gradient(
+      90deg,
+      var(--md-sys-color-primary),
+      var(--md-sys-color-tertiary)
+    );
+    border-radius: 999px;
+    transition: width 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+  }
+
+  .posts-section {
+    margin-bottom: 3rem;
+  }
+
+  .section-title {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 1.5rem 0;
+  }
+
+  .section-title i {
+    color: var(--md-sys-color-primary);
+  }
+
+  .posts-list {
+    display: flex;
+    flex-direction: column;
+    gap: 1rem;
+  }
+
+  .post-card {
+    display: grid;
+    grid-template-columns: auto 1fr auto;
+    align-items: center;
+    gap: 1.5rem;
+    padding: 1.5rem;
+    background: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 12px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+    position: relative;
+  }
+
+  .post-card::before {
+    content: '';
+    position: absolute;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    width: 4px;
+    background: var(--md-sys-color-primary);
+    border-radius: 12px 0 0 12px;
+    transform: scaleY(0);
+    transform-origin: center;
+    transition: transform 0.3s ease;
+  }
+
+  .post-card:hover {
+    background: var(--md-sys-color-surface-container);
+    border-color: var(--md-sys-color-primary);
+    transform: translateX(8px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .post-card:hover::before {
+    transform: scaleY(1);
+  }
+
+  .post-number {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 48px;
+    height: 48px;
+    font-size: 1.25rem;
+    font-weight: 700;
+    color: var(--md-sys-color-primary);
+    background: var(--md-sys-color-primary-container);
+    border-radius: 10px;
+    flex-shrink: 0;
+  }
+
+  .post-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .post-title {
+    font-size: 1.125rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.5rem 0;
+    line-height: 1.4;
+  }
+
+  .post-description {
+    font-size: 0.875rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0 0 0.75rem 0;
+    line-height: 1.6;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    display: -webkit-box;
+    -webkit-line-clamp: 2;
+    -webkit-box-orient: vertical;
+  }
+
+  .post-footer {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    flex-wrap: wrap;
+  }
+
+  .post-date {
+    display: flex;
+    align-items: center;
+    gap: 0.375rem;
+    font-size: 0.8125rem;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .post-tags {
+    display: flex;
+    gap: 0.5rem;
+    flex-wrap: wrap;
+  }
+
+  .tag-badge {
+    font-size: 0.75rem;
+    padding: 0.25rem 0.625rem;
+    background: var(--md-sys-color-surface-container);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 6px;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .post-arrow {
+    color: var(--md-sys-color-primary);
+    font-size: 1.25rem;
+    transition: transform 0.3s ease;
+  }
+
+  .post-card:hover .post-arrow {
+    transform: translateX(4px);
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    background: var(--md-sys-color-surface-container-lowest);
+    border-radius: 16px;
+    border: 1px dashed var(--md-sys-color-outline-variant);
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+
+  .series-nav-section {
+    margin-top: 3rem;
+  }
+
+  .series-nav-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+    gap: 1rem;
+  }
+
+  .series-nav-card {
+    display: flex;
+    align-items: center;
+    gap: 1rem;
+    padding: 1rem;
+    background: var(--md-sys-color-surface-container-low);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 10px;
+    text-decoration: none;
+    color: inherit;
+    transition: all 0.3s ease;
+  }
+
+  .series-nav-card:hover {
+    background: var(--md-sys-color-surface-container);
+    border-color: var(--md-sys-color-primary);
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+  }
+
+  .nav-card-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 40px;
+    height: 40px;
+    border-radius: 8px;
+    background: var(--md-sys-color-primary-container);
+    color: var(--md-sys-color-on-primary-container);
+    font-size: 1.25rem;
+    flex-shrink: 0;
+  }
+
+  .nav-card-content {
+    flex: 1;
+    min-width: 0;
+  }
+
+  .nav-card-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.25rem 0;
+    overflow: hidden;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .nav-card-count {
+    font-size: 0.75rem;
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+
+  .nav-card-arrow {
+    color: var(--md-sys-color-primary);
+    transition: transform 0.3s ease;
+  }
+
+  .series-nav-card:hover .nav-card-arrow {
+    transform: translateX(4px);
+  }
+
+  @media (max-width: 768px) {
+    .series-info-card {
+      padding: 1.5rem;
+    }
+
+    .series-header {
+      gap: 1rem;
+    }
+
+    .series-icon {
+      width: 56px;
+      height: 56px;
+      font-size: 1.75rem;
+    }
+
+    .series-name {
+      font-size: 1.5rem;
+    }
+
+    .series-meta {
+      gap: 1rem;
+    }
+
+    .post-card {
+      grid-template-columns: auto 1fr;
+      gap: 1rem;
+      padding: 1rem;
+    }
+
+    .post-arrow {
+      display: none;
+    }
+
+    .series-nav-grid {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

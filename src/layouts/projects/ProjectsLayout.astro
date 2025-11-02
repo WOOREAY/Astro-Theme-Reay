@@ -1,0 +1,82 @@
+---
+/**
+ * ProjectsLayout.astro
+ * Projects page dedicated layout
+ */
+import DefaultLayout from '../base/DefaultLayout.astro';
+
+interface Props {
+  title?: string;
+  description?: string;
+  showBackButton?: boolean;
+  backUrl?: string;
+}
+
+const {
+  title = 'Project Showcase',
+  description = 'My open source projects and portfolio',
+  showBackButton = false,
+  backUrl = '/projects',
+} = Astro.props;
+---
+
+<DefaultLayout title={title} description={description}>
+  <div class="projects-layout">
+    <div class="container">
+      {showBackButton && (
+        <button class="back-button" onclick={`window.location.href='${backUrl}'`}>
+          <i class="i-carbon:arrow-left"></i>
+          <span>Back</span>
+        </button>
+      )}
+      
+      <slot />
+    </div>
+  </div>
+</DefaultLayout>
+
+<style>
+  .projects-layout {
+    min-height: 100vh;
+    padding: 2rem 0;
+  }
+
+  .container {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 1.5rem;
+  }
+
+  .back-button {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.5rem;
+    padding: 0.625rem 1.25rem;
+    background: var(--md-sys-color-surface-container-low);
+    border: 2px solid var(--md-sys-color-outline-variant);
+    border-radius: 999px;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.9375rem;
+    font-weight: 500;
+    cursor: pointer;
+    transition: all 0.3s ease;
+    margin-bottom: 2rem;
+  }
+
+  .back-button:hover {
+    background: var(--md-sys-color-surface-container);
+    border-color: var(--md-sys-color-primary);
+    color: var(--md-sys-color-primary);
+    transform: translateX(-4px);
+  }
+
+  .back-button i {
+    font-size: 1.125rem;
+  }
+
+  @media (max-width: 768px) {
+    .container {
+      padding: 0 1rem;
+    }
+  }
+</style>

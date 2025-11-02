@@ -1,0 +1,43 @@
+---
+/**
+ * FullpageSection.astro
+ * 全屏滚动的单个区块组件
+ */
+interface Props {
+  sectionId: string;
+}
+
+const { sectionId } = Astro.props;
+---
+
+<div class="fullpage-section" data-section={sectionId}>
+  <slot />
+</div>
+
+<style>
+  .fullpage-section {
+    height: 100%;
+    width: 100%;
+    position: absolute;
+    inset: 0;
+    opacity: 0;
+    transform: translateY(100%);
+    transition: none;
+    will-change: transform, opacity;
+    overflow-y: auto;
+    overflow-x: hidden;
+  }
+
+  .fullpage-section:first-of-type {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .fullpage-section[data-active='true'] {
+    opacity: 1;
+  }
+
+  .fullpage-section[data-ready='true'] {
+    transition: transform 0.8s cubic-bezier(0.65, 0, 0.35, 1), opacity 0.8s ease;
+  }
+</style>

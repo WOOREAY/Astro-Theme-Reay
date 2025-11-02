@@ -1,0 +1,187 @@
+---
+/**
+ * Projects Index Page
+ * Display all GitHub projects
+ * 
+ * Performance optimizations:
+ * - Parallel loading of all projects
+ * - GitHub API caching
+ * - Request deduplication
+ */
+import ProjectsLayout from '../../layouts/projects/ProjectsLayout.astro';
+import ProjectHeader from '../../components/projects/ProjectHeader.astro';
+import CategoryTabs from '../../components/projects/CategoryTabs.astro';
+import ProjectCard from '../../components/projects/ProjectCard.astro';
+import { projectCategories, githubUsername } from '../../data/projects.config';
+import { getUserRepos } from '../../utils/github';
+
+console.time('⏱️  Total project load time');
+
+// Only fetch user's all public repositories
+console.time('⏱️  Fetch user repos');
+const userRepos = await getUserRepos(githubUsername);
+console.timeEnd('⏱️  Fetch user repos');
+
+const allRepos = userRepos
+  .filter(repo => !repo.isFork && !repo.isArchived)
+  .map(repo => ({
+    ...repo,
+    category: 'all',
+    featured: false,
+    customDescription: undefined,
+    customTags: [],
+  }));
+
+// Sort by update time
+allRepos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
+
+// Statistics
+const totalProjects = allRepos.length;
+const totalStars = allRepos.reduce((sum, p) => sum + p.stars, 0);
+const totalForks = allRepos.reduce((sum, p) => sum + p.forks, 0);
+
+// Category statistics
+const projectCounts: Record<string, number> = {};
+projectCategories.forEach(category => {
+  if (category.id === 'all') {
+    projectCounts[category.id] = allRepos.length;
+  } else {
+    projectCounts[category.id] = 0;
+  }
+});
+
+const currentCategory = 'all';
+
+console.timeEnd('⏱️  Total project load time');
+console.log(`📊 Loaded ${allRepos.length} projects (⭐ ${totalStars} stars, 🔀 ${totalForks} forks)`);
+---
+
+<ProjectsLayout>
+  <!-- Page title and statistics -->
+  <ProjectHeader 
+    totalProjects={totalProjects}
+    totalStars={totalStars}
+    totalForks={totalForks}
+  />
+
+  <!-- Category navigation -->
+  <CategoryTabs 
+    categories={projectCategories}
+    projectCounts={projectCounts}
+    currentCategory={currentCategory}
+  />
+
+  <!-- Projects list -->
+  <div class="projects-list" id="projects-list">
+    {allRepos.map((project) => (
+      <ProjectCard project={project} />
+    ))}
+  </div>
+
+  <!-- Empty state -->
+  {allRepos.length === 0 && (
+    <div class="empty-state">
+      <i class="i-carbon:folder-off"></i>
+      <h3>No Projects Yet</h3>
+      <p>No projects configured yet. Please add projects in src/data/projects.config.ts.</p>
+    </div>
+  )}
+</ProjectsLayout>
+
+<script>
+  // Category filtering functionality - performance optimized version
+  document.addEventListener('DOMContentLoaded', () => {
+    const categoryTabs = document.querySelectorAll('.category-tab');
+    const projectCards = document.querySelectorAll('.project-card');
+
+    categoryTabs.forEach(tab => {
+      tab.addEventListener('click', (e) => {
+        e.preventDefault();
+        const category = tab.getAttribute('data-category');
+
+        // Use requestAnimationFrame to optimize DOM operations
+        requestAnimationFrame(() => {
+          // Update active state
+          categoryTabs.forEach(t => t.classList.remove('active'));
+          tab.classList.add('active');
+
+          // Use CSS class instead of directly manipulating style
+          projectCards.forEach(card => {
+            const cardCategory = card.getAttribute('data-category');
+            const isFeatured = card.getAttribute('data-featured') === 'true';
+
+            if (category === 'all') {
+              card.classList.remove('hidden');
+            } else if (category === 'featured') {
+              card.classList.toggle('hidden', !isFeatured);
+            } else {
+              card.classList.toggle('hidden', cardCategory !== category);
+            }
+          });
+        });
+
+        // Update URL (without page refresh)
+        const url = new URL(window.location.href);
+        url.searchParams.set('category', category);
+        window.history.pushState({}, '', url);
+      });
+    });
+
+    // Read category from URL and apply
+    const urlParams = new URLSearchParams(window.location.search);
+    const categoryFromUrl = urlParams.get('category');
+    if (categoryFromUrl) {
+      const tab = document.querySelector(`[data-category="${categoryFromUrl}"]`);
+      if (tab) {
+        (tab as HTMLElement).click();
+      }
+    }
+  });
+</script>
+
+<style>
+  .projects-list {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1rem;
+    margin-bottom: 3rem;
+  }
+
+  /* Hide filtered projects - use CSS class instead of inline style */
+  .project-card.hidden {
+    display: none;
+  }
+
+  .empty-state {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 4rem 2rem;
+    text-align: center;
+    grid-column: 1 / -1;
+  }
+
+  .empty-state i {
+    font-size: 4rem;
+    color: var(--md-sys-color-outline);
+    margin-bottom: 1rem;
+  }
+
+  .empty-state h3 {
+    font-size: 1.5rem;
+    color: var(--md-sys-color-on-surface);
+    margin: 0 0 0.5rem 0;
+  }
+
+  .empty-state p {
+    color: var(--md-sys-color-on-surface-variant);
+    margin: 0;
+  }
+
+  @media (max-width: 968px) {
+    .projects-list {
+      grid-template-columns: 1fr;
+    }
+  }
+</style>

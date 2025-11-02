@@ -1,0 +1,120 @@
+import { defineConfig, presetWind4, presetIcons } from 'unocss'
+import { aboutConfig, user } from './src/data/user.config'
+
+// 自动从配置文件中提取所有图标
+function extractIcons() {
+  const icons = new Set<string>()
+  
+  // 从 user.socials 提取图标
+  user.socials?.forEach(social => {
+    if (social.icon) icons.add(social.icon)
+  })
+  
+  // 从 aboutConfig.sections 提取图标
+  aboutConfig.sections?.forEach(section => {
+    if (section.icon) icons.add(section.icon)
+    section.items?.forEach(item => {
+      if (item.icon) icons.add(item.icon)
+    })
+  })
+  
+  // 从 aboutConfig.socialNetworks 提取图标
+  aboutConfig.socialNetworks?.forEach(network => {
+    if (network.icon) icons.add(network.icon)
+  })
+  
+  // 从 aboutConfig.site.techStack 提取图标
+  aboutConfig.site?.techStack?.forEach(tech => {
+    if (tech.icon) icons.add(tech.icon)
+  })
+  
+  return Array.from(icons)
+}
+
+export default defineConfig({
+  presets: [
+    presetWind4(),
+    presetIcons({
+      scale: 1.2,
+      collections: {
+        carbon: () => import('@iconify-json/carbon/icons.json').then(i => i.default),
+      },
+    }),
+  ],
+  shortcuts: {
+    // MD3 Primary Filled Button
+    btn: [
+      'px-3 py-2 rounded-md transition-200',
+      'bg-[var(--md-sys-color-primary)] text-[var(--md-sys-color-on-primary)]',
+      'hover:op-90'
+    ].join(' '),
+
+    // MD3 Outlined Button
+    'btn-outline': [
+      'px-3 py-2 rounded-md transition-200',
+      'border border-[var(--md-sys-color-outline)]',
+      'text-[var(--md-sys-color-primary)]',
+      'hover:bg-[var(--md-sys-color-primary)]/10'
+    ].join(' '),
+
+    // MD3 Tonal Button
+    'btn-tonal': [
+      'px-3 py-2 rounded-md transition-200',
+      'bg-[var(--md-sys-color-secondary-container)]',
+      'text-[var(--md-sys-color-on-secondary-container)]',
+      'hover:op-90'
+    ].join(' '),
+
+    // MD3 Surface Card
+    card: [
+      'rounded-[var(--radius-md)]',
+      'border border-[var(--md-sys-color-outline)]',
+      'bg-[var(--md-sys-color-surface)]',
+      'text-[var(--md-sys-color-on-surface)]',
+      'shadow-[var(--shadow-sm)]'
+    ].join(' '),
+
+    // MD3 Icon Button (已在全局样式定义，这里保留作为 UnoCSS 快捷方式)
+    'icon-btn-uno': [
+      'inline-flex items-center justify-center',
+      'w-10 h-10 rounded-[var(--radius-md)]',
+      'text-[var(--md-sys-color-on-surface)]',
+      'border border-[var(--md-sys-color-outline)]',
+      'bg-transparent',
+      'hover:bg-[var(--md-sys-color-surface-variant)]',
+      'transition-200'
+    ].join(' '),
+
+    // 排版快捷方式
+    h1: 'text-[var(--fs-3xl)] font-bold',
+    h2: 'text-[var(--fs-2xl)] font-bold',
+    h3: 'text-[var(--fs-xl)] font-semibold',
+  },
+  safelist: [
+    // 系统核心图标（手动维护）
+    'i-carbon:sun',
+    'i-carbon:moon',
+    'i-carbon:laptop',
+    'i-carbon:menu',
+    'i-carbon:close',
+    'i-carbon:logo-github',
+    'i-carbon:logo-twitter',
+    'i-carbon:email',
+    'i-carbon:rss',
+    'i-carbon:arrow-right',
+    'i-carbon:portfolio',
+    'i-carbon:chevron-down',
+    'i-carbon:launch',
+    'i-carbon:tools',
+    'i-carbon:user-avatar',
+    'i-carbon:development',
+    'i-carbon:blog',
+    'i-carbon:chart-bar',
+    'i-carbon:link',
+    'i-carbon:cube',
+    'i-carbon:analytics',
+    'text-[18px]',
+    // 自动从配置文件提取的图标
+    ...extractIcons(),
+  ],
+})

@@ -1,0 +1,21 @@
+---
+/**
+ * ThemeToggle.astro
+ * 精致圆润风格主题切换按钮：light / dark / system
+ * 更小巧、更优雅的图标按钮
+ */
+---
+<button
+  id="theme-toggle"
+  class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/40 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 cursor-pointer backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+  aria-label="切换主题"
+  title="切换主题">
+  <i id="theme-icon" class="i-carbon:sun text-[1.25rem] transition-transform duration-300"></i>
+</button>
+
+<script>
+  import { initThemeToggle } from '../../scripts/ui/theme-toggle';
+  
+  // 初始化主题切换
+  initThemeToggle();
+</script>
