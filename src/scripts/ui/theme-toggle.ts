@@ -114,7 +114,9 @@ export class ThemeToggle {
 
     // Set data-theme attribute
     if (mode === 'system') {
-      this.el.removeAttribute('data-theme');
+      // When system mode, detect system preference and apply
+      const prefersDark = window.matchMedia('(prefers-color-scheme: dark)').matches;
+      this.el.setAttribute('data-theme', prefersDark ? 'dark' : 'light');
     } else {
       this.el.setAttribute('data-theme', mode);
     }

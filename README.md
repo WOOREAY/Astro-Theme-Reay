@@ -1,4 +1,4 @@
-# Astro Theme Reay# Astro Theme Reay
+# Astro Theme Reay
 
 
 
@@ -6,7 +6,7 @@ A modern, clean, and elegant blog theme built with Astro and Material Design 3.�
 
 
 
-## ✨ Features## ✨ 特性
+## ✨ Features
 
 
 

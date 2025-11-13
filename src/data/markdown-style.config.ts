@@ -185,13 +185,13 @@ export interface MarkdownStyleConfig {
    * Link styles
    */
   link: {
-    color: string;              // 链接Color: CSS color value or variable
-    hoverColor: string;         // 悬停Color: CSS color value or variable
+    color: string;              // Link color: CSS color value or variable
+    hoverColor: string;         // Hover color: CSS color value or variable
     underline: boolean;         // Show underline: true/false
     underlineStyle: string;     // Underline style: 'solid', 'gradient', 'animated'
     underlineThickness: string; // Underline thickness: e.g. '2px', '1px'
     underlineOffset: string;    // Underline offset: e.g. '3px', '2px'
-    fontWeight: string;         // 链接Font weight: 400-900
+    fontWeight: string;         // Link font weight: 400-900
     transition: string;         // Transition: e.g. 'all 0.3s ease'
     externalIcon: boolean;      // Show external icon: true/false
     externalIconSymbol: string; // External icon symbol: e.g. '🔗', '↗'
@@ -225,12 +225,12 @@ export interface MarkdownStyleConfig {
       border: string;           // Border: e.g. '1px solid var(...)', 'none'
       marginTop: string;        // Top margin: e.g. '1.3em', '1rem'
       marginBottom: string;     // Bottom margin: e.g. '1.3em', '1rem'
-      maxHeight: string;        // 最大Height: e.g. '600px', 'none'
+      maxHeight: string;        // Maximum height: e.g. '600px', 'none'
       overflow: string;         // Overflow: 'auto', 'scroll', 'hidden'
       showLineNumbers: boolean; // Show line numbers: true/false
       lineNumberStyle: string;  // Line number style: 'normal', 'minimal', 'fancy'
-      lineNumberColor: string;  // 行号Color: CSS color value or variable
-      lineNumberBg: string;     // 行号Background color: CSS color value or variable
+      lineNumberColor: string;  // Line number color: CSS color value or variable
+      lineNumberBg: string;     // Line number background color: CSS color value or variable
       showLanguage: boolean;    // Show language tag: true/false
       languagePosition: string; // Language tag position: 'top-right', 'top-left'
       languageStyle: string;    // Language tag style: CSS style string
@@ -239,13 +239,13 @@ export interface MarkdownStyleConfig {
       copyButtonStyle: string;  // Copy button style: CSS style string
       copyButtonText: string;   // Copy button text: e.g. 'Copy', '复制'
       copiedButtonText: string; // Copied text: e.g. 'Copied!', '已复制！'
-      scrollbarWidth: string;   // 滚动条Width: e.g. '8px', '10px'
-      scrollbarColor: string;   // 滚动条Color: CSS color value or variable
-      lineHeight: string;       // 代码Line height: e.g. '1.6', '1.5'
+      scrollbarWidth: string;   // Scrollbar width: e.g. '8px', '10px'
+      scrollbarColor: string;   // Scrollbar color: CSS color value or variable
+      lineHeight: string;       // Code line height: e.g. '1.6', '1.5'
       boxShadow: string;        // Shadow: e.g. '0 2px 8px rgba(0,0,0,0.08)', 'none'
       tabSize: number;          // Tab size: e.g. 2, 4
       highlightLines: boolean;  // Highlight lines: true/false
-      highlightColor: string;   // 高亮行Color: CSS color value or variable
+      highlightColor: string;   // Highlight line color: CSS color value or variable
     };
   };
 
@@ -280,7 +280,7 @@ export interface MarkdownStyleConfig {
       marginTop: string;        // Top margin: e.g. '0.9em', '1rem'
       marginBottom: string;     // Bottom margin: e.g. '0.9em', '1rem'
       paddingLeft: string;      // Left padding: e.g. '1.3em', '2rem'
-      markerColor: string;      // 标记Color: CSS color value or variable
+      markerColor: string;      // Marker color: CSS color value or variable
       markerType: string;       // Marker type: 'disc', 'circle', 'square'
       nestedIndent: string;     // Nested indent: e.g. '1.3em', '2em'
     };
@@ -289,8 +289,8 @@ export interface MarkdownStyleConfig {
       marginTop: string;        // Top margin: e.g. '0.9em', '1rem'
       marginBottom: string;     // Bottom margin: e.g. '0.9em', '1rem'
       paddingLeft: string;      // Left padding: e.g. '1.3em', '2rem'
-      markerColor: string;      // 标记Color: CSS color value or variable
-      markerFontWeight: string; // 标记Font weight: 400-900
+      markerColor: string;      // Marker color: CSS color value or variable
+      markerFontWeight: string; // Marker font weight: 400-900
       nestedIndent: string;     // Nested indent: e.g. '1.3em', '2em'
     };
     // List item
@@ -301,8 +301,8 @@ export interface MarkdownStyleConfig {
     // Task list
     task: {
       checkboxSize: string;     // Checkbox size: e.g. '1.1em', '16px'
-      checkboxColor: string;    // 复选框Color: CSS color value or variable
-      checkedColor: string;     // 选中Color: CSS color value or variable
+      checkboxColor: string;    // Checkbox color: CSS color value or variable
+      checkedColor: string;     // Checked color: CSS color value or variable
     };
   };
 
@@ -333,22 +333,22 @@ export interface MarkdownStyleConfig {
       borderBottom: string;     // Bottom border: e.g. '1px solid var(...)'
     };
     striped: boolean;           // Striped rows: true/false
-    stripedColor: string;       // 斑马纹Color: CSS color value or variable
-    hoverColor: string;         // 悬停Color: CSS color value or variable
+    stripedColor: string;       // Color: CSS color value or variable
+    hoverColor: string;         // Hover color: CSS color value or variable
   };
 
   /**
    * Image styles
    */
   image: {
-    maxWidth: string;           // 最大Width: e.g. '100%', '800px'
+    maxWidth: string;           // maxWidth: e.g. '100%', '800px'
     marginTop: string;          // Top margin: e.g. '1.3em', '1rem'
     marginBottom: string;       // Bottom margin: e.g. '1.3em', '1rem'
     borderRadius: string;       // Border radius: e.g. '6px', '8px'
     border: string;             // Border: e.g. '1px solid var(...)', 'none'
     boxShadow: string;          // Shadow: e.g. '0 3px 10px rgba(0,0,0,0.1)', 'none'
     hoverTransform: string;     // Hover transform: e.g. 'scale(1.02)', 'none'
-    hoverShadow: string;        // 悬停Shadow: e.g. '0 6px 20px rgba(0,0,0,0.15)', 'none'
+    hoverShadow: string;        // Hover shadow: e.g. '0 6px 20px rgba(0,0,0,0.15)', 'none'
     transition: string;         // Transition: e.g. 'all 0.3s ease'
     cursor: string;             // Cursor: 'pointer', 'default', 'zoom-in'
     display: string;            // Display: 'block', 'inline-block'
@@ -362,10 +362,10 @@ export interface MarkdownStyleConfig {
     marginBottom: string;       // Bottom margin: e.g. '1.8em', '2rem'
     border: string;             // Border: e.g. '1px solid var(...)', 'none'
     height: string;             // Height: e.g. '1px', '2px'
-    background: string;         // 背景：如 'linear-gradient(...)', CSS 颜色值
+    background: string;         // Background: e.g. 'linear-gradient(...)', CSS color value
     showDecorator: boolean;     // Show decorator: true/false
     decoratorSymbol: string;    // Decorator symbol: e.g. '◆', '❖', '✦'
-    decoratorColor: string;     // 装饰符号Color: CSS color value or variable
+    decoratorColor: string;     // Decorator symbol color: CSS color value or variable
   };
 
   /**
@@ -419,18 +419,18 @@ export interface MarkdownStyleConfig {
     };
     // Strikethrough text
     del: {
-      textDecorationColor: string; // 删除线Color: CSS color value or variable
+      textDecorationColor: string; // Strikethrough color: CSS color value or variable
       opacity: string;          // Opacity: e.g. '0.7', '0.5'
     };
     // Superscript
     sup: {
       fontSize: string;         // Font size: e.g. '0.75em', '12px'
-      verticalAlign: string;    // 垂直Alignment: 'super', 'top'
+      verticalAlign: string;    // Vertical alignment: 'super', 'top'
     };
-    // 下标
+    // Subscript
     sub: {
       fontSize: string;         // Font size: e.g. '0.75em', '12px'
-      verticalAlign: string;    // 垂直Alignment: 'sub', 'bottom'
+      verticalAlign: string;    // Vertical alignment: 'sub', 'bottom'
     };
   };
 }
@@ -438,7 +438,7 @@ export interface MarkdownStyleConfig {
 // Default Markdown style configuration
 export const defaultMarkdownStyle: MarkdownStyleConfig = {
   postHeader: {
-    // 标题样式
+    // Title styles
     fontSize: '1.5em',                                      // Mobile
     fontSizeMd: '1.75em',                                   // Tablet
     fontSizeLg: '2.0em',                                    // Desktop
@@ -446,7 +446,7 @@ export const defaultMarkdownStyle: MarkdownStyleConfig = {
     color: 'var(--md-sys-color-on-surface)',                // Primary text color
     marginBottom: '1.5rem',                                 // Title bottom margin
     lineHeight: '1.2',                                      // Tight line height
-    // 描述样式
+    // Description styles
     descriptionFontSize: '1.000rem',                        // Description font size
     descriptionColor: 'var(--md-sys-color-on-surface-variant)', // Secondary text color
     descriptionFontStyle: 'italic',                         // Italic
