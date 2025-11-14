@@ -21,11 +21,11 @@ export function updateUserContent(lang: Language) {
   // Update tagline (for typewriter effect via data-text)
   const taglineElement = document.querySelector('[data-user-content="tagline"]');
   if (taglineElement && content.tagline) {
-    if (taglineElement.hasAttribute('data-text')) {
-      taglineElement.setAttribute('data-text', content.tagline);
-    } else {
-      taglineElement.textContent = content.tagline;
-    }
+    // Always update data-text attribute for typewriter effect
+    taglineElement.setAttribute('data-text', content.tagline);
+    // Clear the displayed text so typewriter can restart
+    taglineElement.textContent = '';
+    taglineElement.classList.remove('typing-complete');
   }
   
   // Update greeting
@@ -39,13 +39,24 @@ export function updateUserContent(lang: Language) {
  * Initialize user content i18n system
  */
 export function initUserContentI18n() {
+  let isInitialLoad = true;
+  
+  // Listen for language change events
   window.addEventListener('languagechange', (event: Event) => {
     const customEvent = event as CustomEvent<{ lang: Language }>;
     if (customEvent.detail?.lang) {
+      // Update user content
       updateUserContent(customEvent.detail.lang);
     }
   });
   
+  // Initial update based on stored language
+  // This fixes server-side vs client-side language mismatch
   const currentLang = (localStorage.getItem('language') || 'en') as Language;
-  updateUserContent(currentLang);
+  
+  // Update immediately if language is different from default
+  if (isInitialLoad) {
+    updateUserContent(currentLang);
+    isInitialLoad = false;
+  }
 }

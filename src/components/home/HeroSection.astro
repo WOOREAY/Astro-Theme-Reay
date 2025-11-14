@@ -169,8 +169,10 @@ const userContent = getUserContent(currentLang);
   import { initI18n } from '../../scripts/i18n-content-updater';
   import { initUserContentI18n } from '../../scripts/i18n-user-content';
   
-  initTypewriterEffect();
-  initI18n();
+  // IMPORTANT: Initialize user content BEFORE typewriter effect
+  // This ensures the correct language content is loaded before animation starts
   initUserContentI18n();
+  initI18n();
+  initTypewriterEffect();
 </script>
 

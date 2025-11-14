@@ -52,9 +52,13 @@ export class TypewriterEffect {
     this.nameText = this.nameElement.getAttribute('data-text') || '';
     this.descriptionText = this.descriptionElement?.getAttribute('data-text') || '';
     
+    // Listen for language change events to restart animation
     window.addEventListener('languagechange', () => {
-      this.updateTexts();
-      this.restart();
+      // Wait for content update to complete
+      setTimeout(() => {
+        this.updateTexts();
+        this.restart();
+      }, 50);
     });
     
     this.start();
