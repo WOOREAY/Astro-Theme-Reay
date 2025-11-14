@@ -8,64 +8,115 @@ All user settings are in `src/data/user.config.ts`
 
 ## Basic Information
 
+### User Profile (Language-Independent)
+
 ```typescript
 export const user = {
-  // Personal Information
   name: 'Your Name',
-  email: 'your.email@example.com',
-  avatar: '/images/avatar.jpg',
-  bio: 'Your short bio or tagline',
-  
-  // Location (optional)
-  location: 'City, Country',
-  timezone: 'Asia/Shanghai',
+  avatar: '/avatar.png',
+  location: 'Your Location',
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
+    { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/yourusername' },
+    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
+  ],
+  github: {
+    username: 'yourusername',
+    token: '', // Use environment variables instead
+  },
 }
+```
+
+### Multilingual User Content (Single Source of Truth)
+
+**Important**: This is the **only place** to define your personal content. All pages (home, about, etc.) will read from here.
+
+```typescript
+export const userContent = {
+  en: {
+    tagline: 'Your Professional Title · Your Interests',
+    bio: 'Your bio here. Describe yourself, your skills, interests, and what you\'re passionate about.',
+    greeting: 'Hello, I am',
+  },
+  zh: {
+    tagline: '你的职业 · 你的兴趣',
+    bio: '在这里写下你的个人介绍。描述你自己、你的技能、兴趣和热情所在。',
+    greeting: '你好，我是',
+  },
+}
+```
+
+**Fields**:
+- **tagline**: Short professional tagline (shown on home page and about page)
+- **bio**: Brief personal introduction (shown on home page and about page intro)
+- **greeting**: Greeting text for about page (e.g., "Hello, I am" or "你好，我是")
+
+**Why Single Source?**
+- ✅ Define once, use everywhere
+- ✅ Automatic language switching
+- ✅ Easy maintenance
+- ✅ No content duplication
+
+### Usage in Components
+
+```typescript
+import { getUserContent } from '../../data/user.config';
+import { useI18n } from '../../utils/i18n';
+
+const { currentLang } = useI18n();
+const content = getUserContent(currentLang);
+
+// Now use: content.tagline, content.bio, content.greeting
 ```
 
 ### Fields
 
-- **name**: Your display name (shown in header, about page)
-- **email**: Contact email (shown in about page)
-- **avatar**: Path to avatar image (store in `public/images/`)
-- **bio**: Short description (1-2 sentences)
-- **location**: Where you're based (optional)
-- **timezone**: Your timezone for date formatting
+- **name**: Your display name (shown in all pages)
+- **avatar**: Path to avatar image (store in `public/`)
+- **location**: Where you're based
+- **socials**: Array of social links with icons
+- **github.username**: For fetching repository stats
+- **github.token**: Optional, use environment variables for higher API limits
 
 ## Social Links
 
+Social links are defined in the `user.socials` array:
+
 ```typescript
 export const user = {
-  social: {
-    github: 'yourusername',
-    twitter: 'yourusername',
-    linkedin: 'yourusername',
-    email: 'your.email@example.com',
-    
-    // Optional platforms
-    mastodon: '@you@mastodon.social',
-    youtube: 'yourchannel',
-    bilibili: 'your-uid',
-    zhihu: 'yourusername',
-    weibo: 'yourusername',
-  }
+  socials: [
+    { 
+      icon: 'i-carbon:logo-github',  // UnoCSS icon class
+      label: 'GitHub',                // Platform name
+      url: 'https://github.com/yourusername'  // Profile URL
+    },
+    { 
+      icon: 'i-carbon:logo-twitter', 
+      label: 'Twitter', 
+      url: 'https://twitter.com/yourusername' 
+    },
+    { 
+      icon: 'i-carbon:email', 
+      label: 'Email', 
+      url: 'mailto:your.email@example.com' 
+    },
+  ],
 }
 ```
 
-### Supported Platforms
+### Supported Icons (UnoCSS Carbon Icons)
 
-| Platform | Field | Format | Example |
-|----------|-------|--------|---------|
-| GitHub | `github` | Username | `'octocat'` |
-| Twitter/X | `twitter` | Handle (no @) | `'jack'` |
-| LinkedIn | `linkedin` | Username | `'yourname'` |
-| Email | `email` | Email address | `'you@example.com'` |
-| Mastodon | `mastodon` | Full handle | `'@you@mastodon.social'` |
-| YouTube | `youtube` | Channel ID | `'UCxxxxxx'` |
-| Bilibili | `bilibili` | UID | `'12345678'` |
-| 知乎 | `zhihu` | Username | `'yourname'` |
-| Weibo | `weibo` | Username | `'yourname'` |
+| Platform | Icon Class | Example URL |
+|----------|------------|-------------|
+| GitHub | `i-carbon:logo-github` | `https://github.com/username` |
+| Twitter/X | `i-carbon:logo-twitter` | `https://twitter.com/username` |
+| LinkedIn | `i-carbon:logo-linkedin` | `https://linkedin.com/in/username` |
+| Email | `i-carbon:email` | `mailto:your@email.com` |
+| Instagram | `i-carbon:logo-instagram` | `https://instagram.com/username` |
+| YouTube | `i-carbon:logo-youtube` | `https://youtube.com/@username` |
+| Discord | `i-carbon:logo-discord` | `https://discord.gg/invite` |
 
-**Note**: Only configured platforms will be displayed. Leave empty to hide.
+For more icons, see [Icônes](https://icones.js.org/collection/carbon)
 
 ## GitHub Configuration
 

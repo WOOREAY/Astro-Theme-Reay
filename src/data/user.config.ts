@@ -32,15 +32,21 @@ export const user = {
 /**
  * Multilingual user content
  * Add your bio and description in multiple languages
+ * This is the SINGLE SOURCE OF TRUTH for all personal content across the site
  */
 export const userContent = {
   en: {
-    description: 'Your Professional Title · Your Interests',
+    // Short tagline (used in home page subtitle and about page)
+    tagline: 'Your Professional Title · Your Interests',
+    // Brief bio (used in home page and about intro)
     bio: 'Your bio here. Describe yourself, your skills, interests, and what you\'re passionate about.',
+    // About page greeting
+    greeting: 'Hello, I am',
   },
   zh: {
-    description: '你的职业 · 你的兴趣',
+    tagline: '你的职业 · 你的兴趣',
     bio: '在这里写下你的个人介绍。描述你自己、你的技能、兴趣和热情所在。',
+    greeting: '你好,我是',
   },
 } as const;
 
@@ -57,50 +63,11 @@ export function getUserContent(lang: Language = 'en') {
 }
 
 /**
- * About page multilingual configuration
- */
-export const aboutContentConfig = {
-  en: {
-    intro: {
-      title: 'Hello, I am',
-      name: 'Your Name',
-      tagline: 'Developer / Designer / Creator',
-      description: `
-Hello, I'm [Your Name], a developer driven by passion and curiosity.
-
-Currently focusing on modern web development, exploring new technologies,
-and pursuing clean, elegant code and exceptional user experiences.
-
-Feel free to customize this introduction to match your personality and expertise.
-      `.trim(),
-      avatar: '/avatar.png',
-    },
-  },
-  zh: {
-    intro: {
-      title: '你好，我是',
-      name: '你的名字',
-      tagline: '开发者 / 设计师 / 创造者',
-      description: `
-你好，我是 [你的名字]，一个充满热情和好奇心的开发者。
-
-目前专注于现代 Web 开发，探索新技术，
-追求简洁优雅的代码和卓越的用户体验。
-
-请根据你的个性和专长自定义这段介绍。
-      `.trim(),
-      avatar: '/avatar.png',
-    },
-  },
-} as const;
-
-/**
  * About page configuration
  * Customize the sections to showcase your skills, tools, and interests
+ * Personal info (name, bio, avatar) comes from userContent and user config
  */
 export const aboutConfig = {
-  // Personal introduction (uses Chinese as default, change via aboutContentConfig)
-  intro: aboutContentConfig.zh.intro,
 
   /**
    * Custom content sections

@@ -1,6 +1,6 @@
 /**
  * User Content i18n Handler
- * Manages bilingual user-configurable content (bio, description, etc.)
+ * Manages bilingual user-configurable content (bio, tagline, etc.)
  */
 
 import type { Language } from '../data/i18n.config';
@@ -18,14 +18,20 @@ export function updateUserContent(lang: Language) {
     bioElement.textContent = content.bio;
   }
   
-  // Update description (for typewriter effect via data-text)
-  const descriptionElement = document.querySelector('[data-user-content="description"]');
-  if (descriptionElement && content.description) {
-    if (descriptionElement.hasAttribute('data-text')) {
-      descriptionElement.setAttribute('data-text', content.description);
+  // Update tagline (for typewriter effect via data-text)
+  const taglineElement = document.querySelector('[data-user-content="tagline"]');
+  if (taglineElement && content.tagline) {
+    if (taglineElement.hasAttribute('data-text')) {
+      taglineElement.setAttribute('data-text', content.tagline);
     } else {
-      descriptionElement.textContent = content.description;
+      taglineElement.textContent = content.tagline;
     }
+  }
+  
+  // Update greeting
+  const greetingElement = document.querySelector('[data-user-content="greeting"]');
+  if (greetingElement && content.greeting) {
+    greetingElement.textContent = content.greeting;
   }
 }
 

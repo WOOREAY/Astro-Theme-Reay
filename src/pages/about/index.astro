@@ -19,7 +19,6 @@ import { getAllPosts } from '../../utils/blog';
 const { t } = useI18n();
 
 const { 
-  intro, 
   sections,
   timeline,
   socialNetworks, 
@@ -43,13 +42,13 @@ const siteWithStats = {
 };
 ---
 
-<DefaultLayout title={`${t('aboutPage.title')} | Astro Theme Reay`} description={intro.description}>
+<DefaultLayout title={`${t('aboutPage.title')} | Astro Theme Reay`} description={t('aboutPage.subtitle')}>
   <div class="about-page">
     <!-- Page header -->
     <AboutHeader title={t('aboutPage.title')} description={t('aboutPage.subtitle')} />
 
     <!-- Personal introduction -->
-    <AboutIntro intro={intro} />
+    <AboutIntro />
 
     <!-- Dynamically render all custom categories -->
     {sections.map((section) => (
@@ -121,5 +120,8 @@ const siteWithStats = {
 
 <script>
   import { initI18n } from '../../scripts/i18n-content-updater';
+  import { initUserContentI18n } from '../../scripts/i18n-user-content';
+  
   initI18n();
+  initUserContentI18n();
 </script>
