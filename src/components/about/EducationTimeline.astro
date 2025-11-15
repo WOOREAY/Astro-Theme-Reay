@@ -7,12 +7,13 @@ import { useI18n } from '../../utils/i18n';
 
 interface Education {
   school: string;
-  major: string;
+  major?: string;
   degree: string;
   startDate: string;
   endDate: string;
   logo: string;
-  url: string;
+  url?: string;
+  description?: string;
 }
 
 interface Props {
@@ -32,33 +33,47 @@ const { t } = useI18n();
   </div>
 
   <div class="timeline">
-    {education.map((edu, index) => (
-      <a href={edu.url} target="_blank" rel="noopener noreferrer" class="timeline-item">
-        <div class="timeline-marker">
-          <div class="timeline-dot"></div>
-          {index < education.length - 1 && <div class="timeline-line"></div>}
-        </div>
-        
-        <div class="timeline-content">
-          <div class="edu-header">
-            <div class="edu-logo">
-              <img src={edu.logo} alt={edu.school} />
-            </div>
-            <div class="edu-info">
-              <h3 class="edu-school">{edu.school}</h3>
-              <p class="edu-major">{edu.major}</p>
-              <div class="edu-meta">
-                <span class="edu-degree">{edu.degree}</span>
-                <span class="edu-dates">
-                  <i class="i-carbon:calendar"></i>
-                  {edu.startDate} - {edu.endDate}
-                </span>
+    {education.map((edu, index) => {
+      const ItemWrapper = edu.url ? 'a' : 'div';
+      const itemProps = edu.url ? { 
+        href: edu.url, 
+        target: '_blank', 
+        rel: 'noopener noreferrer' 
+      } : {};
+      
+      return (
+        <ItemWrapper class="timeline-item" {...itemProps}>
+          <div class="timeline-marker">
+            <div class="timeline-dot"></div>
+            {index < education.length - 1 && <div class="timeline-line"></div>}
+          </div>
+          
+          <div class="timeline-content">
+            <div class="edu-header">
+              <div class="edu-logo">
+                <img src={edu.logo} alt={edu.school} />
+              </div>
+              <div class="edu-info">
+                <h3 class="edu-school">{edu.school}</h3>
+                {edu.major && <p class="edu-major">{edu.major}</p>}
+                <div class="edu-meta">
+                  <span class="edu-degree">{edu.degree}</span>
+                  <span class="edu-dates">
+                    <i class="i-carbon:calendar"></i>
+                    {edu.startDate} - {edu.endDate}
+                  </span>
+                </div>
               </div>
             </div>
+            {edu.description && (
+              <div class="edu-description">
+                <p>{edu.description}</p>
+              </div>
+            )}
           </div>
-        </div>
-      </a>
-    ))}
+        </ItemWrapper>
+      );
+    })}
   </div>
 </section>
 
@@ -223,6 +238,20 @@ const { t } = useI18n();
 
   .edu-dates i {
     font-size: 0.8125rem;
+  }
+
+  .edu-description {
+    margin-top: 0.75rem;
+    padding: 0.875rem 1rem;
+    background: var(--md-sys-color-surface-variant);
+    border-radius: 10px;
+    font-size: 0.8125rem;
+    line-height: 1.6;
+    color: var(--md-sys-color-on-surface-variant);
+  }
+
+  .edu-description p {
+    margin: 0;
   }
 
   /* Responsive */
