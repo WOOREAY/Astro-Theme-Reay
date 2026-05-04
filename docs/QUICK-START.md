@@ -39,16 +39,16 @@ export const user = {
 
 export const userContent = {
   en: {
-    tagline: 'Your Professional Title · Your Interests',
-    bio: 'Your short bio.',
+    tagline: 'Software Developer · Technical Notes · Project Practice',
+    bio: 'Write a short intro about your engineering focus and active projects.',
     greeting: 'Hello, I am',
-    description: 'A personal site for notes, projects, and ideas.',
+    description: 'A personal technology blog for notes, projects, and long-term learning.',
   },
   zh: {
-    tagline: '你的职业 · 你的兴趣',
-    bio: '你的简短介绍。',
+    tagline: '软件开发者 · 技术笔记 · 项目实践',
+    bio: '在这里写下你的工程方向和正在打磨的项目。',
     greeting: '你好,我是',
-    description: '一个用于记录文章、项目与想法的个人网站。',
+    description: '一个记录技术笔记、项目实践与长期学习的个人博客。',
   },
 }
 ```

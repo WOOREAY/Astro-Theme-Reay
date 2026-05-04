@@ -9,7 +9,7 @@ import type { UserThemeOverrides } from '../theme';
 
 export const themeConfig = {
   // Primary color used to generate the Material Design 3 palette.
-  primary: '#00aaffff',
+  primary: '#00eeff',
 
   typography: {
     fontFamily: 'Inter, "Noto Sans SC", system-ui, sans-serif',

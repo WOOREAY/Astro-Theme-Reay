@@ -89,7 +89,7 @@ export const mySiteInfo = {
   name: 'Your Site Name',
   url: 'https://yourdomain.com',
   avatar: '/avatar.png',
-  description: 'A personal site for notes, projects, and ideas.',
+  description: 'Technical notes, project practice, and long-term learning logs',
 }
 ```
 

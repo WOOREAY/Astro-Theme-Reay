@@ -43,14 +43,16 @@ export const user = {
 ```typescript
 export const userContent = {
   en: {
-    tagline: 'Your Professional Title · Your Interests',
-    bio: 'Your bio here. Describe yourself, your skills, interests, and what you\'re passionate about.',
+    tagline: 'Software Developer · Technical Notes · Project Practice',
+    bio: 'Write a short intro about your engineering focus, current projects, and the technical problems you like to explore.',
     greeting: 'Hello, I am',
+    description: 'A personal technology blog for notes, projects, and long-term learning.',
   },
   zh: {
-    tagline: '你的职业 · 你的兴趣',
-    bio: '在这里写下你的个人介绍。描述你自己、你的技能、兴趣和热情所在。',
+    tagline: '软件开发者 · 技术笔记 · 项目实践',
+    bio: '在这里写下你的工程方向、正在打磨的项目，以及你持续探索的技术问题。',
     greeting: '你好，我是',
+    description: '一个记录技术笔记、项目实践与长期学习的个人博客。',
   },
 }
 ```
@@ -59,6 +61,7 @@ export const userContent = {
 - **tagline**: Short professional tagline (shown on home page and about page)
 - **bio**: Brief personal introduction (shown on home page and about page intro)
 - **greeting**: Greeting text for about page (e.g., "Hello, I am" or "你好，我是")
+- **description**: Site-level intro sentence used by layouts and meta information
 
 **Why Single Source?**
 - ✅ Define once, use everywhere
@@ -163,8 +166,8 @@ Do not commit `.env` or hard-code tokens in `user.config.ts`.
 export const aboutConfig = {
   site: {
     name: 'Your Site Name',
-    description: 'A modern, clean, and elegant Astro blog theme',
-    builtWith: 'Built with Astro + UnoCSS + TypeScript',
+    description: 'A personal technology blog for notes, projects, and long-term learning.',
+    builtWith: 'Built with Astro, UnoCSS, and TypeScript',
     since: '2024',
     stats: {
       posts: 0,
@@ -211,8 +214,8 @@ export const aboutConfig = {
   timeline: [],
   site: {
     name: 'Your Site Name',
-    description: 'A modern, clean, and elegant Astro blog theme',
-    builtWith: 'Built with Astro + UnoCSS + TypeScript',
+    description: 'A personal technology blog for notes, projects, and long-term learning.',
+    builtWith: 'Built with Astro, UnoCSS, and TypeScript',
     since: '2024',
     stats: { posts: 0, words: 0, visitors: 0 },
     techStack: [],

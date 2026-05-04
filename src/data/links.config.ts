@@ -53,7 +53,7 @@ export const linksConfig: LinksConfig = {
       name: 'GitHub',
       url: 'https://github.com/yourusername',
       avatar: 'https://github.githubassets.com/favicons/favicon.png',
-      description: 'View my open source projects',
+      description: 'Code, project experiments, and open-source work',
       category: 'social',
       type: 'social',
     },
@@ -61,7 +61,7 @@ export const linksConfig: LinksConfig = {
       name: 'Twitter',
       url: 'https://twitter.com/yourusername',
       avatar: 'https://abs.twimg.com/favicons/twitter.ico',
-      description: 'Follow my updates',
+      description: 'Short updates and technical notes',
       category: 'social',
       type: 'social',
     },
@@ -87,7 +87,7 @@ export const linksConfig: LinksConfig = {
 
   linkApplicationInfo: {
     title: 'Apply for Link Exchange',
-    description: '',
+    description: 'Share a personal site, technical blog, or useful resource.',
     contacts: [
       { label: 'Email', value: 'your.email@example.com', icon: 'i-carbon:email' },
       { label: 'GitHub', value: 'github.com/yourusername', icon: 'i-carbon:logo-github' },
@@ -99,7 +99,7 @@ export const linksConfig: LinksConfig = {
     name: 'Your Site Name',
     url: 'https://your-site.example.com',
     avatar: '/avatar.png',
-    description: 'Your site tagline or description',
+    description: 'Technical notes, project practice, and long-term learning logs',
   },
 };
 
