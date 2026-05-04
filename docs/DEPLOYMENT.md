@@ -29,7 +29,40 @@ export default defineConfig({
 
 ## Deployment Platforms
 
-### Vercel (Recommended)
+### GitHub Pages (Built In)
+
+The template includes `.github/workflows/deploy.yml`, so GitHub Pages is the default zero-extra-file deployment path.
+
+**Steps:**
+
+1. **Configure site URL**
+
+   For a user or organization site:
+   ```env
+   SITE=https://yourusername.github.io
+   BASE=/
+   ```
+
+   For a project site:
+   ```env
+   SITE=https://yourusername.github.io
+   BASE=/repository-name
+   ```
+
+2. **Enable Pages**
+   - Repository Settings → Pages
+   - Source: GitHub Actions
+
+3. **Push to deploy**
+   ```bash
+   git push origin main
+   ```
+
+4. **Check Actions**
+   - Open the Actions tab
+   - Confirm `Deploy to GitHub Pages` completed successfully
+
+### Vercel
 
 **Why Vercel:**
 - Zero configuration
@@ -102,73 +135,6 @@ GITHUB_TOKEN=your_token_here
 4. **Custom Domain**
    - Domain Settings → Add custom domain
    - Update DNS records
-
-### GitHub Pages
-
-**Steps:**
-
-1. **Install adapter**
-   ```bash
-   npm install -D @astrojs/gh-pages
-   ```
-
-2. **Update astro.config.mjs**
-   ```javascript
-   export default defineConfig({
-     site: 'https://username.github.io',
-     base: '/repository-name',  // If not using custom domain
-   })
-   ```
-
-3. **Add workflow file**
-
-   Create `.github/workflows/deploy.yml`:
-   ```yaml
-   name: Deploy to GitHub Pages
-
-   on:
-     push:
-       branches: [main]
-     workflow_dispatch:
-
-   permissions:
-     contents: read
-     pages: write
-     id-token: write
-
-   jobs:
-     build:
-       runs-on: ubuntu-latest
-       steps:
-         - uses: actions/checkout@v4
-         - uses: actions/setup-node@v4
-           with:
-             node-version: 18
-         - run: npm ci
-         - run: npm run build
-         - uses: actions/upload-pages-artifact@v2
-           with:
-             path: dist
-
-     deploy:
-       needs: build
-       runs-on: ubuntu-latest
-       environment:
-         name: github-pages
-         url: ${{ steps.deployment.outputs.page_url }}
-       steps:
-         - uses: actions/deploy-pages@v2
-           id: deployment
-   ```
-
-4. **Enable Pages**
-   - Repository Settings → Pages
-   - Source: GitHub Actions
-
-5. **Push to deploy**
-   ```bash
-   git push
-   ```
 
 ### Cloudflare Pages
 
@@ -474,7 +440,7 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: 18
+          node-version: 20
       - run: npm ci
       - run: npm run build
       # Upload to your hosting provider
@@ -583,5 +549,5 @@ Before deploying:
 ## Related Documentation
 
 - [User Configuration](./USER-CONFIG.md)
-- [Performance Guide](./PERFORMANCE.md)
+- [Deployment Checklist](./DEPLOYMENT-CHECKLIST.md)
 - [Project Structure](./PROJECT-STRUCTURE.md)

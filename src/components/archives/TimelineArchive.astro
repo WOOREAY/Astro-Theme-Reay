@@ -211,20 +211,28 @@ const groupByMonthFn = (posts: CollectionEntry<'blog'>[]) => {
     display: flex;
     gap: 1rem;
     padding: 1.25rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: var(--reay-card-radius);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition:
+      transform 0.36s var(--reay-ease-out),
+      background 0.32s ease,
+      border-color 0.32s ease,
+      box-shadow 0.32s ease;
     position: relative;
+    overflow: hidden;
   }
 
   .post-item:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
-    transform: translateX(8px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    transform: translateX(6px) translateY(-2px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .post-marker {
@@ -295,10 +303,11 @@ const groupByMonthFn = (posts: CollectionEntry<'blog'>[]) => {
     gap: 0.25rem;
     padding: 0.25rem 0.625rem;
     font-size: 0.75rem;
-    background: var(--md-sys-color-surface-container);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 6px;
+    background: var(--reay-chip-bg);
+    border: 1px solid var(--reay-chip-border);
+    border-radius: 999px;
     color: var(--md-sys-color-on-surface-variant);
+    box-shadow: 0 8px 18px rgba(var(--md-sys-color-primary-rgb), 0.08);
   }
 
   @media (max-width: 768px) {

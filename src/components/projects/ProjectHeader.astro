@@ -29,20 +29,20 @@ const { t } = useI18n();
   
   <!-- 统计信息 -->
   <div class="projects-stats">
-    <div class="stat-item">
+    <div class="stat-item reay-chip">
       <i class="i-carbon:folder"></i>
       <span class="stat-value">{totalProjects}</span>
-      <span class="stat-label" data-i18n="projects.stats.featured">{t('projects.stats.featured')}</span>
+      <span class="stat-label" data-i18n="projects.stats.projects">{t('projects.stats.projects')}</span>
     </div>
-    <div class="stat-item">
+    <div class="stat-item reay-chip">
       <i class="i-carbon:star"></i>
       <span class="stat-value">{formatNumber(totalStars)}</span>
       <span class="stat-label" data-i18n="projects.stats.stars">{t('projects.stats.stars')}</span>
     </div>
-    <div class="stat-item">
+    <div class="stat-item reay-chip">
       <i class="i-carbon:branch"></i>
       <span class="stat-value">{formatNumber(totalForks)}</span>
-      <span class="stat-label">Forks</span>
+      <span class="stat-label" data-i18n="projects.stats.forks">{t('projects.stats.forks')}</span>
     </div>
   </div>
 </header>
@@ -103,8 +103,8 @@ const { t } = useI18n();
 
   /* 使用统一的卡片样式 */
   .stat-item {
-    background: var(--md-sys-color-surface-container-low);
-    border: 1.5px solid var(--md-sys-color-outline-variant);
+    background: rgba(var(--md-sys-color-surface-container-rgb), 0.5);
+    border: 1px solid var(--reay-button-border);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -122,8 +122,8 @@ const { t } = useI18n();
   }
 
   .stat-item:hover {
-    background: var(--md-sys-color-primary-container);
-    border-color: var(--md-sys-color-primary);
+    background: var(--reay-button-bg-hover);
+    border-color: rgba(var(--md-sys-color-primary-rgb), 0.44);
     transform: translateY(-1px) scale(1.02);
   }
 

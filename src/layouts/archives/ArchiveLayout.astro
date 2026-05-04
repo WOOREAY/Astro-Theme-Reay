@@ -11,6 +11,8 @@ const { t } = useI18n();
 interface Props {
   title: string;
   description: string;
+  titleKey?: string;
+  descriptionKey?: string;
   showBackButton?: boolean;
   backUrl?: string;
 }
@@ -18,9 +20,13 @@ interface Props {
 const { 
   title, 
   description, 
+  titleKey,
+  descriptionKey,
   showBackButton = true,
   backUrl = '/blog'
 } = Astro.props;
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 ---
 
 <DefaultLayout title={title} description={description}>
@@ -30,9 +36,9 @@ const {
       <div class="header-content">
         <h1 class="page-title">
           <i class="i-carbon:analytics"></i>
-          <span data-i18n="archives.stats.title">{title}</span>
+          <span data-i18n={titleKey}>{title}</span>
         </h1>
-        <p class="page-description" data-i18n="archives.subtitle">{description}</p>
+        <p class="page-description" data-i18n={descriptionKey}>{description}</p>
       </div>
 
       <!-- Navigation tabs -->
@@ -40,7 +46,7 @@ const {
         <a 
           href="/archives" 
           class="nav-item"
-          class:list={[{ active: Astro.url.pathname === '/archives' }]}
+          class:list={[{ active: currentPath === '/archives' }]}
         >
           <i class="i-carbon:analytics"></i>
           <span data-i18n="archives.nav.overview">{t('archives.nav.overview')}</span>
@@ -48,7 +54,7 @@ const {
         <a 
           href="/archives/tags" 
           class="nav-item"
-          class:list={[{ active: Astro.url.pathname.startsWith('/archives/tags') }]}
+          class:list={[{ active: currentPath.startsWith('/archives/tags') }]}
         >
           <i class="i-carbon:tag"></i>
           <span data-i18n="archives.nav.tags">{t('archives.nav.tags')}</span>
@@ -56,7 +62,7 @@ const {
         <a 
           href="/archives/series" 
           class="nav-item"
-          class:list={[{ active: Astro.url.pathname.startsWith('/archives/series') }]}
+          class:list={[{ active: currentPath.startsWith('/archives/series') }]}
         >
           <i class="i-carbon:folder"></i>
           <span data-i18n="archives.nav.series">{t('archives.nav.series')}</span>
@@ -64,7 +70,7 @@ const {
         <a 
           href="/archives/timeline" 
           class="nav-item"
-          class:list={[{ active: Astro.url.pathname.startsWith('/archives/timeline') }]}
+          class:list={[{ active: currentPath.startsWith('/archives/timeline') }]}
         >
           <i class="i-carbon:time"></i>
           <span data-i18n="archives.nav.timeline">{t('archives.nav.timeline')}</span>
@@ -129,9 +135,12 @@ const {
     justify-content: center;
     gap: 0.5rem;
     padding: 0.5rem;
-    background: var(--md-sys-color-surface-container-lowest);
+    background: var(--reay-surface-bg);
     border-radius: 12px;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
     overflow-x: auto;
   }
 
@@ -144,7 +153,7 @@ const {
     font-weight: 500;
     color: var(--md-sys-color-on-surface-variant);
     text-decoration: none;
-    border-radius: 8px;
+    border-radius: 999px;
     transition: all 0.3s ease;
     white-space: nowrap;
     position: relative;
@@ -156,7 +165,7 @@ const {
     position: absolute;
     inset: 0;
     border-radius: 8px;
-    background: var(--md-sys-color-primary);
+    background: linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.12));
     opacity: 0;
     transition: opacity 0.3s ease;
   }
@@ -166,16 +175,15 @@ const {
   }
 
   .nav-item.active {
-    background: transparent;
-    color: var(--md-sys-color-on-surface-variant);
-  }
-  
-  .nav-item.active > * {
-    opacity: 0.4;
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.2), rgba(var(--md-sys-color-tertiary-rgb), 0.14)),
+      rgba(var(--md-sys-color-surface-container-rgb), 0.42);
+    color: var(--md-sys-color-primary);
+    box-shadow: var(--reay-button-shadow);
   }
 
   .nav-item.active::before {
-    opacity: 0;
+    opacity: 1;
   }
 
   .nav-item i {
@@ -183,7 +191,7 @@ const {
   }
 
   .archive-main {
-    animation: fadeInUp 0.5s ease-out;
+    animation: none;
   }
 
   @keyframes fadeInUp {

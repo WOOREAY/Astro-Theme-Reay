@@ -1,11 +1,11 @@
 ---
 /**
  * Blog post detail page
- * Route: /blog/[slug]
+ * Route: /blog/[...slug]
  */
 import { getCollection, render } from 'astro:content';
 import BlogPostLayout from '../../layouts/blog/BlogPostLayout.astro';
-import { getSlugFromPostId } from '../../utils/blog';
+import { getPostSlug } from '../../utils/blog';
 import type { CollectionEntry } from 'astro:content';
 
 // Generate static paths for all posts
@@ -16,7 +16,7 @@ export async function getStaticPaths() {
   });
   
   return posts.map((post) => ({
-    params: { slug: getSlugFromPostId(post.id) },
+    params: { slug: getPostSlug(post) },
     props: { post }
   }));
 }

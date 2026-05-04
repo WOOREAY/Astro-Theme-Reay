@@ -72,24 +72,27 @@ function getGradient(name: string): string {
     position: relative;
     display: block;
     height: 160px;
-    border-radius: 10px;
+    border-radius: 1.1rem;
     overflow: hidden;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
     text-decoration: none;
-    transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+    transition:
+      transform 0.28s var(--reay-ease-out, ease),
+      border-color 0.28s ease,
+      background 0.28s ease,
+      box-shadow 0.28s ease;
     cursor: pointer;
     will-change: transform, box-shadow;
-    
-    /* Initial state */
-    opacity: 0;
-    transform: translateY(20px);
+    opacity: 1;
+    transform: translateY(0);
   }
 
   /* Scroll fade-in animation */
   .link-card-simple.animate-in {
-    animation: fadeInUp 0.6s cubic-bezier(0.4, 0, 0.2, 1) forwards;
-    animation-delay: var(--animation-delay, 0ms);
+    opacity: 1;
+    transform: translateY(0);
   }
 
   @keyframes fadeInUp {
@@ -109,7 +112,7 @@ function getGradient(name: string): string {
     inset: 0;
     z-index: 1;
     background: var(--card-gradient);
-    opacity: 0.8;
+    opacity: 0.62;
     transition: all 0.6s cubic-bezier(0.4, 0, 0.2, 1);
   }
 
@@ -118,12 +121,10 @@ function getGradient(name: string): string {
     position: absolute;
     inset: 0;
     z-index: 2;
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary-container) 0%,
-      var(--md-sys-color-tertiary-container) 100%
-    );
-    opacity: 0.92;
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-surface-rgb), 0.76), rgba(var(--md-sys-color-surface-container-rgb), 0.44)),
+      linear-gradient(315deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.12));
+    opacity: 0.9;
     backdrop-filter: blur(20px) saturate(1.4);
     -webkit-backdrop-filter: blur(20px) saturate(1.4);
     transition: opacity 0.5s cubic-bezier(0.4, 0, 0.2, 1),
@@ -173,7 +174,7 @@ function getGradient(name: string): string {
     width: 24px;
     height: 24px;
     background: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
+    color: var(--md-sys-color-on-surface);
     border-radius: 50%;
     box-shadow: 0 2px 6px var(--md-sys-color-shadow);
     font-size: 0.6875rem;
@@ -197,7 +198,7 @@ function getGradient(name: string): string {
 
   .card-description {
     font-size: 0.75rem;
-    color: var(--md-sys-color-on-tertiary-container);
+    color: var(--md-sys-color-on-surface-variant);
     line-height: 1.4;
     margin: 0;
     display: -webkit-box;
@@ -224,16 +225,16 @@ function getGradient(name: string): string {
 
   /* Hover effects */
   .link-card-simple:hover {
-    transform: translateY(-8px) scale(1.02);
-    box-shadow: 0 12px 32px rgba(0, 0, 0, 0.15);
-    border-color: var(--md-sys-color-primary);
+    transform: translateY(-4px);
+    box-shadow: var(--reay-surface-shadow-hover);
+    border-color: var(--reay-surface-border-hover);
     z-index: 10;
   }
 
   .link-card-simple:hover .card-overlay {
-    opacity: 0.1;
-    backdrop-filter: blur(2px);
-    -webkit-backdrop-filter: blur(2px);
+    opacity: 0.34;
+    backdrop-filter: blur(6px) saturate(1.2);
+    -webkit-backdrop-filter: blur(6px) saturate(1.2);
   }
 
   .link-card-simple:hover .card-background {

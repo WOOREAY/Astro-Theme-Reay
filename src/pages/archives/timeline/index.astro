@@ -20,34 +20,36 @@ const latestYear = postsByYear[0]?.[0];
 ---
 
 <ArchiveLayout
-  title="Timeline"
-  description={`From ${firstYear} to ${latestYear}, ${totalPosts} posts in total`}
+  title={t('archives.timeline.title')}
+  description={t('archives.timeline.subtitle')}
+  titleKey="archives.timeline.title"
+  descriptionKey="archives.timeline.subtitle"
   showBackButton={true}
   backUrl="/archives"
 >
   <!-- Timeline statistics -->
   <div class="timeline-summary">
-    <div class="summary-card">
+    <div class="summary-card reay-card">
       <div class="summary-icon">
         <i class="i-carbon:calendar"></i>
       </div>
       <div class="summary-content">
         <div class="summary-value">{totalYears}</div>
-        <div class="summary-label">Years Span</div>
+        <div class="summary-label" data-i18n="archives.timeline.yearsSpan">{t('archives.timeline.yearsSpan')}</div>
       </div>
     </div>
 
-    <div class="summary-card">
+    <div class="summary-card reay-card">
       <div class="summary-icon">
         <i class="i-carbon:document"></i>
       </div>
       <div class="summary-content">
         <div class="summary-value">{totalPosts}</div>
-        <div class="summary-label">Total Posts</div>
+        <div class="summary-label" data-i18n="archives.timeline.totalPosts">{t('archives.timeline.totalPosts')}</div>
       </div>
     </div>
 
-    <div class="summary-card">
+    <div class="summary-card reay-card">
       <div class="summary-icon">
         <i class="i-carbon:growth"></i>
       </div>
@@ -55,17 +57,17 @@ const latestYear = postsByYear[0]?.[0];
         <div class="summary-value">
           {totalYears > 0 ? Math.round(totalPosts / totalYears) : 0}
         </div>
-        <div class="summary-label">Average Output</div>
+        <div class="summary-label" data-i18n="archives.timeline.averageOutput">{t('archives.timeline.averageOutput')}</div>
       </div>
     </div>
 
-    <div class="summary-card">
+    <div class="summary-card reay-card">
       <div class="summary-icon">
         <i class="i-carbon:time"></i>
       </div>
       <div class="summary-content">
         <div class="summary-value">{firstYear}-{latestYear}</div>
-        <div class="summary-label">Time Range</div>
+        <div class="summary-label" data-i18n="archives.timeline.timeRange">{t('archives.timeline.timeRange')}</div>
       </div>
     </div>
   </div>
@@ -99,8 +101,8 @@ const latestYear = postsByYear[0]?.[0];
   ) : (
     <div class="empty-state">
       <i class="i-carbon:document-blank"></i>
-      <h3>No Posts Yet</h3>
-      <p>No posts have been published yet. Start creating!</p>
+      <h3 data-i18n="archives.empty.posts.title">{t('archives.empty.posts.title')}</h3>
+      <p data-i18n="archives.empty.posts.description">{t('archives.empty.posts.description')}</p>
     </div>
   )}
 
@@ -123,16 +125,16 @@ const latestYear = postsByYear[0]?.[0];
     align-items: center;
     gap: 1rem;
     padding: 1.5rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: 1.1rem;
     transition: all 0.3s ease;
   }
 
   .summary-card:hover {
-    background: var(--md-sys-color-surface-container);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--reay-surface-bg-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .summary-icon {

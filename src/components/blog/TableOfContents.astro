@@ -487,13 +487,16 @@ if (!headings || headings.length === 0) {
         const href = link.getAttribute('href');
         if (!href) return;
         
-        const targetId = href.slice(1);
+        const targetId = decodeURIComponent(href.slice(1));
         const targetHeading = document.getElementById(targetId);
         
         if (targetHeading) {
-          const yOffset = -100;
-          const y = targetHeading.getBoundingClientRect().top + window.pageYOffset + yOffset;
+          const scrollMarginTop = Number.parseFloat(
+            window.getComputedStyle(targetHeading).scrollMarginTop || '0'
+          );
+          const y = targetHeading.getBoundingClientRect().top + window.pageYOffset - scrollMarginTop;
           
+          window.history.pushState(null, '', `#${encodeURIComponent(targetId)}`);
           window.scrollTo({
             top: y,
             behavior: 'smooth'

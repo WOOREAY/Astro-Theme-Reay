@@ -7,6 +7,9 @@
 
 import { user } from './user.config';
 
+/**
+ * Project category interface
+ */
 export interface ProjectCategory {
   id: string;
   name: string;
@@ -14,6 +17,9 @@ export interface ProjectCategory {
   icon: string;
 }
 
+/**
+ * GitHub repository reference interface
+ */
 export interface ProjectRepo {
   owner: string;
   repo: string;
@@ -21,6 +27,39 @@ export interface ProjectRepo {
   featured?: boolean;
   customDescription?: string;
   tags?: string[];
+}
+
+/**
+ * GitHub configuration interface
+ */
+export interface GithubConfig {
+  username: string;
+  token?: string;
+  excludeRepos?: string[];
+  includeForked?: boolean;
+}
+
+/**
+ * Project display settings interface
+ */
+export interface ProjectDisplaySettings {
+  itemsPerPage: number;
+  showLanguages: boolean;
+  showStars: boolean;
+  showForks: boolean;
+  showLastUpdate: boolean;
+  defaultSort: 'stars' | 'updated' | 'created' | 'name';
+}
+
+/**
+ * Complete projects configuration interface
+ */
+export interface ProjectsConfig {
+  categories: ProjectCategory[];
+  githubUsername: string;
+  githubConfig: GithubConfig;
+  displaySettings: ProjectDisplaySettings;
+  featuredRepos?: ProjectRepo[];
 }
 
 /**
@@ -70,4 +109,56 @@ export const projectCategories: ProjectCategory[] = [
  * GitHub username (loaded from user.config)
  * Projects will be automatically fetched from your GitHub profile
  */
-export const githubUsername = user.github.username;
+export const githubUsername: string = user.github.username;
+
+/**
+ * GitHub configuration
+ * Controls how projects are fetched from GitHub
+ */
+export const githubConfig: GithubConfig = {
+  username: user.github.username,
+  token: user.github.token,
+  excludeRepos: [],
+  includeForked: false,
+};
+
+/**
+ * Project display settings
+ * Configure how projects are displayed on the page
+ */
+export const projectDisplaySettings: ProjectDisplaySettings = {
+  itemsPerPage: 12,
+  showLanguages: true,
+  showStars: true,
+  showForks: true,
+  showLastUpdate: true,
+  defaultSort: 'updated',
+};
+
+/**
+ * Featured repositories (optional)
+ * Manually specify repositories to feature
+ */
+export const featuredRepos: ProjectRepo[] = [
+  // Example:
+  // {
+  //   owner: 'yourusername',
+  //   repo: 'your-project',
+  //   category: 'frontend',
+  //   featured: true,
+  //   customDescription: 'A modern project built with Astro',
+  //   tags: ['astro', 'typescript', 'material-design'],
+  // },
+];
+
+/**
+ * Complete projects configuration export
+ * Aggregates all project-related configurations in one place
+ */
+export const projectsConfig: ProjectsConfig = {
+  categories: projectCategories,
+  githubUsername,
+  githubConfig,
+  displaySettings: projectDisplaySettings,
+  featuredRepos,
+};

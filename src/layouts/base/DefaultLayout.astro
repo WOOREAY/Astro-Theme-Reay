@@ -9,13 +9,14 @@ import HeadMeta from '../../components/common/HeadMeta.astro'
 import Header from '../../components/common/Header.astro'
 import Footer from '../../components/common/Footer.astro'
 import Container from '../../components/common/Container.astro'
-import ThemeToggle from '../../components/common/ThemeToggle.astro'
 import Background from '../../components/common/Background.astro'
+import I18nRuntime from '../../components/common/I18nRuntime.astro'
 
 import { createTheme, themeToCSSVars } from '../../theme'
 import { themeConfig } from '../../data/theme.config'
 
 import '../../styles/cards.css'
+import '../../styles/immersive.css'
 
 const {
   title = 'Astro Theme Reay',
@@ -52,6 +53,8 @@ const THEME = createTheme(themeConfig)
         }
       })();
     </script>
+
+    <I18nRuntime />
     
     <HeadMeta {title} {description} {ogImage} />
 
@@ -85,6 +88,12 @@ const THEME = createTheme(themeConfig)
       
       /* Smooth scrolling behavior */
       html{ scroll-behavior: smooth; }
+
+      html.i18n-syncing *,
+      html.i18n-syncing *::before,
+      html.i18n-syncing *::after {
+        transition: none !important;
+      }
       
       /* Global border-radius inheritance */
       * {
@@ -141,13 +150,12 @@ const THEME = createTheme(themeConfig)
     </style>
   </head>
 
-  <body class="antialiased">
+  <body class="antialiased layout-default">
     <!-- Unified background -->
     <Background />
     
     <!-- Header -->
     <Header>
-      <ThemeToggle />
       <slot name="header-extra" />
     </Header>
 

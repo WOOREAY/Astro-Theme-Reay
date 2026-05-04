@@ -55,7 +55,7 @@ npm --version   # Should be 7.0.0 or higher
 1. **Clone the repository**
 
    ```bash
-   git clone https://github.com/wooreay/Astro-Theme-Reay.git
+   git clone https://github.com/yourusername/Astro-Theme-Reay.git
    cd Astro-Theme-Reay
    ```
 2. **Remove existing Git history** (optional)
@@ -225,7 +225,7 @@ The project includes `.vscode/settings.json` with optimal configuration.
 If you encounter issues:
 
 1. Check [Common Issues](#common-issues) above
-2. Search [GitHub Issues](https://github.com/wooreay/Astro-Theme-Reay/issues)
+2. Search [GitHub Issues](https://github.com/yourusername/Astro-Theme-Reay/issues)
 3. Create a new issue with:
    - Node.js version
    - npm/pnpm version
@@ -236,5 +236,5 @@ If you encounter issues:
 ## Support
 
 - 📖 Read the [documentation](./README.md)
-- 🐛 Report bugs on [GitHub Issues](https://github.com/wooreay/Astro-Theme-Reay/issues)
-- 💬 Ask questions in [Discussions](https://github.com/wooreay/Astro-Theme-Reay/discussions)
+- 🐛 Report bugs on [GitHub Issues](https://github.com/yourusername/Astro-Theme-Reay/issues)
+- 💬 Ask questions in [Discussions](https://github.com/yourusername/Astro-Theme-Reay/discussions)

@@ -17,11 +17,10 @@ export class LinksAnimation {
    * Initialize animations
    */
   private init() {
-    // Setup intersection observer for scroll-triggered animations
-    this.setupIntersectionObserver();
-    
-    // Add stagger delays to create cascading animation effect
-    this.setupStaggerAnimation();
+    this.cards.forEach((card) => {
+      card.classList.add('animate-in');
+      card.style.removeProperty('--animation-delay');
+    });
   }
 
   /**

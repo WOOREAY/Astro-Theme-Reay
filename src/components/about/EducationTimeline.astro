@@ -11,7 +11,7 @@ interface Education {
   degree: string;
   startDate: string;
   endDate: string;
-  logo: string;
+  logo?: string;
   url?: string;
   description?: string;
 }
@@ -50,9 +50,15 @@ const { t } = useI18n();
           
           <div class="timeline-content">
             <div class="edu-header">
-              <div class="edu-logo">
-                <img src={edu.logo} alt={edu.school} />
-              </div>
+              {edu.logo ? (
+                <div class="edu-logo">
+                  <img src={edu.logo} alt={edu.school} />
+                </div>
+              ) : (
+                <div class="edu-logo edu-logo-fallback">
+                  <i class="i-carbon:education"></i>
+                </div>
+              )}
               <div class="edu-info">
                 <h3 class="edu-school">{edu.school}</h3>
                 {edu.major && <p class="edu-major">{edu.major}</p>}
@@ -190,6 +196,13 @@ const { t } = useI18n();
     width: 100%;
     height: 100%;
     object-fit: cover;
+  }
+
+  .edu-logo-fallback {
+    display: grid;
+    place-items: center;
+    color: var(--md-sys-color-secondary);
+    font-size: 1.5rem;
   }
 
   .edu-info {

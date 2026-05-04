@@ -9,6 +9,9 @@ import ProjectDetailHeader from '../../../components/projects/ProjectDetailHeade
 import ReadmeContent from '../../../components/projects/ReadmeContent.astro';
 import { getGitHubRepo, getRepoReadme, getUserRepos } from '../../../utils/github';
 import { githubUsername } from '../../../data/projects.config';
+import { useI18n } from '../../../utils/i18n';
+
+const { t } = useI18n();
 
 // Generate static paths
 export async function getStaticPaths() {
@@ -66,7 +69,7 @@ const htmlContent = await marked(processedContent);
   <!-- Back button -->
   <button class="back-button" onclick="history.back()">
     <i class="i-carbon:arrow-left"></i>
-    <span>Back to Projects</span>
+    <span data-i18n="projectsPage.back">{t('projectsPage.back')}</span>
   </button>
 
   <!-- Project header info -->

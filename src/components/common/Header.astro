@@ -10,30 +10,37 @@
 import { user } from '../../data/user.config';
 import LanguageToggle from './LanguageToggle.astro';
 import { useI18n } from '../../utils/i18n';
+import ThemeToggle from './ThemeToggle.astro';
 
 const { t } = useI18n();
 
 const links = [
-  { href: '/', label: t('nav.home') },
-  { href: '/blog', label: t('nav.blog') },
-  { href: '/archives', label: t('nav.archives') },
-  { href: '/projects', label: t('nav.projects') },
-  { href: '/links', label: t('nav.links') },
-  { href: '/about', label: t('nav.about') },
+  { href: '/', key: 'nav.home' as const, label: t('nav.home') },
+  { href: '/blog', key: 'nav.blog' as const, label: t('nav.blog') },
+  { href: '/archives', key: 'nav.archives' as const, label: t('nav.archives') },
+  { href: '/projects', key: 'nav.projects' as const, label: t('nav.projects') },
+  { href: '/links', key: 'nav.links' as const, label: t('nav.links') },
+  { href: '/about', key: 'nav.about' as const, label: t('nav.about') },
 ];
+
+const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
+const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
 ---
-<header class="sticky top-0 z-20 bg-[var(--md-sys-color-surface)]/80 backdrop-blur-xl supports-backdrop-blur:bg-[var(--md-sys-color-surface)]/60 border-b border-[var(--md-sys-color-outline)]/5 shadow-sm">
+<header class="site-header sticky top-0 z-20">
   <div class="mx-auto max-w-1100px px-4 sm:px-6 h-16 flex items-center justify-between gap-4">
     <!-- Brand with avatar -->
     <a 
       href="/" 
-      class="text-lg sm:text-xl font-700 text-[var(--md-sys-color-primary)] hover:scale-105 transition-transform duration-200 flex items-center gap-2.5"
+      class="brand-link text-lg sm:text-xl font-800 text-[var(--md-sys-color-primary)] flex items-center gap-2.5"
+      aria-label={`${user.name} Home`}
     >
-      <img 
-        src="/avatar.png" 
-        alt={user.name}
-        class="w-8 h-8 rounded-full object-cover shadow-md ring-2 ring-[var(--md-sys-color-primary)]/20"
-      />
+      <span class="brand-avatar-wrap">
+        <img 
+          src="/avatar.png" 
+          alt={user.name}
+          class="brand-avatar w-8 h-8 rounded-full object-cover"
+        />
+      </span>
       <span class="hidden sm:inline">{user.name}</span>
     </a>
 
@@ -42,13 +49,18 @@ const links = [
       {links.map(l => (
         <a 
           href={l.href} 
-          class="px-3.5 py-2 rounded-full text-sm font-500 hover:bg-[var(--md-sys-color-primary-container)]/30 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-md hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 backdrop-blur-sm"
+          class:list={[
+            'nav-link px-3.5 py-2 text-sm font-600',
+            isActive(l.href) && 'is-active'
+          ]}
+          aria-current={isActive(l.href) ? 'page' : undefined}
         >
-          {l.label}
+          <span data-i18n={l.key}>{l.label}</span>
         </a>
       ))}
       <div class="ml-2 flex items-center gap-2">
         <LanguageToggle />
+        <ThemeToggle />
         <slot />
       </div>
     </nav>
@@ -56,10 +68,11 @@ const links = [
     <!-- Mobile controls group -->
     <div class="lg:hidden flex items-center gap-2">
       <LanguageToggle />
+      <ThemeToggle />
       <slot />
       <button
         id="menu-btn"
-        class="inline-flex items-center justify-center w-9 h-9 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/40 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-lg hover:-translate-y-0.5 active:translate-y-0 transition-all duration-300 backdrop-blur-sm border border-[var(--md-sys-color-outline)]/10"
+        class="menu-button inline-flex items-center justify-center w-9 h-9"
         aria-label="Open menu"
         aria-controls="mobile-menu"
         aria-expanded="false"
@@ -70,24 +83,170 @@ const links = [
   </div>
 
   <!-- Mobile menu with glass morphism -->
-  <div id="mobile-menu" class="lg:hidden hidden bg-[var(--md-sys-color-surface)]/95 backdrop-blur-xl border-t border-[var(--md-sys-color-outline)]/10">
+  <div id="mobile-menu" class="mobile-menu lg:hidden hidden">
     <nav class="mx-auto max-w-1100px px-4 sm:px-6 py-4 grid gap-1 text-[var(--md-sys-color-on-surface)]">
       {links.map(l => (
         <a 
           href={l.href} 
-          class="px-4 py-2.5 rounded-lg text-sm font-500 hover:bg-[var(--md-sys-color-primary-container)]/30 hover:text-[var(--md-sys-color-on-primary-container)] hover:shadow-md hover:translate-x-1 transition-all duration-300"
+          class:list={[
+            'mobile-nav-link px-4 py-2.5 text-sm font-600',
+            isActive(l.href) && 'is-active'
+          ]}
+          aria-current={isActive(l.href) ? 'page' : undefined}
         >
-          {l.label}
+          <span data-i18n={l.key}>{l.label}</span>
         </a>
       ))}
-  </nav>
+    </nav>
+  </div>
 </header>
+
+<style>
+  .site-header {
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-surface-rgb), 0.72), rgba(var(--md-sys-color-surface-container-rgb), 0.46)),
+      linear-gradient(90deg, rgba(var(--md-sys-color-primary-rgb), 0.12), rgba(var(--md-sys-color-tertiary-rgb), 0.1));
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.34);
+    box-shadow:
+      0 18px 45px -38px rgba(0, 0, 0, 0.65),
+      inset 0 1px 0 rgba(255, 255, 255, 0.22);
+    backdrop-filter: blur(24px) saturate(165%);
+    -webkit-backdrop-filter: blur(24px) saturate(165%);
+  }
+
+  .site-header::after {
+    content: '';
+    position: absolute;
+    left: 0;
+    right: 0;
+    bottom: -1px;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--md-sys-color-primary), var(--md-sys-color-tertiary), transparent);
+    opacity: 0.48;
+  }
+
+  .brand-link {
+    position: relative;
+    transition: transform 0.35s var(--reay-ease-spring, ease);
+  }
+
+  .brand-link:hover {
+    transform: translateY(-1px) scale(1.03);
+    color: var(--md-sys-color-primary);
+  }
+
+  .brand-avatar-wrap {
+    position: relative;
+    display: inline-grid;
+    place-items: center;
+    width: 2.35rem;
+    height: 2.35rem;
+    border-radius: 999px;
+    background: conic-gradient(from 180deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary), var(--md-ref-palette-warning), var(--md-sys-color-primary));
+    box-shadow: 0 0 22px rgba(var(--md-sys-color-primary-rgb), 0.28);
+  }
+
+  .brand-avatar {
+    width: 2rem;
+    height: 2rem;
+    border: 2px solid rgba(var(--md-sys-color-surface-rgb), 0.82);
+  }
+
+  .nav-link,
+  .mobile-nav-link,
+  .menu-button {
+    position: relative;
+    border-radius: 999px;
+    transition:
+      color 0.3s var(--reay-ease-out, ease),
+      background 0.3s var(--reay-ease-out, ease),
+      box-shadow 0.3s var(--reay-ease-out, ease),
+      transform 0.3s var(--reay-ease-out, ease);
+  }
+
+  .nav-link {
+    overflow: hidden;
+  }
+
+  .nav-link::before {
+    content: '';
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.14));
+    opacity: 0;
+    transition: opacity 0.3s ease;
+  }
+
+  .nav-link::after {
+    content: '';
+    position: absolute;
+    left: 20%;
+    right: 20%;
+    bottom: 0.35rem;
+    height: 2px;
+    border-radius: 999px;
+    background: linear-gradient(90deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary));
+    transform: scaleX(0);
+    transform-origin: center;
+    transition: transform 0.3s var(--reay-ease-out, ease);
+  }
+
+  .nav-link:hover,
+  .nav-link.is-active {
+    color: var(--md-sys-color-primary);
+    transform: translateY(-1px);
+    box-shadow: 0 12px 28px -18px rgba(var(--md-sys-color-primary-rgb), 0.55);
+  }
+
+  .nav-link:hover::before,
+  .nav-link.is-active::before {
+    opacity: 1;
+  }
+
+  .nav-link:hover::after,
+  .nav-link.is-active::after {
+    transform: scaleX(1);
+  }
+
+  .menu-button {
+    border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
+    background: rgba(var(--md-sys-color-surface-container-rgb), 0.52);
+    box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.16);
+    backdrop-filter: blur(16px);
+  }
+
+  .menu-button:hover {
+    color: var(--md-sys-color-primary);
+    background: rgba(var(--md-sys-color-primary-container-rgb), 0.5);
+    transform: translateY(-1px);
+  }
+
+  .mobile-menu {
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-surface-rgb), 0.92), rgba(var(--md-sys-color-surface-container-rgb), 0.72));
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.32);
+    box-shadow: 0 18px 45px -30px rgba(0, 0, 0, 0.55);
+    backdrop-filter: blur(24px) saturate(160%);
+    -webkit-backdrop-filter: blur(24px) saturate(160%);
+  }
+
+  .mobile-nav-link {
+    border: 1px solid transparent;
+  }
+
+  .mobile-nav-link:hover,
+  .mobile-nav-link.is-active {
+    color: var(--md-sys-color-primary);
+    background: rgba(var(--md-sys-color-primary-container-rgb), 0.35);
+    border-color: rgba(var(--md-sys-color-primary-rgb), 0.18);
+    transform: translateX(4px);
+  }
+</style>
 
 <script>
   import { initMobileMenu } from '../../scripts/interactions/mobile-menu';
-  import { initNavigationI18n } from '../../scripts/interactions/navigation-i18n';
   
   initMobileMenu();
-  initNavigationI18n();
 </script>
-

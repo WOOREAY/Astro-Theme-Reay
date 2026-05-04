@@ -12,7 +12,7 @@ export default defineConfig({
             injectReset: true,
         })
     ],
-    site: process.env.SITE || 'https://localhost:4321',
+    site: process.env.SITE || process.env.PUBLIC_SITE_URL || 'https://localhost:4321',
     base: process.env.BASE || '/',
     
     // 使用集中管理的 Markdown 配置

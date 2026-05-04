@@ -3,6 +3,8 @@
  * TagCloud Component
  * Tag cloud with optimized word cloud styling
  */
+import { getTagUrl } from '../../utils/blog';
+
 interface Tag {
   tag: string;
   count: number;
@@ -94,7 +96,7 @@ const cloudLayout = shuffleTags(sortedTags);
       
       return (
         <a 
-          href={`/archives/tags/${item.tag}`}
+          href={getTagUrl(item.tag)}
           class="tag-item"
           style={`
             font-size: ${fontSize}rem; 
@@ -279,19 +281,9 @@ const cloudLayout = shuffleTags(sortedTags);
   }
 
   .tag-item {
-    animation: tagPopIn 0.8s cubic-bezier(0.34, 1.56, 0.64, 1) backwards;
+    animation: none;
   }
 
   /* Staggered animation delay */
-  .tag-item:nth-child(1) { animation-delay: 0.05s; }
-  .tag-item:nth-child(2) { animation-delay: 0.08s; }
-  .tag-item:nth-child(3) { animation-delay: 0.11s; }
-  .tag-item:nth-child(4) { animation-delay: 0.14s; }
-  .tag-item:nth-child(5) { animation-delay: 0.17s; }
-  .tag-item:nth-child(6) { animation-delay: 0.20s; }
-  .tag-item:nth-child(7) { animation-delay: 0.23s; }
-  .tag-item:nth-child(8) { animation-delay: 0.26s; }
-  .tag-item:nth-child(9) { animation-delay: 0.29s; }
-  .tag-item:nth-child(10) { animation-delay: 0.32s; }
-  .tag-item:nth-child(n+11) { animation-delay: 0.35s; }
+  .tag-item:nth-child(n) { animation-delay: 0s; }
 </style>

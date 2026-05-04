@@ -138,23 +138,28 @@ const tagsPercentage = maxValue > 0 ? (totalTags / maxValue) * 100 : 0;
   }
 
   .stat-card-compact {
-    background: linear-gradient(135deg, 
-      var(--md-sys-color-surface-container-lowest) 0%, 
-      var(--md-sys-color-surface-container-low) 100%
-    );
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: var(--reay-card-radius);
     padding: 1rem;
     display: flex;
     align-items: center;
     gap: 0.75rem;
-    transition: all 0.3s ease;
+    box-shadow: var(--reay-surface-shadow);
+    overflow: hidden;
+    position: relative;
+    transition:
+      transform 0.32s var(--reay-ease-out),
+      background 0.32s ease,
+      border-color 0.32s ease,
+      box-shadow 0.32s ease;
   }
 
   .stat-card-compact:hover {
-    transform: translateY(-2px);
-    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.1);
-    border-color: var(--md-sys-color-primary);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .stat-icon-wrapper {
@@ -163,10 +168,20 @@ const tagsPercentage = maxValue > 0 ? (totalTags / maxValue) * 100 : 0;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: var(--md-sys-color-primary-container);
+    background: linear-gradient(
+      135deg,
+      var(--md-sys-color-primary-container),
+      var(--md-sys-color-tertiary-container)
+    );
     color: var(--md-sys-color-on-primary-container);
     border-radius: 10px;
     flex-shrink: 0;
+    box-shadow: 0 10px 24px rgba(var(--md-sys-color-primary-rgb), 0.18);
+    transition: transform 0.32s var(--reay-ease-out);
+  }
+
+  .stat-card-compact:hover .stat-icon-wrapper {
+    transform: scale(1.06) rotate(2deg);
   }
 
   .stat-content {
@@ -199,10 +214,6 @@ const tagsPercentage = maxValue > 0 ? (totalTags / maxValue) * 100 : 0;
     font-weight: 600;
     color: var(--md-sys-color-on-surface);
     margin: 0;
-  }
-    background: var(--md-sys-color-primary);
-    color: var(--md-sys-color-on-primary);
-    border-radius: 50%;
   }
 
   .featured-content {

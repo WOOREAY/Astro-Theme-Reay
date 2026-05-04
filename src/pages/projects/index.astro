@@ -12,15 +12,21 @@ import ProjectsLayout from '../../layouts/projects/ProjectsLayout.astro';
 import ProjectHeader from '../../components/projects/ProjectHeader.astro';
 import CategoryTabs from '../../components/projects/CategoryTabs.astro';
 import ProjectCard from '../../components/projects/ProjectCard.astro';
+import GitHubActivityPanel from '../../components/projects/GitHubActivityPanel.astro';
 import { projectCategories, githubUsername } from '../../data/projects.config';
-import { getUserRepos } from '../../utils/github';
+import { getGitHubContributionCalendar, getLanguageColor, getUserRepos } from '../../utils/github';
+import { useI18n } from '../../utils/i18n';
 
-console.time('⏱️  Total project load time');
+const { t } = useI18n();
+
+const loadTimerLabel = `⏱️  Total project load time ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+const repoTimerLabel = `⏱️  Fetch user repos ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
+console.time(loadTimerLabel);
 
 // Only fetch user's all public repositories
-console.time('⏱️  Fetch user repos');
+console.time(repoTimerLabel);
 const userRepos = await getUserRepos(githubUsername);
-console.timeEnd('⏱️  Fetch user repos');
+console.timeEnd(repoTimerLabel);
 
 const allRepos = userRepos
   .filter(repo => !repo.isFork && !repo.isArchived)
@@ -39,6 +45,21 @@ allRepos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).
 const totalProjects = allRepos.length;
 const totalStars = allRepos.reduce((sum, p) => sum + p.stars, 0);
 const totalForks = allRepos.reduce((sum, p) => sum + p.forks, 0);
+const contributionCalendar = await getGitHubContributionCalendar(githubUsername, allRepos);
+const languageCounts = Array.from(
+  allRepos.reduce((map, repo) => {
+    if (!repo.language) return map;
+    map.set(repo.language, (map.get(repo.language) || 0) + 1);
+    return map;
+  }, new Map<string, number>())
+)
+  .sort((a, b) => b[1] - a[1])
+  .slice(0, 6)
+  .map(([name, count]) => ({
+    name,
+    count,
+    color: getLanguageColor(name),
+  }));
 
 // Category statistics
 const projectCounts: Record<string, number> = {};
@@ -52,7 +73,7 @@ projectCategories.forEach(category => {
 
 const currentCategory = 'all';
 
-console.timeEnd('⏱️  Total project load time');
+console.timeEnd(loadTimerLabel);
 console.log(`📊 Loaded ${allRepos.length} projects (⭐ ${totalStars} stars, 🔀 ${totalForks} forks)`);
 ---
 
@@ -63,6 +84,8 @@ console.log(`📊 Loaded ${allRepos.length} projects (⭐ ${totalStars} stars, �
     totalStars={totalStars}
     totalForks={totalForks}
   />
+
+  <GitHubActivityPanel calendar={contributionCalendar} languages={languageCounts} />
 
   <!-- Category navigation -->
   <CategoryTabs 
@@ -82,8 +105,8 @@ console.log(`📊 Loaded ${allRepos.length} projects (⭐ ${totalStars} stars, �
   {allRepos.length === 0 && (
     <div class="empty-state">
       <i class="i-carbon:folder-off"></i>
-      <h3>No Projects Yet</h3>
-      <p>No projects configured yet. Please add projects in src/data/projects.config.ts.</p>
+      <h3 data-i18n="projectsPage.empty.title">{t('projectsPage.empty.title')}</h3>
+      <p data-i18n="projectsPage.empty.description">{t('projectsPage.empty.description')}</p>
     </div>
   )}
 </ProjectsLayout>

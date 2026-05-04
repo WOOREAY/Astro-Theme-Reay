@@ -1,16 +1,23 @@
-name: CI/CD Pipeline
+name: CI
 
 on:
-  push:
-    branches: [main, develop]
   pull_request:
     branches: [main, develop]
+  push:
+    branches: [develop]
   workflow_dispatch:
 
+permissions:
+  contents: read
+
+concurrency:
+  group: ci-${{ github.workflow }}-${{ github.ref }}
+  cancel-in-progress: true
+
 jobs:
-  # 代码质量检查和构建
-  check-and-build:
+  build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
@@ -21,22 +28,19 @@ jobs:
           node-version: '20'
           cache: 'npm'
 
+      - name: Restore GitHub API cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/github
+          key: ${{ runner.os }}-github-cache-${{ github.ref_name }}-${{ hashFiles('src/utils/github.ts', 'src/data/projects.config.ts', 'src/data/user.config.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-github-cache-${{ github.ref_name }}-
+            ${{ runner.os }}-github-cache-
+
       - name: Install dependencies
         run: npm ci
-
-      - name: Type check
-        run: npm run check
-        continue-on-error: true
 
       - name: Build
         run: npm run build
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-
-      - name: Upload build artifacts
-        uses: actions/upload-artifact@v4
-        with:
-          name: dist
-          path: dist/
-          retention-days: 7
-        if: success()

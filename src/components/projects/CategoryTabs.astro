@@ -4,6 +4,7 @@
  * 项目分类标签组件
  */
 import type { ProjectCategory } from '../../data/projects.config';
+import { useI18n } from '../../utils/i18n';
 
 interface Props {
   categories: ProjectCategory[];
@@ -12,6 +13,8 @@ interface Props {
 }
 
 const { categories, projectCounts, currentCategory = 'all' } = Astro.props;
+const { t } = useI18n();
+const getCategoryKey = (id: string) => `projects.category.${id}` as keyof typeof import('../../data/i18n.config').translations.en;
 ---
 
 <nav class="projects-categories">
@@ -21,11 +24,11 @@ const { categories, projectCounts, currentCategory = 'all' } = Astro.props;
     return (
       <a
         href={`/projects?category=${category.id}`}
-        class={`category-tab ${currentCategory === category.id ? 'active' : ''}`}
+        class={`reay-button category-tab ${currentCategory === category.id ? 'active' : ''}`}
         data-category={category.id}
       >
         <i class={category.icon}></i>
-        <span>{category.name}</span>
+        <span data-i18n={getCategoryKey(category.id)}>{t(getCategoryKey(category.id)) || category.name}</span>
         <span class="count">{count}</span>
       </a>
     );
@@ -66,9 +69,8 @@ const { categories, projectCounts, currentCategory = 'all' } = Astro.props;
     align-items: center;
     gap: 0.5rem;
     padding: 0.625rem 1rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 2px solid var(--md-sys-color-outline-variant);
-    border-radius: 999px;
+    background: var(--reay-button-bg);
+    border: 1px solid var(--reay-button-border);
     color: var(--md-sys-color-on-surface-variant);
     font-size: 0.875rem;
     font-weight: 500;
@@ -108,26 +110,24 @@ const { categories, projectCounts, currentCategory = 'all' } = Astro.props;
     min-width: 1.5rem;
     height: 1.5rem;
     padding: 0 0.375rem;
-    background: var(--md-sys-color-surface-variant);
+    background: rgba(var(--md-sys-color-surface-container-highest-rgb), 0.52);
     border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 600;
   }
 
   .category-tab:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
+    background: var(--reay-button-bg-hover);
+    border-color: rgba(var(--md-sys-color-primary-rgb), 0.44);
     color: var(--md-sys-color-primary);
     transform: translateY(-2px);
   }
 
   .category-tab.active {
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary-container),
-      var(--md-sys-color-secondary-container)
-    );
-    border-color: var(--md-sys-color-primary);
+    background:
+      linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.12)),
+      var(--reay-button-bg);
+    border-color: rgba(var(--md-sys-color-primary-rgb), 0.52);
     color: var(--md-sys-color-on-primary-container);
     box-shadow: 
       0 4px 12px rgba(var(--md-sys-color-primary-rgb), 0.25),

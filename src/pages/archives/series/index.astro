@@ -6,25 +6,29 @@
 import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
 import SeriesCard from '../../../components/archives/SeriesCard.astro';
 import { getAllSeries } from '../../../utils/blog';
+import { useI18n } from '../../../utils/i18n';
 
 // Data layer: Get all series
 const allSeries = await getAllSeries();
+const { t } = useI18n();
 ---
 
 <ArchiveLayout
-  title="Series"
-  description={`Explore ${allSeries.length} topic series for systematic learning`}
+  title={t('archives.series.title')}
+  description={t('archives.series.subtitle')}
+  titleKey="archives.series.title"
+  descriptionKey="archives.series.subtitle"
   showBackButton={true}
   backUrl="/archives"
 >
   <!-- Series statistics -->
   <div class="series-summary">
-    <div class="summary-item">
-      <span class="summary-label">Total Series</span>
+    <div class="summary-item reay-card">
+      <span class="summary-label" data-i18n="archives.series.total">{t('archives.series.total')}</span>
       <span class="summary-value">{allSeries.length}</span>
     </div>
-    <div class="summary-item">
-      <span class="summary-label">Total Posts</span>
+    <div class="summary-item reay-card">
+      <span class="summary-label" data-i18n="archives.timeline.totalPosts">{t('archives.timeline.totalPosts')}</span>
       <span class="summary-value">
         {allSeries.reduce((sum, s) => sum + s.count, 0)}
       </span>
@@ -45,8 +49,8 @@ const allSeries = await getAllSeries();
   ) : (
     <div class="empty-state">
       <i class="i-carbon:folder-off"></i>
-      <h3>No Series Yet</h3>
-      <p>No series created yet. Start organizing your posts!</p>
+      <h3 data-i18n="archives.empty.series.title">{t('archives.empty.series.title')}</h3>
+      <p data-i18n="archives.empty.series.description">{t('archives.empty.series.description')}</p>
     </div>
   )}
 </ArchiveLayout>
@@ -63,9 +67,10 @@ const allSeries = await getAllSeries();
     display: flex;
     flex-direction: column;
     padding: 1.5rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: 1.1rem;
+    box-shadow: var(--reay-surface-shadow);
     text-align: center;
   }
 

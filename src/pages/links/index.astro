@@ -145,7 +145,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
   <div class="apply-section">
     <h2 class="apply-section-title">
       <i class="i-carbon:user-follow"></i>
-      <span data-i18n="links.apply.title">{linkApplicationInfo.title}</span>
+      <span data-i18n="links.apply.title">{t('links.apply.title')}</span>
     </h2>
     
     <div class="apply-grid">
@@ -153,41 +153,41 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
       <div class="apply-card">
         <div class="apply-card-header">
           <i class="i-carbon:document"></i>
-          <h3 data-i18n="links.apply.requirements">Application Instructions</h3>
+          <h3 data-i18n="links.apply.requirements">{t('links.apply.requirements')}</h3>
         </div>
         <div class="apply-card-content">
           <div class="requirements-list">
             <div class="requirement-item">
               <i class="i-carbon:checkmark-filled requirement-icon"></i>
               <div class="requirement-text">
-                <strong>Healthy Content</strong>
-                <p>No illegal, violent, pornographic or inappropriate content</p>
+                <strong data-i18n="links.apply.healthy.title">{t('links.apply.healthy.title')}</strong>
+                <p data-i18n="links.apply.healthy.desc">{t('links.apply.healthy.desc')}</p>
               </div>
             </div>
             <div class="requirement-item">
               <i class="i-carbon:checkmark-filled requirement-icon"></i>
               <div class="requirement-text">
-                <strong>Accessible</strong>
-                <p>Website is stable and loads at reasonable speed</p>
+                <strong data-i18n="links.apply.accessible.title">{t('links.apply.accessible.title')}</strong>
+                <p data-i18n="links.apply.accessible.desc">{t('links.apply.accessible.desc')}</p>
               </div>
             </div>
             <div class="requirement-item">
               <i class="i-carbon:checkmark-filled requirement-icon"></i>
               <div class="requirement-text">
-                <strong>Mutual Exchange</strong>
-                <p>Please add this site's link on your website first</p>
+                <strong data-i18n="links.apply.mutual.title">{t('links.apply.mutual.title')}</strong>
+                <p data-i18n="links.apply.mutual.desc">{t('links.apply.mutual.desc')}</p>
               </div>
             </div>
             <div class="requirement-item">
               <i class="i-carbon:checkmark-filled requirement-icon"></i>
               <div class="requirement-text">
-                <strong>Regular Updates</strong>
-                <p>Website maintains reasonable update frequency</p>
+                <strong data-i18n="links.apply.updated.title">{t('links.apply.updated.title')}</strong>
+                <p data-i18n="links.apply.updated.desc">{t('links.apply.updated.desc')}</p>
               </div>
             </div>
           </div>
           <div class="contact-section">
-            <p class="contact-hint">After meeting the above requirements, please contact me via:</p>
+            <p class="contact-hint" data-i18n="links.apply.contactHint">{t('links.apply.contactHint')}</p>
             <div class="contact-buttons">
               {linkApplicationInfo.contacts.map((contact) => (
                 <button class="contact-button" data-contact={contact.value}>
@@ -204,7 +204,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
       <div class="apply-card site-info-card">
         <div class="apply-card-header">
           <i class="i-carbon:information"></i>
-          <h3 data-i18n="links.apply.siteInfo">Site Information</h3>
+          <h3 data-i18n="links.apply.siteInfo">{t('links.apply.siteInfo')}</h3>
         </div>
         <div class="apply-card-content">
           <div class="site-info">
@@ -214,28 +214,28 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
             <div class="site-details">
               <div class="info-row" data-copy={mySiteInfo.name}>
                 <div class="info-content">
-                  <span class="info-label" data-i18n="links.apply.siteName">Site Name</span>
+                  <span class="info-label" data-i18n="links.apply.siteName">{t('links.apply.siteName')}</span>
                   <span class="info-value">{mySiteInfo.name}</span>
                 </div>
-                <button class="copy-btn" title="Copy">
+                <button class="copy-btn" title={t('links.copy')} data-i18n="links.copy" data-i18n-attr="title">
                   <i class="i-carbon:copy"></i>
                 </button>
               </div>
               <div class="info-row" data-copy={mySiteInfo.url}>
                 <div class="info-content">
-                  <span class="info-label" data-i18n="links.apply.siteUrl">Site URL</span>
+                  <span class="info-label" data-i18n="links.apply.siteUrl">{t('links.apply.siteUrl')}</span>
                   <span class="info-value">{mySiteInfo.url}</span>
                 </div>
-                <button class="copy-btn" title="Copy">
+                <button class="copy-btn" title={t('links.copy')} data-i18n="links.copy" data-i18n-attr="title">
                   <i class="i-carbon:copy"></i>
                 </button>
               </div>
               <div class="info-row" data-copy={mySiteInfo.description}>
                 <div class="info-content">
-                  <span class="info-label" data-i18n="links.apply.siteDesc">Site Description</span>
+                  <span class="info-label" data-i18n="links.apply.siteDesc">{t('links.apply.siteDesc')}</span>
                   <span class="info-value">{mySiteInfo.description}</span>
                 </div>
-                <button class="copy-btn" title="Copy">
+                <button class="copy-btn" title={t('links.copy')} data-i18n="links.copy" data-i18n-attr="title">
                   <i class="i-carbon:copy"></i>
                 </button>
               </div>
@@ -301,11 +301,8 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
             }
 
             if (shouldShow) {
-              // Show card with delayed animation
               card.classList.remove('hidden');
-              setTimeout(() => {
-                card.classList.add('animate-in');
-              }, visibleIndex * 50);
+              card.classList.add('animate-in');
               visibleIndex++;
             } else {
               // Hide card

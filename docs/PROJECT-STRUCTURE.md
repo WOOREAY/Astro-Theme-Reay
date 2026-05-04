@@ -422,4 +422,4 @@ dist/
 - [User Configuration](./USER-CONFIG.md)
 - [Blog System](./BLOG-SYSTEM.md)
 - [Theme Configuration](./THEME-CONFIG.md)
-- [Customization Guide](./CUSTOMIZATION.md)
+- [Markdown Styles](./MARKDOWN-CUSTOM-GUIDE.md)

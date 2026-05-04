@@ -7,13 +7,14 @@
  */
 import HeadMeta from '../../components/common/HeadMeta.astro'
 import Header from '../../components/common/Header.astro'
-import ThemeToggle from '../../components/common/ThemeToggle.astro'
 import Background from '../../components/common/Background.astro'
+import I18nRuntime from '../../components/common/I18nRuntime.astro'
 
 import { createTheme, themeToCSSVars } from '../../theme'
 import { themeConfig } from '../../data/theme.config'
 
 import '../../styles/cards.css'
+import '../../styles/immersive.css'
 
 const {
   title = 'My Website',
@@ -50,6 +51,8 @@ const THEME = createTheme(themeConfig)
         }
       })();
     </script>
+
+    <I18nRuntime />
     
     <HeadMeta {title} {description} {ogImage} />
 
@@ -87,6 +90,12 @@ const THEME = createTheme(themeConfig)
       
       /* Smooth scrolling behavior */
       html{ scroll-behavior: smooth; }
+
+      html.i18n-syncing *,
+      html.i18n-syncing *::before,
+      html.i18n-syncing *::after {
+        transition: none !important;
+      }
       
       /* Global border-radius inheritance */
       * {
@@ -143,13 +152,12 @@ const THEME = createTheme(themeConfig)
     </style>
   </head>
 
-  <body class="antialiased min-h-dvh grid grid-rows-[auto,1fr]">
+  <body class="antialiased layout-home min-h-dvh grid grid-rows-[auto,1fr]">
     <!-- Unified background -->
     <Background />
     
     <!-- Header - fixed top -->
     <Header>
-      <ThemeToggle />
       <slot name="header-extra" />
     </Header>
 

@@ -8,9 +8,37 @@
 import type { Language } from './i18n.config';
 
 /**
+ * Social link interface
+ */
+export interface SocialLink {
+  icon: string;
+  label: string;
+  url: string;
+}
+
+/**
+ * GitHub configuration interface
+ */
+export interface GithubUserConfig {
+  username: string;
+  token?: string;
+}
+
+/**
+ * Basic user information interface
+ */
+export interface User {
+  name: string;
+  avatar: string;
+  location: string;
+  socials: SocialLink[];
+  github: GithubUserConfig;
+}
+
+/**
  * Basic user information (language-independent)
  */
-export const user = {
+export const user: User = {
   name: 'Your Name',
   avatar: '/avatar.png', // Replace with your avatar image path
   location: 'Your Location',
@@ -30,11 +58,29 @@ export const user = {
 };
 
 /**
+ * Language-specific user content interface
+ */
+export interface UserContentLanguage {
+  tagline: string;
+  bio: string;
+  greeting: string;
+  description: string;
+}
+
+/**
+ * Multilingual user content interface
+ */
+export interface UserContent {
+  en: UserContentLanguage;
+  zh: UserContentLanguage;
+}
+
+/**
  * Multilingual user content
  * Add your bio and description in multiple languages
  * This is the SINGLE SOURCE OF TRUTH for all personal content across the site
  */
-export const userContent = {
+export const userContent: UserContent = {
   en: {
     // Short tagline (used in home page subtitle and about page)
     tagline: 'Your Professional Title · Your Interests',
@@ -42,13 +88,16 @@ export const userContent = {
     bio: 'Your bio here. Describe yourself, your skills, interests, and what you\'re passionate about.',
     // About page greeting
     greeting: 'Hello, I am',
+    // Compact description used in section subtitles and footer
+    description: 'A personal site for notes, projects, and ideas.',
   },
   zh: {
     tagline: '你的职业 · 你的兴趣',
     bio: '在这里写下你的个人介绍。描述你自己、你的技能、兴趣和热情所在。',
     greeting: '你好,我是',
+    description: '一个用于记录文章、项目与想法的个人网站。',
   },
-} as const;
+};
 
 /**
  * Get user content for the current language
@@ -63,11 +112,120 @@ export function getUserContent(lang: Language = 'en') {
 }
 
 /**
+ * About section item interface
+ */
+export interface AboutSectionItem {
+  name: string;
+  description?: string;
+  url?: string;
+  icon?: string;
+}
+
+/**
+ * About section interface
+ */
+export interface AboutSection {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  columns: 2 | 3 | 4 | 5;
+  compact: boolean;
+  colorTheme: 'primary' | 'secondary' | 'tertiary' | 'accent';
+  items: AboutSectionItem[];
+}
+
+/**
+ * Social network interface
+ */
+export interface SocialNetwork {
+  platform: string;
+  username: string;
+  url: string;
+  icon: string;
+  followers: number;
+}
+
+/**
+ * Education entry interface
+ */
+export interface Education {
+  school: string;
+  major?: string;
+  degree: string;
+  startDate: string;
+  endDate: string;
+  logo?: string;
+  url?: string;
+  description?: string;
+}
+
+/**
+ * Work experience interface
+ */
+export interface Experience {
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  logo?: string;
+  url?: string;
+  description?: string;
+}
+
+/**
+ * Tech stack item interface
+ */
+export interface TechStackItem {
+  name: string;
+  description: string;
+  url: string;
+  icon: string;
+}
+
+/**
+ * Site information interface
+ */
+export interface SiteInfo {
+  name: string;
+  description: string;
+  builtWith: string;
+  since: string;
+  stats: {
+    posts: number;
+    words: number;
+    visitors: number;
+  };
+  techStack: TechStackItem[];
+}
+
+/**
+ * Timeline event interface
+ */
+export interface TimelineEvent {
+  year: string;
+  event: string;
+  description?: string;
+}
+
+/**
+ * About page configuration interface
+ */
+export interface AboutConfig {
+  sections: AboutSection[];
+  socialNetworks: SocialNetwork[];
+  education: Education[];
+  experience: Experience[];
+  site: SiteInfo;
+  timeline: TimelineEvent[];
+}
+
+/**
  * About page configuration
  * Customize the sections to showcase your skills, tools, and interests
  * Personal info (name, bio, avatar) comes from userContent and user config
  */
-export const aboutConfig = {
+export const aboutConfig: AboutConfig = {
 
   /**
    * Custom content sections

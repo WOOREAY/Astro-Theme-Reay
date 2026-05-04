@@ -22,15 +22,28 @@ concurrency:
 jobs:
   build:
     runs-on: ubuntu-latest
+    timeout-minutes: 15
     steps:
       - name: Checkout
         uses: actions/checkout@v4
+
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
       
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
           node-version: '20'
           cache: 'npm'
+
+      - name: Restore GitHub API cache
+        uses: actions/cache@v4
+        with:
+          path: .cache/github
+          key: ${{ runner.os }}-github-cache-main-${{ hashFiles('src/utils/github.ts', 'src/data/projects.config.ts', 'src/data/user.config.ts') }}
+          restore-keys: |
+            ${{ runner.os }}-github-cache-main-
+            ${{ runner.os }}-github-cache-
       
       - name: Install dependencies
         run: npm ci

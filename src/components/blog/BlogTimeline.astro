@@ -45,9 +45,9 @@ function formatFullDate(date: Date) {
 }
 
 // 计算阅读时间（假设每分钟阅读 300 字）
-function calculateReadingTime(content: string): number {
+function calculateReadingTime(content?: string): number {
   const wordsPerMinute = 300;
-  const wordCount = content.length;
+  const wordCount = content?.length ?? 0;
   const minutes = Math.ceil(wordCount / wordsPerMinute);
   return Math.max(1, minutes); // 至少 1 分钟
 }
@@ -109,61 +109,56 @@ function calculateReadingTime(content: string): number {
             <!-- 文章卡片 -->
             <a 
               href={getPostUrl(post)}
-              class="block p-4 rounded-xl bg-[var(--md-sys-color-surface-variant)]/30 hover:bg-[var(--md-sys-color-primary-container)]/20 border border-[var(--md-sys-color-outline)]/10 hover:border-[var(--md-sys-color-primary)]/30 hover:shadow-xl hover:-translate-y-1 transition-all duration-300"
+              class="timeline-post-card reay-card reay-card--compact block"
             >
-              <!-- 标题 -->
-              <h3 class="text-lg font-700 text-[var(--md-sys-color-on-surface)] mb-2 group-hover:text-[var(--md-sys-color-primary)] transition-colors">
-                {post.data.title}
-              </h3>
+              <div class="reay-card__body">
+                <!-- 标题 -->
+                <h3 class="reay-card__title text-lg">
+                  {post.data.title}
+                </h3>
 
-              <!-- 描述 -->
-              {post.data.description && (
-                <p class="text-xs text-[var(--md-sys-color-on-surface-variant)] mb-3 line-clamp-2 leading-relaxed">
-                  {post.data.description}
-                </p>
-              )}
+                <!-- 描述 -->
+                {post.data.description && (
+                  <p class="reay-card__text text-xs line-clamp-2">
+                    {post.data.description}
+                  </p>
+                )}
 
-              <!-- 元信息行 -->
-              <div class="flex flex-wrap items-center gap-1.5 text-xs mb-2.5">
-                <!-- 发布日期 -->
-                <div class="flex items-center gap-1 text-[var(--md-sys-color-on-surface-variant)]/80">
-                  <i class="i-carbon:calendar text-xs"></i>
-                  <span>{formatFullDate(post.data.publishDate)}</span>
-                </div>
+                <!-- 元信息行 -->
+                <div class="reay-meta">
+                  <div class="reay-meta-item">
+                    <i class="i-carbon:calendar text-xs"></i>
+                    <span>{formatFullDate(post.data.publishDate)}</span>
+                  </div>
 
-                <!-- 分隔符 -->
-                <span class="text-[var(--md-sys-color-outline)]">•</span>
+                  <div class="reay-meta-item">
+                    <i class="i-carbon:time text-xs"></i>
+                    <span>阅读约 {calculateReadingTime(post.body)} 分钟</span>
+                  </div>
 
-                <!-- 阅读时间 -->
-                <div class="flex items-center gap-1 text-[var(--md-sys-color-on-surface-variant)]/80">
-                  <i class="i-carbon:time text-xs"></i>
-                  <span>阅读约 {calculateReadingTime(post.body)} 分钟</span>
-                </div>
-
-                <!-- 精选标记 -->
-                {post.data.featured && (
-                  <>
-                    <span class="text-[var(--md-sys-color-outline)]">•</span>
-                    <div class="flex items-center gap-1 text-[var(--md-sys-color-primary)]">
+                  {post.data.featured && (
+                    <div class="reay-chip">
                       <i class="i-carbon:star-filled text-xs"></i>
                       <span class="font-500">精选</span>
                     </div>
-                  </>
-                )}
-              </div>
+                  )}
+                </div>
 
-              <!-- 标签 -->
-              <div class="flex flex-wrap items-center gap-1.5 text-xs">
-                {post.data.tags.slice(0, 5).map((tag) => (
-                  <span class="px-2 py-0.5 rounded-full bg-[var(--md-sys-color-surface-variant)]/50 text-[var(--md-sys-color-on-surface-variant)] font-400">
-                    #{tag}
-                  </span>
-                ))}
+                <!-- 标签 -->
+                {post.data.tags && post.data.tags.length > 0 && (
+                  <div class="reay-card__footer flex-wrap">
+                    {post.data.tags.slice(0, 5).map((tag) => (
+                      <span class="reay-chip">
+                        #{tag}
+                      </span>
+                    ))}
 
-                {post.data.tags.length > 5 && (
-                  <span class="text-[var(--md-sys-color-on-surface-variant)]/50">
-                    +{post.data.tags.length - 5}
-                  </span>
+                    {post.data.tags.length > 5 && (
+                      <span class="text-[var(--md-sys-color-on-surface-variant)]/50">
+                        +{post.data.tags.length - 5}
+                      </span>
+                    )}
+                  </div>
                 )}
               </div>
             </a>
@@ -179,8 +174,8 @@ function calculateReadingTime(content: string): number {
 <style>
   /* 时间线动画 */
   .timeline-line {
-    opacity: 0;
-    animation: fadeInLine 1s ease-out forwards;
+    opacity: 1;
+    transform: scaleY(1);
   }
 
   @keyframes fadeInLine {
@@ -197,16 +192,8 @@ function calculateReadingTime(content: string): number {
 
   /* 文章项入场动画 */
   .post-item {
-    opacity: 0;
-    animation: fadeInUp 0.5s ease-out forwards;
+    opacity: 1;
   }
-
-  .post-item:nth-child(1) { animation-delay: 0.1s; }
-  .post-item:nth-child(2) { animation-delay: 0.2s; }
-  .post-item:nth-child(3) { animation-delay: 0.3s; }
-  .post-item:nth-child(4) { animation-delay: 0.4s; }
-  .post-item:nth-child(5) { animation-delay: 0.5s; }
-  .post-item:nth-child(n+6) { animation-delay: 0.6s; }
 
   @keyframes fadeInUp {
     from {

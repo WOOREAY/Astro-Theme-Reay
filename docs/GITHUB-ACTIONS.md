@@ -1,40 +1,18 @@
 # GitHub Actions 自动部署指南
 
-本项目已配置多个 GitHub Actions 工作流，支持自动部署到不同平台。
+本模板默认只内置 GitHub Pages 部署和 CI 构建检查。Vercel、Netlify 等平台仍然支持，但建议通过各自平台的 Dashboard 连接仓库并配置构建命令，而不是在模板中默认携带额外部署工作流。
 
 ## 📋 可用的工作流
 
 ### 1. GitHub Pages 部署 (`deploy.yml`)
-自动部署到 GitHub Pages。
+推送到 `main` 后自动构建并部署到 GitHub Pages。
 
-### 2. Vercel 部署 (`deploy-vercel.yml`)
-自动部署到 Vercel。
-
-### 3. Netlify 部署 (`deploy-netlify.yml`)
-自动部署到 Netlify。
-
-### 4. CI/CD 流水线 (`ci.yml`)
-代码质量检查、类型检查和构建测试。
+### 2. CI 构建检查 (`ci.yml`)
+对 pull request 和 `develop` 分支推送运行构建检查。
 
 ## 🚀 快速开始
 
-### 选择一个工作流
-
-根据你的部署目标，**只保留一个部署工作流**，删除或禁用其他：
-
-```bash
-# 保留 GitHub Pages
-rm .github/workflows/deploy-vercel.yml
-rm .github/workflows/deploy-netlify.yml
-
-# 或保留 Vercel
-rm .github/workflows/deploy.yml
-rm .github/workflows/deploy-netlify.yml
-
-# 或保留 Netlify
-rm .github/workflows/deploy.yml
-rm .github/workflows/deploy-vercel.yml
-```
+默认无需选择工作流。保留 `.github/workflows/deploy.yml` 和 `.github/workflows/ci.yml` 即可。
 
 ## 📝 详细配置
 
@@ -42,14 +20,25 @@ rm .github/workflows/deploy-vercel.yml
 
 #### 1. 检查 Astro 配置
 
-编辑 `astro.config.mjs`：
+推荐通过环境变量配置站点地址。`astro.config.mjs` 已支持：
 
 ```javascript
 export default defineConfig({
-  site: 'https://yourusername.github.io',
-  base: '/repository-name', // 如果是仓库项目页面
-  // 如果是用户/组织页面，注释掉 base
+  site: process.env.SITE || process.env.PUBLIC_SITE_URL || 'https://localhost:4321',
+  base: process.env.BASE || '/',
 })
+```
+
+常见取值：
+
+```env
+# 用户/组织站点
+SITE=https://yourusername.github.io
+BASE=/
+
+# 仓库项目站点
+SITE=https://yourusername.github.io
+BASE=/repository-name
 ```
 
 #### 2. 启用 GitHub Pages
@@ -90,23 +79,9 @@ export default defineConfig({
 
 ### 方案 2: Vercel
 
-#### 1. 获取 Vercel Token
+本模板不再默认携带 Vercel workflow。推荐在 Vercel Dashboard 直接导入 GitHub 仓库。
 
-1. 访问 [Vercel Dashboard](https://vercel.com/account/tokens)
-2. 创建新 Token
-3. 复制 Token
-
-#### 2. 添加 GitHub Secrets
-
-在仓库 Settings → Secrets and variables → Actions:
-
-- `VERCEL_TOKEN`: 你的 Vercel Token
-- `VERCEL_ORG_ID`: 在 Vercel 项目设置中找到
-- `VERCEL_PROJECT_ID`: 在 Vercel 项目设置中找到
-
-#### 3. Vercel 项目配置
-
-在 Vercel 项目根目录创建 `vercel.json`（可选）：
+构建配置：
 
 ```json
 {
@@ -115,12 +90,6 @@ export default defineConfig({
   "devCommand": "npm run dev",
   "installCommand": "npm install"
 }
-```
-
-#### 4. 推送部署
-
-```bash
-git push origin main
 ```
 
 #### 优点
@@ -133,26 +102,14 @@ git push origin main
 
 ### 方案 3: Netlify
 
-#### 1. 获取 Netlify Token
+本模板不再默认携带 Netlify workflow。推荐在 Netlify Dashboard 连接 GitHub 仓库，或本地构建后上传 `dist/`。
 
-1. 访问 [Netlify Personal Access Tokens](https://app.netlify.com/user/applications#personal-access-tokens)
-2. 创建新 Token
-3. 复制 Token
+Netlify 构建配置：
 
-#### 2. 获取 Site ID
+- Build command: `npm run build`
+- Publish directory: `dist`
 
-1. 在 Netlify 创建新站点（可以是空站点）
-2. 进入 Site settings
-3. 复制 Site ID
-
-#### 3. 添加 GitHub Secrets
-
-在仓库 Settings → Secrets and variables → Actions:
-
-- `NETLIFY_AUTH_TOKEN`: 你的 Netlify Token
-- `NETLIFY_SITE_ID`: 你的 Site ID
-
-#### 4. Netlify 配置文件
+可选配置文件：
 
 创建 `netlify.toml`：
 
@@ -165,12 +122,6 @@ git push origin main
   from = "/*"
   to = "/404.html"
   status = 404
-```
-
-#### 5. 推送部署
-
-```bash
-git push origin main
 ```
 
 ---
@@ -399,7 +350,7 @@ on:
 - ✅ CI 检查 `ci.yml`
 
 **商业项目：**
-- ✅ Vercel + `deploy-vercel.yml`
+- ✅ Vercel Dashboard Git 集成
 - ✅ CI 检查 `ci.yml`
 
 **大型项目：**

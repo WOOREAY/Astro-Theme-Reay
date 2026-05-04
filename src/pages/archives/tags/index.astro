@@ -5,44 +5,48 @@
  */
 import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
 import TagCloud from '../../../components/archives/TagCloud.astro';
-import { getAllTags } from '../../../utils/blog';
+import { getAllTags, getTagUrl } from '../../../utils/blog';
+import { useI18n } from '../../../utils/i18n';
 
 // Data layer: Get all tags
 const allTags = await getAllTags();
+const { t } = useI18n();
 ---
 
 <ArchiveLayout
-  title="Tag Cloud"
-  description={`Browse all ${allTags.length} tags and discover topics of interest`}
+  title={t('archives.tags.title')}
+  description={t('archives.tags.subtitle')}
+  titleKey="archives.tags.title"
+  descriptionKey="archives.tags.subtitle"
   showBackButton={true}
   backUrl="/archives"
 >
   <!-- Tags statistics -->
   <div class="tags-summary">
-    <div class="summary-item">
+    <div class="summary-item reay-card">
       <div class="summary-icon">
         <i class="i-carbon:tag"></i>
       </div>
       <div class="summary-content">
-        <span class="summary-label">Total Tags</span>
+        <span class="summary-label" data-i18n="archives.tags.total">{t('archives.tags.total')}</span>
         <span class="summary-value">{allTags.length}</span>
       </div>
     </div>
-    <div class="summary-item">
+    <div class="summary-item reay-card">
       <div class="summary-icon">
         <i class="i-carbon:star-filled"></i>
       </div>
       <div class="summary-content">
-        <span class="summary-label">Hottest Tag</span>
+        <span class="summary-label" data-i18n="archives.tags.hottest">{t('archives.tags.hottest')}</span>
         <span class="summary-value">{allTags[0]?.tag || '-'}</span>
       </div>
     </div>
-    <div class="summary-item">
+    <div class="summary-item reay-card">
       <div class="summary-icon">
         <i class="i-carbon:document"></i>
       </div>
       <div class="summary-content">
-        <span class="summary-label">Total Posts</span>
+        <span class="summary-label" data-i18n="archives.timeline.totalPosts">{t('archives.timeline.totalPosts')}</span>
         <span class="summary-value">
           {allTags.reduce((sum, tag) => sum + tag.count, 0)}
         </span>
@@ -56,8 +60,8 @@ const allTags = await getAllTags();
   ) : (
     <div class="empty-state">
       <i class="i-carbon:tag-none"></i>
-      <h3>No Tags Yet</h3>
-      <p>No tags yet. Start writing posts and add tags!</p>
+      <h3 data-i18n="archives.empty.tags.title">{t('archives.empty.tags.title')}</h3>
+      <p data-i18n="archives.empty.tags.description">{t('archives.empty.tags.description')}</p>
     </div>
   )}
 
@@ -66,18 +70,18 @@ const allTags = await getAllTags();
     <section class="tags-table-section">
       <h2 class="section-title">
         <i class="i-carbon:list"></i>
-        Tag List
+        <span data-i18n="archives.tags.list">{t('archives.tags.list')}</span>
       </h2>
       <div class="tags-table">
         {allTags.map((tag, index) => (
-          <a href={`/archives/tags/${tag.tag}`} class="tag-row">
+          <a href={getTagUrl(tag.tag)} class="tag-row">
             <div class="tag-rank">#{index + 1}</div>
             <div class="tag-name">
               <i class="i-carbon:tag"></i>
               {tag.tag}
             </div>
             <div class="tag-count-badge">
-              {tag.count} posts
+              {tag.count} <span data-i18n="archives.postsCount">{t('archives.postsCount')}</span>
             </div>
             <div class="tag-arrow">
               <i class="i-carbon:arrow-right"></i>
@@ -102,12 +106,10 @@ const allTags = await getAllTags();
     align-items: center;
     gap: 1.25rem;
     padding: 1.5rem;
-    background: linear-gradient(135deg, 
-      var(--md-sys-color-surface-container-low) 0%,
-      var(--md-sys-color-surface-container) 100%
-    );
-    border: 2px solid var(--md-sys-color-outline-variant);
-    border-radius: 16px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: 1.1rem;
+    box-shadow: var(--reay-surface-shadow);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: relative;
     overflow: hidden;
@@ -126,11 +128,11 @@ const allTags = await getAllTags();
   }
 
   .summary-item:hover {
-    border-color: var(--md-sys-color-primary);
+    border-color: var(--reay-surface-border-hover);
     transform: translateY(-4px);
     box-shadow: 
-      0 8px 24px rgba(0, 0, 0, 0.1),
-      0 0 0 1px var(--md-sys-color-primary) inset;
+      var(--reay-surface-shadow-hover),
+      0 0 0 1px rgba(var(--md-sys-color-primary-rgb), 0.24) inset;
   }
 
   .summary-item:hover::before {

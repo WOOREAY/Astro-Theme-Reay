@@ -6,6 +6,8 @@
 import { getCollection } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
 
+const BLOG_FILE_EXTENSION_PATTERN = /\.(md|mdx)$/i
+
 /**
  * Extract slug from post ID for URL generation
  * Format examples:
@@ -13,16 +15,59 @@ import type { CollectionEntry } from 'astro:content'
  * - "typescript-advanced/index" -> "typescript-advanced"
  */
 export function getSlugFromPostId(id: string): string {
-  let slug = id.replace(/\.(md|mdx)$/i, '');
-  slug = slug.replace(/\/index$/i, '');
-  return slug;
+  let slug = id.replace(BLOG_FILE_EXTENSION_PATTERN, '')
+  slug = slug.replace(/\/index$/i, '')
+  return slug
+}
+
+export function getPostSlug(post: CollectionEntry<'blog'>): string {
+  return post.slug || getSlugFromPostId(post.id)
+}
+
+/**
+ * Encode a route path while preserving nested separators.
+ */
+export function encodePathSegments(path: string): string {
+  return path
+    .split('/')
+    .filter(Boolean)
+    .map(segment => encodeURIComponent(segment))
+    .join('/')
+}
+
+/**
+ * Decode Astro route params, including catch-all params.
+ */
+export function decodeRouteParam(param?: string): string {
+  if (!param) {
+    return ''
+  }
+
+  return param
+    .split('/')
+    .map(segment => {
+      try {
+        return decodeURIComponent(segment)
+      } catch {
+        return segment
+      }
+    })
+    .join('/')
 }
 
 /**
  * Generate blog post URL
  */
 export function getPostUrl(post: CollectionEntry<'blog'>): string {
-  return `/blog/${getSlugFromPostId(post.id)}`;
+  return `/blog/${encodePathSegments(getPostSlug(post))}`
+}
+
+export function getTagUrl(tag: string): string {
+  return `/archives/tags/${encodeURIComponent(tag)}`
+}
+
+export function getSeriesUrl(series: string): string {
+  return `/archives/series/${encodeURIComponent(series)}`
 }
 
 /**
@@ -42,7 +87,7 @@ export async function getAllPosts() {
  * Sort posts by publish date (newest first)
  */
 export function sortPostsByDate(posts: CollectionEntry<'blog'>[]) {
-  return posts.sort((a, b) => {
+  return [...posts].sort((a, b) => {
     const dateA = new Date(a.data.publishDate).valueOf()
     const dateB = new Date(b.data.publishDate).valueOf()
     return dateB - dateA
@@ -80,7 +125,7 @@ export async function getLatestPosts(limit = 6) {
  */
 export async function getPostBySlug(slug: string) {
   const posts = await getAllPosts()
-  return posts.find(post => post.id === slug)
+  return posts.find(post => getPostSlug(post) === slug)
 }
 
 /**
@@ -163,10 +208,10 @@ export function formatDate(date: Date): string {
  * @param content - Content to calculate reading time for
  * @returns Estimated reading time in minutes
  */
-export function calculateReadingTime(content: string): number {
+export function calculateReadingTime(content?: string): number {
   const wordsPerMinute = 200
-  const words = content.length
-  return Math.ceil(words / wordsPerMinute)
+  const words = content?.length ?? 0
+  return Math.max(1, Math.ceil(words / wordsPerMinute))
 }
 
 /**

@@ -27,6 +27,8 @@ const topSeries = allSeries.slice(0, 3);
 <ArchiveLayout
   title={t('archives.stats.title')}
   description={t('archives.subtitle')}
+  titleKey="archives.stats.title"
+  descriptionKey="archives.subtitle"
   showBackButton={true}
 >
   <!-- Statistics panel -->
@@ -42,7 +44,7 @@ const topSeries = allSeries.slice(0, 3);
           <i class="i-carbon:tag"></i>
           <span data-i18n="archives.hotTags">{t('archives.hotTags')}</span>
         </h2>
-        <a href="/archives/tags" class="view-all">
+        <a href="/archives/tags" class="view-all reay-button">
           <span data-i18n="archives.viewAllTags">{t('archives.viewAllTags')}</span>
           <i class="i-carbon:arrow-right"></i>
         </a>
@@ -65,7 +67,7 @@ const topSeries = allSeries.slice(0, 3);
           <i class="i-carbon:folder"></i>
           <span data-i18n="archives.series">{t('archives.series')}</span>
         </h2>
-        <a href="/archives/series" class="view-all">
+        <a href="/archives/series" class="view-all reay-button">
           <span data-i18n="archives.viewAllSeries">{t('archives.viewAllSeries')}</span>
           <i class="i-carbon:arrow-right"></i>
         </a>
@@ -97,7 +99,7 @@ const topSeries = allSeries.slice(0, 3);
       <span data-i18n="archives.exploreMore">{t('archives.exploreMore')}</span>
     </h2>
     <div class="quick-nav-grid">
-      <a href="/archives/timeline" class="quick-nav-card">
+      <a href="/archives/timeline" class="quick-nav-card reay-card">
         <div class="nav-icon">
           <i class="i-carbon:time"></i>
         </div>
@@ -108,7 +110,7 @@ const topSeries = allSeries.slice(0, 3);
         <i class="i-carbon:arrow-right nav-arrow"></i>
       </a>
 
-      <a href="/blog" class="quick-nav-card">
+      <a href="/blog" class="quick-nav-card reay-card">
         <div class="nav-icon">
           <i class="i-carbon:blog"></i>
         </div>
@@ -131,7 +133,7 @@ const topSeries = allSeries.slice(0, 3);
   /* Global layout */
   section {
     margin-bottom: 2.5rem;
-    animation: sectionFadeIn 0.6s ease-out backwards;
+    animation: none;
   }
 
   @keyframes sectionFadeIn {
@@ -144,11 +146,6 @@ const topSeries = allSeries.slice(0, 3);
       transform: translateY(0);
     }
   }
-
-  section:nth-child(1) { animation-delay: 0.1s; }
-  section:nth-child(2) { animation-delay: 0.2s; }
-  section:nth-child(3) { animation-delay: 0.3s; }
-  section:nth-child(4) { animation-delay: 0.4s; }
 
   /* Section header style enhancement */
   .section-header {
@@ -198,8 +195,8 @@ const topSeries = allSeries.slice(0, 3);
     text-decoration: none;
     padding: 0.5rem 1rem;
     border-radius: 10px;
-    background: var(--md-sys-color-surface-container-lowest);
-    border: 1px solid var(--md-sys-color-outline-variant);
+    background: var(--reay-button-bg);
+    border: 1px solid var(--reay-button-border);
     transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     position: absolute;
     right: 0;
@@ -218,8 +215,8 @@ const topSeries = allSeries.slice(0, 3);
   }
 
   .view-all:hover {
-    background: var(--md-sys-color-primary-container);
-    border-color: var(--md-sys-color-primary);
+    background: var(--reay-button-bg-hover);
+    border-color: rgba(var(--md-sys-color-primary-rgb), 0.44);
     gap: 0.5rem;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.08);
   }
@@ -308,9 +305,9 @@ const topSeries = allSeries.slice(0, 3);
     align-items: center;
     gap: 1rem;
     padding: 1.25rem;
-    background: var(--md-sys-color-surface);
-    border: 2px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: 1.1rem;
     text-decoration: none;
     color: inherit;
     transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
@@ -328,17 +325,17 @@ const topSeries = allSeries.slice(0, 3);
     background: linear-gradient(
       120deg,
       transparent,
-      var(--md-sys-color-primary-container),
+      rgba(var(--md-sys-color-primary-rgb), 0.16),
       transparent
     );
     transition: left 0.6s ease;
   }
 
   .quick-nav-card:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
-    transform: translateY(-3px) scale(1.01);
-    box-shadow: 0 6px 20px rgba(0, 0, 0, 0.12);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .quick-nav-card:hover::before {

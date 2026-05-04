@@ -44,6 +44,9 @@ export const markdownConfig: AstroUserConfig['markdown'] = {
       light: 'github-light',
       dark: 'github-dark',
     },
+    langAlias: {
+      gitignore: 'plaintext',
+    },
     wrap: true,
     defaultColor: false,
     

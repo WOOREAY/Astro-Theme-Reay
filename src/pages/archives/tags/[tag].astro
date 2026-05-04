@@ -6,17 +6,18 @@
 import type { CollectionEntry } from 'astro:content';
 import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
 import BlogTimeline from '../../../components/blog/BlogTimeline.astro';
-import { getAllPosts, getPostsByTag, getAllTags } from '../../../utils/blog';
+import { decodeRouteParam, getPostsByTag, getAllTags, getTagUrl } from '../../../utils/blog';
+import { useI18n } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const tags = await getAllTags();
   
   return tags.map(({ tag }) => ({
-    params: { tag },
+    params: { tag: encodeURIComponent(tag) },
   }));
 }
 
-const { tag } = Astro.params;
+const tag = decodeRouteParam(Astro.params.tag);
 
 // Data layer: Get all posts under this tag
 const posts = await getPostsByTag(tag);
@@ -40,16 +41,18 @@ const getRelatedTags = () => {
 };
 
 const relatedTags = getRelatedTags();
+const { t } = useI18n();
 ---
 
 <ArchiveLayout
   title={`#${tag}`}
-  description={`${posts.length} posts with tag "${tag}"`}
+  description={t('archives.tags.subtitle')}
+  descriptionKey="archives.tags.subtitle"
   showBackButton={true}
   backUrl="/archives/tags"
 >
   <!-- Tag info card -->
-  <div class="tag-info-card">
+  <div class="tag-info-card reay-card">
     <div class="tag-header">
       <div class="tag-icon">
         <i class="i-carbon:tag"></i>
@@ -57,7 +60,7 @@ const relatedTags = getRelatedTags();
       <div class="tag-details">
         <h2 class="tag-name">#{tag}</h2>
         <p class="tag-stats">
-          Total {posts.length} posts
+          {posts.length} <span data-i18n="archives.postsCount">{t('archives.postsCount')}</span>
           {currentTagInfo && allTags.length > 0 && (
             <span class="tag-rank">
               · Rank #{allTags.findIndex(t => t.tag === tag) + 1}/{allTags.length}
@@ -72,11 +75,11 @@ const relatedTags = getRelatedTags();
       <div class="related-tags">
         <h3 class="related-title">
           <i class="i-carbon:connect"></i>
-          Related Tags
+          <span data-i18n="archives.tags.related">{t('archives.tags.related')}</span>
         </h3>
         <div class="related-tags-list">
           {relatedTags.map(t => (
-            <a href={`/archives/tags/${t.tag}`} class="related-tag">
+            <a href={getTagUrl(t.tag)} class="related-tag">
               #{t.tag}
               <span class="related-count">{t.count}</span>
             </a>
@@ -91,15 +94,15 @@ const relatedTags = getRelatedTags();
     <section class="posts-section">
       <h3 class="section-title">
         <i class="i-carbon:document"></i>
-        Posts List
+        <span data-i18n="archives.blogList">{t('archives.blogList')}</span>
       </h3>
       <BlogTimeline posts={posts} />
     </section>
   ) : (
     <div class="empty-state">
       <i class="i-carbon:document-blank"></i>
-      <h3>No Posts Yet</h3>
-      <p>No posts under this tag yet</p>
+      <h3 data-i18n="archives.empty.posts.title">{t('archives.empty.posts.title')}</h3>
+      <p data-i18n="archives.empty.posts.description">{t('archives.empty.posts.description')}</p>
     </div>
   )}
 </ArchiveLayout>
@@ -107,14 +110,11 @@ const relatedTags = getRelatedTags();
 <style>
   .tag-info-card {
     padding: 1.25rem;
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary-container),
-      var(--md-sys-color-secondary-container)
-    );
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border-radius: 1.1rem;
     margin-bottom: 1.5rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
   }
 
   .tag-header {

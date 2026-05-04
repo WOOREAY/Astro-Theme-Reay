@@ -466,8 +466,6 @@ npm update astro
 
 ### How can I make my site faster?
 
-See [Performance Guide](./PERFORMANCE.md):
-
 1. Optimize images (WebP, correct sizes)
 2. Use CDN for assets
 3. Enable caching headers

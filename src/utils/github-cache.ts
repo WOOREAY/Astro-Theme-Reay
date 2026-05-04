@@ -70,7 +70,6 @@ class GitHubCache {
 
       const isExpired = Date.now() - entry.timestamp > this.ttl;
       if (isExpired) {
-        fs.unlinkSync(filePath);
         return null;
       }
 
@@ -78,6 +77,32 @@ class GitHubCache {
       return entry.data;
     } catch (error) {
       console.error(`Error reading cache for ${key}:`, error);
+      return null;
+    }
+  }
+
+  /**
+   * Get data from memory cache even if it is expired.
+   */
+  private getStaleFromMemory<T>(key: string): T | null {
+    const entry = this.memoryCache.get(key);
+    return entry ? (entry.data as T) : null;
+  }
+
+  /**
+   * Get data from disk cache even if it is expired.
+   */
+  private getStaleFromDisk<T>(key: string): T | null {
+    try {
+      const filePath = this.getCacheFilePath(key);
+      if (!fs.existsSync(filePath)) return null;
+
+      const content = fs.readFileSync(filePath, 'utf-8');
+      const entry: CacheEntry<T> = JSON.parse(content);
+      this.memoryCache.set(key, entry);
+      return entry.data;
+    } catch (error) {
+      console.error(`Error reading stale cache for ${key}:`, error);
       return null;
     }
   }
@@ -92,6 +117,16 @@ class GitHubCache {
 
     // Fall back to disk cache
     return this.getFromDisk<T>(key);
+  }
+
+  /**
+   * Get cached data even if the entry has expired.
+   */
+  getStale<T>(key: string): T | null {
+    const memoryData = this.getStaleFromMemory<T>(key);
+    if (memoryData) return memoryData;
+
+    return this.getStaleFromDisk<T>(key);
   }
 
   /**

@@ -67,7 +67,7 @@ Settings → Actions → General → Workflow permissions
 3. 添加到项目（二选一）：
    - **方案 A**: 仓库 Secrets（推荐）
      - Settings → Secrets and variables → Actions
-     - 添加 `GH_TOKEN`
+     - 添加 `GITHUB_TOKEN`（也可以使用 GitHub Actions 自动提供的 token）
    - **方案 B**: 本地环境变量
      - 创建 `.env` 文件
      - 添加 `GITHUB_TOKEN=your_token`
@@ -104,11 +104,11 @@ BASE=/repository-name
 export const user = {
   name: '你的名字',
   avatar: '/avatar.jpg',
-  bio: '你的简介',
-  links: {
-    github: 'yourusername',
-    // ...
-  }
+  location: '你的城市',
+  github: {
+    username: 'yourusername',
+    token: '',
+  },
 }
 ```
 

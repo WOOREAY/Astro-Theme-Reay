@@ -3,7 +3,7 @@
  * PostsSection Component
  * Latest blog posts section for homepage
  */
-import { getSortedPosts } from '../../utils/blog';
+import { calculateReadingTime, getPostUrl, getSortedPosts } from '../../utils/blog';
 
 const allPosts = await getSortedPosts();
 const latestPosts = allPosts.slice(0, 6);
@@ -43,7 +43,7 @@ const latestPosts = allPosts.slice(0, 6);
             class="post-card group animate-fade-in"
             style={`animation-delay: ${index * 100}ms;`}
           >
-            <a href={`/blog/${post.id}`} class="block h-full">
+            <a href={getPostUrl(post)} class="block h-full">
               <div class="card-inner relative h-full p-4 bg-gradient-to-br from-[var(--md-sys-color-surface-container-low)]/80 to-[var(--md-sys-color-surface-container)]/80 backdrop-blur-md border border-[var(--md-sys-color-outline-variant)]/50 rounded-xl transition-all duration-300 hover:border-[var(--md-sys-color-primary)] hover:shadow-xl hover:-translate-y-2 overflow-hidden flex flex-col gap-3">
                 
                 <div class="absolute inset-0 bg-gradient-to-br from-[var(--md-sys-color-primary)]/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300"></div>
@@ -62,12 +62,10 @@ const latestPosts = allPosts.slice(0, 6);
                     </time>
                     
                     <!-- 阅读时间 -->
-                    {post.data.readingTime && (
-                      <span class="flex items-center gap-1 text-xs text-[var(--md-sys-color-on-surface-variant)]">
-                        <i class="i-carbon:time text-sm"></i>
-                        {Math.ceil(post.data.readingTime)} 分钟
-                      </span>
-                    )}
+                    <span class="flex items-center gap-1 text-xs text-[var(--md-sys-color-on-surface-variant)]">
+                      <i class="i-carbon:time text-sm"></i>
+                      {calculateReadingTime(post.body)} 分钟
+                    </span>
                   </div>
 
                   <!-- 标题 -->

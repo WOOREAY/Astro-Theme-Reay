@@ -5,14 +5,81 @@
  * Replace the example links with your own connections.
  */
 
-export interface FriendLink {
+/**
+ * Link type definition
+ */
+export type LinkType = 'friend' | 'site' | 'social';
+
+/**
+ * Base link interface
+ */
+export interface BaseLink {
   name: string;
   url: string;
   avatar: string;
   description: string;
+}
+
+/**
+ * Friend link interface
+ */
+export interface FriendLink extends BaseLink {
   category?: string;
-  type: 'friend' | 'site' | 'social';
+  type: LinkType;
   featured?: boolean;
+}
+
+/**
+ * Link category item interface
+ */
+export interface LinkCategoryItem {
+  id: string;
+  label: string;
+  icon: string;
+}
+
+/**
+ * Link categories configuration interface
+ */
+export interface LinkCategoriesConfig {
+  friend: LinkCategoryItem[];
+  site: LinkCategoryItem[];
+  social: LinkCategoryItem[];
+}
+
+/**
+ * Contact information interface
+ */
+export interface ContactInfo {
+  label: string;
+  value: string;
+  icon: string;
+}
+
+/**
+ * Link application information interface
+ */
+export interface LinkApplicationInfo {
+  title: string;
+  description: string;
+  contacts: ContactInfo[];
+}
+
+/**
+ * Site information interface
+ */
+export interface SiteInfo extends BaseLink {
+  // Inherits: name, url, avatar, description
+}
+
+/**
+ * Complete links configuration interface
+ */
+export interface LinksConfig {
+  friendLinks: FriendLink[];
+  linkCategories: LinkCategoriesConfig;
+  linkApplicationInfo: LinkApplicationInfo;
+  mySiteInfo: SiteInfo;
 }
 
 /**
@@ -88,7 +155,7 @@ export const friendLinks: FriendLink[] = [
 /**
  * Link categories (grouped by type)
  */
-export const linkCategories = {
+export const linkCategories: LinkCategoriesConfig = {
   friend: [
     { id: 'all', label: 'All', icon: 'i-carbon:apps' },
     { id: 'featured', label: 'Featured', icon: 'i-carbon:star-filled' },
@@ -110,7 +177,7 @@ export const linkCategories = {
  * Link exchange application information
  * Replace with your contact details
  */
-export const linkApplicationInfo = {
+export const linkApplicationInfo: LinkApplicationInfo = {
   title: 'Apply for Link Exchange',
   description: '',
   contacts: [
@@ -124,9 +191,20 @@ export const linkApplicationInfo = {
  * Your site information (displayed in link exchange section)
  * Update with your actual site details
  */
-export const mySiteInfo = {
+export const mySiteInfo: SiteInfo = {
   name: 'Your Site Name',
   url: 'https://your-site.example.com',
   avatar: '/avatar.png',
   description: 'Your site tagline or description',
+};
+
+/**
+ * Complete links configuration export
+ * Aggregates all link-related configurations in one place
+ */
+export const linksConfig: LinksConfig = {
+  friendLinks,
+  linkCategories,
+  linkApplicationInfo,
+  mySiteInfo,
 };

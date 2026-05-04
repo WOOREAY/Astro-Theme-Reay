@@ -6,7 +6,7 @@ Get your blog up and running in 5 minutes!
 
 ```bash
 # Clone or use template
-git clone https://github.com/wooreay/Astro-Theme-Reay.git
+git clone https://github.com/yourusername/Astro-Theme-Reay.git
 cd Astro-Theme-Reay
 
 # Install dependencies
@@ -137,20 +137,15 @@ npm run preview
 
 ## Deploy Quick Options
 
-### Vercel (Recommended)
-1. Push to GitHub
-2. Import on Vercel
-3. Deploy automatically
+### GitHub Pages (Built In)
+1. Enable **Settings → Pages → Source → GitHub Actions** in your repository.
+2. Configure `SITE` and `BASE` if your site is not deployed at the domain root.
+3. Push to `main`; `.github/workflows/deploy.yml` builds and deploys `dist/`.
 
-### Netlify
-1. Drag `dist/` folder to Netlify
-2. Done!
-
-### GitHub Pages
-```bash
-npm run build
-# Push dist/ to gh-pages branch
-```
+### Vercel / Netlify
+1. Push to GitHub and import the repository in the platform dashboard.
+2. Use build command `npm run build`.
+3. Use output directory `dist`.
 
 See [Deployment Guide](./DEPLOYMENT.md) for detailed instructions.
 

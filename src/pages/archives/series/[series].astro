@@ -5,17 +5,18 @@
  */
 import type { CollectionEntry } from 'astro:content';
 import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import { getAllSeries, getPostsBySeries, formatDate, getPostUrl } from '../../../utils/blog';
+import { decodeRouteParam, getAllSeries, getPostsBySeries, formatDate, getPostUrl, getSeriesUrl } from '../../../utils/blog';
+import { useI18n } from '../../../utils/i18n';
 
 export async function getStaticPaths() {
   const series = await getAllSeries();
   
   return series.map(({ series: seriesName }) => ({
-    params: { series: seriesName },
+    params: { series: encodeURIComponent(seriesName) },
   }));
 }
 
-const { series } = Astro.params;
+const series = decodeRouteParam(Astro.params.series);
 
 // Data layer: Get all posts in this series
 const posts = await getPostsBySeries(series);
@@ -26,16 +27,18 @@ const currentSeries = allSeries.find(s => s.series === series);
 const totalPosts = posts.length;
 const completedPosts = totalPosts; // Simplified: assume all posts are completed
 const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100) : 0;
+const { t } = useI18n();
 ---
 
 <ArchiveLayout
   title={series}
-  description={`${series} series, ${posts.length} posts in total`}
+  description={t('archives.series.subtitle')}
+  descriptionKey="archives.series.subtitle"
   showBackButton={true}
   backUrl="/archives/series"
 >
   <!-- Series info card -->
-  <div class="series-info-card">
+  <div class="series-info-card reay-card">
     <div class="series-header">
       <div class="series-icon">
         <i class="i-carbon:folder"></i>
@@ -45,16 +48,16 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
         <div class="series-meta">
           <span class="meta-item">
             <i class="i-carbon:document"></i>
-            {posts.length} posts
+            {posts.length} <span data-i18n="archives.postsCount">{t('archives.postsCount')}</span>
           </span>
           <span class="meta-item">
             <i class="i-carbon:time"></i>
-            About {posts.length * 5} min read
+            <span data-i18n="archives.series.aboutPrefix">{t('archives.series.aboutPrefix')}</span> {posts.length * 5} <span data-i18n="blog.readTime">{t('blog.readTime')}</span>
           </span>
           {currentSeries && allSeries.length > 0 && (
             <span class="meta-item">
               <i class="i-carbon:trophy"></i>
-              Rank #{allSeries.findIndex(s => s.series === series) + 1}
+              <span data-i18n="archives.series.rank">{t('archives.series.rank')}</span> #{allSeries.findIndex(s => s.series === series) + 1}
             </span>
           )}
         </div>
@@ -64,7 +67,7 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     <!-- Progress bar -->
     <div class="series-progress">
       <div class="progress-header">
-        <span class="progress-label">Reading Progress</span>
+        <span class="progress-label" data-i18n="archives.series.progress">{t('archives.series.progress')}</span>
         <span class="progress-percentage">{progress}%</span>
       </div>
       <div class="progress-bar">
@@ -78,11 +81,11 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     <section class="posts-section">
       <h3 class="section-title">
         <i class="i-carbon:book"></i>
-        Chapters
+        <span data-i18n="archives.series.chapters">{t('archives.series.chapters')}</span>
       </h3>
       <div class="posts-list">
         {posts.map((post, index) => (
-          <a href={getPostUrl(post)} class="post-card">
+          <a href={getPostUrl(post)} class="post-card reay-card reay-card--compact">
             <div class="post-number">{(post.data.seriesOrder || index + 1).toString().padStart(2, '0')}</div>
             <div class="post-content">
               <h4 class="post-title">{post.data.title}</h4>
@@ -97,7 +100,7 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
                 {post.data.tags && post.data.tags.length > 0 && (
                   <div class="post-tags">
                     {post.data.tags.slice(0, 3).map(tag => (
-                      <span class="tag-badge">#{tag}</span>
+                      <span class="tag-badge reay-chip">#{tag}</span>
                     ))}
                   </div>
                 )}
@@ -113,8 +116,8 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
   ) : (
     <div class="empty-state">
       <i class="i-carbon:document-blank"></i>
-      <h3>Empty Series</h3>
-      <p>No posts in this series yet</p>
+      <h3 data-i18n="archives.empty.series.title">{t('archives.empty.series.title')}</h3>
+      <p data-i18n="archives.empty.series.description">{t('archives.empty.series.description')}</p>
     </div>
   )}
 
@@ -123,20 +126,20 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     <section class="series-nav-section">
       <h3 class="section-title">
         <i class="i-carbon:grid"></i>
-        Other Series
+        <span data-i18n="archives.series.other">{t('archives.series.other')}</span>
       </h3>
       <div class="series-nav-grid">
         {allSeries
           .filter(s => s.series !== series)
           .slice(0, 4)
           .map(s => (
-            <a href={`/archives/series/${s.series}`} class="series-nav-card">
+            <a href={getSeriesUrl(s.series)} class="series-nav-card reay-card reay-card--compact">
               <div class="nav-card-icon">
                 <i class="i-carbon:folder"></i>
               </div>
               <div class="nav-card-content">
                 <h4 class="nav-card-title">{s.series}</h4>
-                <p class="nav-card-count">{s.count} posts</p>
+                <p class="nav-card-count">{s.count} <span data-i18n="archives.postsCount">{t('archives.postsCount')}</span></p>
               </div>
               <i class="i-carbon:arrow-right nav-card-arrow"></i>
             </a>
@@ -207,14 +210,11 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
 <style>
   .series-info-card {
     padding: 2rem;
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary-container),
-      var(--md-sys-color-tertiary-container)
-    );
-    border-radius: 16px;
+    background: var(--reay-surface-bg);
+    border-radius: 1.1rem;
     margin-bottom: 2rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
   }
 
   .series-header {
@@ -336,13 +336,21 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     align-items: center;
     gap: 1.5rem;
     padding: 1.5rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: var(--reay-card-radius);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition:
+      transform 0.36s var(--reay-ease-out),
+      background 0.32s ease,
+      border-color 0.32s ease,
+      box-shadow 0.32s ease;
     position: relative;
+    overflow: hidden;
   }
 
   .post-card::before {
@@ -353,17 +361,17 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     bottom: 0;
     width: 4px;
     background: var(--md-sys-color-primary);
-    border-radius: 12px 0 0 12px;
+    border-radius: var(--reay-card-radius) 0 0 var(--reay-card-radius);
     transform: scaleY(0);
     transform-origin: center;
     transition: transform 0.3s ease;
   }
 
   .post-card:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
-    transform: translateX(8px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    transform: translateX(6px) translateY(-2px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .post-card:hover::before {
@@ -433,9 +441,9 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
   .tag-badge {
     font-size: 0.75rem;
     padding: 0.25rem 0.625rem;
-    background: var(--md-sys-color-surface-container);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 6px;
+    background: var(--reay-chip-bg);
+    border: 1px solid var(--reay-chip-border);
+    border-radius: 999px;
     color: var(--md-sys-color-on-surface-variant);
   }
 
@@ -493,19 +501,28 @@ const progress = totalPosts > 0 ? Math.round((completedPosts / totalPosts) * 100
     align-items: center;
     gap: 1rem;
     padding: 1rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 10px;
+    background: var(--reay-surface-bg);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: var(--reay-card-radius);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
     text-decoration: none;
     color: inherit;
-    transition: all 0.3s ease;
+    transition:
+      transform 0.32s var(--reay-ease-out),
+      background 0.32s ease,
+      border-color 0.32s ease,
+      box-shadow 0.32s ease;
+    position: relative;
+    overflow: hidden;
   }
 
   .series-nav-card:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
-    transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    transform: translateY(-3px);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .nav-card-icon {

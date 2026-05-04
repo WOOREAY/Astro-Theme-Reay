@@ -26,8 +26,6 @@ Welcome to the comprehensive documentation for Astro Theme Reay, a modern blog t
 - [Deployment](./DEPLOYMENT.md) - Publishing your site
 - [GitHub Actions](./GITHUB-ACTIONS.md) - Automated deployment setup
 - [Deployment Checklist](./DEPLOYMENT-CHECKLIST.md) - Pre-deployment verification
-- [Security Guide](./SECURITY.md) - Safe configuration and token management
-- [Performance Optimization](./PERFORMANCE.md) - Speed and Core Web Vitals
 - [API Reference](./API.md) - Technical documentation and types
 - [FAQ](./FAQ.md) - Frequently asked questions
 
@@ -74,7 +72,7 @@ Built-in English and Chinese language support with:
 1. Understand [Project Structure](./PROJECT-STRUCTURE.md)
 2. Customize [Theme Configuration](./THEME-CONFIG.md)
 3. Style your content with [Markdown Styles](./MARKDOWN-CUSTOM-GUIDE.md)
-4. Advanced changes in [Customization](./CUSTOMIZATION.md)
+4. Review advanced configuration in [API Reference](./API.md)
 
 ### For Developers
 1. Review [API Reference](./API.md)

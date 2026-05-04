@@ -19,18 +19,21 @@ const DEFAULT_CONFIG: ThemeToggleConfig = {
 
 export class ThemeToggle {
   private el: HTMLElement;
-  private btn: HTMLButtonElement | null;
-  private icon: HTMLElement | null;
+  private buttons: HTMLButtonElement[];
   private config: ThemeToggleConfig;
   private order: ThemeMode[] = ['light', 'dark', 'system'];
 
   constructor(config: Partial<ThemeToggleConfig> = {}) {
     this.config = { ...DEFAULT_CONFIG, ...config };
     this.el = document.documentElement;
-    this.btn = document.getElementById(this.config.btnId!) as HTMLButtonElement | null;
-    this.icon = document.getElementById(this.config.iconId!) as HTMLElement | null;
+    this.buttons = Array.from(document.querySelectorAll<HTMLButtonElement>('[data-theme-toggle]'));
 
-    if (!this.btn || !this.icon) {
+    if (this.buttons.length === 0) {
+      const legacyButton = document.getElementById(this.config.btnId!) as HTMLButtonElement | null;
+      this.buttons = legacyButton ? [legacyButton] : [];
+    }
+
+    if (this.buttons.length === 0) {
       console.warn('[ThemeToggle] Required elements not found');
       return;
     }
@@ -44,11 +47,16 @@ export class ThemeToggle {
   private init() {
     this.apply(this.read());
 
-    this.btn?.addEventListener('click', () => {
-      const cur = this.read();
-      const idx = this.order.indexOf(cur);
-      const next = this.order[(idx + 1) % this.order.length];
-      this.apply(next);
+    this.buttons.forEach((button) => {
+      if (button.dataset.bound === 'true') return;
+      button.dataset.bound = 'true';
+
+      button.addEventListener('click', () => {
+        const cur = this.read();
+        const idx = this.order.indexOf(cur);
+        const next = this.order[(idx + 1) % this.order.length];
+        this.apply(next);
+      });
     });
 
     const mql = window.matchMedia('(prefers-color-scheme: dark)');
@@ -110,8 +118,6 @@ export class ThemeToggle {
    * @param mode - Theme mode to apply
    */
   private apply(mode: ThemeMode) {
-    if (!this.btn || !this.icon) return;
-
     // Set data-theme attribute
     if (mode === 'system') {
       // When system mode, detect system preference and apply
@@ -124,17 +130,23 @@ export class ThemeToggle {
     // Save to localStorage
     localStorage.setItem(this.config.storageKey!, mode);
 
-    // Add rotation animation effect
-    this.icon.style.transform = 'rotate(360deg)';
-    setTimeout(() => {
-      this.icon!.className = this.iconClass(mode);
-      this.icon!.style.transform = '';
-    }, 150);
-
     // Update aria-label for accessibility
     const labelText = `切换主题（当前：${this.label(mode)}）`;
-    this.btn.setAttribute('aria-label', labelText);
-    this.btn.title = labelText;
+    this.buttons.forEach((button) => {
+      const icon = button.querySelector<HTMLElement>('[data-theme-icon]') ||
+        document.getElementById(this.config.iconId!) as HTMLElement | null;
+
+      if (icon) {
+        icon.style.transform = 'rotate(360deg)';
+        setTimeout(() => {
+          icon.className = this.iconClass(mode);
+          icon.style.transform = '';
+        }, 150);
+      }
+
+      button.setAttribute('aria-label', labelText);
+      button.title = labelText;
+    });
   }
 
   /**

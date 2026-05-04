@@ -27,7 +27,7 @@ const { project } = Astro.props;
 
 <a
   href={`/projects/${project.owner}/${project.name}`}
-  class="glass-card-interactive project-card"
+  class="reay-card project-card"
   data-category={project.category}
   data-featured={project.featured}
   rel="prefetch"
@@ -52,13 +52,13 @@ const { project } = Astro.props;
 
     <div class="project-tags">
       {project.language && (
-        <span class="tag tag-language" style={`--lang-color: ${getLanguageColor(project.language)}`}>
+        <span class="tag tag-language reay-chip" style={`--lang-color: ${getLanguageColor(project.language)}`}>
           <span class="lang-dot"></span>
           {project.language}
         </span>
       )}
       {[...project.topics, ...(project.customTags || [])].slice(0, 5).map(tag => (
-        <span class="tag">{tag}</span>
+        <span class="tag reay-chip">{tag}</span>
       ))}
     </div>
   </div>
@@ -86,6 +86,7 @@ const { project } = Astro.props;
     flex-direction: column;
     gap: 1rem;
     height: 100%;
+    padding: 1.25rem;
   }
 
   .project-card::after {
@@ -96,7 +97,7 @@ const { project } = Astro.props;
     top: 0;
     height: 3px;
     background: linear-gradient(to right, var(--md-sys-color-primary), var(--md-sys-color-tertiary));
-    border-radius: 16px 16px 0 0;
+    border-radius: 1.1rem 1.1rem 0 0;
     transform: scaleX(0);
     transition: transform 0.3s cubic-bezier(0.4, 0, 0.2, 1);
     opacity: 0;
@@ -174,11 +175,7 @@ const { project } = Astro.props;
 
   .tag {
     padding: 0.1875rem 0.5rem;
-    background: var(--md-sys-color-surface-variant);
     color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.75rem;
-    font-weight: 500;
-    border-radius: 4px;
   }
 
   .tag-language {

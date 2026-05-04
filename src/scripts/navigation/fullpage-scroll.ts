@@ -11,7 +11,11 @@ export class FullPageScroll {
   private isAnimating: boolean = false;
   private touchStartY: number = 0;
   private lastScrollTime: number = 0;
-  private scrollCooldown: number = 1000;
+  private scrollCooldown: number = 680;
+  private wheelDelta: number = 0;
+  private wheelResetTimer: number | undefined;
+  private animationDuration: number = 760;
+  private lastWheelDirection: number = 0;
 
   constructor() {
     const container = document.getElementById('fullpage-container');
@@ -68,10 +72,20 @@ export class FullPageScroll {
   private updateSectionPositions() {
     this.sections.forEach((section, index) => {
       const offset = (index - this.currentSection) * 100;
-      section.style.transform = `translateY(${offset}%)`;
+      section.style.transform = `translate3d(0, ${offset}%, 0)`;
       const isActive = index === this.currentSection;
       section.style.opacity = isActive ? '1' : '0';
       section.dataset.active = isActive ? 'true' : 'false';
+    });
+  }
+
+  private resetSectionScroll(section: HTMLElement) {
+    section.scrollTop = 0;
+    section.querySelectorAll<HTMLElement>('*').forEach((element) => {
+      const style = window.getComputedStyle(element);
+      if (/(auto|scroll)/.test(style.overflowY) && element.scrollHeight > element.clientHeight + 2) {
+        element.scrollTop = 0;
+      }
     });
   }
 
@@ -80,24 +94,83 @@ export class FullPageScroll {
    * Implements cooldown period to prevent rapid scrolling
    */
   private handleWheel(e: WheelEvent) {
-    e.preventDefault();
+    if (this.shouldLetActiveSectionScroll(e.deltaY, e.target)) {
+      return;
+    }
     
     // Check if in cooldown period or animating
     const now = Date.now();
     if (this.isAnimating || (now - this.lastScrollTime) < this.scrollCooldown) {
+      e.preventDefault();
       return;
     }
 
-    // Determine scroll direction (deltaY > 0 = down, < 0 = up)
-    // Minimum threshold to prevent accidental triggers
-    if (Math.abs(e.deltaY) > 10) {
-      if (e.deltaY > 0) {
+    e.preventDefault();
+
+    const direction = Math.sign(e.deltaY);
+    if (direction !== 0 && direction !== this.lastWheelDirection) {
+      this.wheelDelta = 0;
+      this.lastWheelDirection = direction;
+    }
+
+    this.wheelDelta += e.deltaY;
+
+    if (this.wheelResetTimer) {
+      window.clearTimeout(this.wheelResetTimer);
+    }
+    this.wheelResetTimer = window.setTimeout(() => {
+      this.wheelDelta = 0;
+    }, 180);
+
+    const threshold = e.deltaMode === WheelEvent.DOM_DELTA_LINE ? 7 : 128;
+    if (Math.abs(this.wheelDelta) >= threshold) {
+      if (this.wheelDelta > 0) {
         this.scrollDown();
       } else {
         this.scrollUp();
       }
+      this.wheelDelta = 0;
       this.lastScrollTime = now;
     }
+  }
+
+  private shouldLetActiveSectionScroll(deltaY: number, target?: EventTarget | null) {
+    const activeSection = this.sections[this.currentSection];
+    if (!activeSection) return false;
+
+    const scrollableElement = this.findScrollableElement(activeSection, target);
+    if (!scrollableElement) return false;
+
+    const atTop = scrollableElement.scrollTop <= 0;
+    const atBottom = scrollableElement.scrollTop + scrollableElement.clientHeight >= scrollableElement.scrollHeight - 2;
+
+    if (deltaY > 0 && !atBottom) return true;
+    if (deltaY < 0 && !atTop) return true;
+
+    return false;
+  }
+
+  private findScrollableElement(activeSection: HTMLElement, target?: EventTarget | null): HTMLElement | null {
+    let node = target instanceof HTMLElement ? target : null;
+
+    while (node && node !== activeSection.parentElement) {
+      if (activeSection.contains(node) && node.scrollHeight > node.clientHeight + 2) {
+        const style = window.getComputedStyle(node);
+        const canScroll = /(auto|scroll)/.test(style.overflowY);
+        if (canScroll) return node;
+      }
+      node = node.parentElement;
+    }
+
+    const activeStyle = window.getComputedStyle(activeSection);
+    if (
+      /(auto|scroll)/.test(activeStyle.overflowY) &&
+      activeSection.scrollHeight > activeSection.clientHeight + 2
+    ) {
+      return activeSection;
+    }
+
+    return null;
   }
 
   /**
@@ -115,9 +188,14 @@ export class FullPageScroll {
   private handleTouchMove(e: TouchEvent) {
     if (this.isAnimating) return;
     
-    e.preventDefault();
     const touchEndY = e.touches[0].clientY;
     const diff = this.touchStartY - touchEndY;
+
+    if (this.shouldLetActiveSectionScroll(diff, e.target)) {
+      return;
+    }
+
+    e.preventDefault();
     
     // Check cooldown time
     const now = Date.now();
@@ -125,13 +203,14 @@ export class FullPageScroll {
       return;
     }
 
-    // Swipe threshold: 50 pixels
-    if (Math.abs(diff) > 50) {
+    // Swipe threshold: tuned for mobile without making small movements jump pages.
+    if (Math.abs(diff) > 88) {
       if (diff > 0) {
         this.scrollDown();
       } else {
         this.scrollUp();
       }
+      this.touchStartY = touchEndY;
       this.lastScrollTime = now;
     }
   }
@@ -193,6 +272,12 @@ export class FullPageScroll {
     }
     
     this.isAnimating = true;
+    const targetSection = this.sections[index];
+    if (targetSection) {
+      this.resetSectionScroll(targetSection);
+      requestAnimationFrame(() => this.resetSectionScroll(targetSection));
+    }
+
     this.currentSection = index;
     
     // Update all section positions
@@ -201,10 +286,10 @@ export class FullPageScroll {
     // Update indicators
     this.updateDots();
     
-    // Unlock after 800ms (matches CSS transition duration)
+    // Unlock after the CSS transition finishes
     setTimeout(() => {
       this.isAnimating = false;
-    }, 800);
+    }, this.animationDuration);
   }
 
   /**

@@ -3,7 +3,7 @@
  * Manages bilingual user-configurable content (bio, tagline, etc.)
  */
 
-import type { Language } from '../data/i18n.config';
+import { defaultLang, type Language } from '../data/i18n.config';
 import { userContent } from '../data/user.config';
 
 /**
@@ -33,6 +33,14 @@ export function updateUserContent(lang: Language) {
   if (greetingElement && content.greeting) {
     greetingElement.textContent = content.greeting;
   }
+
+  // Update compact description
+  const descriptionElements = document.querySelectorAll('[data-user-content="description"]');
+  if (descriptionElements.length > 0 && content.description) {
+    descriptionElements.forEach((element) => {
+      element.textContent = content.description;
+    });
+  }
 }
 
 /**
@@ -52,7 +60,7 @@ export function initUserContentI18n() {
   
   // Initial update based on stored language
   // This fixes server-side vs client-side language mismatch
-  const currentLang = (localStorage.getItem('language') || 'en') as Language;
+  const currentLang = (localStorage.getItem('language') || defaultLang) as Language;
   
   // Update immediately if language is different from default
   if (isInitialLoad) {

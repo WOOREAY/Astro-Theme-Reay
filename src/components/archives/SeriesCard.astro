@@ -4,6 +4,8 @@
  * 系列卡片组件 - 展示文章系列/文件夹
  */
 import type { CollectionEntry } from 'astro:content';
+import { getSeriesUrl } from '../../utils/blog';
+import { useI18n } from '../../utils/i18n';
 
 interface Props {
   series: string;
@@ -12,16 +14,18 @@ interface Props {
   compact?: boolean; // 紧凑模式
 }
 
-const { series, count, posts, compact = false } = Astro.props;
+const { series, count, posts = [], compact = false } = Astro.props;
+const { t } = useI18n();
 
 // 计算统计信息
-const latestPost = posts.sort((a, b) => 
+const sortedPosts = [...posts].sort((a, b) => 
   b.data.publishDate.getTime() - a.data.publishDate.getTime()
-)[0];
+);
+const latestPost = sortedPosts[0];
 
 const totalReadingTime = posts.reduce((sum, post) => {
   const wordsPerMinute = 300;
-  const wordCount = post.body.length;
+  const wordCount = post.body?.length ?? 0;
   const minutes = Math.ceil(wordCount / wordsPerMinute);
   return sum + Math.max(1, minutes);
 }, 0);
@@ -29,7 +33,7 @@ const totalReadingTime = posts.reduce((sum, post) => {
 // 获取所有标签并计数
 const tagCount = new Map<string, number>();
 posts.forEach(post => {
-  post.data.tags.forEach(tag => {
+  (post.data.tags ?? []).forEach(tag => {
     tagCount.set(tag, (tagCount.get(tag) || 0) + 1);
   });
 });
@@ -49,8 +53,8 @@ function formatDate(date: Date) {
 ---
 
 <a 
-  href={`/archives/series/${series}`}
-  class={`glass-card-interactive series-card ${compact ? 'compact' : ''}`}
+  href={getSeriesUrl(series)}
+  class={`reay-card series-card ${compact ? 'compact' : ''}`}
 >
   <div class="series-header">
     <div class="series-icon">
@@ -65,11 +69,11 @@ function formatDate(date: Date) {
     <div class="series-stats">
       <div class="stat-item">
         <i class="i-carbon:document"></i>
-        <span>{count} 篇文章</span>
+        <span>{count} <span data-i18n="archives.postsCount">{t('archives.postsCount')}</span></span>
       </div>
       <div class="stat-item">
         <i class="i-carbon:time"></i>
-        <span>约 {totalReadingTime} 分钟</span>
+        <span><span data-i18n="archives.series.aboutPrefix">{t('archives.series.aboutPrefix')}</span> {totalReadingTime} <span data-i18n="blog.readTime">{t('blog.readTime')}</span></span>
       </div>
       {latestPost && (
         <div class="stat-item">
@@ -82,7 +86,7 @@ function formatDate(date: Date) {
     {topTags.length > 0 && !compact && (
       <div class="series-tags">
         {topTags.map(tag => (
-          <span class="tag-badge">#{tag}</span>
+          <span class="tag-badge reay-chip">#{tag}</span>
         ))}
       </div>
     )}
@@ -90,7 +94,7 @@ function formatDate(date: Date) {
 
   <div class="series-footer">
     <span class="view-series">
-      查看系列
+      <span data-i18n="archives.series.view">{t('archives.series.view')}</span>
       <i class="i-carbon:arrow-right"></i>
     </span>
   </div>
@@ -104,6 +108,8 @@ function formatDate(date: Date) {
     color: inherit;
     position: relative;
     overflow: hidden;
+    min-height: 15rem;
+    padding: 1.4rem 1.45rem 1.25rem 1.7rem;
   }
 
   .series-card::before {
@@ -160,7 +166,7 @@ function formatDate(date: Date) {
     display: flex;
     align-items: flex-start;
     gap: 1.25rem;
-    margin-bottom: 1rem;
+    margin-bottom: 1.1rem;
     padding-bottom: 1rem;
     border-bottom: 1px solid var(--md-sys-color-outline-variant);
   }
@@ -287,7 +293,8 @@ function formatDate(date: Date) {
 
   /* 紧凑模式 */
   .series-card.compact {
-    padding: 1.25rem;
+    min-height: 12rem;
+    padding: 1.15rem 1.25rem 1.1rem 1.5rem;
   }
 
   .series-card.compact .series-header {
@@ -311,7 +318,7 @@ function formatDate(date: Date) {
 
   @media (max-width: 768px) {
     .series-card {
-      padding: 1.25rem;
+      padding: 1.2rem 1.2rem 1.1rem 1.45rem;
     }
 
     .series-header {

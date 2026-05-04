@@ -22,6 +22,10 @@ interface Props {
 
 const { post, headings = [], readingTime, readingMinutes } = Astro.props;
 const { title, description, publishDate, updatedDate, tags, cover, coverAlt, author, language } = post.data;
+const siteOrigin = import.meta.env.PROD
+  ? (Astro.site?.toString() || Astro.url.origin)
+  : Astro.url.origin;
+const postUrl = new URL(Astro.url.pathname, siteOrigin).toString();
 
 // Generate Markdown styles
 const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
@@ -67,7 +71,7 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
       </div>
       
       <!-- Post footer -->
-      <PostFooter author={author} postUrl={Astro.url.href} />
+      <PostFooter author={author} postUrl={postUrl} />
     </article>
     
     <!-- Right sidebar TOC (desktop only) -->
@@ -80,10 +84,87 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
   .blog-post-container {
     max-width: 1400px;
     margin: 0 auto;
+    --blog-anchor-offset: 6.75rem;
+  }
+
+  .post-content :is(h1, h2, h3, h4, h5, h6)[id] {
+    scroll-margin-top: var(--blog-anchor-offset);
   }
 </style>
 
 <style is:global set:html={markdownStyles}></style>
+
+<script>
+  /**
+   * Unify in-article anchor behavior with sidebar TOC behavior.
+   * This prevents headings from being hidden behind the fixed header.
+   */
+  function getAnchorScrollTarget(target: HTMLElement) {
+    const scrollMarginTop = Number.parseFloat(
+      window.getComputedStyle(target).scrollMarginTop || '0'
+    );
+    return target.getBoundingClientRect().top + window.scrollY - scrollMarginTop;
+  }
+
+  function scrollToAnchor(targetId: string, updateHistory = true) {
+    const target = document.getElementById(targetId);
+    if (!target) return false;
+
+    const top = getAnchorScrollTarget(target);
+    if (updateHistory) {
+      window.history.pushState(null, '', `#${encodeURIComponent(targetId)}`);
+    }
+
+    window.scrollTo({
+      top,
+      behavior: 'smooth',
+    });
+    return true;
+  }
+
+  function initArticleAnchors() {
+    const postContent = document.querySelector('.post-content');
+    if (!postContent) return;
+
+    if (postContent.getAttribute('data-anchor-handler-initialized') === 'true') {
+      return;
+    }
+
+    postContent.setAttribute('data-anchor-handler-initialized', 'true');
+
+    postContent.addEventListener('click', (event) => {
+      const target = event.target;
+      if (!(target instanceof Element)) return;
+
+      const link = target.closest('a[href^="#"]');
+      if (!(link instanceof HTMLAnchorElement)) return;
+
+      const href = link.getAttribute('href');
+      if (!href || href === '#') return;
+
+      const targetId = decodeURIComponent(href.slice(1));
+      if (!document.getElementById(targetId)) return;
+
+      event.preventDefault();
+      scrollToAnchor(targetId);
+    });
+
+    if (window.location.hash) {
+      const targetId = decodeURIComponent(window.location.hash.slice(1));
+      setTimeout(() => {
+        scrollToAnchor(targetId, false);
+      }, 50);
+    }
+  }
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initArticleAnchors);
+  } else {
+    initArticleAnchors();
+  }
+
+  document.addEventListener('astro:page-load', initArticleAnchors);
+</script>
 
 <script>
   /**

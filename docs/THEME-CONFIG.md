@@ -496,4 +496,4 @@ export const themeConfig = {
 - [MD3 Color Guide](./MD3-COLOR-GUIDE.md)
 - [Markdown Styles](./MARKDOWN-CUSTOM-GUIDE.md)
 - [User Configuration](./USER-CONFIG.md)
-- [Customization](./CUSTOMIZATION.md)
+- [Project Structure](./PROJECT-STRUCTURE.md)

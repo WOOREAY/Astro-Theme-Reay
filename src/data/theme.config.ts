@@ -39,32 +39,18 @@ export interface BackgroundConfig {
   };
 }
 
-export const backgroundConfig: BackgroundConfig = {
-  type: 'none',
-  blur: true,
-  blurIntensity: 'medium',
-  
-  // Example custom background image (uncomment to use)
-  // imageUrl: '/images/background.jpg',
-  
-  imageStyle: {
-    size: 'cover',
-    position: 'center',
-    repeat: 'no-repeat',
-    opacity: 0.6,
-  },
-  
-  gradient: {
-    useMD3Colors: true,
-    direction: '135deg',
-  },
-};
+/**
+ * Extended theme configuration with background settings
+ */
+export interface ThemeConfig extends UserThemeOverrides {
+  background: BackgroundConfig;
+}
 
 /**
  * Main theme configuration
- * Customize colors and typography to match your brand
+ * Customize colors, typography, and background to match your brand
  */
-export const themeConfig: UserThemeOverrides = {
+export const themeConfig: ThemeConfig = {
   /** Primary color - generates the complete MD3 color palette */
   primary: '#00aaffff',
 
@@ -73,4 +59,31 @@ export const themeConfig: UserThemeOverrides = {
     fontFamily: 'Inter, "Noto Sans SC", system-ui, sans-serif',
     lineHeight: 1.65,
   },
+
+  /** Background configuration */
+  background: {
+    type: 'gradient',
+    blur: true,
+    blurIntensity: 'light',
+
+    // Example custom background image (uncomment to use)
+    // imageUrl: '/images/background.jpg',
+
+    imageStyle: {
+      size: 'cover',
+      position: 'center',
+      repeat: 'no-repeat',
+      opacity: 0.6,
+    },
+
+    gradient: {
+      useMD3Colors: true,
+      direction: '135deg',
+    },
+  },
 };
+
+/**
+ * Backward-compatible export for older user customizations.
+ */
+export const backgroundConfig: BackgroundConfig = themeConfig.background;

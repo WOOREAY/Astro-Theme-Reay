@@ -4,9 +4,9 @@
  * 统一的背景组件
  * 支持 MD3 渐变背景、自定义图片背景、可配置模糊效果
  */
-import { backgroundConfig } from '../../data/theme.config';
+import { themeConfig } from '../../data/theme.config';
 
-const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = backgroundConfig;
+const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = themeConfig.background;
 
 // 模糊程度映射
 const blurMap = {
@@ -20,19 +20,20 @@ const blurValue = blur ? blurMap[blurIntensity] : '0px';
 // 构建背景样式
 let backgroundStyle = '';
 let useImage = false;
+let imageOpacity = 1;
 
 if (type === 'gradient') {
   if (gradient?.useMD3Colors) {
     // 使用 MD3 调色板颜色的渐变
     backgroundStyle = `
-      background: linear-gradient(
-        ${gradient.direction || '135deg'},
-        var(--md-sys-color-primary-container) 0%,
-        var(--md-sys-color-secondary-container) 25%,
-        var(--md-sys-color-tertiary-container) 50%,
-        var(--md-sys-color-primary-container) 75%,
-        var(--md-sys-color-secondary-container) 100%
-      );
+      background:
+        linear-gradient(120deg, rgba(var(--md-sys-color-primary-rgb), 0.24), transparent 32%),
+        linear-gradient(235deg, rgba(var(--md-sys-color-tertiary-rgb), 0.24), transparent 34%),
+        linear-gradient(${gradient.direction || '135deg'},
+          rgba(var(--md-sys-color-primary-container-rgb), 0.8) 0%,
+          rgba(var(--md-sys-color-secondary-container-rgb), 0.68) 38%,
+          rgba(var(--md-sys-color-tertiary-container-rgb), 0.72) 100%
+        );
     `;
   } else if (gradient?.colors && gradient.colors.length > 0) {
     // 使用自定义渐变色
@@ -52,7 +53,7 @@ if (type === 'gradient') {
 } else if (type === 'image' && imageUrl) {
   // 使用图片背景
   useImage = true;
-  const opacity = imageStyle?.opacity ?? 1;
+  imageOpacity = imageStyle?.opacity ?? 1;
   backgroundStyle = `
     background-image: url('${imageUrl}');
     background-size: ${imageStyle?.size || 'cover'};
@@ -66,8 +67,12 @@ if (type === 'gradient') {
 {type !== 'none' && (
   <div 
     class={`app-background ${useImage ? 'image-bg' : 'gradient-bg'}`}
-    style={backgroundStyle}
+    style={`${backgroundStyle} --image-opacity: ${imageOpacity};`}
+    aria-hidden="true"
   >
+    <div class="aurora-field"></div>
+    <div class="motion-grid"></div>
+    <div class="light-sweep"></div>
     {blur && (
       <div 
         class="background-overlay" 
@@ -80,41 +85,95 @@ if (type === 'gradient') {
 <style>
   .app-background {
     position: fixed;
-    top: 0;
-    left: 0;
-    width: 100%;
-    height: 100%;
+    inset: 0;
     z-index: -2;
+    overflow: hidden;
     transition: opacity 0.5s ease;
   }
 
   /* 渐变背景 */
   .gradient-bg {
-    opacity: 0.6; /* 增加渐变强度，从 0.4 提升到 0.6 */
+    opacity: 0.82;
+    background-size: 160% 160%, 180% 180%, 100% 100%;
+    animation: gradient-drift 18s ease-in-out infinite alternate;
   }
 
   /* 图片背景 */
   .image-bg {
-    opacity: 1;
+    opacity: var(--image-opacity, 1);
+  }
+
+  .aurora-field,
+  .motion-grid,
+  .light-sweep {
+    position: absolute;
+    inset: -20%;
+    pointer-events: none;
+  }
+
+  .aurora-field {
+    z-index: 0;
+    background:
+      linear-gradient(105deg, transparent 12%, rgba(var(--md-sys-color-primary-rgb), 0.18) 24%, transparent 40%),
+      linear-gradient(252deg, transparent 8%, rgba(var(--md-sys-color-tertiary-rgb), 0.16) 30%, transparent 48%),
+      linear-gradient(18deg, transparent 26%, rgba(var(--md-ref-palette-warning-rgb), 0.12) 48%, transparent 66%);
+    filter: blur(26px);
+    opacity: 0.58;
+    mix-blend-mode: screen;
+    animation: aurora-flow 16s ease-in-out infinite alternate;
+  }
+
+  .motion-grid {
+    z-index: 1;
+    inset: 0;
+    background:
+      linear-gradient(rgba(var(--md-sys-color-on-surface-rgb), 0.045) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--md-sys-color-on-surface-rgb), 0.04) 1px, transparent 1px);
+    background-size: 56px 56px;
+    mask-image: linear-gradient(to bottom, transparent, #000 18%, #000 78%, transparent);
+    opacity: 0.28;
+    transform: perspective(900px) rotateX(58deg) translateY(-18%);
+    transform-origin: top;
+    animation: grid-slide 22s linear infinite;
+  }
+
+  .light-sweep {
+    z-index: 2;
+    background: linear-gradient(112deg, transparent 0 42%, rgba(255, 255, 255, 0.14) 49%, transparent 58% 100%);
+    opacity: 0.34;
+    transform: translateX(-18%);
+    animation: sweep 12s var(--reay-ease-out, ease-out) infinite;
   }
 
   /* 模糊遮罩层 */
   .background-overlay {
     position: absolute;
     inset: 0;
-    z-index: 1;
-    background: var(--md-sys-color-surface);
-    opacity: 0.3; /* 降低遮罩透明度，从 0.5 降到 0.3，让渐变更明显 */
+    z-index: 3;
+    background:
+      linear-gradient(to bottom, rgba(var(--md-sys-color-surface-rgb), 0.16), rgba(var(--md-sys-color-surface-rgb), 0.06) 44%, rgba(var(--md-sys-color-surface-rgb), 0.2)),
+      rgba(var(--md-sys-color-surface-rgb), 0.08);
+    opacity: 1;
   }
 
   /* 暗色模式下调整遮罩透明度 */
   :global([data-theme='dark']) .background-overlay {
-    opacity: 0.5; /* 暗色模式也降低，从 0.7 降到 0.5 */
+    background:
+      linear-gradient(to bottom, rgba(var(--md-sys-color-surface-rgb), 0.34), rgba(var(--md-sys-color-surface-rgb), 0.14) 48%, rgba(var(--md-sys-color-surface-rgb), 0.36)),
+      rgba(var(--md-sys-color-surface-rgb), 0.12);
   }
 
   /* 渐变背景在暗色模式下调整 */
   :global([data-theme='dark']) .gradient-bg {
-    opacity: 0.5; /* 暗色模式也提升，从 0.3 提升到 0.5 */
+    opacity: 0.78;
+  }
+
+  :global([data-theme='dark']) .aurora-field {
+    opacity: 0.5;
+  }
+
+  :global([data-theme='dark']) .motion-grid {
+    opacity: 0.18;
   }
 
   /* 图片背景的额外遮罩 */
@@ -122,19 +181,83 @@ if (type === 'gradient') {
     content: '';
     position: absolute;
     inset: 0;
-    background: var(--md-sys-color-surface);
-    opacity: 0.3;
+    background:
+      linear-gradient(120deg, rgba(var(--md-sys-color-primary-rgb), 0.28), transparent 40%),
+      rgba(var(--md-sys-color-surface-rgb), 0.2);
+    opacity: 1;
     z-index: 0;
   }
 
   :global([data-theme='dark']) .image-bg::before {
-    opacity: 0.5;
+    background:
+      linear-gradient(120deg, rgba(var(--md-sys-color-primary-rgb), 0.18), transparent 38%),
+      rgba(var(--md-sys-color-surface-rgb), 0.48);
   }
 
   /* 性能优化 */
-  .app-background {
-    will-change: opacity;
-    transform: translateZ(0);
-    backface-visibility: hidden;
+	  .app-background {
+	    will-change: opacity, background-position;
+	    transform: translateZ(0);
+	    backface-visibility: hidden;
+	  }
+
+	  :global(body.layout-default) .gradient-bg,
+	  :global(body.layout-default) .aurora-field,
+	  :global(body.layout-default) .motion-grid,
+	  :global(body.layout-default) .light-sweep {
+	    animation: none !important;
+	  }
+
+	  :global(body.layout-default) .aurora-field,
+	  :global(body.layout-default) .light-sweep {
+	    display: none;
+	  }
+
+	  :global(body.layout-default) .gradient-bg {
+	    opacity: 0.58;
+	    background-size: 100% 100%;
+	  }
+
+	  :global(body.layout-default) .motion-grid {
+	    opacity: 0.12;
+	    transform: none;
+	  }
+
+	  :global(body.layout-default) .background-overlay {
+	    backdrop-filter: none !important;
+	    -webkit-backdrop-filter: none !important;
+	  }
+
+  @keyframes gradient-drift {
+    from { background-position: 0% 44%, 100% 50%, center; }
+    to { background-position: 100% 54%, 0% 48%, center; }
+  }
+
+  @keyframes aurora-flow {
+    from { transform: translate3d(-4%, -2%, 0) rotate(-2deg) scale(1.02); }
+    to { transform: translate3d(4%, 3%, 0) rotate(2deg) scale(1.08); }
+  }
+
+  @keyframes grid-slide {
+    from { background-position: 0 0, 0 0; }
+    to { background-position: 0 56px, 56px 0; }
+  }
+
+  @keyframes sweep {
+    0%, 42% { transform: translateX(-42%); opacity: 0; }
+    52% { opacity: 0.5; }
+    78%, 100% { transform: translateX(36%); opacity: 0; }
+  }
+
+  @media (max-width: 768px) {
+    .motion-grid {
+      background-size: 42px 42px;
+      transform: perspective(700px) rotateX(62deg) translateY(-14%);
+    }
+
+    .aurora-field {
+      filter: blur(20px);
+      opacity: 0.68;
+    }
   }
 </style>

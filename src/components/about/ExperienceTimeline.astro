@@ -10,8 +10,9 @@ interface Experience {
   position: string;
   startDate: string;
   endDate: string;
-  logo: string;
-  url: string;
+  logo?: string;
+  url?: string;
+  description?: string;
 }
 
 interface Props {
@@ -31,8 +32,16 @@ const { t } = useI18n();
   </div>
 
   <div class="timeline">
-    {experience.map((exp, index) => (
-      <a href={exp.url} target="_blank" rel="noopener noreferrer" class="timeline-item">
+    {experience.map((exp, index) => {
+      const ItemWrapper = exp.url ? 'a' : 'div';
+      const itemProps = exp.url ? {
+        href: exp.url,
+        target: '_blank',
+        rel: 'noopener noreferrer',
+      } : {};
+
+      return (
+      <ItemWrapper class="timeline-item" {...itemProps}>
         <div class="timeline-marker">
           <div class="timeline-dot"></div>
           {index < experience.length - 1 && <div class="timeline-line"></div>}
@@ -40,9 +49,15 @@ const { t } = useI18n();
         
         <div class="timeline-content">
           <div class="exp-header">
-            <div class="exp-logo">
-              <img src={exp.logo} alt={exp.company} />
-            </div>
+            {exp.logo ? (
+              <div class="exp-logo">
+                <img src={exp.logo} alt={exp.company} />
+              </div>
+            ) : (
+              <div class="exp-logo exp-logo-fallback">
+                <i class="i-carbon:portfolio"></i>
+              </div>
+            )}
             <div class="exp-info">
               <h3 class="exp-company">{exp.company}</h3>
               <p class="exp-position">{exp.position}</p>
@@ -52,9 +67,11 @@ const { t } = useI18n();
               </div>
             </div>
           </div>
+          {exp.description && <p class="exp-description">{exp.description}</p>}
         </div>
-      </a>
-    ))}
+      </ItemWrapper>
+      );
+    })}
   </div>
 </section>
 
@@ -173,6 +190,13 @@ const { t } = useI18n();
     object-fit: cover;
   }
 
+  .exp-logo-fallback {
+    display: grid;
+    place-items: center;
+    color: var(--md-sys-color-primary);
+    font-size: 1.5rem;
+  }
+
   .exp-info {
     flex: 1;
     min-width: 0;
@@ -202,6 +226,13 @@ const { t } = useI18n();
 
   .exp-dates i {
     font-size: 0.8125rem;
+  }
+
+  .exp-description {
+    margin: 0.75rem 0 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.875rem;
+    line-height: 1.6;
   }
 
   /* Responsive */

@@ -171,22 +171,22 @@ const displayDescription = isDescTranslationKey ? t(description as any) : descri
 
   /* 2-column layout: suitable for detailed content */
   .items-grid.cols-2 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 360px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
   }
 
   /* 3-column layout: default recommended */
   .items-grid.cols-3 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 280px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
   }
 
   /* 4-column layout: compact display */
   .items-grid.cols-4 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 240px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
   }
 
   /* 5-column layout: icon wall style */
   .items-grid.cols-5 {
-    grid-template-columns: repeat(auto-fit, minmax(min(100%, 200px), 1fr));
+    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
   }
 
   .items-grid.compact {
@@ -196,14 +196,14 @@ const displayDescription = isDescTranslationKey ? t(description as any) : descri
   /* Responsive breakpoint optimization */
   @media (max-width: 1200px) {
     .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 220px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
     }
   }
 
   @media (max-width: 992px) {
     .items-grid.cols-4,
     .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 260px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
     }
   }
 
@@ -211,7 +211,7 @@ const displayDescription = isDescTranslationKey ? t(description as any) : descri
     .items-grid.cols-3,
     .items-grid.cols-4,
     .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(min(100%, 300px), 1fr));
+      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
     }
   }
 

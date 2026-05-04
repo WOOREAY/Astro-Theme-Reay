@@ -8,7 +8,10 @@ const {
     description?: string;
     ogImage?: string;
 };
-const url = new URL(Astro.request.url);
+const siteOrigin = import.meta.env.PROD
+    ? (Astro.site?.toString() || Astro.url.origin)
+    : Astro.url.origin;
+const url = new URL(Astro.url.pathname, siteOrigin);
 ---
 
 <title>{title}</title>

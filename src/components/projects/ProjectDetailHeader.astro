@@ -4,6 +4,7 @@
  * 项目详情页头部组件
  */
 import { formatNumber, getLanguageColor } from '../../utils/github';
+import { useI18n } from '../../utils/i18n';
 
 interface Props {
   project: {
@@ -22,6 +23,7 @@ interface Props {
 }
 
 const { project } = Astro.props;
+const { t } = useI18n();
 
 const createdDate = new Date(project.createdAt).toLocaleDateString('zh-CN');
 const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
@@ -51,7 +53,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
       </div>
       <div class="stat-content">
         <div class="stat-value">{formatNumber(project.stars)}</div>
-        <div class="stat-label">Stars</div>
+        <div class="stat-label" data-i18n="projects.stats.stars">{t('projects.stats.stars')}</div>
       </div>
     </div>
     <div class="stat-card">
@@ -60,7 +62,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
       </div>
       <div class="stat-content">
         <div class="stat-value">{formatNumber(project.forks)}</div>
-        <div class="stat-label">Forks</div>
+        <div class="stat-label" data-i18n="projects.stats.forks">{t('projects.stats.forks')}</div>
       </div>
     </div>
     {project.language && (
@@ -72,7 +74,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
           <div class="stat-value" style={`color: ${getLanguageColor(project.language)}`}>
             {project.language}
           </div>
-          <div class="stat-label">语言</div>
+          <div class="stat-label" data-i18n="projects.detail.language">{t('projects.detail.language')}</div>
         </div>
       </div>
     )}
@@ -83,7 +85,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
         </div>
         <div class="stat-content">
           <div class="stat-value">{project.license}</div>
-          <div class="stat-label">许可证</div>
+          <div class="stat-label" data-i18n="projects.detail.license">{t('projects.detail.license')}</div>
         </div>
       </div>
     )}
@@ -94,7 +96,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     <div class="project-topics">
       <div class="topics-label">
         <i class="i-carbon:tag"></i>
-        <span>标签</span>
+        <span data-i18n="projects.detail.tags">{t('projects.detail.tags')}</span>
       </div>
       <div class="topics-list">
         {project.topics.map(topic => (
@@ -117,7 +119,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
         class="action-button primary"
       >
         <i class="i-carbon:logo-github"></i>
-        <span>访问 GitHub</span>
+        <span data-i18n="projects.detail.github">{t('projects.detail.github')}</span>
         <i class="i-carbon:arrow-right arrow"></i>
       </a>
       {project.homepage && (
@@ -128,7 +130,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
           class="action-button secondary"
         >
           <i class="i-carbon:launch"></i>
-          <span>在线预览</span>
+          <span data-i18n="projects.detail.preview">{t('projects.detail.preview')}</span>
           <i class="i-carbon:arrow-right arrow"></i>
         </a>
       )}
@@ -137,12 +139,12 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     <div class="project-dates">
       <div class="date-item">
         <i class="i-carbon:calendar"></i>
-        <span>创建：{createdDate}</span>
+        <span><span data-i18n="projects.detail.created">{t('projects.detail.created')}</span>：{createdDate}</span>
       </div>
       <div class="date-separator">•</div>
       <div class="date-item">
         <i class="i-carbon:time"></i>
-        <span>更新：{updatedDate}</span>
+        <span><span data-i18n="projects.detail.updated">{t('projects.detail.updated')}</span>：{updatedDate}</span>
       </div>
     </div>
   </div>
@@ -150,15 +152,12 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
 
 <style>
   .project-header {
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary-container),
-      var(--md-sys-color-tertiary-container)
-    );
-    border-radius: 12px;
+    background: var(--reay-surface-bg);
+    border-radius: 1.1rem;
     padding: 1.25rem;
     margin-bottom: 1.5rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
     overflow: hidden;
     position: relative;
   }
@@ -199,7 +198,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     color: var(--md-sys-color-on-primary-container);
     line-height: 1.2;
     word-break: break-word;
-    letter-spacing: -0.02em;
+    letter-spacing: 0;
   }
 
   .project-subtitle {
@@ -220,14 +219,21 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
   }
 
   .stat-card {
-    background: var(--md-sys-color-surface-container-low);
-    border-radius: 8px;
+    background: var(--reay-surface-bg);
+    border-radius: 0.9rem;
     padding: 0.75rem;
     display: flex;
     align-items: center;
     gap: 0.625rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    transition:
+      transform 0.32s var(--reay-ease-out),
+      background 0.32s ease,
+      border-color 0.32s ease,
+      box-shadow 0.32s ease;
     cursor: default;
     position: relative;
     overflow: hidden;
@@ -251,8 +257,9 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
 
   .stat-card:hover {
     transform: translateY(-2px);
-    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.1);
-    border-color: var(--md-sys-color-primary);
+    background: var(--reay-surface-bg-hover);
+    border-color: var(--reay-surface-border-hover);
+    box-shadow: var(--reay-surface-shadow-hover);
   }
 
   .stat-card:hover::before {
@@ -309,7 +316,7 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     font-weight: 700;
     color: var(--md-sys-color-on-surface);
     margin-bottom: 0.125rem;
-    letter-spacing: -0.01em;
+    letter-spacing: 0;
   }
 
   .stat-label {
@@ -322,11 +329,14 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
 
   /* 标签区域 */
   .project-topics {
-    background: var(--md-sys-color-surface-container-low);
-    border-radius: 8px;
+    background: var(--reay-surface-bg);
+    border-radius: 0.9rem;
     padding: 0.75rem;
     margin-bottom: 1rem;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-surface-border);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
+    -webkit-backdrop-filter: blur(var(--reay-glass-blur)) saturate(150%);
   }
 
   .topics-label {
@@ -356,14 +366,14 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     display: inline-flex;
     align-items: center;
     padding: 0.25rem 0.625rem;
-    background: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    border-radius: 12px;
+    background: var(--reay-chip-bg);
+    color: var(--md-sys-color-on-surface-variant);
+    border-radius: 999px;
     font-size: 0.75rem;
     font-weight: 500;
     transition: all 0.2s ease;
     cursor: default;
-    border: 1px solid transparent;
+    border: 1px solid var(--reay-chip-border);
   }
 
   .tag-hash {
@@ -402,16 +412,16 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
     align-items: center;
     gap: 0.375rem;
     padding: 0.5rem 1rem;
-    background: var(--md-sys-color-surface-container-high);
+    background: var(--reay-button-bg);
     color: var(--md-sys-color-on-surface);
-    border-radius: 8px;
+    border-radius: 0.85rem;
     text-decoration: none;
     font-size: 0.8125rem;
     font-weight: 600;
     transition: transform 0.15s cubic-bezier(0.4, 0, 0.2, 1),
                 box-shadow 0.15s cubic-bezier(0.4, 0, 0.2, 1),
                 background-color 0.15s ease;
-    border: 1px solid var(--md-sys-color-outline-variant);
+    border: 1px solid var(--reay-button-border);
     position: relative;
     overflow: hidden;
     cursor: pointer;
@@ -454,7 +464,8 @@ const updatedDate = new Date(project.updatedAt).toLocaleDateString('zh-CN');
 
   .action-button:hover {
     transform: translateY(-1px);
-    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.1);
+    background: var(--reay-button-bg-hover);
+    box-shadow: var(--reay-surface-shadow);
   }
 
   .action-button:active {
