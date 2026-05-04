@@ -4,9 +4,9 @@
  * 统一的背景组件
  * 支持 MD3 渐变背景、自定义图片背景、可配置模糊效果
  */
-import { themeConfig } from '../../data/theme.config';
+import { getBackgroundConfig } from '../../data/site.config';
 
-const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = themeConfig.background;
+const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = getBackgroundConfig();
 
 // 模糊程度映射
 const blurMap = {

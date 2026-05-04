@@ -2,13 +2,14 @@
 /**
  * AboutIntro.astro
  * About page - Personal introduction component
- * Uses userContent from user.config.ts for multilingual support
+ * Uses centralized site configuration for multilingual user content
  */
-import { user, getUserContent } from '../../data/user.config';
+import { getLocalizedUserContent, getUserProfile } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 
 const { currentLang } = useI18n();
-const content = getUserContent(currentLang);
+const user = getUserProfile();
+const content = getLocalizedUserContent(currentLang);
 ---
 
 <section class="intro-section">

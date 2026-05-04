@@ -268,7 +268,7 @@ docker run -p 80:80 my-blog
 SITE_URL=https://yourdomain.com
 
 # GitHub token (optional, for higher API limits)
-GITHUB_TOKEN=ghp_your_token_here
+GITHUB_TOKEN=<your-github-token>
 ```
 
 ### Platform-Specific Setup
@@ -374,11 +374,11 @@ Most platforms provide free SSL:
    ```
 
 3. **Verify Sitemap**
-   - Built automatically
-   - Check `/sitemap-index.xml`
+   - Add an Astro sitemap integration if your deployment needs a sitemap
+   - Check the generated sitemap URL after enabling it
 
 4. **Meta Tags**
-   - Verify in `src/data/user.config.ts`
+   - Verify page titles and descriptions in layouts and page props
 
 ### After Deployment
 
@@ -388,12 +388,8 @@ Most platforms provide free SSL:
    - Verify ownership
 
 2. **Google Analytics** (optional)
-   ```typescript
-   // src/data/user.config.ts
-   analytics: {
-     google: 'G-XXXXXXXXXX'
-   }
-   ```
+   - Add your analytics provider script in a layout or component
+   - Keep provider IDs in environment variables when needed
 
 3. **Bing Webmaster Tools**
    - Add site

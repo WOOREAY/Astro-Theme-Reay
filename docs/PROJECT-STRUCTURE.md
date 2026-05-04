@@ -117,6 +117,7 @@ Configuration files for the entire site:
 
 ```
 data/
+├── site.config.ts              # Central read layer for app code
 ├── user.config.ts              # Personal information
 ├── theme.config.ts             # Theme colors and settings
 ├── markdown-style.config.ts    # Markdown rendering styles
@@ -127,6 +128,7 @@ data/
 ```
 
 **Key Files:**
+- **site.config.ts**: App-facing aggregation of user, theme, links, projects, and i18n config
 - **user.config.ts**: Your personal info, social links, bio
 - **theme.config.ts**: Color scheme, primary colors
 - **markdown-style.config.ts**: How all Markdown content renders
@@ -175,25 +177,27 @@ pages/
 ├── index.astro                 # Homepage (/)
 ├── blog/
 │   ├── index.astro            # Blog list (/blog)
-│   ├── [slug].astro           # Blog post (/blog/post-title)
-│   └── tag/
-│       └── [tag].astro        # Tag page (/blog/tag/javascript)
+│   └── [...slug].astro        # Blog post (/blog/post-title)
 ├── projects/
 │   ├── index.astro            # Projects list (/projects)
-│   └── [id].astro             # Project detail (/projects/project-name)
+│   └── [owner]/[repo].astro   # Project detail (/projects/owner/repo)
 ├── about/
 │   └── index.astro            # About page (/about)
 ├── archives/
-│   └── index.astro            # Archives (/archives)
-├── links/
-│   └── index.astro            # Links (/links)
-└── rss.xml.ts                 # RSS feed (/rss.xml)
+│   ├── index.astro            # Archives (/archives)
+│   ├── timeline/index.astro   # Timeline archive
+│   ├── tags/index.astro       # Tags index
+│   ├── tags/[tag].astro       # Tag page
+│   ├── series/index.astro     # Series index
+│   └── series/[series].astro  # Series page
+└── links/
+    └── index.astro            # Links (/links)
 ```
 
 **Routing Examples:**
 - `pages/blog/index.astro` → `/blog`
-- `pages/blog/[slug].astro` → `/blog/my-post`
-- `pages/projects/[id].astro` → `/projects/my-project`
+- `pages/blog/[...slug].astro` → `/blog/my-post`
+- `pages/projects/[owner]/[repo].astro` → `/projects/owner/repo`
 - `pages/about/index.astro` → `/about`
 
 ### Scripts (`src/scripts/`)
@@ -281,9 +285,7 @@ Main Astro configuration:
 export default defineConfig({
   site: 'https://yourdomain.com',
   integrations: [
-    mdx(),
-    sitemap(),
-    // ...
+    UnoCSS(),
   ],
   markdown: {
     // Markdown settings

@@ -1,94 +1,43 @@
 /**
  * User Configuration
- * 
- * This file contains all user-specific information and content.
- * Replace the template values with your own personal information.
+ *
+ * Edit the three sections below first:
+ * 1. Basic profile
+ * 2. Multilingual intro copy
+ * 3. About page content
  */
 
-import type { Language } from './i18n.config';
+import { defaultLang, type Language } from './i18n.config';
 
-/**
- * Social link interface
- */
-export interface SocialLink {
-  icon: string;
-  label: string;
-  url: string;
-}
+// ---------------------------------------------------------------------------
+// 1. Basic profile
+// ---------------------------------------------------------------------------
 
-/**
- * GitHub configuration interface
- */
-export interface GithubUserConfig {
-  username: string;
-  token?: string;
-}
-
-/**
- * Basic user information interface
- */
-export interface User {
-  name: string;
-  avatar: string;
-  location: string;
-  socials: SocialLink[];
-  github: GithubUserConfig;
-}
-
-/**
- * Basic user information (language-independent)
- */
-export const user: User = {
+export const user = {
   name: 'Your Name',
-  avatar: '/avatar.png', // Replace with your avatar image path
+  avatar: '/avatar.png',
   location: 'Your Location',
   socials: [
     { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
     { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/yourusername' },
     { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
   ],
-  
-  // GitHub configuration for fetching repository stats
+
   github: {
     username: 'yourusername',
     token: '',
-    // ⚠️ NEVER put your token here! Use environment variables instead.
-    // The token will be automatically loaded from process.env.GITHUB_TOKEN
   },
-};
+} satisfies User;
 
-/**
- * Language-specific user content interface
- */
-export interface UserContentLanguage {
-  tagline: string;
-  bio: string;
-  greeting: string;
-  description: string;
-}
+// ---------------------------------------------------------------------------
+// 2. Multilingual intro copy
+// ---------------------------------------------------------------------------
 
-/**
- * Multilingual user content interface
- */
-export interface UserContent {
-  en: UserContentLanguage;
-  zh: UserContentLanguage;
-}
-
-/**
- * Multilingual user content
- * Add your bio and description in multiple languages
- * This is the SINGLE SOURCE OF TRUTH for all personal content across the site
- */
-export const userContent: UserContent = {
+export const userContent = {
   en: {
-    // Short tagline (used in home page subtitle and about page)
     tagline: 'Your Professional Title · Your Interests',
-    // Brief bio (used in home page and about intro)
     bio: 'Your bio here. Describe yourself, your skills, interests, and what you\'re passionate about.',
-    // About page greeting
     greeting: 'Hello, I am',
-    // Compact description used in section subtitles and footer
     description: 'A personal site for notes, projects, and ideas.',
   },
   zh: {
@@ -97,149 +46,22 @@ export const userContent: UserContent = {
     greeting: '你好,我是',
     description: '一个用于记录文章、项目与想法的个人网站。',
   },
-};
+} satisfies UserContent;
 
-/**
- * Get user content for the current language
- * @param lang - Language code (default: 'en')
- * @returns Combined user object with language-specific content
- */
-export function getUserContent(lang: Language = 'en') {
-  return {
-    ...user,
-    ...userContent[lang],
-  };
-}
+// ---------------------------------------------------------------------------
+// 3. About page content
+// ---------------------------------------------------------------------------
 
-/**
- * About section item interface
- */
-export interface AboutSectionItem {
-  name: string;
-  description?: string;
-  url?: string;
-  icon?: string;
-}
-
-/**
- * About section interface
- */
-export interface AboutSection {
-  id: string;
-  title: string;
-  description?: string;
-  icon?: string;
-  columns: 2 | 3 | 4 | 5;
-  compact: boolean;
-  colorTheme: 'primary' | 'secondary' | 'tertiary' | 'accent';
-  items: AboutSectionItem[];
-}
-
-/**
- * Social network interface
- */
-export interface SocialNetwork {
-  platform: string;
-  username: string;
-  url: string;
-  icon: string;
-  followers: number;
-}
-
-/**
- * Education entry interface
- */
-export interface Education {
-  school: string;
-  major?: string;
-  degree: string;
-  startDate: string;
-  endDate: string;
-  logo?: string;
-  url?: string;
-  description?: string;
-}
-
-/**
- * Work experience interface
- */
-export interface Experience {
-  company: string;
-  position: string;
-  startDate: string;
-  endDate: string;
-  logo?: string;
-  url?: string;
-  description?: string;
-}
-
-/**
- * Tech stack item interface
- */
-export interface TechStackItem {
-  name: string;
-  description: string;
-  url: string;
-  icon: string;
-}
-
-/**
- * Site information interface
- */
-export interface SiteInfo {
-  name: string;
-  description: string;
-  builtWith: string;
-  since: string;
-  stats: {
-    posts: number;
-    words: number;
-    visitors: number;
-  };
-  techStack: TechStackItem[];
-}
-
-/**
- * Timeline event interface
- */
-export interface TimelineEvent {
-  year: string;
-  event: string;
-  description?: string;
-}
-
-/**
- * About page configuration interface
- */
-export interface AboutConfig {
-  sections: AboutSection[];
-  socialNetworks: SocialNetwork[];
-  education: Education[];
-  experience: Experience[];
-  site: SiteInfo;
-  timeline: TimelineEvent[];
-}
-
-/**
- * About page configuration
- * Customize the sections to showcase your skills, tools, and interests
- * Personal info (name, bio, avatar) comes from userContent and user config
- */
-export const aboutConfig: AboutConfig = {
-
-  /**
-   * Custom content sections
-   * Each section supports: title, description, columns, compact mode, icon, color theme
-   */
+export const aboutConfig = {
   sections: [
     {
       id: 'dev-tools',
       title: 'about.dev-tools.title',
       description: 'about.dev-tools.subtitle',
       icon: 'i-carbon:development',
-      columns: 3 as const,
+      columns: 3,
       compact: false,
-      colorTheme: 'primary' as const,
+      colorTheme: 'primary',
       items: [
         { name: 'VS Code', description: 'Code editor', url: 'https://code.visualstudio.com/', icon: 'i-carbon:code' },
         { name: 'Terminal', description: 'Command line interface', url: '#', icon: 'i-carbon:terminal' },
@@ -252,9 +74,9 @@ export const aboutConfig: AboutConfig = {
       title: 'about.productivity.title',
       description: 'about.productivity.subtitle',
       icon: 'i-carbon:rocket',
-      columns: 4 as const,
+      columns: 4,
       compact: true,
-      colorTheme: 'secondary' as const,
+      colorTheme: 'secondary',
       items: [
         { name: 'Browser', description: 'Modern web browser', url: '#', icon: 'i-carbon:cloud' },
         { name: 'Launcher', description: 'Quick access tool', url: '#', icon: 'i-carbon:rocket' },
@@ -267,9 +89,9 @@ export const aboutConfig: AboutConfig = {
       title: 'about.interests.title',
       description: 'about.interests.subtitle',
       icon: 'i-carbon:favorite',
-      columns: 4 as const,
+      columns: 4,
       compact: true,
-      colorTheme: 'accent' as const,
+      colorTheme: 'accent',
       items: [
         { name: 'Photography', description: 'Capturing moments', icon: 'i-carbon:camera' },
         { name: 'Reading', description: 'Books and articles', icon: 'i-carbon:book' },
@@ -279,29 +101,23 @@ export const aboutConfig: AboutConfig = {
     },
   ],
 
-  /**
-   * Social networks with follower count
-   */
   socialNetworks: [
-    { 
-      platform: 'GitHub', 
-      username: 'yourusername', 
-      url: 'https://github.com/yourusername', 
+    {
+      platform: 'GitHub',
+      username: 'yourusername',
+      url: 'https://github.com/yourusername',
       icon: 'i-carbon:logo-github',
       followers: 0,
     },
-    { 
-      platform: 'Twitter', 
-      username: '@yourusername', 
-      url: 'https://twitter.com/yourusername', 
+    {
+      platform: 'Twitter',
+      username: '@yourusername',
+      url: 'https://twitter.com/yourusername',
       icon: 'i-carbon:logo-twitter',
       followers: 0,
     },
   ],
 
-  /**
-   * Education history
-   */
   education: [
     {
       school: 'Your University',
@@ -315,11 +131,8 @@ export const aboutConfig: AboutConfig = {
     },
   ],
 
-  /**
-   * Work experience
-   */
   experience: [
-    // Uncomment and customize as needed
+    // Uncomment and customize as needed.
     // {
     //   company: 'Company Name',
     //   position: 'Your Position',
@@ -331,9 +144,6 @@ export const aboutConfig: AboutConfig = {
     // },
   ],
 
-  /**
-   * About this site
-   */
   site: {
     name: 'Your Site Name',
     description: 'A modern, clean, and elegant Astro blog theme',
@@ -351,11 +161,148 @@ export const aboutConfig: AboutConfig = {
     ],
   },
 
-  /**
-   * Timeline
-   */
   timeline: [
     { year: '2024', event: 'Started blogging', description: 'Sharing knowledge and experiences' },
     { year: '2023', event: 'Learning web development', description: 'Deep dive into frontend stack' },
   ],
-};
+} satisfies AboutConfig;
+
+// ---------------------------------------------------------------------------
+// Helper exports
+// ---------------------------------------------------------------------------
+
+export function getUserContent(lang: Language = defaultLang) {
+  return {
+    ...user,
+    ...userContent[lang],
+  };
+}
+
+export const userConfig = {
+  user,
+  userContent,
+  aboutConfig,
+} satisfies UserConfig;
+
+// ---------------------------------------------------------------------------
+// Types
+// ---------------------------------------------------------------------------
+
+export interface SocialLink {
+  icon: string;
+  label: string;
+  url: string;
+}
+
+export interface GithubUserConfig {
+  username: string;
+  token?: string;
+}
+
+export interface User {
+  name: string;
+  avatar: string;
+  location: string;
+  socials: SocialLink[];
+  github: GithubUserConfig;
+}
+
+export interface UserContentLanguage {
+  tagline: string;
+  bio: string;
+  greeting: string;
+  description: string;
+}
+
+export interface UserContent {
+  en: UserContentLanguage;
+  zh: UserContentLanguage;
+}
+
+export interface AboutSectionItem {
+  name: string;
+  description?: string;
+  url?: string;
+  icon?: string;
+}
+
+export interface AboutSection {
+  id: string;
+  title: string;
+  description?: string;
+  icon?: string;
+  columns: 2 | 3 | 4 | 5;
+  compact: boolean;
+  colorTheme: 'primary' | 'secondary' | 'tertiary' | 'accent';
+  items: AboutSectionItem[];
+}
+
+export interface SocialNetwork {
+  platform: string;
+  username: string;
+  url: string;
+  icon: string;
+  followers: number;
+}
+
+export interface Education {
+  school: string;
+  major?: string;
+  degree: string;
+  startDate: string;
+  endDate: string;
+  logo?: string;
+  url?: string;
+  description?: string;
+}
+
+export interface Experience {
+  company: string;
+  position: string;
+  startDate: string;
+  endDate: string;
+  logo?: string;
+  url?: string;
+  description?: string;
+}
+
+export interface TechStackItem {
+  name: string;
+  description: string;
+  url: string;
+  icon: string;
+}
+
+export interface SiteInfo {
+  name: string;
+  description: string;
+  builtWith: string;
+  since: string;
+  stats: {
+    posts: number;
+    words: number;
+    visitors: number;
+  };
+  techStack: TechStackItem[];
+}
+
+export interface TimelineEvent {
+  year: string;
+  event: string;
+  description?: string;
+}
+
+export interface AboutConfig {
+  sections: AboutSection[];
+  socialNetworks: SocialNetwork[];
+  education: Education[];
+  experience: Experience[];
+  site: SiteInfo;
+  timeline: TimelineEvent[];
+}
+
+export interface UserConfig {
+  user: User;
+  userContent: UserContent;
+  aboutConfig: AboutConfig;
+}

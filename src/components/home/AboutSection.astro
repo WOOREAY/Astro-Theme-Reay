@@ -4,11 +4,14 @@
  * Personal info section for homepage
  * Displays bio, skills, tools, and interests
  */
-import { user, aboutConfig, getUserContent } from '../../data/user.config';
+import { getAboutConfig, getLocalizedUserContent, getUserProfile } from '../../data/site.config';
+import type { AboutSectionItem } from '../../data/user.config';
 import { useI18n } from '../../utils/i18n';
 
 const { currentLang } = useI18n();
-const userContent = getUserContent(currentLang);
+const user = getUserProfile();
+const aboutConfig = getAboutConfig();
+const userContent = getLocalizedUserContent(currentLang);
 ---
 
 <div class="h-full box-border flex items-center justify-center px-4 py-6 overflow-y-auto">
@@ -115,7 +118,7 @@ const userContent = getUserContent(currentLang);
           <p class="tools-description text-xs text-[var(--md-sys-color-on-surface-variant)] mb-3" data-i18n={`about.${section.id}.subtitle`}>{section.description}</p>
           
           <div class={`tools-grid cols-${section.columns} ${section.compact ? 'compact' : ''}`}>
-            {section.items.map((item, itemIndex) => (
+            {section.items.map((item: AboutSectionItem, itemIndex: number) => (
               <a 
                 href={item.url || '#'} 
                 target={item.url ? '_blank' : undefined}

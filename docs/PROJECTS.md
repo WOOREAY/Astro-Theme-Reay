@@ -204,7 +204,7 @@ For higher API rate limits:
 2. **Add to Environment**
    ```env
    # .env
-   GITHUB_TOKEN=ghp_your_token_here
+   GITHUB_TOKEN=<your-github-token>
    ```
 
 3. **Configure**
@@ -213,10 +213,12 @@ For higher API rate limits:
    export const user = {
      github: {
        username: 'yourusername',
-       token: import.meta.env.GITHUB_TOKEN,
+       token: '',
      }
    }
    ```
+
+   `src/utils/github.ts` also reads `GITHUB_TOKEN` from the environment at build time. Keep real tokens in `.env` or deployment secrets, not in `user.config.ts`.
 
 ### Rate Limits
 

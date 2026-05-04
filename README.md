@@ -27,10 +27,11 @@ Open `http://localhost:4321`.
 
 ## Configuration
 
-Most template customization lives in `src/data/`.
+Most template customization lives in `src/data/`. Edit the feature-specific `*.config.ts` files; application code reads them through `src/data/site.config.ts` so configuration access stays consistent.
 
 | File | Purpose |
 | --- | --- |
+| `src/data/site.config.ts` | Central read layer used by pages, layouts, and utilities |
 | `src/data/user.config.ts` | User profile, multilingual bio, about page sections |
 | `src/data/theme.config.ts` | Brand color, typography, background settings |
 | `src/data/i18n.config.ts` | UI translations and default language |

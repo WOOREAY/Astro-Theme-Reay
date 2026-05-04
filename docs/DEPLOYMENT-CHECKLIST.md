@@ -86,7 +86,7 @@ cp .env.example .env
 
 编辑 `.env`:
 ```env
-GITHUB_TOKEN=ghp_your_token_here
+GITHUB_TOKEN=<your-github-token>
 SITE=https://yourusername.github.io
 BASE=/repository-name
 ```

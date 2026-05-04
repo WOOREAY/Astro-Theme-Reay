@@ -4,11 +4,12 @@
  * Fullscreen hero section with typewriter effects
  * Layout: text content (left) + avatar (right)
  */
-import { user, getUserContent } from '../../data/user.config';
+import { getLocalizedUserContent, getUserProfile } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 
 const { t, currentLang } = useI18n();
-const userContent = getUserContent(currentLang);
+const user = getUserProfile();
+const userContent = getLocalizedUserContent(currentLang);
 ---
 
 <section class="hero-section h-full w-full flex items-center justify-center relative overflow-hidden">

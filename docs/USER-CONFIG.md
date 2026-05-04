@@ -2,9 +2,18 @@
 
 Complete reference for configuring your personal information and site settings.
 
-## Configuration File
+## Configuration Layers
 
-All user settings are in `src/data/user.config.ts`
+Editable settings are split by feature under `src/data/`. Application code reads those files through `src/data/site.config.ts`, which is the central read layer.
+
+| File | Purpose |
+| --- | --- |
+| `src/data/user.config.ts` | Profile, social links, multilingual personal content, about page data |
+| `src/data/theme.config.ts` | Colors, typography, and background |
+| `src/data/projects.config.ts` | GitHub project fetching and display options |
+| `src/data/links.config.ts` | Friend links, resource links, and link application info |
+| `src/data/i18n.config.ts` | Default language and UI translations |
+| `src/data/site.config.ts` | Central app-facing access layer; usually do not edit |
 
 ## Basic Information
 
@@ -60,13 +69,14 @@ export const userContent = {
 ### Usage in Components
 
 ```typescript
-import { getUserContent } from '../../data/user.config';
+import { getLocalizedUserContent, getUserProfile } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 
 const { currentLang } = useI18n();
-const content = getUserContent(currentLang);
+const user = getUserProfile();
+const content = getLocalizedUserContent(currentLang);
 
-// Now use: content.tagline, content.bio, content.greeting
+// Now use: user.name, user.avatar, content.tagline, content.bio, content.greeting
 ```
 
 ### Fields
@@ -124,7 +134,7 @@ For more icons, see [Icônes](https://icones.js.org/collection/carbon)
 export const user = {
   github: {
     username: 'yourusername',
-    token: import.meta.env.GITHUB_TOKEN, // Optional, for higher rate limits
+    token: '', // Keep tokens in environment variables instead
   }
 }
 ```
@@ -142,96 +152,90 @@ export const user = {
 4. Copy the token
 5. Create `.env` file:
    ```env
-   GITHUB_TOKEN=ghp_your_token_here
+   GITHUB_TOKEN=<your-github-token>
    ```
 
-## Site Information
+Do not commit `.env` or hard-code tokens in `user.config.ts`.
+
+## About Site Information
 
 ```typescript
-export const site = {
-  title: 'Your Blog Name',
-  description: 'Your blog description for SEO',
-  url: 'https://yourdomain.com',
-  
-  // Blog settings
-  postsPerPage: 10,
-  showReadingTime: true,
-  showTableOfContents: true,
-  
-  // Social preview
-  ogImage: '/images/og-image.jpg',
-  
-  // Analytics (optional)
-  analytics: {
-    google: 'G-XXXXXXXXXX',
-    baidu: 'xxxxxx',
-  }
+export const aboutConfig = {
+  site: {
+    name: 'Your Site Name',
+    description: 'A modern, clean, and elegant Astro blog theme',
+    builtWith: 'Built with Astro + UnoCSS + TypeScript',
+    since: '2024',
+    stats: {
+      posts: 0,
+      words: 0,
+      visitors: 0,
+    },
+    techStack: [
+      { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+    ],
+  },
 }
 ```
 
 ### Fields
 
-- **title**: Site name (browser title, SEO)
-- **description**: Site description (meta description for SEO)
-- **url**: Your production URL (important for SEO and RSS)
-- **postsPerPage**: Number of posts per page in blog list
-- **showReadingTime**: Display estimated reading time
-- **showTableOfContents**: Show TOC in blog posts
-- **ogImage**: Social media preview image (1200x630px recommended)
+- **name**: Site name displayed on the about/site section
+- **description**: Short site description
+- **builtWith**: Technology summary
+- **since**: Start year
+- **stats**: Initial stats; some page stats are calculated at build time
+- **techStack**: Technologies displayed in the site info section
 
 ## About Page Configuration
 
 ```typescript
-export const about = {
-  // Education
-  education: [
+export const aboutConfig = {
+  sections: [
     {
-      degree: 'Bachelor of Computer Science',
-      school: 'University Name',
-      period: '2016 - 2020',
-      description: 'Major in Computer Science',
-    }
+      id: 'dev-tools',
+      title: 'about.dev-tools.title',
+      description: 'about.dev-tools.subtitle',
+      icon: 'i-carbon:development',
+      columns: 3,
+      compact: false,
+      colorTheme: 'primary',
+      items: [
+        { name: 'VS Code', description: 'Code editor', url: 'https://code.visualstudio.com/', icon: 'i-carbon:code' },
+      ],
+    },
   ],
-  
-  // Work Experience
-  experience: [
-    {
-      title: 'Software Engineer',
-      company: 'Company Name',
-      period: '2020 - Present',
-      description: 'Working on web applications',
-    }
-  ],
-  
-  // Skills
-  skills: {
-    languages: ['JavaScript', 'TypeScript', 'Python'],
-    frameworks: ['React', 'Vue', 'Astro'],
-    tools: ['Git', 'Docker', 'VS Code'],
+  socialNetworks: [],
+  education: [],
+  experience: [],
+  timeline: [],
+  site: {
+    name: 'Your Site Name',
+    description: 'A modern, clean, and elegant Astro blog theme',
+    builtWith: 'Built with Astro + UnoCSS + TypeScript',
+    since: '2024',
+    stats: { posts: 0, words: 0, visitors: 0 },
+    techStack: [],
   },
-  
-  // Interests
-  interests: ['Photography', 'Travel', 'Reading'],
 }
 ```
 
 ## Statistics Configuration
 
 ```typescript
-export const stats = {
-  // Blog statistics
-  posts: 0,        // Auto-calculated if 0
-  words: 0,        // Auto-calculated if 0
-  visitors: 1000,  // Manual count or analytics integration
-  
-  // Start date
-  startDate: '2024-01-01',
-  
-  // Tech stack
-  techStack: [
-    { name: 'Astro', icon: 'astro', url: 'https://astro.build' },
-    { name: 'TypeScript', icon: 'typescript', url: 'https://www.typescriptlang.org' },
-  ]
+export const aboutConfig = {
+  // ...
+  site: {
+    since: '2024',
+    stats: {
+      posts: 0,
+      words: 0,
+      visitors: 0,
+    },
+    techStack: [
+      { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+    ],
+  },
 }
 ```
 
@@ -240,94 +244,35 @@ export const stats = {
 Configure site navigation in `src/data/i18n.config.ts`:
 
 ```typescript
-export const i18nConfig = {
+export const translations = {
   en: {
-    nav: {
-      home: 'Home',
-      blog: 'Blog',
-      projects: 'Projects',
-      about: 'About',
-      archives: 'Archives',
-    }
+    'nav.home': 'Home',
+    'nav.blog': 'Blog',
+    'nav.projects': 'Projects',
+    'nav.about': 'About',
+    'nav.archives': 'Archives',
   },
   zh: {
-    nav: {
-      home: '首页',
-      blog: '博客',
-      projects: '项目',
-      about: '关于',
-      archives: '归档',
-    }
+    'nav.home': '首页',
+    'nav.blog': '博客',
+    'nav.projects': '项目',
+    'nav.about': '关于',
+    'nav.archives': '归档',
   }
 }
 ```
 
-## Footer Configuration
-
-```typescript
-export const footer = {
-  // Copyright
-  copyright: '© 2024 Your Name. All rights reserved.',
-  
-  // Links
-  links: [
-    { text: 'Privacy', url: '/privacy' },
-    { text: 'Terms', url: '/terms' },
-    { text: 'RSS', url: '/rss.xml' },
-  ],
-  
-  // Show powered by
-  showPoweredBy: true,
-}
-```
-
-## RSS Feed Configuration
-
-```typescript
-export const rss = {
-  enabled: true,
-  title: 'Your Blog RSS Feed',
-  description: 'Latest posts from your blog',
-  limit: 20,  // Number of posts in feed
-}
-```
-
-## SEO Configuration
-
-```typescript
-export const seo = {
-  // Default meta tags
-  defaultTitle: 'Your Blog',
-  titleTemplate: '%s | Your Blog',
-  
-  // Twitter card
-  twitter: {
-    card: 'summary_large_image',
-    site: '@yourusername',
-    creator: '@yourusername',
-  },
-  
-  // Verification
-  verification: {
-    google: 'your-google-verification-code',
-    bing: 'your-bing-verification-code',
-  }
-}
-```
+Routes are currently declared in `src/components/common/Header.astro`; add matching translation keys when adding navigation items.
 
 ## Language Configuration
 
 ```typescript
-export const i18n = {
-  defaultLang: 'en',     // Default language
-  supportedLangs: ['en', 'zh'],  // Available languages
-  
-  // Language names
-  langNames: {
-    en: 'English',
-    zh: '中文',
-  }
-}
+export const defaultLang = 'zh' as const;
+
+export const languages = {
+  en: 'English',
+  zh: '中文',
+} as const;
 ```
 
 ## Examples
@@ -336,15 +281,31 @@ export const i18n = {
 ```typescript
 export const user = {
   name: 'Jane Doe',
-  email: 'jane@example.com',
   avatar: '/images/jane.jpg',
-  bio: 'Full-stack developer and tech writer',
-  
-  social: {
-    github: 'janedoe',
-    twitter: 'janedoe',
-    linkedin: 'janedoe',
-  }
+  location: 'Your City',
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/janedoe' },
+    { icon: 'i-carbon:logo-linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/janedoe' },
+  ],
+  github: {
+    username: 'janedoe',
+    token: '',
+  },
+}
+
+export const userContent = {
+  en: {
+    tagline: 'Full-stack developer · Tech writer',
+    bio: 'Full-stack developer and tech writer.',
+    greeting: 'Hello, I am',
+    description: 'Notes on web development and product building.',
+  },
+  zh: {
+    tagline: '全栈开发者 · 技术作者',
+    bio: '全栈开发者与技术作者。',
+    greeting: '你好,我是',
+    description: '记录 Web 开发和产品实践。',
+  },
 }
 ```
 
@@ -352,18 +313,16 @@ export const user = {
 ```typescript
 export const user = {
   name: 'John Smith',
-  bio: 'Open source contributor | React enthusiast',
-  
-  social: {
-    github: 'johnsmith',
-    twitter: 'johnsmith',
-    email: 'john@example.com',
-  },
-  
+  avatar: '/avatar.png',
+  location: 'Remote',
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/johnsmith' },
+    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:john@example.com' },
+  ],
   github: {
     username: 'johnsmith',
-    token: import.meta.env.GITHUB_TOKEN,
-  }
+    token: '',
+  },
 }
 ```
 
@@ -371,20 +330,16 @@ export const user = {
 ```typescript
 export const user = {
   name: '张三',
-  email: 'zhangsan@example.com',
-  bio: '前端开发者，技术博客作者',
+  avatar: '/avatar.png',
   location: '北京，中国',
-  
-  social: {
-    github: 'zhangsan',
-    zhihu: 'zhangsan',
-    weibo: 'zhangsan',
-  }
-}
-
-export const i18n = {
-  defaultLang: 'zh',
-  supportedLangs: ['zh', 'en'],
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/zhangsan' },
+    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:zhangsan@example.com' },
+  ],
+  github: {
+    username: 'zhangsan',
+    token: '',
+  },
 }
 ```
 

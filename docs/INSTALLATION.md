@@ -199,7 +199,7 @@ Create a `.env` file for optional features:
 
 ```env
 # GitHub API token (for higher rate limits)
-GITHUB_TOKEN=your_github_token_here
+GITHUB_TOKEN=<your-github-token>
 
 # Site URL (for production)
 SITE_URL=https://yourdomain.com

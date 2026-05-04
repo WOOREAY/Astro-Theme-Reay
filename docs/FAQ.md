@@ -97,13 +97,31 @@ Edit `src/data/user.config.ts`:
 
 ```typescript
 export const user = {
-  name: 'Your Name',          // Site title
-  avatar: '/avatar.jpg',      // Your photo
-  bio: 'Your bio',           // Description
-  links: {
-    github: 'username',       // Social links
-    // ...
-  }
+  name: 'Your Name',
+  avatar: '/avatar.png',
+  location: 'Your Location',
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
+  ],
+  github: {
+    username: 'yourusername',
+    token: '',
+  },
+}
+
+export const userContent = {
+  en: {
+    tagline: 'Your Professional Title · Your Interests',
+    bio: 'Your bio.',
+    greeting: 'Hello, I am',
+    description: 'A personal site for notes, projects, and ideas.',
+  },
+  zh: {
+    tagline: '你的职业 · 你的兴趣',
+    bio: '你的个人介绍。',
+    greeting: '你好,我是',
+    description: '一个用于记录文章、项目与想法的个人网站。',
+  },
 }
 ```
 
@@ -129,12 +147,11 @@ Edit `src/data/user.config.ts`:
 
 ```typescript
 export const user = {
-  links: {
-    github: 'username',
-    twitter: 'username',
-    email: 'your@email.com',
-    // ... add more
-  }
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/username' },
+    { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/username' },
+    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your@email.com' },
+  ],
 }
 ```
 
@@ -145,18 +162,7 @@ Supported platforms:
 
 ### Can I use Google Analytics?
 
-**Yes.** Add your tracking ID:
-
-```typescript
-// src/data/user.config.ts
-export const user = {
-  analytics: {
-    googleAnalytics: 'G-XXXXXXXXXX'
-  }
-}
-```
-
-Or use environment variable:
+**Yes, with a small custom integration.** The template does not ship a committed analytics ID or analytics config. Add the provider script in a layout or component, and keep provider IDs in environment variables when needed:
 
 ```env
 PUBLIC_GA_ID=G-XXXXXXXXXX
@@ -513,19 +519,7 @@ Configure in `src/data/theme.config.ts`.
 
 ### Does it support RSS?
 
-**Yes**, RSS feed at `/rss.xml`
-
-Configure in `src/data/user.config.ts`:
-
-```typescript
-export const user = {
-  rss: {
-    enabled: true,
-    title: 'My Blog',
-    description: 'My posts'
-  }
-}
-```
+RSS is not currently configured as a user setting. Add an Astro RSS endpoint if your site needs `/rss.xml`.
 
 ### Can I add search functionality?
 

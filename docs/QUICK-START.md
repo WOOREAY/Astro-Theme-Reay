@@ -24,16 +24,32 @@ Edit `src/data/user.config.ts`:
 
 ```typescript
 export const user = {
-  name: 'Your Name',              // Your name
-  email: 'you@example.com',       // Your email
-  avatar: '/images/avatar.jpg',   // Your avatar
-  bio: 'Your bio here',           // Short bio
-  
-  social: {
-    github: 'yourusername',       // GitHub username
-    twitter: 'yourusername',      // Twitter handle
-    // ... other social links
-  }
+  name: 'Your Name',
+  avatar: '/avatar.png',
+  location: 'Your Location',
+  socials: [
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
+    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
+  ],
+  github: {
+    username: 'yourusername',
+    token: '',
+  },
+}
+
+export const userContent = {
+  en: {
+    tagline: 'Your Professional Title · Your Interests',
+    bio: 'Your short bio.',
+    greeting: 'Hello, I am',
+    description: 'A personal site for notes, projects, and ideas.',
+  },
+  zh: {
+    tagline: '你的职业 · 你的兴趣',
+    bio: '你的简短介绍。',
+    greeting: '你好,我是',
+    description: '一个用于记录文章、项目与想法的个人网站。',
+  },
 }
 ```
 
@@ -89,9 +105,11 @@ Modify Markdown styles in `src/data/markdown-style.config.ts`
 
 ```
 src/data/
+├── site.config.ts           ← Central read layer for app code
 ├── user.config.ts           ← Your personal info
 ├── theme.config.ts          ← Theme colors
 ├── markdown-style.config.ts ← Content styles
+├── links.config.ts          ← Links page
 └── projects.config.ts       ← Projects showcase
 ```
 

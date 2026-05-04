@@ -14,10 +14,11 @@ import LinksLayout from '../../layouts/links/LinksLayout.astro';
 import LinksHeader from '../../components/links/LinksHeader.astro';
 import LinksCategoryTabs from '../../components/links/LinksCategoryTabs.astro';
 import LinkCard from '../../components/links/LinkCard.astro';
-import { friendLinks, linkCategories, linkApplicationInfo, mySiteInfo } from '../../data/links.config';
+import { getLinksConfig } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 
 const { t } = useI18n();
+const { friendLinks, linkCategories, linkApplicationInfo, mySiteInfo } = getLinksConfig();
 
 // Group by type
 const friendsLinks = friendLinks.filter(link => link.type === 'friend');

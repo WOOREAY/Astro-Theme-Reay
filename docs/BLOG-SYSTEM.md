@@ -376,17 +376,7 @@ See posts organized by year/month at `/archives`.
 
 ## RSS Feed
 
-Automatic RSS feed at `/rss.xml`
-
-**Configuration:**
-```typescript
-export const rss = {
-  enabled: true,
-  title: 'My Blog Feed',
-  description: 'Latest posts',
-  limit: 20,  // Posts in feed
-}
-```
+RSS is not configured by default. Add an Astro RSS endpoint if your site needs `/rss.xml`.
 
 ## Best Practices
 

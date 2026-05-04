@@ -8,7 +8,7 @@
  * - ETag conditional requests
  * - Request deduplication
  */
-import { user } from '../data/user.config';
+import { getGitHubConfig } from '../data/site.config';
 import { githubCache } from './github-cache';
 
 interface GitHubRepo {
@@ -52,7 +52,8 @@ interface GitHubReadme {
 }
 
 const GITHUB_API = 'https://api.github.com';
-const rawGitHubToken = user.github.token || import.meta.env.GITHUB_TOKEN;
+const githubConfig = getGitHubConfig();
+const rawGitHubToken = githubConfig.token || import.meta.env.GITHUB_TOKEN;
 const GITHUB_TOKEN = rawGitHubToken && !/^your[_-]?github[_-]?token$/i.test(rawGitHubToken)
   ? rawGitHubToken
   : '';

@@ -13,7 +13,7 @@ import Background from '../../components/common/Background.astro'
 import I18nRuntime from '../../components/common/I18nRuntime.astro'
 
 import { createTheme, themeToCSSVars } from '../../theme'
-import { themeConfig } from '../../data/theme.config'
+import { getThemeConfig } from '../../data/site.config'
 
 import '../../styles/cards.css'
 import '../../styles/immersive.css'
@@ -28,7 +28,7 @@ const {
   ogImage?: string;
 }
 
-const THEME = createTheme(themeConfig)
+const THEME = createTheme(getThemeConfig())
 ---
 
 <html lang="zh-CN">

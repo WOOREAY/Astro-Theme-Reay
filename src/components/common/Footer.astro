@@ -3,11 +3,12 @@
  * Footer Component
  * Site-wide footer with navigation, resources, and copyright info
  */
-import { user, getUserContent } from '../../data/user.config';
+import { getLocalizedUserContent, getUserProfile } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 
 const { t, currentLang } = useI18n();
-const userContent = getUserContent(currentLang);
+const user = getUserProfile();
+const userContent = getLocalizedUserContent(currentLang);
 
 const year = new Date().getFullYear();
 const startYear = 2024;

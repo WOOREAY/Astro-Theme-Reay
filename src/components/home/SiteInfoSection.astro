@@ -4,10 +4,11 @@
  * Site information section for homepage
  * Displays tech stack, statistics, and footer
  */
-import { aboutConfig } from '../../data/user.config';
+import { getAboutConfig } from '../../data/site.config';
 import { getArchiveStats } from '../../utils/blog';
 import Footer from '../common/Footer.astro';
 
+const aboutConfig = getAboutConfig();
 const stats = await getArchiveStats();
 
 const statCards = [

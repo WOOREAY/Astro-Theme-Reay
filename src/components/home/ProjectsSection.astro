@@ -4,14 +4,16 @@
  * Featured projects section for homepage
  * Fetches and displays top repositories from GitHub API
  */
-import { user } from '../../data/user.config';
+import { getGitHubConfig } from '../../data/site.config';
 import { getUserRepos, formatNumber, getLanguageColor } from '../../utils/github';
 
 let featuredProjects = [];
+const githubConfig = getGitHubConfig();
+const githubUsername = githubConfig.username;
 
 try {
-  console.log(`🔍 Fetching repositories for user: ${user.github.username}`);
-  const allRepos = await getUserRepos(user.github.username);
+  console.log(`🔍 Fetching repositories for user: ${githubUsername}`);
+  const allRepos = await getUserRepos(githubUsername);
   
   if (allRepos && allRepos.length > 0) {
     featuredProjects = allRepos
@@ -26,7 +28,7 @@ try {
     
     console.log(`✅ Loaded ${featuredProjects.length} repositories for homepage`);
   } else {
-    console.warn(`⚠️ No repositories found for user: ${user.github.username}`);
+    console.warn(`⚠️ No repositories found for user: ${githubUsername}`);
   }
 } catch (error) {
   console.error(`❌ Error fetching repositories:`, error);
@@ -121,7 +123,7 @@ try {
               <!-- Tags -->
               {(project.topics && project.topics.length > 0) && (
                 <div class="project-tags relative z-10 flex flex-wrap gap-1.5 mt-auto pt-3 border-t border-[var(--md-sys-color-outline-variant)]/30">
-                  {project.topics.slice(0, 3).map((tag) => (
+                  {project.topics.slice(0, 3).map((tag: string) => (
                     <span class="tag inline-flex items-center px-2.5 py-1 text-xs font-500 bg-gradient-to-r from-[var(--md-sys-color-tertiary-container)]/70 to-[var(--md-sys-color-primary-container)]/70 text-[var(--md-sys-color-on-tertiary-container)] rounded-full backdrop-blur-sm shadow-sm">
                       {tag}
                     </span>

@@ -12,11 +12,12 @@ import SocialNetworks from '../../components/about/SocialNetworks.astro';
 import EducationTimeline from '../../components/about/EducationTimeline.astro';
 import ExperienceTimeline from '../../components/about/ExperienceTimeline.astro';
 import SiteInfo from '../../components/about/SiteInfo.astro';
-import { aboutConfig } from '../../data/user.config';
+import { getAboutConfig } from '../../data/site.config';
 import { useI18n } from '../../utils/i18n';
 import { getAllPosts } from '../../utils/blog';
 
 const { t } = useI18n();
+const aboutConfig = getAboutConfig();
 
 const { 
   sections,

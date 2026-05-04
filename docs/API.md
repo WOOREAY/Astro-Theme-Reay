@@ -475,6 +475,32 @@ interface Shape {
 
 ## Configuration Files
 
+### site.config.ts
+
+Central read layer for application code.
+
+```typescript
+export const siteConfig = {
+  i18n: { defaultLang, languages, translations }
+  user
+  userContent
+  about: aboutConfig
+  theme: themeConfig
+  background: backgroundConfig
+  links: linksConfig
+  projects: projectsConfig
+}
+
+export function getUserProfile()
+export function getLocalizedUserContent(lang?)
+export function getAboutConfig()
+export function getThemeConfig()
+export function getBackgroundConfig()
+export function getLinksConfig()
+export function getProjectsConfig()
+export function getGitHubConfig()
+```
+
 ### user.config.ts
 
 User configuration.
@@ -483,17 +509,17 @@ User configuration.
 export const user = {
   name: string
   avatar: string
-  bio: string
-  links: {
-    github?: string
-    twitter?: string
-    // ...
-  }
+  location: string
+  socials: Array<{ icon: string; label: string; url: string }>
   github: {
     username: string
     token?: string
   }
-  // ...
+}
+
+export const userContent = {
+  en: { tagline: string; bio: string; greeting: string; description: string }
+  zh: { tagline: string; bio: string; greeting: string; description: string }
 }
 ```
 
@@ -530,16 +556,13 @@ export const markdownStyleConfig = {
 Projects configuration.
 
 ```typescript
-export const projects = [
-  {
-    id: string
-    owner: string
-    repo: string
-    category?: string
-    featured?: boolean
-    // ...
-  }
-]
+export const projectsConfig = {
+  categories: ProjectCategory[]
+  githubUsername: string
+  githubConfig: GithubConfig
+  displaySettings: ProjectDisplaySettings
+  featuredRepos?: ProjectRepo[]
+}
 ```
 
 ### links.config.ts
@@ -548,20 +571,10 @@ Friend links configuration.
 
 ```typescript
 export const linksConfig = {
-  categories: [
-    {
-      name: string
-      links: [
-        {
-          name: string
-          url: string
-          avatar?: string
-          description?: string
-          // ...
-        }
-      ]
-    }
-  ]
+  friendLinks: FriendLink[]
+  linkCategories: LinkCategoriesConfig
+  linkApplicationInfo: LinkApplicationInfo
+  mySiteInfo: SiteInfo
 }
 ```
 

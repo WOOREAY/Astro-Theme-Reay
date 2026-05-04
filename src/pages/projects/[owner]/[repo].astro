@@ -8,13 +8,14 @@ import ProjectDetailLayout from '../../../layouts/projects/ProjectDetailLayout.a
 import ProjectDetailHeader from '../../../components/projects/ProjectDetailHeader.astro';
 import ReadmeContent from '../../../components/projects/ReadmeContent.astro';
 import { getGitHubRepo, getRepoReadme, getUserRepos } from '../../../utils/github';
-import { githubUsername } from '../../../data/projects.config';
+import { getProjectsConfig } from '../../../data/site.config';
 import { useI18n } from '../../../utils/i18n';
 
 const { t } = useI18n();
 
 // Generate static paths
 export async function getStaticPaths() {
+  const { githubUsername } = getProjectsConfig();
   // Only fetch user's public repositories
   const userRepos = await getUserRepos(githubUsername);
   const projects = userRepos
