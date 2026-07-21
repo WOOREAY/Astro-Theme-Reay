@@ -10,12 +10,12 @@
  * - Category filtering
  * - Responsive layout
  */
-import LinksLayout from '../../layouts/links/LinksLayout.astro';
-import LinksHeader from '../../components/links/LinksHeader.astro';
-import LinksCategoryTabs from '../../components/links/LinksCategoryTabs.astro';
-import LinkCard from '../../components/links/LinkCard.astro';
-import { getLinksConfig } from '../../data/site.config';
-import { useI18n } from '../../utils/i18n';
+import LinksLayout from '@app/layouts/links/LinksLayout.astro';
+import LinksHeader from '@features/links/components/LinksHeader.astro';
+import LinksCategoryTabs from '@features/links/components/LinksCategoryTabs.astro';
+import LinkCard from '@features/links/components/LinkCard.astro';
+import { getLinksConfig } from '@app/config/site.config';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t } = useI18n();
 const { friendLinks, linkCategories, linkApplicationInfo, mySiteInfo } = getLinksConfig();

@@ -365,17 +365,13 @@ Most platforms provide free SSL:
    site: 'https://yourdomain.com'
    ```
 
-2. **Add robots.txt**
-   ```txt
-   # public/robots.txt
-   User-agent: *
-   Allow: /
-   Sitemap: https://yourdomain.com/sitemap-index.xml
-   ```
+2. **Verify robots.txt**
+   - The build generates `/robots.txt` from `src/pages/robots.txt.ts`
+   - Confirm its Sitemap URL uses the production `SITE` origin
 
 3. **Verify Sitemap**
-   - Add an Astro sitemap integration if your deployment needs a sitemap
-   - Check the generated sitemap URL after enabling it
+   - `@astrojs/sitemap` generates `/sitemap-index.xml`
+   - Open the generated URL after deployment
 
 4. **Meta Tags**
    - Verify page titles and descriptions in layouts and page props

@@ -1,427 +1,146 @@
 # Project Structure
 
-Understanding the codebase organization and file architecture.
+本文描述当前 feature-first 架构。代码行为以仓库为准，所有新增功能应遵守这里的依赖方向。
 
-## Directory Overview
+## 目录总览
 
-```
+```text
 Astro-Theme-Reay/
-├── src/                    # Source code
-│   ├── components/         # Reusable UI components
-│   ├── content/           # Content collections (blog posts)
-│   ├── data/              # Configuration files
-│   ├── layouts/           # Page layout templates
-│   ├── pages/             # Route pages (file-based routing)
-│   ├── scripts/           # Client-side JavaScript
-│   ├── styles/            # Global styles
-│   ├── theme/             # Theme system
-│   └── utils/             # Utility functions
-├── public/                # Static assets (served as-is)
-├── docs/                  # Documentation
-├── astro.config.mjs       # Astro configuration
-├── package.json           # Dependencies and scripts
-├── tsconfig.json          # TypeScript configuration
-└── uno.config.ts          # UnoCSS configuration
+├── .github/workflows/       # CI 与 GitHub Pages 部署
+├── public/                  # 不经构建处理的静态资源
+├── scripts/                 # 构建期检查脚本
+├── src/
+│   ├── app/                 # 应用配置和布局
+│   ├── content/             # Markdown/MDX 与相册图片
+│   ├── design-system/       # 主题 token 和共享视觉基础
+│   ├── features/            # 业务功能模块
+│   ├── pages/               # 路由入口
+│   ├── shared/              # 跨功能组件和客户端基础设施
+│   └── types/               # 第三方类型补充
+├── astro.config.mjs
+├── uno.config.ts
+└── package.json
 ```
 
-## Source Directory (`src/`)
+## 依赖方向
 
-### Components (`src/components/`)
-
-Organized by feature/page:
-
-```
-components/
-├── about/              # About page components
-│   ├── AboutHeader.astro
-│   ├── AboutIntro.astro
-│   ├── EducationTimeline.astro
-│   ├── ExperienceTimeline.astro
-│   ├── InfoCard.astro
-│   ├── SiteInfo.astro
-│   └── SocialNetworks.astro
-├── archives/           # Archive page components
-│   ├── ArchiveStats.astro
-│   ├── SeriesCard.astro
-│   ├── TagCloud.astro
-│   └── TimelineArchive.astro
-├── blog/               # Blog components
-│   ├── BlogListHeader.astro
-│   ├── BlogTimeline.astro
-│   ├── PostFooter.astro
-│   ├── PostHeader.astro
-│   ├── PostMeta.astro
-│   └── TableOfContents.astro
-├── common/             # Shared components
-│   ├── Background.astro
-│   ├── Container.astro
-│   ├── Footer.astro
-│   ├── Header.astro
-│   ├── HeadMeta.astro
-│   └── ThemeToggle.astro
-├── home/               # Homepage components
-│   ├── AboutSection.astro
-│   ├── HeroSection.astro
-│   ├── PostsSection.astro
-│   └── ProjectsSection.astro
-├── layout/             # Layout utilities
-│   ├── FullPageSection.astro
-│   └── PageScrollContainer.astro
-├── links/              # Friend links components
-│   ├── LinkCard.astro
-│   ├── LinksCategoryTabs.astro
-│   └── LinksHeader.astro
-└── projects/           # Projects showcase
-    ├── CategoryTabs.astro
-    ├── ProjectCard.astro
-    ├── ProjectDetailHeader.astro
-    └── ReadmeContent.astro
+```text
+pages -> app/layouts -> features -> shared
+                     -> design-system
+features -> app/config
+shared   -> app/config + design-system
 ```
 
-**Component Naming Convention:**
-- Feature-based organization (easier to find related components)
-- PascalCase for all component files
-- Descriptive names indicating purpose
+- `pages` 只负责取路由参数、调用领域 API 和组合布局。
+- `app/layouts` 提供 HTML 外壳、Header/Footer、SEO、主题和全局运行时。
+- `features` 维护领域组件、数据转换、客户端交互和领域样式。
+- `shared` 不依赖具体页面，避免放入仅供某个功能使用的代码。
+- `app/config/site.config.ts` 是应用读取用户配置的统一门面。
 
-### Content (`src/content/`)
+## app
 
-Content Collections for type-safe content:
+### `src/app/config`
 
-```
-content/
-├── config.ts           # Content collections schema
-└── blog/              # Blog posts
-    ├── example-post.md
-    ├── another-post.md
-    └── ...
-```
+用户可编辑配置与应用聚合层：
 
-**Blog Post Structure:**
-```markdown
----
-title: Post Title
-description: Post description
-publishDate: 2024-01-01
-tags: ['tag1', 'tag2']
-draft: false
----
+| 文件 | 职责 |
+| --- | --- |
+| `site.config.ts` | 聚合并导出类型稳定的 getter |
+| `user.config.ts` | 个人资料、关于页与站点说明 |
+| `features.config.ts` | 功能开关和首页滚动模式 |
+| `navigation.config.ts` | Header/Footer 路由清单 |
+| `theme.config.ts` | 主题、背景和动效 |
+| `markdown.config.ts` | Unified、Shiki、Remark/Rehype |
+| `comments.config.ts` | 评论 provider |
+| `projects.config.ts` | GitHub 数据源 |
 
-Post content here...
-```
+业务组件不应直接复制这些配置对象，应通过 `site.config.ts` 的 getter 读取。
 
-See [Blog Frontmatter](./BLOG-FRONTMATTER.md) for complete reference.
+### `src/app/layouts`
 
-### Data (`src/data/`)
+- `base/DefaultLayout.astro`：普通页面外壳和 Pagefind 内容边界。
+- `home/FullscreenLayout.astro`：首页 flow/snap 外壳。
+- `blog/BlogPostLayout.astro`：文章正文、目录和评论。
+- 其余目录封装 about、archives、links、projects 的页面布局。
 
-Configuration files for the entire site:
+## design-system
 
-```
-data/
-├── site.config.ts              # Central read layer for app code
-├── user.config.ts              # Personal information
-├── theme.config.ts             # Theme colors and settings
-├── markdown-style.config.ts    # Markdown rendering styles
-├── markdown.config.ts          # Markdown plugins
-├── projects.config.ts          # Projects showcase
-├── links.config.ts             # Friend links
-└── i18n.config.ts              # Internationalization
-```
+- `theme/`：MD3 颜色生成、token、类型与 CSS 变量输出。
+- `styles/cards.css`：共享卡片语义。
+- `styles/immersive.css`：沉浸式布局公共规则。
 
-**Key Files:**
-- **site.config.ts**: App-facing aggregation of user, theme, links, projects, and i18n config
-- **user.config.ts**: Your personal info, social links, bio
-- **theme.config.ts**: Color scheme, primary colors
-- **markdown-style.config.ts**: How all Markdown content renders
-- **projects.config.ts**: GitHub projects to showcase
-- **i18n.config.ts**: Translations for UI text
+领域专属样式放在相应 `features/<domain>/styles`，不要继续扩大共享样式。
 
-### Layouts (`src/layouts/`)
+## features
 
-Page layout templates:
-
-```
-layouts/
-├── base/
-│   ├── BaseLayout.astro        # Minimal base layout
-│   └── DefaultLayout.astro     # Standard layout with header/footer
-├── home/
-│   └── FullscreenLayout.astro  # Homepage fullscreen layout
-├── blog/
-│   ├── BlogListLayout.astro    # Blog list page
-│   └── BlogPostLayout.astro    # Individual post
-├── projects/
-│   ├── ProjectsLayout.astro    # Projects list
-│   └── ProjectDetailLayout.astro
-├── about/
-│   └── AboutLayout.astro
-├── archives/
-│   └── ArchivesLayout.astro
-└── links/
-    └── LinksLayout.astro
+```text
+features/<domain>/
+├── components/             # Astro 展示组件
+├── lib/                    # 服务端或同构领域逻辑
+├── client/                 # 浏览器交互与 provider adapters
+└── styles/                 # 领域样式，可选
 ```
 
-**Layout Hierarchy:**
-```
-BaseLayout (HTML structure)
-  └── DefaultLayout (Header + Footer + Main)
-      └── Specific layouts (Blog, Projects, etc.)
-          └── Page content
-```
+当前领域包括 `about`、`archives`、`blog`、`comments`、`effects`、`gallery`、`home`、`i18n`、`links`、`media`、`projects`、`search`。
 
-### Pages (`src/pages/`)
+几个关键实现：
 
-File-based routing (file name = URL):
+- `features/blog/lib/blog.ts`：文章查询、slug、归档和统计。
+- `features/gallery/lib/plog.ts`：相册与图片聚合。
+- `features/projects/lib/github.ts`：GitHub API、降级和缓存。
+- `features/comments/client/providers.ts`：六种评论服务的适配器表。
+- `features/search/client/search.ts`：Pagefind UI 生命周期。
+- `features/i18n/components/I18nRuntime.astro`：首屏翻译和 Astro 导航同步。
 
-```
-pages/
-├── index.astro                 # Homepage (/)
-├── blog/
-│   ├── index.astro            # Blog list (/blog)
-│   └── [...slug].astro        # Blog post (/blog/post-title)
-├── projects/
-│   ├── index.astro            # Projects list (/projects)
-│   └── [owner]/[repo].astro   # Project detail (/projects/owner/repo)
-├── about/
-│   └── index.astro            # About page (/about)
-├── archives/
-│   ├── index.astro            # Archives (/archives)
-│   ├── timeline/index.astro   # Timeline archive
-│   ├── tags/index.astro       # Tags index
-│   ├── tags/[tag].astro       # Tag page
-│   ├── series/index.astro     # Series index
-│   └── series/[series].astro  # Series page
-└── links/
-    └── index.astro            # Links (/links)
-```
+## shared
 
-**Routing Examples:**
-- `pages/blog/index.astro` → `/blog`
-- `pages/blog/[...slug].astro` → `/blog/my-post`
-- `pages/projects/[owner]/[repo].astro` → `/projects/owner/repo`
-- `pages/about/index.astro` → `/about`
+- `components/`：Header、Footer、SEO、背景、通用容器和运行时挂载点。
+- `components/layout/`：页面滚动容器等布局原语。
+- `client/runtime/client-runtime.ts`：页面生命周期唯一编排入口。
+- `client/animations`、`navigation`、`ui`：可销毁的浏览器行为实例。
 
-### Scripts (`src/scripts/`)
+新增客户端行为应提供初始化与清理边界，并接入 Astro 的 `astro:page-load` / `astro:before-swap` 生命周期，避免组件重复绑定全局监听。
 
-Client-side JavaScript:
+## content
 
-```
-scripts/
-├── animations/             # Animation effects
-│   ├── typewriter-effect.ts
-│   └── links-animation.ts
-├── interactions/           # User interactions
-│   ├── mobile-menu.ts
-│   └── navigation-i18n.ts
-├── navigation/             # Navigation handling
-│   └── fullpage-scroll.ts
-└── ui/                     # UI enhancements
-    ├── theme-toggle.ts
-    └── i18n-content-updater.ts
-```
+`src/content.config.ts` 使用 Astro Content Layer 的显式 `glob` loader：
 
-### Styles (`src/styles/`)
+- `src/content/blog/**/*.{md,mdx}` -> `blog`
+- `src/content/plog/**/*.{md,mdx}` -> `plog`
 
-Global CSS and style utilities:
+Astro 7 的 entry URL 标识由 `entry.id` 派生，不使用已删除的 `entry.slug`。内容目录应提交到 Git；仅 `dist`、`.astro`、缓存和本地环境变量被忽略。
 
-```
-styles/
-├── global.css              # Global styles
-├── markdown.css            # Markdown content styles
-└── themes/                 # Theme-specific styles
-```
+## pages 与输出
 
-### Theme (`src/theme/`)
+| 路由 | 实现 |
+| --- | --- |
+| `/` | `pages/index.astro` |
+| `/blog/[...slug]` | 博客详情 |
+| `/archives/*` | 标签、系列与时间线 |
+| `/gallery/[...slug]` | 相册详情 |
+| `/projects/[owner]/[repo]` | 项目详情 |
+| `/search` | Pagefind 本地搜索 |
+| `/rss.xml` | RSS endpoint |
+| `/robots.txt` | robots endpoint |
+| `/sitemap-index.xml` | Sitemap integration |
 
-Material Design 3 theme system:
+`npm run build` 先生成 Astro 静态页面，再生成 `dist/pagefind`。`npm run test:routes` 校验关键路由和构建产物。
 
-```
-theme/
-├── index.ts                # Main export
-├── types.ts                # Type definitions
-├── tokens.ts               # Design tokens
-├── config.ts               # Theme configuration
-├── generate.ts             # Color generation
-└── css-vars.ts             # CSS variables
-```
+## 路径别名
 
-### Utils (`src/utils/`)
+| 别名 | 目录 |
+| --- | --- |
+| `@app/*` | `src/app/*` |
+| `@design/*` | `src/design-system/*` |
+| `@features/*` | `src/features/*` |
+| `@shared/*` | `src/shared/*` |
+| `@/*` | `src/*`，仅用于兼容，新增代码优先使用语义别名 |
 
-Helper functions and utilities:
+## 新增功能的推荐步骤
 
-```
-utils/
-├── blog.ts                     # Blog utilities
-├── github.ts                   # GitHub API
-├── github-cache.ts             # GitHub caching
-├── markdown-style-generator.ts # Style generation
-└── remark-reading-time.ts      # Reading time plugin
-```
-
-## Public Directory (`public/`)
-
-Static files served directly:
-
-```
-public/
-├── favicon/                # Favicon files
-│   └── site.webmanifest
-├── images/                 # Static images
-│   ├── avatar.jpg
-│   └── og-image.jpg
-└── robots.txt              # SEO robots file
-```
-
-**Important:**
-- Files in `public/` are served at root path
-- `public/images/logo.png` → `/images/logo.png`
-- Don't process or optimize - served as-is
-
-## Configuration Files
-
-### `astro.config.mjs`
-
-Main Astro configuration:
-```javascript
-export default defineConfig({
-  site: 'https://yourdomain.com',
-  integrations: [
-    UnoCSS(),
-  ],
-  markdown: {
-    // Markdown settings
-  }
-})
-```
-
-### `package.json`
-
-Project dependencies and scripts:
-```json
-{
-  "scripts": {
-    "dev": "astro dev",
-    "build": "astro build",
-    "preview": "astro preview"
-  }
-}
-```
-
-### `tsconfig.json`
-
-TypeScript configuration:
-```json
-{
-  "extends": "astro/tsconfigs/strict",
-  "compilerOptions": {
-    "baseUrl": ".",
-    "paths": {
-      "@/*": ["src/*"]
-    }
-  }
-}
-```
-
-### `uno.config.ts`
-
-UnoCSS (Tailwind-compatible) configuration:
-```typescript
-export default defineConfig({
-  shortcuts: {
-    // Custom shortcuts
-  },
-  theme: {
-    // Theme customization
-  }
-})
-```
-
-## File Naming Conventions
-
-### Components
-- **Astro Components**: `PascalCase.astro`
-- **TypeScript**: `kebab-case.ts`
-- **Styles**: `kebab-case.css`
-
-### Content
-- **Blog Posts**: `kebab-case-title.md`
-- **Collections**: lowercase folder names
-
-### Configurations
-- **All configs**: `kebab-case.config.ts`
-- **Data files**: `kebab-case.ts`
-
-## Import Paths
-
-TypeScript path aliases configured in `tsconfig.json`:
-
-```typescript
-// Instead of:
-import Header from '../../../components/common/Header.astro'
-
-// You can use:
-import Header from '@/components/common/Header.astro'
-```
-
-**Available aliases:**
-- `@/components` → `src/components`
-- `@/layouts` → `src/layouts`
-- `@/utils` → `src/utils`
-- `@/data` → `src/data`
-- `@/styles` → `src/styles`
-
-## Build Output (`dist/`)
-
-Production build output (git-ignored):
-
-```
-dist/
-├── index.html              # Pre-rendered pages
-├── blog/
-│   └── post-title/
-│       └── index.html
-├── _astro/                 # Optimized assets
-│   ├── *.css
-│   └── *.js
-└── images/                 # Optimized images
-```
-
-## Key Directories Summary
-
-| Directory | Purpose | Edit Frequency |
-|-----------|---------|----------------|
-| `src/components/` | UI components | Medium |
-| `src/content/blog/` | Blog posts | High |
-| `src/data/` | Configuration | Medium |
-| `src/layouts/` | Page layouts | Low |
-| `src/pages/` | Routes | Low |
-| `src/scripts/` | Client JS | Low |
-| `src/styles/` | Global styles | Low |
-| `src/utils/` | Utilities | Low |
-| `public/` | Static assets | Medium |
-| `docs/` | Documentation | Low |
-
-## Common Workflows
-
-### Adding a new page
-1. Create file in `src/pages/`
-2. Create layout if needed
-3. Create components in `src/components/`
-4. Add navigation link in i18n config
-
-### Adding a feature
-1. Create components in `src/components/feature/`
-2. Add utilities in `src/utils/` if needed
-3. Update configuration in `src/data/`
-4. Add page route in `src/pages/`
-
-### Customizing styles
-1. Edit theme in `src/data/theme.config.ts`
-2. Modify Markdown styles in `src/data/markdown-style.config.ts`
-3. Update global styles in `src/styles/global.css`
-
-## Related Documentation
-
-- [User Configuration](./USER-CONFIG.md)
-- [Blog System](./BLOG-SYSTEM.md)
-- [Theme Configuration](./THEME-CONFIG.md)
-- [Markdown Styles](./MARKDOWN-CUSTOM-GUIDE.md)
+1. 在 `features/<domain>` 创建领域模块。
+2. 把用户可调值放入 `app/config`，并由 `site.config.ts` 暴露。
+3. 在 `pages` 中仅组合组件与路由数据。
+4. 跨域视觉基础才进入 `design-system`；跨域行为才进入 `shared`。
+5. 添加 i18n key、关键路由 smoke test 和使用文档。
+6. 执行 `npm run verify && npm run audit`。

@@ -4,12 +4,12 @@
  * Display GitHub README as blog post
  */
 import { marked } from 'marked';
-import ProjectDetailLayout from '../../../layouts/projects/ProjectDetailLayout.astro';
-import ProjectDetailHeader from '../../../components/projects/ProjectDetailHeader.astro';
-import ReadmeContent from '../../../components/projects/ReadmeContent.astro';
-import { getGitHubRepo, getRepoReadme, getUserRepos } from '../../../utils/github';
-import { getProjectsConfig } from '../../../data/site.config';
-import { useI18n } from '../../../utils/i18n';
+import ProjectDetailLayout from '@app/layouts/projects/ProjectDetailLayout.astro';
+import ProjectDetailHeader from '@features/projects/components/ProjectDetailHeader.astro';
+import ReadmeContent from '@features/projects/components/ReadmeContent.astro';
+import { getGitHubRepo, getRepoReadme, getUserRepos } from '@features/projects/lib/github';
+import { getProjectsConfig } from '@app/config/site.config';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t } = useI18n();
 

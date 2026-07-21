@@ -3,27 +3,27 @@
  * /about/index.astro
  * About page - fully customizable category display system
  */
-import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
-import AboutHeader from '../../components/about/AboutHeader.astro';
-import AboutIntro from '../../components/about/AboutIntro.astro';
-import Section from '../../components/about/Section.astro';
-import Timeline from '../../components/about/Timeline.astro';
-import SocialNetworks from '../../components/about/SocialNetworks.astro';
-import EducationTimeline from '../../components/about/EducationTimeline.astro';
-import ExperienceTimeline from '../../components/about/ExperienceTimeline.astro';
-import SiteInfo from '../../components/about/SiteInfo.astro';
-import { getAboutConfig } from '../../data/site.config';
-import { useI18n } from '../../utils/i18n';
-import { getAllPosts } from '../../utils/blog';
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import AboutHeader from '@features/about/components/AboutHeader.astro';
+import AboutIntro from '@features/about/components/AboutIntro.astro';
+import Section from '@features/about/components/Section.astro';
+import Timeline from '@features/about/components/Timeline.astro';
+import SocialNetworks from '@features/about/components/SocialNetworks.astro';
+import EducationTimeline from '@features/about/components/EducationTimeline.astro';
+import ExperienceTimeline from '@features/about/components/ExperienceTimeline.astro';
+import SiteInfo from '@features/about/components/SiteInfo.astro';
+import { getAboutConfig } from '@app/config/site.config';
+import { useI18n } from '@features/i18n/lib/i18n';
+import { getAllPosts } from '@features/blog/lib/blog';
 
 const { t } = useI18n();
 const aboutConfig = getAboutConfig();
 
-const { 
+const {
   sections,
   timeline,
-  socialNetworks, 
-  education, 
+  socialNetworks,
+  education,
   experience,
   site,
 } = aboutConfig;
@@ -53,7 +53,7 @@ const siteWithStats = {
 
     <!-- Dynamically render all custom categories -->
     {sections.map((section) => (
-      <Section 
+      <Section
         id={section.id}
         title={section.title}
         description={section.description}
@@ -118,11 +118,3 @@ const siteWithStats = {
     }
   }
 </style>
-
-<script>
-  import { initI18n } from '../../scripts/i18n-content-updater';
-  import { initUserContentI18n } from '../../scripts/i18n-user-content';
-  
-  initI18n();
-  initUserContentI18n();
-</script>

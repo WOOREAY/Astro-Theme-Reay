@@ -1,0 +1,377 @@
+---
+/**
+ * AboutSection Component
+ * Personal info section for homepage
+ * Displays bio, skills, tools, and interests
+ */
+import { getAboutConfig, getLocalizedUserContent, getUserProfile } from '@app/config/site.config';
+import type { AboutSectionItem } from '@app/config/user.config';
+import { useI18n } from '@features/i18n/lib/i18n';
+
+const { currentLang } = useI18n();
+const user = getUserProfile();
+const aboutConfig = getAboutConfig();
+const userContent = getLocalizedUserContent(currentLang);
+const isZh = currentLang === 'zh';
+const labels = isZh
+  ? {
+      profile: '个人快照',
+      now: '当前状态',
+      education: '正在学习',
+      timeline: '近期记录',
+      focus: '关注方向',
+      profileFocus: '最近聚焦',
+      interests: '生活切片',
+      channels: '可联系渠道',
+      contact: '快速联系',
+      status: '在线状态',
+      available: '保持连接',
+      tools: '常用工具',
+      location: '常驻位置',
+      more: '完整关于页',
+      empty: '持续整理中',
+    }
+  : {
+      profile: 'Profile',
+      now: 'Now',
+      education: 'Studying',
+      timeline: 'Recent note',
+      focus: 'Focus',
+      profileFocus: 'Current focus',
+      interests: 'Life fragments',
+      channels: 'Channels',
+      contact: 'Quick contact',
+      status: 'Status',
+      available: 'Available',
+      tools: 'Tools',
+      location: 'Location',
+      more: 'Full About',
+      empty: 'Being refined',
+    };
+
+const primaryEducation = aboutConfig.education[0];
+const latestTimeline = aboutConfig.timeline[0];
+const interestSection = aboutConfig.sections.find((section) => section.id === 'hobbies') ?? aboutConfig.sections[2];
+const homeToolSections = aboutConfig.sections.slice(0, 2).map((section) => ({
+  ...section,
+  items: section.items.slice(0, 4),
+}));
+const focusChips = aboutConfig.sections
+  .flatMap((section) => section.items.map((item: AboutSectionItem) => ({
+    icon: item.icon ?? section.icon ?? 'i-carbon:dot-mark',
+    name: item.name,
+  })))
+  .slice(0, 6);
+const channelCount = aboutConfig.socialNetworks.length || user.socials.length;
+const profileHighlights = [
+  {
+    icon: 'i-carbon:activity',
+    label: labels.status,
+    value: labels.available,
+    tone: 'success',
+  },
+  {
+    icon: focusChips[0]?.icon ?? 'i-carbon:center-circle',
+    label: labels.profileFocus,
+    value: focusChips[0]?.name ?? labels.empty,
+    tone: 'secondary',
+  },
+  {
+    icon: 'i-carbon:connect',
+    label: labels.channels,
+    value: `${channelCount}`,
+    tone: 'primary',
+  },
+];
+const contactLinks = user.socials.slice(0, 3);
+const profileNotes = [
+  {
+    icon: 'i-carbon:time',
+    label: labels.timeline,
+    value: latestTimeline?.event ?? labels.empty,
+  },
+  {
+    icon: interestSection?.icon ?? 'i-carbon:favorite',
+    label: labels.interests,
+    value: interestSection?.items.slice(0, 2).map((item) => item.name).join(' / ') ?? labels.empty,
+  },
+];
+const snapshotCards = [
+  {
+    icon: 'i-carbon:location',
+    label: labels.location,
+    value: user.location,
+  },
+  {
+    icon: 'i-carbon:education',
+    label: labels.education,
+    value: primaryEducation?.school ?? labels.empty,
+  },
+  {
+    icon: 'i-carbon:connect',
+    label: labels.channels,
+    value: `${channelCount}`,
+  },
+];
+---
+
+<div class="home-section-frame about-home-frame h-full box-border px-4 py-6">
+  <div class="about-section home-section-shell home-section-accent-secondary max-w-6xl mx-auto w-full">
+    <!-- Section Header -->
+    <div class="section-header home-section-heading mb-6 relative">
+      <div class="absolute inset-0 -z-10 opacity-30">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-[var(--md-sys-color-secondary)]/10 to-[var(--md-sys-color-primary)]/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <span class="section-logo icon-wrapper inline-flex items-center justify-center bg-gradient-to-br from-[var(--md-sys-color-secondary-container)] to-[var(--md-sys-color-primary-container)] rounded-xl" aria-hidden="true">
+        <i class="i-carbon:user-avatar text-xl text-[var(--md-sys-color-secondary)]"></i>
+      </span>
+      <h2 class="section-title inline-flex items-center justify-start gap-2 text-2xl md:text-3xl font-700 text-[var(--md-sys-color-on-surface)] mb-2">
+        <span class="section-title-text bg-gradient-to-r from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] bg-clip-text text-transparent" data-i18n="about.title">
+          关于我
+        </span>
+      </h2>
+      <p class="section-subtitle text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)] font-500">
+        <span class="section-subtitle-text" data-user-content="description">{userContent.description}</span>
+      </p>
+
+      <div class="section-divider flex items-center justify-start gap-2 mt-3">
+        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent to-[var(--md-sys-color-secondary)]/50"></div>
+        <div class="w-2 h-2 rounded-full bg-[var(--md-sys-color-secondary)]"></div>
+        <div class="w-12 h-0.5 bg-gradient-to-l from-transparent to-[var(--md-sys-color-secondary)]/50"></div>
+      </div>
+    </div>
+
+    <!-- Main Content -->
+    <div class="about-content home-section-content">
+      <div class="about-profile-column">
+        <!-- Bio Card -->
+        <div class="card intro-card group relative animate-fade-in">
+          <div class="absolute inset-0 bg-gradient-to-br from-[var(--md-sys-color-secondary)]/8 to-[var(--md-sys-color-primary)]/8 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl pointer-events-none"></div>
+
+          <div class="absolute -top-8 -right-8 w-32 h-32 bg-gradient-to-br from-[var(--md-sys-color-secondary)]/15 to-[var(--md-sys-color-primary)]/15 rounded-full blur-3xl group-hover:scale-150 transition-transform duration-700 pointer-events-none"></div>
+
+          <div class="relative z-10 grid grid-cols-[auto_1fr] gap-4 md:gap-6">
+            <div class="intro-left">
+              <div class="avatar-wrapper relative">
+                <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] opacity-20 animate-pulse"></div>
+                <div class="absolute inset-[-4px] rounded-full bg-gradient-to-br from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
+
+                <img
+                  src={user.avatar}
+                  alt={user.name}
+                  class="avatar relative z-10"
+                />
+
+                <!-- 在线状态指示器 -->
+                <div class="absolute bottom-1 right-1 z-20 w-4 h-4 rounded-full border-2 border-[var(--md-sys-color-surface)]" style="background: var(--reay-color-success); box-shadow: 0 0 14px rgba(var(--reay-color-success-rgb), 0.45);">
+                  <div class="absolute inset-0 rounded-full animate-ping" style="background: var(--reay-color-success);"></div>
+                </div>
+              </div>
+            </div>
+
+            <div class="intro-right flex flex-col gap-2">
+              <span class="profile-eyebrow">{labels.profile}</span>
+              <h3 class="name text-xl md:text-2xl font-700 bg-gradient-to-r from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] bg-clip-text text-transparent mb-1">
+                {user.name}
+              </h3>
+
+              <p class="tagline">{userContent.tagline}</p>
+
+              <p class="location flex items-center gap-1.5 text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)]">
+                <i class="i-carbon:location text-base text-[var(--md-sys-color-secondary)]"></i>
+                {user.location}
+              </p>
+
+              <p class="bio text-xs md:text-sm leading-relaxed text-[var(--md-sys-color-on-surface-variant)]/90 mt-1" data-user-content="bio">
+                {userContent.bio}
+              </p>
+
+              <div class="profile-meta-grid" aria-label={labels.profile}>
+                {profileHighlights.map((item) => (
+                  <div class={`profile-meta-card tone-${item.tone}`}>
+                    <span class="profile-meta-icon" aria-hidden="true">
+                      <i class={item.icon}></i>
+                    </span>
+                    <span class="profile-meta-label">{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+
+              <!-- 社交链接 - 美化版 -->
+              <div class="social-links" aria-label={labels.contact}>
+                {contactLinks.map((social, index) => (
+                  <a
+                    href={social.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    class="social-link group/link"
+                    aria-label={social.label}
+                    title={social.label}
+                    style={`animation-delay: ${index * 100 + 300}ms;`}
+                  >
+                    <span class="social-icon-wrapper">
+                      <i class={social.icon}></i>
+                    </span>
+                    <span class="social-label">{social.label}</span>
+                    <i class="i-carbon:arrow-up-right text-xs opacity-0 group-hover/link:opacity-100 transition-all duration-300 group-hover/link:translate-x-0.5 group-hover/link:-translate-y-0.5"></i>
+                  </a>
+                ))}
+              </div>
+
+              <div class="profile-note-strip" aria-label={labels.timeline}>
+                {profileNotes.map((item) => (
+                  <div class="profile-note-card">
+                    <span class="profile-note-icon" aria-hidden="true">
+                      <i class={item.icon}></i>
+                    </span>
+                    <span class="profile-note-label">{item.label}</span>
+                    <strong>{item.value}</strong>
+                  </div>
+                ))}
+              </div>
+            </div>
+          </div>
+        </div>
+
+        <div class="profile-snapshot-grid">
+          {snapshotCards.map((card) => (
+            <div class="snapshot-card">
+              <span class="snapshot-icon" aria-hidden="true">
+                <i class={card.icon}></i>
+              </span>
+              <span class="snapshot-label">{card.label}</span>
+              <strong>{card.value}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="about-detail-column">
+        <div class="about-current-card animate-fade-in" style="animation-delay: 250ms;">
+          <div class="about-card-heading">
+            <div>
+              <span>{labels.now}</span>
+              <h3>{labels.focus}</h3>
+            </div>
+            <a href="/about" class="about-more-link">
+              <span>{labels.more}</span>
+              <i class="i-carbon:arrow-up-right"></i>
+            </a>
+          </div>
+
+          <div class="current-items">
+            {primaryEducation && (
+              <div class="current-item">
+                <span class="current-marker">
+                  <i class="i-carbon:education"></i>
+                </span>
+                <div>
+                  <span class="current-label">{labels.education}</span>
+                  <strong>{primaryEducation.school}</strong>
+                  <p>{[primaryEducation.major, primaryEducation.degree].filter(Boolean).join(' · ') || primaryEducation.description}</p>
+                </div>
+              </div>
+            )}
+
+            {latestTimeline && (
+              <div class="current-item">
+                <span class="current-marker">
+                  <i class="i-carbon:time"></i>
+                </span>
+                <div>
+                  <span class="current-label">{latestTimeline.year}</span>
+                  <strong>{latestTimeline.event}</strong>
+                  {latestTimeline.description && <p>{latestTimeline.description}</p>}
+                </div>
+              </div>
+            )}
+          </div>
+
+          <div class="focus-chip-grid">
+            {focusChips.map((chip) => (
+              <span class="focus-chip">
+                <i class={chip.icon}></i>
+                {chip.name}
+              </span>
+            ))}
+          </div>
+        </div>
+
+        <div class="about-tools-stack">
+          <!-- 技能/工具网格 - 美化版 -->
+          {homeToolSections.map((section, sectionIndex) => (
+            <div class="tools-section animate-fade-in" style={`animation-delay: ${sectionIndex * 150 + 400}ms;`}>
+              <div class="tools-header flex items-center gap-2 mb-2">
+                <div class="icon-wrapper inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[var(--md-sys-color-secondary-container)] to-[var(--md-sys-color-primary-container)] rounded-lg">
+                  <i class={`${section.icon} text-base text-[var(--md-sys-color-secondary)]`}></i>
+                </div>
+                <h3 class="text-base md:text-lg font-700 text-[var(--md-sys-color-on-surface)]" data-i18n={`about.${section.id}.title`}>{section.title}</h3>
+              </div>
+              <p class="tools-description text-xs text-[var(--md-sys-color-on-surface-variant)] mb-3" data-i18n={`about.${section.id}.subtitle`}>{section.description}</p>
+
+              <div class={`tools-grid cols-${section.columns} ${section.compact ? 'compact' : ''}`}>
+                {section.items.map((item: AboutSectionItem, itemIndex: number) => (
+                  <a
+                    href={item.url || '#'}
+                    target={item.url ? '_blank' : undefined}
+                    rel={item.url ? 'noopener noreferrer' : undefined}
+                    class={`card-minimal tool-card group/tool animate-scale-in`}
+                    style={`animation-delay: ${itemIndex * 50 + sectionIndex * 150 + 500}ms;`}
+                  >
+                    <!-- 装饰性背景 -->
+                    <div class="absolute inset-0 bg-gradient-to-br from-[var(--md-sys-color-secondary)]/8 to-[var(--md-sys-color-primary)]/8 opacity-0 group-hover/tool:opacity-100 transition-opacity duration-400 rounded-xl pointer-events-none"></div>
+
+                    {item.icon && (
+                      <div class="tool-icon-wrapper relative z-10">
+                        <i class={`${item.icon} text-2xl text-[var(--md-sys-color-secondary)] group-hover/tool:scale-110 transition-transform duration-300`}></i>
+                      </div>
+                    )}
+
+                    <div class="tool-info relative z-10">
+                      <h4 class="text-sm font-600 text-[var(--md-sys-color-on-surface)] group-hover/tool:text-[var(--md-sys-color-secondary)] transition-colors leading-snug">
+                        {item.name}
+                      </h4>
+                      {item.description && (
+                        <p class="text-xs text-[var(--md-sys-color-on-surface-variant)]/80 leading-relaxed mt-0.5 line-clamp-2">
+                          {item.description}
+                        </p>
+                      )}
+                    </div>
+
+                    <!-- 外链指示器 -->
+                    {item.url && (
+                      <i class="i-carbon:arrow-up-right absolute top-2 right-2 text-sm text-[var(--md-sys-color-on-surface-variant)] opacity-0 group-hover/tool:opacity-100 transition-all duration-300 transform translate-x-1 -translate-y-1 group-hover/tool:translate-x-0 group-hover/tool:translate-y-0"></i>
+                    )}
+                  </a>
+                ))}
+              </div>
+            </div>
+          ))}
+        </div>
+
+        {interestSection && (
+          <div class="interest-card animate-fade-in" style="animation-delay: 620ms;">
+            <div class="interest-heading">
+              <span>{labels.interests}</span>
+              <strong data-i18n={`about.${interestSection.id}.title`}>{interestSection.title}</strong>
+            </div>
+            <div class="interest-grid">
+              {interestSection.items.slice(0, 4).map((item) => (
+                <span class="interest-chip">
+                  {item.icon && <i class={item.icon}></i>}
+                  {item.name}
+                </span>
+              ))}
+            </div>
+          </div>
+        )}
+      </div>
+    </div>
+  </div>
+</div>
+
+<style>
+  @import "../styles/about-section.css";
+</style>

@@ -98,7 +98,7 @@ BASE=/repository-name
 
 ### 7. 用户配置
 
-编辑 `src/data/user.config.ts`:
+编辑 `src/app/config/user.config.ts`:
 
 ```typescript
 export const user = {

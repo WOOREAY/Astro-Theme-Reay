@@ -3,9 +3,9 @@
  * Gallery Page
  * Content-driven plog album index.
  */
-import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
-import { getPlogGallery } from '../../utils/plog';
-import { useI18n } from '../../utils/i18n';
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import { getPlogGallery } from '@features/gallery/lib/plog';
+import { useI18n } from '@features/i18n/lib/i18n';
 import { getImage } from 'astro:assets';
 
 const { t } = useI18n();

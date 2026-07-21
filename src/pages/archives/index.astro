@@ -3,12 +3,12 @@
  * Archives Index Page
  * Display all archive statistics and overview
  */
-import ArchiveLayout from '../../layouts/archives/ArchiveLayout.astro';
-import ArchiveStats from '../../components/archives/ArchiveStats.astro';
-import TagCloud from '../../components/archives/TagCloud.astro';
-import SeriesCard from '../../components/archives/SeriesCard.astro';
-import { getArchiveStats, getAllTags, getAllSeries } from '../../utils/blog';
-import { useI18n } from '../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import ArchiveStats from '@features/archives/components/ArchiveStats.astro';
+import TagCloud from '@features/archives/components/TagCloud.astro';
+import SeriesCard from '@features/archives/components/SeriesCard.astro';
+import { getArchiveStats, getAllTags, getAllSeries } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t } = useI18n();
 
@@ -124,10 +124,6 @@ const topSeries = allSeries.slice(0, 3);
   </section>
 </ArchiveLayout>
 
-<script>
-  import { initI18n } from '../../scripts/i18n-content-updater';
-  initI18n();
-</script>
 
 <style>
   /* Global layout */

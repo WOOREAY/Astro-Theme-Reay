@@ -7,14 +7,15 @@
  *   - FullpageSection (scroll sections)
  *   - HeroSection, PostsSection, ProjectsSection, AboutSection, SiteInfoSection (section content)
  */
-import FullscreenLayout from '../layouts/home/FullscreenLayout.astro';
-import PageScrollContainer from '../components/layout/PageScrollContainer.astro';
-import FullPageSection from '../components/layout/FullPageSection.astro';
-import HeroSection from '../components/home/HeroSection.astro';
-import PostsSection from '../components/home/PostsSection.astro';
-import ProjectsSection from '../components/home/ProjectsSection.astro';
-import AboutSection from '../components/home/AboutSection.astro';
-import SiteInfoSection from '../components/home/SiteInfoSection.astro';
+import FullscreenLayout from '@app/layouts/home/FullscreenLayout.astro';
+import PageScrollContainer from '@shared/components/layout/PageScrollContainer.astro';
+import FullPageSection from '@shared/components/layout/FullPageSection.astro';
+import HeroSection from '@features/home/components/HeroSection.astro';
+import PostsSection from '@features/home/components/PostsSection.astro';
+import ProjectsSection from '@features/home/components/ProjectsSection.astro';
+import AboutSection from '@features/home/components/AboutSection.astro';
+import SiteInfoSection from '@features/home/components/SiteInfoSection.astro';
+import { getFeaturesConfig } from '@app/config/site.config';
 
 const sections = [
   { id: 'hero', label: 'Hero' },
@@ -23,10 +24,11 @@ const sections = [
   { id: 'about', label: 'About' },
   { id: 'site', label: 'Site' },
 ];
+const homeLayout = getFeaturesConfig().home.layout;
 ---
 
 <FullscreenLayout title="Home">
-  <PageScrollContainer sections={sections}>
+  <PageScrollContainer sections={sections} mode={homeLayout}>
     <!-- Section 1: Hero -->
     <FullPageSection sectionId="hero">
       <HeroSection />

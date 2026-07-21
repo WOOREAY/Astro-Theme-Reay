@@ -2,20 +2,34 @@
   "name": "astro-theme-reay",
   "type": "module",
   "version": "0.0.1",
+  "license": "Apache-2.0",
+  "engines": {
+    "node": ">=22.12.0",
+    "npm": ">=9.6.5"
+  },
   "scripts": {
     "dev": "astro dev",
-    "build": "astro build",
+    "build": "astro build && pagefind --site dist",
+    "build:astro": "astro build",
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "lint": "astro check"
+    "lint": "astro check",
+    "test:routes": "node scripts/check-routes.mjs",
+    "audit": "npm audit --audit-level=high",
+    "verify": "npm run check && npm run build && npm run test:routes"
   },
   "dependencies": {
+    "@astrojs/mdx": "^7.0.3",
+    "@astrojs/rss": "^4.0.19",
+    "@astrojs/sitemap": "^3.7.3",
     "@material/material-color-utilities": "^0.3.0",
-    "@shikijs/transformers": "^3.13.0",
-    "astro": "^5.14.5",
+    "@pagefind/default-ui": "^1.5.2",
+    "@shikijs/transformers": "4.3.1",
+    "astro": "^7.1.3",
     "marked": "^16.4.1",
     "mdast-util-to-string": "^4.0.0",
+    "pagefind": "^1.5.2",
     "reading-time": "^1.5.0",
     "rehype": "^13.0.2",
     "rehype-autolink-headings": "^7.1.0",
@@ -29,8 +43,8 @@
     "@iconify-json/carbon": "^1.2.14",
     "@iconify-json/simple-icons": "^1.2.58",
     "@iconify-json/uil": "^1.2.3",
-    "@unocss/astro": "^66.5.3",
-    "typescript": "^5.9.3",
-    "unocss": "^66.5.3"
+    "@unocss/astro": "^66.7.5",
+    "typescript": "^6.0.3",
+    "unocss": "^66.7.5"
   }
 }

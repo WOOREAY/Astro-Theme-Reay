@@ -1,0 +1,11 @@
+---
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import SearchPanel from '@features/search/components/SearchPanel.astro';
+import { useI18n } from '@features/i18n/lib/i18n';
+
+const { t } = useI18n();
+---
+
+<DefaultLayout title={t('page.title.search')} description={t('search.description')}>
+  <SearchPanel />
+</DefaultLayout>

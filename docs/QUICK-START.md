@@ -20,7 +20,7 @@ Visit `http://localhost:4321` - Your site is running! 🎉
 
 ## Step 2: Configure Your Site (2 minutes)
 
-Edit `src/data/user.config.ts`:
+Edit `src/app/config/user.config.ts`:
 
 ```typescript
 export const user = {
@@ -85,7 +85,7 @@ Save and check `http://localhost:4321/blog` - Your post is live!
 ## What's Next?
 
 ### Customize Theme Colors
-Edit `src/data/theme.config.ts`:
+Edit `src/app/config/theme.config.ts`:
 ```typescript
 export const themeConfig = {
   primary: '#5B8CFF',  // Change primary color
@@ -96,15 +96,15 @@ export const themeConfig = {
 Just create more `.md` files in `src/content/blog/`
 
 ### Add Projects
-Configure GitHub projects in `src/data/projects.config.ts`
+Configure GitHub projects in `src/app/config/projects.config.ts`
 
 ### Customize Styles
-Modify Markdown styles in `src/data/markdown-style.config.ts`
+Modify Markdown styles in `src/app/config/markdown-style.config.ts`
 
 ## Essential Files to Know
 
 ```
-src/data/
+src/app/config/
 ├── site.config.ts           ← Central read layer for app code
 ├── user.config.ts           ← Your personal info
 ├── theme.config.ts          ← Theme colors
@@ -131,10 +131,10 @@ import DefaultLayout from '../layouts/base/DefaultLayout.astro';
 Edit `src/pages/index.astro`
 
 ### Add navigation link
-Edit `src/data/i18n.config.ts` navigation section
+Edit `src/app/config/i18n.config.ts` navigation section
 
 ### Enable dark mode by default
-Edit `src/data/theme.config.ts`:
+Edit `src/app/config/theme.config.ts`:
 ```typescript
 mode: 'dark'  // 'light', 'dark', or 'system'
 ```
@@ -196,7 +196,7 @@ npm run format       # Format code
 
 # Content
 src/content/blog/    # Add blog posts here
-src/data/            # Configure site here
+src/app/config/            # Configure site here
 ```
 
 ## You're All Set! 🚀

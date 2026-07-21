@@ -33,14 +33,14 @@ jobs:
       - name: Setup Node
         uses: actions/setup-node@v4
         with:
-          node-version: '20'
+          node-version: '22'
           cache: 'npm'
 
       - name: Restore GitHub API cache
         uses: actions/cache@v4
         with:
           path: .cache/github
-          key: ${{ runner.os }}-github-cache-main-${{ hashFiles('src/utils/github.ts', 'src/data/projects.config.ts', 'src/data/user.config.ts') }}
+          key: ${{ runner.os }}-github-cache-main-${{ hashFiles('src/features/projects/lib/github.ts', 'src/app/config/projects.config.ts', 'src/app/config/user.config.ts') }}
           restore-keys: |
             ${{ runner.os }}-github-cache-main-
             ${{ runner.os }}-github-cache-
@@ -53,6 +53,9 @@ jobs:
         env:
           # 如果你使用了 GitHub Token
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+      - name: Route smoke test
+        run: npm run test:routes
       
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3

@@ -4,7 +4,7 @@ Customize the visual appearance of your site using Material Design 3.
 
 ## Configuration File
 
-Theme settings are in `src/data/theme.config.ts`
+Theme settings are in `src/app/config/theme.config.ts`
 
 ## Basic Theme Configuration
 
@@ -90,7 +90,7 @@ To see your colors:
 
 ## Advanced Color Customization
 
-For complete control, edit `src/theme/config.ts`:
+For complete control, edit `src/design-system/theme/config.ts`:
 
 ```typescript
 export function createTheme(overrides?: UserThemeOverrides): ThemeConfig {
@@ -151,7 +151,7 @@ typography: {
 
 **Loading Custom Fonts:**
 
-Add to `src/layouts/base/BaseLayout.astro`:
+Add to `src/app/layouts/base/BaseLayout.astro`:
 ```html
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link href="https://fonts.googleapis.com/css2?family=Your+Font&display=swap" rel="stylesheet">
@@ -260,7 +260,7 @@ Automatically respects user's `prefers-reduced-motion` setting.
 
 ### Header
 
-Edit `src/components/common/Header.astro`:
+Edit `src/shared/components/Header.astro`:
 
 ```typescript
 // Height
@@ -275,7 +275,7 @@ const backdropBlur = '10px'
 
 ### Footer
 
-Edit `src/components/common/Footer.astro`:
+Edit `src/shared/components/Footer.astro`:
 
 ```typescript
 // Show powered by
@@ -287,7 +287,7 @@ const linkColor = 'primary'
 
 ### Cards
 
-Global card styles in `src/styles/global.css`:
+Global card styles in `src/design-system/styles/global.css`:
 
 ```css
 .card {

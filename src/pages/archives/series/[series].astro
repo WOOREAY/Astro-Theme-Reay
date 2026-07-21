@@ -3,15 +3,15 @@
  * Single Series Page
  * Display all posts in a series
  */
-import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import { decodeRouteParam, getAllSeries, getPostsBySeries, formatDate, getPostUrl, getSeriesUrl } from '../../../utils/blog';
-import { useI18n } from '../../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import { decodeRouteParam, getAllSeries, getPostsBySeries, formatDate, getPostUrl, getSeriesUrl } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 export async function getStaticPaths() {
   const series = await getAllSeries();
   
   return series.map(({ series: seriesName }) => ({
-    params: { series: encodeURIComponent(seriesName) },
+    params: { series: seriesName },
   }));
 }
 

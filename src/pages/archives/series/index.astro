@@ -3,10 +3,10 @@
  * Series Index Page
  * Display all article series
  */
-import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import SeriesCard from '../../../components/archives/SeriesCard.astro';
-import { getAllSeries } from '../../../utils/blog';
-import { useI18n } from '../../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import SeriesCard from '@features/archives/components/SeriesCard.astro';
+import { getAllSeries } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 // Data layer: Get all series
 const allSeries = await getAllSeries();

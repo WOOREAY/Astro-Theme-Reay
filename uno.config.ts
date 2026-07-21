@@ -1,6 +1,6 @@
 import { defineConfig, presetWind4, presetIcons } from 'unocss'
-import { aboutConfig, user } from './src/data/user.config'
-import { mediaConfig } from './src/data/media.config'
+import { aboutConfig, user } from './src/app/config/user.config'
+import { mediaConfig } from './src/app/config/media.config'
 
 // 自动从配置文件中提取所有图标
 function extractIcons() {

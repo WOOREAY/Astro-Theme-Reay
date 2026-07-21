@@ -1,0 +1,126 @@
+---
+import '@pagefind/default-ui/css/ui.css';
+import { useI18n } from '@features/i18n/lib/i18n';
+
+const { t } = useI18n();
+---
+
+<section class="search-page" data-pagefind-ignore>
+  <header class="search-hero">
+    <span class="search-icon" aria-hidden="true"><i class="i-carbon:search"></i></span>
+    <div>
+      <p class="search-eyebrow" data-i18n="search.eyebrow">{t('search.eyebrow')}</p>
+      <h1 data-i18n="search.title">{t('search.title')}</h1>
+      <p data-i18n="search.description">{t('search.description')}</p>
+    </div>
+  </header>
+
+  <div class="search-shortcut">
+    <i class="i-carbon:keyboard"></i>
+    <span data-i18n="search.shortcut">{t('search.shortcut')}</span>
+    <kbd>/</kbd>
+  </div>
+
+  <div class="search-panel" data-pagefind-search aria-live="polite"></div>
+</section>
+
+<script>
+  import { initSearchRuntime } from '@features/search/client/search';
+
+  initSearchRuntime();
+</script>
+
+<style>
+  .search-page {
+    --pagefind-ui-primary: var(--md-sys-color-primary);
+    --pagefind-ui-text: var(--md-sys-color-on-surface);
+    --pagefind-ui-background: rgba(var(--md-sys-color-surface-container-rgb), 0.72);
+    --pagefind-ui-border: rgba(var(--md-sys-color-outline-variant-rgb), 0.55);
+    --pagefind-ui-tag: var(--md-sys-color-secondary-container);
+    width: min(100%, 900px);
+    margin: 0 auto;
+    padding: clamp(2rem, 6vw, 5rem) 0;
+  }
+
+  .search-hero {
+    display: flex;
+    align-items: flex-start;
+    gap: 1rem;
+    margin-bottom: 1.25rem;
+  }
+
+  .search-icon {
+    display: grid;
+    width: 3rem;
+    height: 3rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border: 1px solid rgba(var(--md-sys-color-primary-rgb), 0.3);
+    border-radius: 1rem;
+    background: rgba(var(--md-sys-color-primary-container-rgb), 0.65);
+    color: var(--md-sys-color-primary);
+    font-size: 1.4rem;
+  }
+
+  .search-eyebrow {
+    margin: 0 0 0.25rem;
+    color: var(--md-sys-color-primary);
+    font-size: 0.75rem;
+    font-weight: 800;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .search-hero h1 {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: clamp(2rem, 5vw, 3.25rem);
+    line-height: 1.05;
+  }
+
+  .search-hero p:last-child {
+    margin: 0.65rem 0 0;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.7;
+  }
+
+  .search-shortcut {
+    display: flex;
+    align-items: center;
+    gap: 0.5rem;
+    margin: 0 0 1.5rem 4rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.8rem;
+  }
+
+  .search-shortcut kbd {
+    padding: 0.12rem 0.42rem;
+    border: 1px solid var(--reay-surface-border);
+    border-radius: 0.4rem;
+    background: var(--reay-surface-bg);
+    box-shadow: var(--reay-shadow-soft);
+  }
+
+  .search-panel {
+    min-height: 18rem;
+    padding: clamp(1rem, 3vw, 1.75rem);
+    border: 1px solid var(--reay-surface-border);
+    border-radius: var(--reay-card-radius);
+    background: var(--reay-surface-bg);
+    box-shadow: var(--reay-surface-shadow);
+    backdrop-filter: blur(var(--reay-glass-blur));
+  }
+
+  .search-panel :global(.pagefind-ui__search-input) {
+    border-radius: 1rem;
+    box-shadow: none;
+  }
+
+  .search-panel :global(.pagefind-ui__result) {
+    border-color: var(--reay-surface-border);
+  }
+
+  @media (max-width: 640px) {
+    .search-shortcut { margin-left: 0; }
+  }
+</style>

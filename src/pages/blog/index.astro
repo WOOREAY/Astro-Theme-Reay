@@ -8,11 +8,11 @@
  * - Components: BlogListHeader, BlogTimeline, EmptyBlogList
  * - Page: responsible for data fetching and component composition
  */
-import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
-import BlogListHeader from '../../components/blog/BlogListHeader.astro';
-import BlogTimeline from '../../components/blog/BlogTimeline.astro';
-import EmptyBlogList from '../../components/blog/EmptyBlogList.astro';
-import { getSortedPosts } from '../../utils/blog';
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import BlogListHeader from '@features/blog/components/BlogListHeader.astro';
+import BlogTimeline from '@features/blog/components/BlogTimeline.astro';
+import EmptyBlogList from '@features/blog/components/EmptyBlogList.astro';
+import { getSortedPosts } from '@features/blog/lib/blog';
 
 const sortedPosts = await getSortedPosts();
 const totalTags = new Set(sortedPosts.flatMap(post => post.data.tags)).size;

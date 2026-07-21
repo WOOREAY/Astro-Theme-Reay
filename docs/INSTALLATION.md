@@ -6,7 +6,7 @@ Complete guide to installing and setting up Astro Theme Reay.
 
 Before you begin, ensure you have the following installed:
 
-- **Node.js** 18.0.0 or higher
+- **Node.js** 22.12.0 or higher
 - **npm** 7.0.0+ or **pnpm** 6.0.0+
 - **Git** (for cloning the repository)
 
@@ -102,7 +102,7 @@ Visit `http://localhost:4321` to see:
 Error: Node.js version not supported
 ```
 
-**Solution**: Upgrade to Node.js 18 or higher
+**Solution**: Upgrade to Node.js 22.12 or higher
 
 ```bash
 # Using nvm

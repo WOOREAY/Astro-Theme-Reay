@@ -14,7 +14,7 @@ The projects page automatically fetches and displays your GitHub repositories wi
 
 ## Configuration File
 
-Edit `src/data/projects.config.ts`
+Edit `src/app/config/projects.config.ts`
 
 ## Basic Configuration
 
@@ -209,7 +209,7 @@ For higher API rate limits:
 
 3. **Configure**
    ```typescript
-   // src/data/user.config.ts
+   // src/app/config/user.config.ts
    export const user = {
      github: {
        username: 'yourusername',
@@ -218,7 +218,7 @@ For higher API rate limits:
    }
    ```
 
-   `src/utils/github.ts` also reads `GITHUB_TOKEN` from the environment at build time. Keep real tokens in `.env` or deployment secrets, not in `user.config.ts`.
+   `src/features/projects/lib/github.ts` also reads `GITHUB_TOKEN` from the environment at build time. Keep real tokens in `.env` or deployment secrets, not in `user.config.ts`.
 
 ### Rate Limits
 
@@ -248,7 +248,7 @@ Project READMEs are automatically rendered on detail pages.
 
 READMEs use the same styles as blog posts.
 
-Customize in `src/data/markdown-style.config.ts`
+Customize in `src/app/config/markdown-style.config.ts`
 
 ## Examples
 
@@ -342,15 +342,15 @@ Project detail pages show:
 
 ### Card Style
 
-Edit `src/components/projects/ProjectCard.astro`
+Edit `src/features/projects/components/ProjectCard.astro`
 
 ### Detail Page Layout
 
-Edit `src/layouts/projects/ProjectDetailLayout.astro`
+Edit `src/app/layouts/projects/ProjectDetailLayout.astro`
 
 ### README Styles
 
-Edit `src/data/markdown-style.config.ts`
+Edit `src/app/config/markdown-style.config.ts`
 
 ## Private Repositories
 
@@ -422,7 +422,7 @@ Automatically uses GitHub's language colors:
 - Python: Blue
 - etc.
 
-Customize in `src/utils/github.ts`
+Customize in `src/features/projects/lib/github.ts`
 
 ### Auto-Generated Thumbnails
 

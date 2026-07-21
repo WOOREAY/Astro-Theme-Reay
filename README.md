@@ -1,32 +1,37 @@
 # Astro Theme Reay
 
 <p align="center">
-  <strong>一个内容优先、配置驱动的 Astro 个人站点模版</strong>
+  <strong>内容优先、配置驱动、可渐进定制的 Astro 个人网站主题</strong>
 </p>
 
 <p align="center">
-  <a href="https://astro.build/"><img alt="Astro" src="https://img.shields.io/badge/Astro-5.x-ff5d01?style=flat-square&logo=astro&logoColor=white"></a>
+  <a href="https://astro.build/"><img alt="Astro" src="https://img.shields.io/badge/Astro-7.x-ff5d01?style=flat-square&logo=astro&logoColor=white"></a>
   <a href="https://www.typescriptlang.org/"><img alt="TypeScript" src="https://img.shields.io/badge/TypeScript-ready-3178c6?style=flat-square&logo=typescript&logoColor=white"></a>
   <a href="https://unocss.dev/"><img alt="UnoCSS" src="https://img.shields.io/badge/UnoCSS-enabled-333333?style=flat-square"></a>
-  <img alt="License" src="https://img.shields.io/badge/license-MIT-0f766e?style=flat-square">
+  <img alt="License" src="https://img.shields.io/badge/license-Apache--2.0-0f766e?style=flat-square">
 </p>
 
-Astro Theme Reay 是一个面向个人博客、作品集和摄影记录的静态站点模版。它把博客、相册、项目展示、友情链接、留言评论、音乐小组件和动态视觉效果组织在同一套配置系统下，适合用 GitHub Pages、Vercel 或 Netlify 部署。
+Astro Theme Reay 面向个人博客、作品集、摄影记录和长期知识沉淀。项目采用静态优先架构，博客、相册、项目、友情链接、留言评论、音乐、主题和双语界面都由独立配置或内容文件驱动。
 
-## Highlights
+## 功能
 
-| 能力 | 说明 |
+| 能力 | 实现 |
 | --- | --- |
-| MD3 颜色系统 | 根据主色生成 Material Design 3 色板，支持浅色和深色主题 |
-| 博客系统 | 基于 Astro Content Collections，支持标签、系列、归档和阅读时间 |
-| Plog 相册 | 每个 `src/content/plog` 条目是一组照片合集，支持封面、图片信息和原图下载 |
-| 项目展示 | 自动读取 GitHub 仓库信息，并统一渲染项目 README |
-| 留言与评论 | 支持文章评论和留言板，可接入 utterances、giscus、Waline、Twikoo、Artalk、Disqus |
-| 音乐小组件 | 全站 Header 音乐入口，支持播放、暂停、切歌和播放列表 |
-| 动态效果 | 首页波浪和四季飘落效果，可在配置文件中开关和调节密度 |
-| 双语界面 | 内置中英文 UI 文案，内容和界面翻译集中管理 |
+| 内容系统 | Astro Content Collections、Markdown/MDX、标签、系列、归档、阅读时间 |
+| 视觉系统 | Material Design 3 动态色板、浅色/深色主题、UnoCSS、组件级样式 |
+| 首页 | 默认无障碍普通滚动，可切换为分屏滚动模式 |
+| Plog 相册 | 合集、图片元数据、响应式图片、灯箱和原图下载 |
+| 项目展示 | GitHub API、构建期缓存、README 渲染和贡献统计 |
+| 搜索与订阅 | Pagefind 本地全文搜索、RSS、Sitemap、robots.txt |
+| 评论 | Giscus、Utterances、Waline、Twikoo、Artalk、Disqus 适配器 |
+| 国际化 | 中英文界面和个人简介即时切换，无页面刷新 |
 
-## Preview
+## 环境要求
+
+- Node.js `>=22.12.0`
+- npm `>=9.6.5`
+
+## 快速开始
 
 ```bash
 git clone https://github.com/WOOREAY/Astro-Theme-Reay.git
@@ -37,140 +42,118 @@ npm run dev
 
 开发服务默认运行在 `http://localhost:4321`。
 
-## Project Structure
+首次使用时依次修改：
+
+1. `src/app/config/user.config.ts`：个人资料、简介、教育与兴趣。
+2. `src/app/config/theme.config.ts`：配色、字体、背景与动效。
+3. `src/app/config/projects.config.ts`：GitHub 项目来源。
+4. `src/app/config/comments.config.ts`：评论服务。
+5. `SITE`：生产站点的完整 URL，避免 RSS 和 Sitemap 使用示例域名。
+
+## 架构
 
 ```text
-.
-├── public/                 # 静态资源：头像、背景、音频、favicon
-├── src/
-│   ├── components/         # 页面组件和功能组件
-│   ├── content/
-│   │   ├── blog/           # 博客文章
-│   │   └── plog/           # 相册合集
-│   ├── data/               # 站点配置入口
-│   ├── layouts/            # 页面布局
-│   ├── pages/              # 路由页面
-│   ├── styles/             # 全局样式
-│   └── utils/              # 工具函数
-├── docs/                   # 使用文档
-└── package.json
+src/
+├── app/
+│   ├── config/             # 用户配置、功能开关、导航和配置聚合
+│   └── layouts/            # 页面布局与应用外壳
+├── content/                # blog 与 plog 内容集合
+├── design-system/
+│   ├── styles/             # 跨功能基础样式
+│   └── theme/              # MD3 token、主题生成与 CSS 变量
+├── features/               # 按业务域组织的组件、lib、client 和 styles
+├── pages/                  # Astro 文件路由与 RSS/robots 端点
+└── shared/                 # 跨域组件与全局客户端运行时
 ```
 
-## Configuration
+应用代码通过 `@app`、`@design`、`@features`、`@shared` 别名引用模块。完整说明见 [项目架构](./docs/PROJECT-STRUCTURE.md)，旧版迁移说明见 [架构迁移](./docs/ARCHITECTURE-MIGRATION.md)。
 
-大部分自定义内容都集中在 `src/data/`。推荐从下面几个文件开始：
+## 内容
 
-| 文件 | 用途 |
-| --- | --- |
-| `src/data/user.config.ts` | 个人资料、社交链接、关于页面内容 |
-| `src/data/theme.config.ts` | 主色、字体、背景、波浪和四季飘落效果 |
-| `src/data/media.config.ts` | 音乐播放列表和曲目信息 |
-| `src/data/comments.config.ts` | 文章评论和留言板接入配置 |
-| `src/data/projects.config.ts` | GitHub 项目展示配置 |
-| `src/data/links.config.ts` | 友情链接、站点链接和社交链接 |
-| `src/data/i18n.config.ts` | UI 翻译和默认语言 |
-| `src/data/markdown-style.config.ts` | Markdown 内容的统一视觉样式 |
-
-## Content Workflow
-
-### Blog
-
-在 `src/content/blog/` 下创建 Markdown 或 MDX 文件：
-
-```text
-src/content/blog/my-post/index.md
-```
-
-常用 frontmatter 示例：
+博客文件放在 `src/content/blog/<slug>/index.md`：
 
 ```yaml
 ---
-title: "文章标题"
-description: "文章摘要"
-publishDate: 2026-05-22
-tags: ["Astro", "TypeScript"]
-series: "站点构建"
+title: 文章标题
+description: 文章摘要
+publishDate: 2026-07-21
+tags: [Astro, TypeScript]
+series: 站点构建
+draft: false
 ---
 ```
 
-### Plog Gallery
+相册放在 `src/content/plog/<category>/<slug>/`，入口为 `index.md`，图片放在同级 `images/`。内容目录已纳入 Git 跟踪；不要把个人文章仅保存在构建机上。
 
-每个 `src/content/plog` 条目对应一个相册合集，图片放在同级 `images/` 目录：
+## 配置入口
 
-```text
-src/content/plog/travel-demo/
-├── index.md
-└── images/
-    ├── cover.jpg
-    └── photo-01.jpg
-```
+| 文件 | 用途 |
+| --- | --- |
+| `src/app/config/site.config.ts` | 应用读取配置的统一入口，通常无需修改 |
+| `src/app/config/user.config.ts` | 个人资料、双语简介、关于页和站点信息 |
+| `src/app/config/features.config.ts` | 首页模式、搜索、Feed 和集成功能开关 |
+| `src/app/config/navigation.config.ts` | Header 与 Footer 导航 |
+| `src/app/config/theme.config.ts` | 主题、背景和动效 |
+| `src/app/config/media.config.ts` | 音乐播放列表 |
+| `src/app/config/comments.config.ts` | 评论 provider 与凭据 |
+| `src/app/config/projects.config.ts` | GitHub 项目 |
+| `src/app/config/links.config.ts` | 友情链接与资源链接 |
+| `src/app/config/i18n.config.ts` | 中英文界面文案 |
 
-相册元信息写在 `index.md` 的 frontmatter 中，页面会自动生成合集卡片、图片列表、图片详情和下载入口。
-
-### Music
-
-音频文件建议放在 `public/audio/`，然后在 `src/data/media.config.ts` 中添加曲目信息。音乐播放器会作为 Header 右上角的小组件出现在所有页面。
-
-## Scripts
+## 命令
 
 | 命令 | 说明 |
 | --- | --- |
-| `npm run dev` | 启动本地开发服务 |
-| `npm run check` | 运行 Astro 类型和内容检查 |
-| `npm run build` | 构建生产站点到 `dist/` |
-| `npm run preview` | 本地预览生产构建 |
+| `npm run dev` | 启动开发服务器 |
+| `npm run check` | 执行 Astro、TypeScript 和内容校验 |
+| `npm run build` | 构建静态站点并生成 Pagefind 索引 |
+| `npm run test:routes` | 校验关键生产路由与产物 |
+| `npm run audit` | 检查高危依赖漏洞 |
+| `npm run verify` | 依次执行检查、构建和路由校验 |
+| `npm run preview` | 预览 `dist/`；应先执行构建 |
 
-## Deployment
+## 环境变量
 
-### GitHub Pages
-
-仓库内置 `.github/workflows/deploy.yml`。
-
-1. 在 GitHub 仓库中打开 `Settings -> Pages`。
-2. 将 `Source` 设置为 `GitHub Actions`。
-3. 按需配置 `SITE` 和 `BASE`。
-4. 推送到主分支触发部署。
-
-常见配置：
+复制 `.env.example` 后按需配置：
 
 ```env
-# 用户或组织主页
-SITE=https://yourname.github.io
+SITE=https://example.com
 BASE=/
-
-# 项目页
-SITE=https://yourname.github.io
-BASE=/repository-name
+GITHUB_TOKEN=
 ```
 
-### Vercel / Netlify
+- `SITE` 必须是生产站点 origin，用于 canonical、RSS、Sitemap 和 robots。
+- `BASE` 仅在部署到子目录时设置。
+- `GITHUB_TOKEN` 可提高构建期 GitHub API 限额，禁止提交真实令牌。
 
-| 项 | 值 |
+## 部署
+
+仓库提供 Node 22 的 GitHub Actions 检查和 GitHub Pages 部署工作流。Vercel、Netlify 等平台使用：
+
+| 项目 | 值 |
 | --- | --- |
-| Build Command | `npm run build` |
-| Output Directory | `dist` |
+| Build command | `npm run build` |
+| Output directory | `dist` |
 
-## Documentation
+部署前至少执行一次：
 
-| 文档 | 内容 |
-| --- | --- |
-| [Quick Start](./docs/QUICK-START.md) | 快速开始 |
-| [Installation](./docs/INSTALLATION.md) | 安装和初始化 |
-| [User Config](./docs/USER-CONFIG.md) | 用户信息配置 |
-| [Theme Config](./docs/THEME-CONFIG.md) | 主题、背景和动效配置 |
-| [Blog System](./docs/BLOG-SYSTEM.md) | 博客系统 |
-| [Media](./docs/MEDIA.md) | 相册和音乐 |
-| [Projects](./docs/PROJECTS.md) | GitHub 项目展示 |
-| [Links](./docs/LINKS.md) | 友情链接 |
-| [Deployment](./docs/DEPLOYMENT.md) | 部署指南 |
-| [FAQ](./docs/FAQ.md) | 常见问题 |
+```bash
+npm ci
+npm run verify
+npm run audit
+```
 
-## Notes
+## 文档
 
-- 请把 `yourusername`、`Your Name`、示例邮箱和示例链接替换为自己的信息。
-- GitHub token、评论服务密钥等敏感信息应放在 `.env` 或 GitHub Secrets 中，不要提交到仓库。
-- 如果从模版派生个人站点，建议先完成 `src/data/*.config.ts`，再迁移博客和相册内容。
+- [快速开始](./docs/QUICK-START.md)
+- [项目架构](./docs/PROJECT-STRUCTURE.md)
+- [用户配置](./docs/USER-CONFIG.md)
+- [主题配置](./docs/THEME-CONFIG.md)
+- [博客系统](./docs/BLOG-SYSTEM.md)
+- [媒体与相册](./docs/MEDIA.md)
+- [项目展示](./docs/PROJECTS.md)
+- [部署](./docs/DEPLOYMENT.md)
 
 ## License
 
-MIT
+本项目依据 [Apache License 2.0](./LICENSE) 开源。你可以学习、修改、分发和用于商业项目，但需遵守许可证中的版权、许可声明和变更说明要求。

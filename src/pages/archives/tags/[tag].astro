@@ -3,16 +3,16 @@
  * Single Tag Page
  * Display all posts under a specific tag
  */
-import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import BlogTimeline from '../../../components/blog/BlogTimeline.astro';
-import { decodeRouteParam, getPostsByTag, getAllTags, getTagUrl } from '../../../utils/blog';
-import { useI18n } from '../../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import BlogTimeline from '@features/blog/components/BlogTimeline.astro';
+import { decodeRouteParam, getPostsByTag, getAllTags, getTagUrl } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 export async function getStaticPaths() {
   const tags = await getAllTags();
   
   return tags.map(({ tag }) => ({
-    params: { tag: encodeURIComponent(tag) },
+    params: { tag },
   }));
 }
 

@@ -3,9 +3,9 @@
  * Plog Album Detail Page
  * Shows every photo in one plog collection with metadata and download links.
  */
-import DefaultLayout from '../../layouts/base/DefaultLayout.astro';
-import { getPlogAlbums } from '../../utils/plog';
-import { useI18n } from '../../utils/i18n';
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import { getPlogAlbums } from '@features/gallery/lib/plog';
+import { useI18n } from '@features/i18n/lib/i18n';
 import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {

@@ -1,0 +1,351 @@
+---
+/**
+ * SiteInfoSection Component
+ * Site information section for homepage
+ * Displays tech stack, statistics, and footer
+ */
+import { getAboutConfig } from '@app/config/site.config';
+import { getArchiveStats } from '@features/blog/lib/blog';
+import { getPlogGallery } from '@features/gallery/lib/plog';
+import { useI18n } from '@features/i18n/lib/i18n';
+import Footer from '@shared/components/Footer.astro';
+
+const { currentLang } = useI18n();
+const aboutConfig = getAboutConfig();
+const stats = await getArchiveStats();
+const gallery = await getPlogGallery();
+const isZh = currentLang === 'zh';
+const labels = isZh
+  ? {
+      since: '建站时间',
+      latest: '最近更新',
+      contentMap: '内容地图',
+      contentMapSubtitle: '这个站点主要存放这些内容',
+      blog: '文章',
+      blogCaption: '技术笔记 / 长文整理',
+      gallery: '相册',
+      galleryCaption: '照片合集 / 旅行影像',
+      projects: '项目',
+      projectsCaption: 'GitHub 实践与作品',
+      guestbook: '留言',
+      guestbookCaption: '评论与来访记录',
+      build: '构建方式',
+      principles: '站点原则',
+      staticFirst: '静态优先',
+      staticFirstDesc: '页面预渲染，访问路径更短',
+      contentFirst: '内容优先',
+      contentFirstDesc: '博客与相册都由内容文件驱动',
+      portable: '易于迁移',
+      portableDesc: '配置、内容和媒体分层管理',
+      photos: '张照片',
+      albums: '个合集',
+      open: '开放',
+      unknown: '持续更新',
+    }
+  : {
+      since: 'Since',
+      latest: 'Latest update',
+      contentMap: 'Content Map',
+      contentMapSubtitle: 'Main spaces this site keeps organized',
+      blog: 'Posts',
+      blogCaption: 'Notes and long-form writing',
+      gallery: 'Gallery',
+      galleryCaption: 'Photo albums and travel images',
+      projects: 'Projects',
+      projectsCaption: 'GitHub work and experiments',
+      guestbook: 'Guestbook',
+      guestbookCaption: 'Comments and visitor notes',
+      build: 'Build',
+      principles: 'Site Principles',
+      staticFirst: 'Static first',
+      staticFirstDesc: 'Pre-rendered pages keep visits short',
+      contentFirst: 'Content first',
+      contentFirstDesc: 'Posts and albums are driven by content files',
+      portable: 'Portable',
+      portableDesc: 'Config, content, and media stay separated',
+      photos: 'photos',
+      albums: 'albums',
+      open: 'Open',
+      unknown: 'Updating',
+    };
+
+const formatDate = (date?: Date | string | null) => {
+  if (!date) return labels.unknown;
+  return new Date(date).toLocaleDateString(isZh ? 'zh-CN' : 'en', {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  });
+};
+
+const contentCards = [
+  {
+    href: '/blog',
+    icon: 'i-carbon:document',
+    value: stats.totalPosts,
+    label: labels.blog,
+    caption: labels.blogCaption,
+  },
+  {
+    href: '/gallery',
+    icon: 'i-carbon:image',
+    value: gallery.albums.length,
+    label: labels.gallery,
+    caption: `${gallery.photos.length} ${labels.photos}`,
+  },
+  {
+    href: '/projects',
+    icon: 'i-carbon:code',
+    value: aboutConfig.site.techStack.length,
+    label: labels.projects,
+    caption: labels.projectsCaption,
+  },
+  {
+    href: '/guestbook',
+    icon: 'i-carbon:chat',
+    value: labels.open,
+    label: labels.guestbook,
+    caption: labels.guestbookCaption,
+  },
+];
+
+const siteFacts = [
+  {
+    label: labels.since,
+    value: aboutConfig.site.since,
+  },
+  {
+    label: labels.latest,
+    value: formatDate(stats.latestPostDate),
+  },
+  {
+    label: labels.gallery,
+    value: `${gallery.albums.length} ${labels.albums}`,
+  },
+];
+
+const buildNotes = [
+  {
+    icon: 'i-carbon:flash-filled',
+    title: labels.staticFirst,
+    description: labels.staticFirstDesc,
+  },
+  {
+    icon: 'i-carbon:folder-details',
+    title: labels.contentFirst,
+    description: labels.contentFirstDesc,
+  },
+  {
+    icon: 'i-carbon:ibm-cloud-pak-integration',
+    title: labels.portable,
+    description: labels.portableDesc,
+  },
+];
+
+const statCards = [
+  {
+    icon: 'i-carbon:document',
+    value: stats.totalPosts,
+    label: 'site.stats.articles',
+    gradient: 'linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.14))',
+    color: 'var(--md-sys-color-primary)',
+  },
+  {
+    icon: 'i-carbon:tag',
+    value: stats.totalTags,
+    label: 'site.stats.tags',
+    gradient: 'linear-gradient(135deg, rgba(var(--md-sys-color-tertiary-rgb), 0.18), rgba(var(--md-sys-color-secondary-rgb), 0.14))',
+    color: 'var(--md-sys-color-tertiary)',
+  },
+  {
+    icon: 'i-carbon:text-font',
+    value: `${Math.round(stats.totalWords / 1000)}K`,
+    label: 'site.stats.words',
+    gradient: 'linear-gradient(135deg, rgba(var(--reay-color-success-rgb), 0.18), rgba(var(--md-sys-color-secondary-rgb), 0.14))',
+    color: 'var(--reay-color-success)',
+  },
+  {
+    icon: 'i-carbon:calendar',
+    value: stats.postsThisYear,
+    label: 'site.stats.thisYear',
+    gradient: 'linear-gradient(135deg, rgba(var(--reay-color-warning-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.14))',
+    color: 'var(--reay-color-warning)',
+  },
+];
+---
+
+<div class="home-section-frame site-info-frame h-full box-border px-4 py-6">
+  <div class="site-info-section home-section-shell home-section-accent-primary max-w-6xl mx-auto w-full">
+    <!-- Section Header -->
+    <div class="section-header home-section-heading mb-6 relative">
+      <div class="absolute inset-0 -z-10 opacity-30">
+        <div class="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br from-[var(--md-sys-color-primary)]/10 to-[var(--md-sys-color-tertiary)]/10 rounded-full blur-3xl"></div>
+      </div>
+
+      <span class="section-logo icon-wrapper inline-flex items-center justify-center bg-gradient-to-br from-[var(--md-sys-color-primary-container)] to-[var(--md-sys-color-tertiary-container)] rounded-xl" aria-hidden="true">
+        <i class="i-carbon:information text-xl text-[var(--md-sys-color-primary)]"></i>
+      </span>
+      <h2 class="section-title inline-flex items-center justify-start gap-2 text-2xl md:text-3xl font-700 text-[var(--md-sys-color-on-surface)] mb-2">
+        <span class="section-title-text bg-gradient-to-r from-[var(--md-sys-color-primary)] to-[var(--md-sys-color-tertiary)] bg-clip-text text-transparent" data-i18n="site.title">
+          关于本站
+        </span>
+      </h2>
+      <p class="section-subtitle text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)] font-500">
+        <span class="section-subtitle-text" data-i18n="site.subtitle">{aboutConfig.site.description}</span>
+      </p>
+
+      <!-- 装饰线条 -->
+      <div class="section-divider flex items-center justify-start gap-2 mt-3">
+        <div class="w-12 h-0.5 bg-gradient-to-r from-transparent to-[var(--md-sys-color-primary)]/50"></div>
+        <div class="w-2 h-2 rounded-full bg-[var(--md-sys-color-primary)]"></div>
+        <div class="w-12 h-0.5 bg-gradient-to-l from-transparent to-[var(--md-sys-color-primary)]/50"></div>
+      </div>
+    </div>
+
+    <!-- 主要内容区 -->
+    <div class="site-content home-section-content">
+      <div class="site-overview-card animate-fade-in">
+        <div class="site-overview-icon">
+          <i class="i-carbon:earth-filled"></i>
+        </div>
+        <div class="site-overview-body">
+          <div class="site-overview-meta">
+            <span>{labels.build}</span>
+            <span data-i18n="site.tech.title">技术栈</span>
+          </div>
+          <h3>{aboutConfig.site.name}</h3>
+          <p data-i18n="site.subtitle">{aboutConfig.site.description}</p>
+        </div>
+        <div class="site-facts">
+          {siteFacts.map((fact) => (
+            <div class="site-fact">
+              <span>{fact.label}</span>
+              <strong>{fact.value}</strong>
+            </div>
+          ))}
+        </div>
+      </div>
+
+      <div class="content-map-section animate-fade-in" style="animation-delay: 180ms;">
+        <div class="content-map-header">
+          <div>
+            <span>{labels.contentMap}</span>
+            <h3>{labels.contentMapSubtitle}</h3>
+          </div>
+          <i class="i-carbon:map"></i>
+        </div>
+        <div class="content-map-grid">
+          {contentCards.map((card, index) => (
+            <a
+              href={card.href}
+              class="content-map-card"
+              style={`animation-delay: ${index * 80 + 260}ms;`}
+            >
+              <span class="content-map-icon">
+                <i class={card.icon}></i>
+              </span>
+              <span class="content-map-value">{card.value}</span>
+              <strong>{card.label}</strong>
+              <p>{card.caption}</p>
+            </a>
+          ))}
+        </div>
+      </div>
+
+      <!-- 网站统计 - 美化版 -->
+      <div class="stats-grid grid gap-3 grid-cols-2 lg:grid-cols-4">
+        {statCards.map((stat, index) => (
+          <div
+            class="stat-card group relative animate-scale-in"
+            style={`animation-delay: ${index * 100}ms;`}
+          >
+            <!-- 装饰性渐变背景 -->
+            <div class="absolute inset-0 opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-xl" style={`background: ${stat.gradient};`}></div>
+
+            <!-- 右上角光晕 -->
+            <div class="absolute -top-6 -right-6 w-20 h-20 bg-gradient-to-br from-[var(--md-sys-color-primary)]/10 to-[var(--md-sys-color-tertiary)]/10 rounded-full blur-2xl group-hover:scale-150 transition-transform duration-500"></div>
+
+            <div class="relative z-10 flex items-center gap-3 p-3 md:p-4 bg-gradient-to-br from-[var(--md-sys-color-surface-container-low)]/80 to-[var(--md-sys-color-surface-container)]/80 backdrop-blur-md border border-[var(--md-sys-color-outline-variant)]/50 rounded-xl transition-all duration-300 group-hover:border-[var(--md-sys-color-primary)] group-hover:-translate-y-1 group-hover:shadow-[var(--reay-shadow-panel)]">
+              <div class={`stat-icon w-10 h-10 md:w-12 md:h-12 flex items-center justify-center bg-gradient-to-br from-[var(--md-sys-color-primary-container)] to-[var(--md-sys-color-tertiary-container)] rounded-lg flex-shrink-0 group-hover:scale-110 transition-transform duration-300`}>
+                <i class={`${stat.icon} text-lg md:text-xl group-hover:animate-pulse`} style={`color: ${stat.color};`}></i>
+              </div>
+              <div class="stat-info flex-1">
+                <div class="stat-value text-xl md:text-2xl font-700 text-[var(--md-sys-color-on-surface)] leading-none mb-1 group-hover:scale-105 transition-transform duration-300">{stat.value}</div>
+                <div class="stat-label text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)] font-500" data-i18n={stat.label}></div>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      <!-- 技术栈 - 美化版 -->
+      <div class="tech-stack-section relative p-4 md:p-5 bg-gradient-to-br from-[var(--md-sys-color-surface-container-low)]/80 to-[var(--md-sys-color-surface-container)]/80 backdrop-blur-md border border-[var(--md-sys-color-outline-variant)]/50 rounded-xl overflow-hidden animate-fade-in" style="animation-delay: 400ms;">
+        <!-- 装饰性背景 -->
+        <div class="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-[var(--md-sys-color-primary)]/5 to-transparent rounded-full blur-3xl"></div>
+
+        <div class="relative z-10">
+          <div class="tech-header flex items-center justify-between mb-3">
+            <div class="flex items-center gap-2">
+              <div class="icon-wrapper inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[var(--md-sys-color-primary-container)] to-[var(--md-sys-color-tertiary-container)] rounded-lg">
+                <i class="i-carbon:code text-base text-[var(--md-sys-color-primary)]"></i>
+              </div>
+              <h3 class="text-lg md:text-xl font-700 text-[var(--md-sys-color-on-surface)]" data-i18n="site.tech.title">技术栈</h3>
+            </div>
+            <span class="tech-badge inline-flex items-center gap-1 px-2 py-1 text-xs font-600 bg-gradient-to-r from-[var(--md-sys-color-primary-container)]/60 to-[var(--md-sys-color-tertiary-container)]/60 text-[var(--md-sys-color-on-primary-container)] rounded-full">
+              <i class="i-carbon:checkmark-filled text-xs"></i>
+              <span data-i18n="site.tech.subtitle">现代化</span>
+            </span>
+          </div>
+          <p class="tech-description text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)] mb-4 leading-relaxed" data-i18n="site.tech.description">{aboutConfig.site.builtWith}</p>
+
+          <div class="tech-grid grid gap-2 md:gap-3 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+            {aboutConfig.site.techStack.map((tech, index) => (
+              <a
+                href={tech.url}
+                target="_blank"
+                rel="noopener noreferrer"
+                class="tech-card group/tech relative animate-scale-in"
+                style={`animation-delay: ${index * 80 + 500}ms;`}
+              >
+                <!-- 装饰性渐变背景 -->
+                <div class="absolute inset-0 bg-gradient-to-br from-[var(--md-sys-color-primary)]/5 to-transparent opacity-0 group-hover/tech:opacity-100 transition-opacity duration-300 rounded-lg"></div>
+
+                <div class="relative z-10 flex items-center gap-3 p-3 bg-[var(--md-sys-color-surface-container)]/70 backdrop-blur-sm border border-[var(--md-sys-color-outline-variant)]/50 rounded-lg transition-all duration-300 group-hover/tech:bg-[var(--md-sys-color-surface-container-high)]/70 group-hover/tech:border-[var(--md-sys-color-primary)] group-hover/tech:-translate-y-1 group-hover/tech:shadow-[var(--reay-shadow-panel)] no-underline">
+                  <i class={`${tech.icon} text-2xl text-[var(--md-sys-color-primary)] flex-shrink-0 group-hover/tech:scale-110 transition-transform duration-300`}></i>
+                  <div class="tech-info flex-1 min-w-0">
+                    <h4 class="text-sm font-600 text-[var(--md-sys-color-on-surface)] group-hover/tech:text-[var(--md-sys-color-primary)] transition-colors leading-snug mb-0.5">{tech.name}</h4>
+                    <p class="text-xs text-[var(--md-sys-color-on-surface-variant)]/80 leading-snug m-0 line-clamp-1">{tech.description}</p>
+                  </div>
+                  <i class="i-carbon:arrow-up-right text-sm text-[var(--md-sys-color-on-surface-variant)] opacity-0 group-hover/tech:opacity-100 transition-all duration-300 transform translate-x-1 -translate-y-1 group-hover/tech:translate-x-0 group-hover/tech:translate-y-0"></i>
+                </div>
+              </a>
+            ))}
+          </div>
+
+          <div class="build-notes">
+            {buildNotes.map((note) => (
+              <div class="build-note">
+                <span>
+                  <i class={note.icon}></i>
+                </span>
+                <div>
+                  <strong>{note.title}</strong>
+                  <p>{note.description}</p>
+                </div>
+              </div>
+            ))}
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Footer 固定在底部 - 使用 mt-auto 自动推到底部 -->
+  <div class="site-footer max-w-6xl mx-auto w-full">
+    <Footer />
+  </div>
+</div>
+
+<style>
+  @import "../styles/site-info-section.css";
+</style>

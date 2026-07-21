@@ -3,10 +3,10 @@
  * Timeline Page
  * Display all posts in chronological order
  */
-import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import TimelineArchive from '../../../components/archives/TimelineArchive.astro';
-import { getPostsByYear } from '../../../utils/blog';
-import { useI18n } from '../../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import TimelineArchive from '@features/archives/components/TimelineArchive.astro';
+import { getPostsByYear } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 // Data layer: Get posts grouped by year
 const postsByYear = await getPostsByYear();
@@ -144,8 +144,8 @@ const latestYear = postsByYear[0]?.[0];
     width: 48px;
     height: 48px;
     border-radius: 10px;
-    background: linear-gradient(135deg, 
-      var(--md-sys-color-primary-container), 
+    background: linear-gradient(135deg,
+      var(--md-sys-color-primary-container),
       var(--md-sys-color-secondary-container)
     );
     color: var(--md-sys-color-on-primary-container);
@@ -374,10 +374,10 @@ const latestYear = postsByYear[0]?.[0];
   }
 
   // Smooth scroll to anchors
-  document.querySelectorAll('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', function (e) {
+  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+    anchor.addEventListener('click', (e) => {
       e.preventDefault();
-      const target = document.querySelector(this.getAttribute('href') as string);
+      const target = document.querySelector(anchor.getAttribute('href') as string);
       if (target) {
         target.scrollIntoView({
           behavior: 'smooth',
@@ -426,9 +426,4 @@ const latestYear = postsByYear[0]?.[0];
   // Execute on page load
   // 1. Check if scroll position needs to be restored
   restoreScrollPosition();
-</script>
-
-<script>
-  import { initI18n } from '../../../scripts/i18n-content-updater';
-  initI18n();
 </script>

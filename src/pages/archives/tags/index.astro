@@ -3,10 +3,10 @@
  * Tags Index Page
  * Display cloud view of all tags
  */
-import ArchiveLayout from '../../../layouts/archives/ArchiveLayout.astro';
-import TagCloud from '../../../components/archives/TagCloud.astro';
-import { getAllTags, getTagUrl } from '../../../utils/blog';
-import { useI18n } from '../../../utils/i18n';
+import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import TagCloud from '@features/archives/components/TagCloud.astro';
+import { getAllTags, getTagUrl } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 // Data layer: Get all tags
 const allTags = await getAllTags();

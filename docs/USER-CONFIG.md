@@ -4,16 +4,16 @@ Complete reference for configuring your personal information and site settings.
 
 ## Configuration Layers
 
-Editable settings are split by feature under `src/data/`. Application code reads those files through `src/data/site.config.ts`, which is the central read layer.
+Editable settings are split by feature under `src/app/config/`. Application code reads those files through `src/app/config/site.config.ts`, which is the central read layer.
 
 | File | Purpose |
 | --- | --- |
-| `src/data/user.config.ts` | Profile, social links, multilingual personal content, about page data |
-| `src/data/theme.config.ts` | Colors, typography, and background |
-| `src/data/projects.config.ts` | GitHub project fetching and display options |
-| `src/data/links.config.ts` | Friend links, resource links, and link application info |
-| `src/data/i18n.config.ts` | Default language and UI translations |
-| `src/data/site.config.ts` | Central app-facing access layer; usually do not edit |
+| `src/app/config/user.config.ts` | Profile, social links, multilingual personal content, about page data |
+| `src/app/config/theme.config.ts` | Colors, typography, and background |
+| `src/app/config/projects.config.ts` | GitHub project fetching and display options |
+| `src/app/config/links.config.ts` | Friend links, resource links, and link application info |
+| `src/app/config/i18n.config.ts` | Default language and UI translations |
+| `src/app/config/site.config.ts` | Central app-facing access layer; usually do not edit |
 
 ## Basic Information
 
@@ -244,7 +244,7 @@ export const aboutConfig = {
 
 ## Navigation Menu
 
-Configure site navigation in `src/data/i18n.config.ts`:
+Declare routes in `src/app/config/navigation.config.ts` and add their labels in `src/app/config/i18n.config.ts`:
 
 ```typescript
 export const translations = {
@@ -265,7 +265,7 @@ export const translations = {
 }
 ```
 
-Routes are currently declared in `src/components/common/Header.astro`; add matching translation keys when adding navigation items.
+Header and Footer both consume `navigation.config.ts`; do not duplicate route arrays inside components.
 
 ## Language Configuration
 

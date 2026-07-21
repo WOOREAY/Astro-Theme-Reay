@@ -4,8 +4,8 @@
  * Route: /blog/[...slug]
  */
 import { getCollection, render } from 'astro:content';
-import BlogPostLayout from '../../layouts/blog/BlogPostLayout.astro';
-import { getPostSlug } from '../../utils/blog';
+import BlogPostLayout from '@app/layouts/blog/BlogPostLayout.astro';
+import { getPostSlug } from '@features/blog/lib/blog';
 import type { CollectionEntry } from 'astro:content';
 
 // Generate static paths for all posts

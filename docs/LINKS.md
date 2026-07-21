@@ -1,8 +1,8 @@
 # Links Page Configuration
 
-Configure friend links, resource links, and social profile links in `src/data/links.config.ts`.
+Configure friend links, resource links, and social profile links in `src/app/config/links.config.ts`.
 
-Application code reads this file through `src/data/site.config.ts`, so most users should edit `links.config.ts` only.
+Application code reads this file through `src/app/config/site.config.ts`, so most users should edit `links.config.ts` only.
 
 ## Main Shape
 
@@ -97,4 +97,4 @@ export const mySiteInfo = {
 
 - Keep placeholder contact values in the public template.
 - Do not put private contact methods or API keys in this file.
-- For app code, prefer `getLinksConfig()` from `src/data/site.config.ts`.
+- For app code, prefer `getLinksConfig()` from `src/app/config/site.config.ts`.

@@ -40,7 +40,7 @@ Complete implementation of Google's Material Design 3 system with:
 - Typography scale
 
 ### Unified Markdown Rendering
-All Markdown content (blog posts, project READMEs, etc.) uses a single configurable style system defined in `src/data/markdown-style.config.ts`.
+All Markdown content (blog posts, project READMEs, etc.) uses a single configurable style system defined in `src/app/config/markdown-style.config.ts`.
 
 ### GitHub Integration
 Automatically fetch and display your GitHub repositories with:
@@ -97,4 +97,4 @@ Built-in English and Chinese language support with:
 
 ## 📝 License
 
-MIT License - Feel free to use and modify for your projects.
+Apache License 2.0 - You may use and modify the project subject to the license terms and notice requirements.
