@@ -191,8 +191,10 @@ export function themeToCSSVars(theme: ThemeConfig) {
   const baseTokens = `
 :root{
   /* typography */
-  --font-sans:${t.fontFamily};
-  --font-mono:${t.fontFamilyMono};
+  --reay-font-sans:${t.fontFamily};
+  --reay-font-mono:${t.fontFamilyMono};
+  --font-sans:var(--reay-font-sans);
+  --font-mono:var(--reay-font-mono);
   --text-base:${t.baseSize}px;
   --leading:${t.lineHeight};
   --fs-xs:${t.scale.xs}rem; --fs-sm:${t.scale.sm}rem; --fs-md:${t.scale.md}rem;

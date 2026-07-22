@@ -606,7 +606,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
       font-size: ${config.blockquote.quoteMarkSize};
       color: ${config.blockquote.quoteMarkColor};
       opacity: 0.2;
-      font-family: Georgia, serif;
+      font-family: var(--reay-font-sans);
       line-height: 1;
     }
     ` : ''}

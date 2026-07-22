@@ -16,7 +16,7 @@ export const DEFAULT_PRIMARY = '#5B8CFF';
  * 
  * @remarks
  * Defines font families, base size, line height, and a type scale for responsive design
- * - fontFamily: System fonts for optimal readability across platforms
+ * - fontFamily: Self-hosted rounded Latin font with local CJK fallbacks
  * - fontFamilyMono: Monospace fonts for code display
  * - baseSize: 16px baseline for all text sizing
  * - lineHeight: 1.7 for comfortable reading
@@ -24,7 +24,7 @@ export const DEFAULT_PRIMARY = '#5B8CFF';
  */
 export const defaultTypography: Typography = {
   fontFamily:
-    `Inter, ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica Neue, Arial, "Noto Sans", "Apple Color Emoji", "Segoe UI Emoji", "Segoe UI Symbol", "Noto Color Emoji"`,
+    `"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif`,
   fontFamilyMono:
     `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
   baseSize: 16,

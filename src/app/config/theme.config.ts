@@ -7,6 +7,18 @@
 
 import type { UserThemeOverrides } from '@design/theme';
 
+/**
+ * Global font stacks.
+ *
+ * Change these two values to replace the typeface across the site. Interface
+ * text and Markdown inherit `sans`; code, keyboard hints, and preformatted
+ * content inherit `mono`.
+ */
+export const fontFamilies = {
+  sans: '"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, system-ui, sans-serif',
+  mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+} as const;
+
 export const themeConfig = {
   // Primary color used to generate the Material Design 3 palette.
   primary: '#00eeff',
@@ -18,8 +30,11 @@ export const themeConfig = {
   // },
 
   typography: {
-    fontFamily: 'Inter, "Noto Sans SC", system-ui, sans-serif',
-    lineHeight: 1.65,
+    fontFamily: fontFamilies.sans,
+    fontFamilyMono: fontFamilies.mono,
+    // The root size scales rem-based typography and spacing across the site.
+    baseSize: 15,
+    lineHeight: 1.6,
   },
 
   background: {

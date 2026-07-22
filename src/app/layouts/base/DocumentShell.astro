@@ -1,7 +1,7 @@
 ---
 import { ClientRouter } from 'astro:transitions';
 import type { BackgroundConfig } from '@app/config/theme.config';
-import { getFeaturesConfig } from '@app/config/site.config';
+import { getFeaturesConfig, getThemeConfig } from '@app/config/site.config';
 import I18nRuntime from '@features/i18n/components/I18nRuntime.astro';
 import Background from '@shared/components/Background.astro';
 import ClientRuntime from '@shared/components/ClientRuntime.astro';
@@ -10,6 +10,7 @@ import Header from '@shared/components/Header.astro';
 import HeadMeta from '@shared/components/HeadMeta.astro';
 import PageTransition from '@shared/components/PageTransition.astro';
 
+import '@fontsource-variable/nunito/wght.css';
 import '@design/styles/cards.css';
 import '@design/styles/immersive.css';
 
@@ -36,6 +37,15 @@ const {
 const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
   ? (await import('@features/effects/components/SeasonalEffects.astro')).default
   : null;
+
+const themeCssSchemaVersion = 2;
+const themeSignature = `${themeCssSchemaVersion}:${JSON.stringify(getThemeConfig())}`;
+let themeHash = 2166136261;
+for (let index = 0; index < themeSignature.length; index += 1) {
+  themeHash ^= themeSignature.charCodeAt(index);
+  themeHash = Math.imul(themeHash, 16777619);
+}
+const themeStylesheetHref = `/theme.css?v=${(themeHash >>> 0).toString(36)}`;
 ---
 
 <html lang="zh-CN">
@@ -56,7 +66,7 @@ const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
 
     <I18nRuntime />
     <HeadMeta {title} {description} {ogImage} />
-    <link rel="stylesheet" href="/theme.css" />
+    <link rel="stylesheet" href={themeStylesheetHref} />
     <slot name="head" />
     <ClientRouter fallback="swap" />
     <PageTransition />
@@ -64,6 +74,8 @@ const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
 
     <style is:inline>
       html {
+        font-family: var(--reay-font-sans);
+        font-size: var(--text-base);
         scroll-behavior: smooth;
         overscroll-behavior-x: none;
         overscroll-behavior-y: none;
@@ -79,8 +91,8 @@ const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
         overscroll-behavior-y: none;
         background: var(--md-sys-color-background);
         color: var(--md-sys-color-on-background);
-        font-family: var(--font-sans);
-        font-size: var(--text-base);
+        font-family: var(--reay-font-sans);
+        font-size: 1rem;
         line-height: var(--leading);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;

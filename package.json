@@ -28,6 +28,7 @@
     "@astrojs/mdx": "^7.0.3",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
+    "@fontsource-variable/nunito": "^5.3.0",
     "@material/material-color-utilities": "^0.3.0",
     "@pagefind/default-ui": "^1.5.2",
     "@shikijs/transformers": "4.3.1",
