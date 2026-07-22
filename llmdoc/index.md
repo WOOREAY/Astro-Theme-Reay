@@ -30,7 +30,7 @@
 
 ## Architecture
 
-- `llmdoc/architecture/frontend-composition.md`：薄路由、两个文档根、feature/shared/design-system 的组合边界。
+- `llmdoc/architecture/frontend-composition.md`：薄路由、共享 DocumentShell、feature/shared/design-system 的组合边界。
 - `llmdoc/architecture/content-system.md`：Blog、Plog、slug、可见性、归档和构建期图片处理。
 - `llmdoc/architecture/client-runtime.md`：Astro 页面交换、主题、增强 i18n、首页/图库交互和清理模型。
 - `llmdoc/architecture/external-integrations.md`：Pagefind、GitHub、评论 provider 与外部信任边界。
@@ -53,11 +53,16 @@
 - `llmdoc/reference/content-schema.md`：Blog/Plog frontmatter、默认值和 slug 规则。
 - `llmdoc/reference/client-lifecycle-contract.md`：文档级单例、页面级 disposer 和 Astro 事件合同。
 - `llmdoc/reference/design-system-contract.md`：MD3 token、CSS 变量、模式与主题生成合同。
+- `llmdoc/reference/home-editorial-design-language.md`：首页个人摘要、错位内容橱窗、Home/About 边界、GitHub 热度表、主题所有权与响应式合同。
 - `llmdoc/reference/environment-and-dependencies.md`：环境变量、Node/npm、依赖角色与外部安全边界。
 
 ## Memory
 
 - `llmdoc/memory/decisions/2026-07-21-feature-first-architecture.md`：采用 feature-first，同时保留 app/shared/design-system/薄路由边界的决定。
+- `llmdoc/memory/decisions/2026-07-22-home-asymmetric-activity-flow.md`：已被编辑式内容橱窗取代的旧错位活动流决定。
+- `llmdoc/memory/decisions/2026-07-22-home-editorial-showcase.md`：保留沉浸 Hero，并用个人摘要、错位 Blog/项目/Plog 橱窗与 Site Pulse 重构其余首页的决定。
+- `llmdoc/memory/reflections/2026-07-22-home-density-and-font-ownership.md`：减少栏目边界时仍需保留个人/站点信息，并用真实视口证明字体配置与密度的教训。
+- `llmdoc/memory/reflections/2026-07-22-reference-layout-not-content-model.md`：外部参考需区分布局与内容模型，并先明确 Home/About 职责边界的教训。
 - `llmdoc/memory/doc-gaps.md`：已确认但尚未统一的实现、运维、安全和文档合同，以及各自关闭条件。
 - `llmdoc/memory/reflections/`：仅在未来出现错误假设、失败或可复用过程教训时创建；执行相似任务前主动读取相关条目。
 

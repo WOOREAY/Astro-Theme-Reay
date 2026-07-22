@@ -7,9 +7,9 @@
 
 ## Steps
 
-1. 编辑 `src/app/config/user.config.ts`：姓名、头像、地点、社交、GitHub、双语简介、教育/经历、站点信息。
-2. 编辑 `theme.config.ts`：主色、字体、背景、首页波浪和季节效果。
-3. 选择 `features.config.ts` 的首页 `flow` 或 `snap`；区分只控制入口的 `show*` 与控制集成加载的 `integrations.*`。
+1. 编辑 `src/app/config/user.config.ts`：姓名、头像、可选地点/邮箱/网站、社交、GitHub、双语 role/tagline/bio/status/focus、教育/经历和站点信息；空的可选公开字段会自动隐藏。
+2. 编辑 `theme.config.ts`：在 `fontFamilies.sans/mono` 更换全站普通/代码字体，在 `typography.baseSize/lineHeight` 调整全站排版尺度，再配置主色、背景、首页波浪和季节效果。普通组件和 Markdown 不应再单独声明字体栈。
+3. 选择 `features.config.ts` 的首页 `flow` 或 `snap`，并按需调整 `home.showcase` 的 Blog/项目/Plog 数量；区分只控制入口的 `show*` 与控制集成加载的 `integrations.*`。
 4. 编辑 `navigation.config.ts`；若新增 translation key，同时更新 `i18n.config.ts` 两种字典。
 5. 按需编辑 projects、comments、links、media 配置。
 6. 替换 `public/` 中头像、favicon、音频和其他占位资产；核对配置引用的文件真实存在。

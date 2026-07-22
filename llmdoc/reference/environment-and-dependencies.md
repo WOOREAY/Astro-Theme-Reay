@@ -15,6 +15,7 @@
 
 - Astro、@astrojs/mdx/rss/sitemap/check
 - UnoCSS 与 Iconify JSON sets
+- Fontsource Variable Nunito（自托管拉丁字体，OFL-1.1）
 - TypeScript
 - Material color utilities
 - Pagefind/default UI

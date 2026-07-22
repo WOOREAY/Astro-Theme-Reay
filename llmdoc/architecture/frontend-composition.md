@@ -23,11 +23,11 @@ shared -> app/config + i18n/media features
 design-system -> external Material color utility
 ```
 
-这是一种 feature-first 组织，而不是严格分层。`shared` Header/Footer 使用 i18n/media feature，首页 SiteInfo 使用 shared Footer，archives/home/projects 也复用其他领域逻辑。路径别名只表达意图，目前没有 lint 规则阻止越界或循环。
+这是一种 feature-first 组织，而不是严格分层。`shared` Header/Footer 使用 i18n/media feature，首页编辑组件组合 blog/gallery/projects 数据与 shared Footer，archives/home/projects 也复用其他领域逻辑。路径别名只表达意图，目前没有 lint 规则阻止越界或循环。
 
 ## Root Layouts
 
-`src/app/layouts/base/DefaultLayout.astro` 与 `home/FullscreenLayout.astro` 是两个独立全文档根。它们共同负责：
+`src/app/layouts/base/DocumentShell.astro` 是唯一全文档根，`DefaultLayout.astro` 与 `home/FullscreenLayout.astro` 是它的两个组合包装。DocumentShell 统一负责：
 
 1. 首屏前解析 light/dark。
 2. 安装早期 i18n runtime。
@@ -36,12 +36,12 @@ design-system -> external Material color utility
 5. 安装页面 transition 和统一 ClientRuntime。
 6. 挂载背景、季节效果、Header 和 Pagefind 内容边界。
 
-差异：
+两个包装只保留内容流差异：
 
 - DefaultLayout 使用 Container、普通文档流、固定 Footer。
-- FullscreenLayout 提供 flow/snap 首页外壳，Footer 由首页 SiteInfo 区块渲染。
+- FullscreenLayout 提供 flow/snap 首页外壳，Footer 由首页编辑内容末尾以 seamless 变体渲染。
 
-修改主题/i18n/SEO/router/runtime/Pagefind 根合同必须同步两个根布局，除非先抽出共享 shell。
+修改主题/i18n/SEO/router/runtime/Pagefind 根合同应优先进入 DocumentShell；只有 default/home 的内容流确实不同时才修改对应包装。
 
 ## Domain Layouts
 
@@ -53,12 +53,24 @@ design-system -> external Material color utility
 
 ## Homepage Composition
 
-`src/pages/index.astro` 组合五个 section：Hero、Posts、Projects、About、SiteInfo。`PageScrollContainer` 和 `FullPageSection` 提供 flow/snap 共用 DOM/data-attribute 合同。
+`src/pages/index.astro` 只组合 Hero 与 Activity 两个 section。`PageScrollContainer` 与 `FullPageSection` 保留 flow/snap DOM 合同；`viewportSized` 只用于 Hero，flow 下 Activity 按内容自然增长。
+
+首页采用错位编辑式个人主页：
+
+- Hero 保留打字机、光晕、全息头像、主次按钮和滚动提示等标志性效果。
+- Profile Snapshot 只展示短个人定位、简介、关注方向、当前状态和公开联系入口；完整履历留在 About。
+- Editorial Showcase 以 Shiro 式错位双栏分别表达 Blog、项目与 Plog；展示数量由 features config 控制，并优先使用 featured 内容。
+- Site Pulse 合并配置化站点文案、真实内容统计与 GitHub 公开活动热度表，再由 seamless Footer 收尾；不再重复 Header/Footer 导航。
+- 热度表只读取构建期 GitHub 数据并显示 GraphQL/events/repos/cache/empty 来源语义，不虚构访问量。
+- 页面级主色和背景继续由 theme config、MD3 palette 与 `Background.astro` 统一管理。
+
+首页网格、留白、响应式和交互规则位于 `src/features/home/styles/editorial-home.css`，不作为跨功能 design-system API。
 
 ## Invariants
 
-- `flow` 是默认且无需 fullpage JavaScript 的可用模式。
+- `flow` 是默认且无需 fullpage JavaScript 的可用模式；只有 Hero 使用视口最小高度。
 - `snap` 才能把 section 绝对堆叠并捕获 wheel/touch/keyboard。
+- 首页 section 顺序和 `data-section` 标记是 E2E 合同；`hero`、`activity`、`[data-home-stream]`、`[data-home-editorial]`、`[data-home-now]`、`[data-home-showcase]`、`[data-home-site]` 与 `[data-home-heatmap]` 必须各只有一个。
 - 配置中动态 icon 类必须通过 UnoCSS extraction/safelist，否则不会生成 CSS。
 - 领域样式留在 feature；只有稳定跨域语义才进入 design-system。
 

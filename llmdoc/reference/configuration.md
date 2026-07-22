@@ -8,7 +8,7 @@
 
 | 文件 | 稳定职责 |
 | --- | --- |
-| `user.config.ts` | 身份、社交、GitHub、双语个人文案、关于页、站点信息 |
+| `user.config.ts` | 身份、可选公开资料、社交、GitHub、双语个人文案、关于页、站点信息 |
 | `theme.config.ts` | MD3 source color、字体、shape、背景、波浪、季节效果 |
 | `features.config.ts` | 首页模式、入口显示与 comments/GitHub/music/seasonal 集成 gate |
 | `navigation.config.ts` | Header 主导航与 Footer resources |
@@ -19,6 +19,10 @@
 | `media.config.ts` | 音乐播放列表、曲目和 player 选项 |
 | `markdown.config.ts` | Unified、Remark/Rehype、Shiki |
 | `markdown-style.config.ts` | Markdown 视觉样式合同 |
+
+`user.config.ts` 把基础公开字段与本地化叙事字段分开。基础字段中的 `location/email/website` 为可选，空值不渲染；`userContent` 可提供本地化 `role/status/focus`，并继续提供 `tagline/bio/greeting/description`。客户端 `data-user-content` 支持 `focus.0` 形式的点路径。
+
+`theme.config.ts` 的 `fontFamilies` 是全站字体唯一用户配置入口：`sans` 传递到普通界面与 Markdown，`mono` 传递到代码块、行内代码和键盘提示。`typography.baseSize` 设定根字号并缩放 rem 布局，`lineHeight` 设定正文基线；当前默认使用自托管 Nunito Variable 与本地中文回退。替换字体时应同时保留可靠的中文、系统和等宽回退。
 
 ## site.config.ts Getters
 
@@ -44,6 +48,7 @@ getNavigationConfig
 | 值 | 当前实际效果 |
 | --- | --- |
 | `home.layout` | 控制首页 flow/snap |
+| `home.showcase.posts/projects/plogAlbums` | 控制首页内容橱窗中三类内容的最大展示数量；featured 优先，再按日期或更新时间回退 |
 | `search.showInNavigation` | 控制 Header SearchButton；route/index 仍存在 |
 | `discovery.showRssLink/showSitemapLink` | 控制 Footer 入口；生成端点始终存在 |
 | `i18n.showLanguageSwitcher` | 控制 Header LanguageToggle；runtime 始终存在 |

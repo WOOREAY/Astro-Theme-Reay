@@ -25,7 +25,7 @@ Astro 路由仍必须位于 `src/pages/`，主题 token 需要跨功能共享，
 
 - 阅读或修改一个业务能力时，首先从对应 `src/features/<domain>/` 和薄路由入口进入。
 - 只有出现真实的跨域复用后才把实现提升到 `src/shared/`；设计 token 与全站视觉规则进入 `src/design-system/`。
-- `DefaultLayout` 与 `FullscreenLayout` 仍是两个独立的完整文档根，相关全局能力需要同步维护。
+- `DefaultLayout` 与 `FullscreenLayout` 共享 `DocumentShell` 文档根；全局能力在 shell 统一维护，包装层只保留 default/home 内容流差异。
 - 当前 aliases 只表达约定，尚无 lint/import-boundary 自动验证；边界审查仍依赖 code review 和项目文档。
 - 该决定允许渐进迁移，不要求为了目录纯度制造无价值抽象。
 

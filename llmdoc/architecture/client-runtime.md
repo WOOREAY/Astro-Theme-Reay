@@ -53,7 +53,7 @@ theme.config.ts
 - `data-i18n`、`data-i18n-attr`、`data-i18n-attrs`
 - `data-i18n-date` 与 locale-aware 日期格式
 - `data-page-title-key` 声明式页面标题
-- `data-user-content`、`data-text`
+- `data-user-content`、`data-text`；个人内容支持 `focus.0` 形式的对象/数组点路径
 - `languagechange` custom event
 - incoming document translation on Astro swap
 
@@ -64,7 +64,7 @@ Incoming document 在 swap 前翻译一次；after-swap 只同步 document lang/
 ## Flow and Snap
 
 - flow 不构造 FullPageScroll，section 保持普通文档流。
-- flow 用 IntersectionObserver 标记视口附近 section；离屏 section 暂停动画并使用 `content-visibility`。
+- flow 用 IntersectionObserver 标记视口附近 section；离屏 section 暂停动画并使用 `content-visibility`。首页只有 Hero 保持视口最小高度，内容 section 使用自然高度。
 - snap 依赖 `#fullpage-container[data-home-layout="snap"]`、`.fullpage-section` 和可选 `.section-dot`。
 - snap 捕获全局 wheel/touch/navigation keys，但必须让内部可滚动 active element 优先。
 - 实例销毁时必须移除 listener、timer 和 animation frame。
