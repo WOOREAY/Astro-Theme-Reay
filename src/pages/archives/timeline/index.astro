@@ -1,6 +1,6 @@
 ---
 import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
-import BlogTimeline from '@features/blog/components/BlogTimeline.astro';
+import ArchiveChronicle from '@features/archives/components/ArchiveChronicle.astro';
 import { getPostsByYear } from '@features/blog/lib/blog';
 import { useI18n } from '@features/i18n/lib/i18n';
 
@@ -30,12 +30,12 @@ const headerStats = [
   {postsByYear.length > 1 && (
     <nav class="year-jump" aria-label={t('archives.timeline.quickJump')}>
       <span><i class="i-carbon:location" aria-hidden="true"></i><span data-i18n="archives.timeline.quickJump">{t('archives.timeline.quickJump')}</span></span>
-      {postsByYear.map(([year]) => <a href={`#blog-year-${year}`}>{year}</a>)}
+      {postsByYear.map(([year]) => <a href={`#archive-year-${year}`}>{year}</a>)}
     </nav>
   )}
 
   {posts.length > 0 ? (
-    <BlogTimeline {posts} />
+    <ArchiveChronicle {posts} />
   ) : (
     <div class="archive-empty">
       <i class="i-carbon:document-blank" aria-hidden="true"></i>
@@ -50,32 +50,14 @@ const headerStats = [
     display: flex;
     align-items: center;
     gap: 0.9rem;
-    margin: -0.45rem 0 1.8rem;
+    margin: -0.45rem 0 2rem;
     padding-bottom: 0.7rem;
     overflow-x: auto;
     border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
   }
-
-  .year-jump span,
-  .year-jump a {
-    flex: 0 0 auto;
-    font-size: 0.7rem;
-  }
-
-  .year-jump > span {
-    display: flex;
-    align-items: center;
-    gap: 0.35rem;
-    color: var(--md-sys-color-on-surface-variant);
-    font-weight: 760;
-  }
-
-  .year-jump a {
-    color: var(--md-sys-color-primary);
-    font-family: var(--reay-font-mono);
-    font-weight: 760;
-  }
-
+  .year-jump span, .year-jump a { flex: 0 0 auto; font-size: 0.7rem; }
+  .year-jump > span { display: flex; align-items: center; gap: 0.35rem; color: var(--md-sys-color-on-surface-variant); font-weight: 760; }
+  .year-jump a { color: var(--md-sys-color-primary); font-family: var(--reay-font-mono); font-weight: 760; }
   .archive-empty { padding: 3rem 0; text-align: center; color: var(--md-sys-color-on-surface-variant); }
   .archive-empty i { color: var(--md-sys-color-outline); font-size: 2rem; }
   .archive-empty h2 { margin: 0.7rem 0 0.35rem; color: var(--md-sys-color-on-surface); font-size: 1rem; }

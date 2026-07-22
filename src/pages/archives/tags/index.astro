@@ -3,6 +3,7 @@ import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
 import TagCloud from '@features/archives/components/TagCloud.astro';
 import { getAllTags } from '@features/blog/lib/blog';
 import { useI18n } from '@features/i18n/lib/i18n';
+import EditorialSectionHeader from '@shared/components/EditorialSectionHeader.astro';
 
 const allTags = await getAllTags();
 const { t } = useI18n();
@@ -21,7 +22,16 @@ const headerStats = [
   stats={headerStats}
 >
   {allTags.length > 0 ? (
-    <TagCloud tags={allTags} />
+    <div class="tag-page-flow">
+      <section>
+        <EditorialSectionHeader title={t('archives.topicMap')} titleKey="archives.topicMap" icon="i-carbon:tag-group" />
+        <TagCloud tags={allTags} variant="map" />
+      </section>
+      <section>
+        <EditorialSectionHeader title={t('archives.tags.list')} titleKey="archives.tags.list" icon="i-carbon:list" />
+        <TagCloud tags={allTags} variant="index" />
+      </section>
+    </div>
   ) : (
     <div class="archive-empty">
       <i class="i-carbon:tag-none" aria-hidden="true"></i>
@@ -32,6 +42,7 @@ const headerStats = [
 </ArchiveLayout>
 
 <style>
+  .tag-page-flow { display: grid; gap: clamp(2.5rem, 6vw, 4rem); }
   .archive-empty { padding: 3rem 0; text-align: center; color: var(--md-sys-color-on-surface-variant); }
   .archive-empty i { color: var(--md-sys-color-outline); font-size: 2rem; }
   .archive-empty h2 { margin: 0.7rem 0 0.35rem; color: var(--md-sys-color-on-surface); font-size: 1rem; }

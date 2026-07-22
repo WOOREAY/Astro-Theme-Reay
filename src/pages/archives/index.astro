@@ -1,172 +1,209 @@
 ---
 import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
+import ArchiveChronicle from '@features/archives/components/ArchiveChronicle.astro';
 import SeriesCard from '@features/archives/components/SeriesCard.astro';
 import TagCloud from '@features/archives/components/TagCloud.astro';
-import { getAllSeries, getAllTags, getArchiveStats } from '@features/blog/lib/blog';
+import { getAllSeries, getAllTags, getArchiveStats, getPostsByYear, getSortedPosts } from '@features/blog/lib/blog';
 import { useI18n } from '@features/i18n/lib/i18n';
 import EditorialSectionHeader from '@shared/components/EditorialSectionHeader.astro';
 
 const { t } = useI18n();
-const stats = await getArchiveStats();
-const allTags = await getAllTags();
-const allSeries = await getAllSeries();
-const topTags = allTags.slice(0, 12);
+const [stats, allTags, allSeries, sortedPosts, postsByYear] = await Promise.all([
+  getArchiveStats(),
+  getAllTags(),
+  getAllSeries(),
+  getSortedPosts(),
+  getPostsByYear(),
+]);
+const recentPosts = sortedPosts
+  .filter((post, index, list) => list.findIndex((candidate) => candidate.data.title === post.data.title) === index)
+  .slice(0, 6);
+const topTags = allTags.slice(0, 18);
 const topSeries = allSeries.slice(0, 4);
+const peakYearCount = Math.max(...postsByYear.map(([, posts]) => posts.length), 1);
 const headerStats = [
   { icon: 'i-carbon:document', labelKey: 'archives.timeline.totalPosts', label: t('archives.timeline.totalPosts'), value: stats.totalPosts },
+  { icon: 'i-carbon:calendar', labelKey: 'archives.timeline.yearsSpan', label: t('archives.timeline.yearsSpan'), value: stats.totalYears },
   { icon: 'i-carbon:tag', labelKey: 'archives.tags.total', label: t('archives.tags.total'), value: stats.totalTags },
-  { icon: 'i-carbon:folder', labelKey: 'archives.series.total', label: t('archives.series.total'), value: stats.totalSeries },
   { icon: 'i-carbon:pen', labelKey: 'archives.totalWords', label: t('archives.totalWords'), value: new Intl.NumberFormat('zh-CN', { notation: 'compact' }).format(stats.totalWords) },
 ];
 ---
 
 <ArchiveLayout
-  title={t('archives.stats.title')}
+  title={t('archives.title')}
   description={t('archives.subtitle')}
-  titleKey="archives.stats.title"
+  titleKey="archives.title"
   descriptionKey="archives.subtitle"
   stats={headerStats}
 >
-  <div class="archive-overview-grid">
-    {topTags.length > 0 && (
-      <section class="archive-overview-section archive-tags">
+  <div class="archive-opening-grid">
+    {recentPosts.length > 0 && (
+      <section class="archive-recent">
         <EditorialSectionHeader
-          title={t('archives.hotTags')}
-          titleKey="archives.hotTags"
-          icon="i-carbon:tag"
+          title={t('archives.recent.title')}
+          titleKey="archives.recent.title"
+          icon="i-carbon:recently-viewed"
+          actionHref="/archives/timeline"
+          actionLabel={t('archives.timeline')}
+          actionKey="archives.timeline"
+        />
+        <ArchiveChronicle posts={recentPosts} compact />
+      </section>
+    )}
+
+    {postsByYear.length > 0 && (
+      <aside class="archive-rhythm" aria-labelledby="archive-rhythm-title">
+        <EditorialSectionHeader
+          title={t('archives.rhythm.title')}
+          titleKey="archives.rhythm.title"
+          icon="i-carbon:chart-column"
+        />
+        <p data-i18n="archives.rhythm.description">{t('archives.rhythm.description')}</p>
+        <ol>
+          {postsByYear.map(([year, posts]) => (
+            <li>
+              <a href={`/archives/timeline#archive-year-${year}`}>
+                <span>{year}</span>
+                <span class="rhythm-track"><span style={`--rhythm-width: ${(posts.length / peakYearCount) * 100}%;`}></span></span>
+                <strong>{posts.length}</strong>
+              </a>
+            </li>
+          ))}
+        </ol>
+      </aside>
+    )}
+  </div>
+
+  <div class="archive-discovery-grid">
+    {topTags.length > 0 && (
+      <section class="archive-tags">
+        <EditorialSectionHeader
+          title={t('archives.topicMap')}
+          titleKey="archives.topicMap"
+          icon="i-carbon:tag-group"
           actionHref="/archives/tags"
           actionLabel={t('archives.viewAllTags')}
           actionKey="archives.viewAllTags"
         />
-        <TagCloud tags={topTags} />
+        <TagCloud tags={topTags} variant="map" />
       </section>
     )}
 
     {topSeries.length > 0 && (
-      <section class="archive-overview-section archive-series">
+      <section class="archive-series">
         <EditorialSectionHeader
-          title={t('archives.series')}
-          titleKey="archives.series"
-          icon="i-carbon:folder"
+          title={t('archives.readingPaths')}
+          titleKey="archives.readingPaths"
+          icon="i-carbon:roadmap"
           actionHref="/archives/series"
           actionLabel={t('archives.viewAllSeries')}
           actionKey="archives.viewAllSeries"
         />
-        <div>{topSeries.map((item) => <SeriesCard {...item} />)}</div>
+        <div class="archive-series-list">{topSeries.map((item) => <SeriesCard {...item} />)}</div>
       </section>
     )}
   </div>
-
-  <section class="archive-explore">
-    <EditorialSectionHeader
-      title={t('archives.exploreMore')}
-      titleKey="archives.exploreMore"
-      icon="i-carbon:compass"
-    />
-    <div class="archive-explore-links">
-      <a href="/archives/timeline">
-        <i class="i-carbon:time" aria-hidden="true"></i>
-        <span><strong data-i18n="archives.timeline">{t('archives.timeline')}</strong><small data-i18n="archives.timeline.desc">{t('archives.timeline.desc')}</small></span>
-        <i class="i-carbon:arrow-right" aria-hidden="true"></i>
-      </a>
-      <a href="/blog">
-        <i class="i-carbon:blog" aria-hidden="true"></i>
-        <span><strong data-i18n="archives.blogList">{t('archives.blogList')}</strong><small data-i18n="archives.blogList.desc">{t('archives.blogList.desc')}</small></span>
-        <i class="i-carbon:arrow-right" aria-hidden="true"></i>
-      </a>
-    </div>
-  </section>
 </ArchiveLayout>
 
 <style>
-  .archive-overview-grid {
+  .archive-opening-grid {
     display: grid;
-    grid-template-columns: minmax(0, 1.05fr) minmax(20rem, 0.95fr);
+    grid-template-columns: minmax(0, 1.38fr) minmax(16rem, 0.62fr);
     gap: clamp(2rem, 5vw, 4rem);
     align-items: start;
   }
 
-  .archive-overview-section,
-  .archive-explore {
+  .archive-recent,
+  .archive-rhythm,
+  .archive-tags,
+  .archive-series {
     min-width: 0;
   }
 
-  .archive-explore {
-    margin-top: clamp(2.4rem, 6vw, 4rem);
+  .archive-rhythm {
+    margin-top: 1.8rem;
+    padding: 1.05rem 1.1rem;
+    border-radius: 1rem;
+    background: rgba(var(--md-sys-color-surface-container-rgb), 0.5);
   }
 
-  .archive-explore-links {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.5);
+  .archive-rhythm :global(.editorial-section-header) {
+    margin-bottom: 0.45rem;
   }
 
-  .archive-explore-links a {
-    display: grid;
-    grid-template-columns: 1.8rem minmax(0, 1fr) auto;
-    align-items: center;
-    gap: 0.8rem;
-    padding: 1rem 0.75rem;
-    color: inherit;
-    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.44);
-  }
-
-  .archive-explore-links a:first-child {
-    padding-left: 0;
-    padding-right: 1.25rem;
-    border-right: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.44);
-  }
-
-  .archive-explore-links a:last-child {
-    padding-right: 0;
-    padding-left: 1.25rem;
-  }
-
-  .archive-explore-links a > i {
-    color: var(--md-sys-color-primary);
-    font-size: 1rem;
-  }
-
-  .archive-explore-links span {
-    min-width: 0;
-  }
-
-  .archive-explore-links strong,
-  .archive-explore-links small {
-    display: block;
-  }
-
-  .archive-explore-links strong {
-    font-size: 0.88rem;
-  }
-
-  .archive-explore-links small {
-    margin-top: 0.2rem;
+  .archive-rhythm > p {
+    margin: 0 0 1rem;
     color: var(--md-sys-color-on-surface-variant);
     font-size: 0.7rem;
-    line-height: 1.45;
+    line-height: 1.5;
   }
 
-  .archive-explore-links a:hover {
+  .archive-rhythm ol {
+    display: grid;
+    gap: 0.72rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
+  }
+
+  .archive-rhythm a {
+    display: grid;
+    grid-template-columns: 3.2rem minmax(0, 1fr) 1.4rem;
+    gap: 0.6rem;
+    align-items: center;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-mono);
+    font-size: 0.64rem;
+  }
+
+  .rhythm-track {
+    height: 0.34rem;
+    overflow: hidden;
+    border-radius: 999px;
+    background: rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
+  }
+
+  .rhythm-track > span {
+    display: block;
+    width: var(--rhythm-width);
+    height: 100%;
+    border-radius: inherit;
+    background: var(--md-sys-color-primary);
+  }
+
+  .archive-rhythm strong {
     color: var(--md-sys-color-primary);
-    background: rgba(var(--md-sys-color-primary-rgb), 0.055);
+    text-align: right;
   }
 
-  @media (max-width: 880px) {
-    .archive-overview-grid {
+  .archive-discovery-grid {
+    display: grid;
+    grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
+    gap: clamp(2rem, 5vw, 4rem);
+    align-items: start;
+    margin-top: clamp(2.8rem, 7vw, 5rem);
+  }
+
+  .archive-series-list {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 1.25rem;
+  }
+
+  @media (max-width: 980px) {
+    .archive-opening-grid,
+    .archive-discovery-grid {
       grid-template-columns: 1fr;
+    }
+
+    .archive-rhythm {
+      margin-top: 0;
     }
   }
 
-  @media (max-width: 620px) {
-    .archive-explore-links {
+  @media (max-width: 680px) {
+    .archive-series-list {
       grid-template-columns: 1fr;
-    }
-
-    .archive-explore-links a:nth-child(n) {
-      padding-right: 0;
-      padding-left: 0;
-      border-right: 0;
     }
   }
 </style>

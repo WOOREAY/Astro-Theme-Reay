@@ -65,9 +65,14 @@ function translateElement(element: Element, lang: Language) {
   if (dateValue) {
     const date = new Date(dateValue);
     if (!Number.isNaN(date.valueOf())) {
-      const format = element.getAttribute('data-i18n-date-format') === 'short'
+      const dateFormat = element.getAttribute('data-i18n-date-format');
+      const format = dateFormat === 'short'
         ? { year: 'numeric', month: '2-digit', day: '2-digit' } as const
-        : { year: 'numeric', month: 'long', day: 'numeric' } as const;
+        : dateFormat === 'month'
+          ? { month: 'long' } as const
+          : dateFormat === 'day'
+            ? { day: '2-digit' } as const
+            : { year: 'numeric', month: 'long', day: 'numeric' } as const;
       element.textContent = new Intl.DateTimeFormat(lang === 'zh' ? 'zh-CN' : 'en-US', format).format(date);
     }
   }
