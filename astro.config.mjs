@@ -15,7 +15,9 @@ export default defineConfig({
         sitemap(),
     ],
     site: process.env.SITE || process.env.PUBLIC_SITE_URL || 'https://example.com',
-    base: process.env.BASE || '/',
+    // Reay deliberately supports root-path deployments only. This keeps every
+    // authored URL, feed, search asset, and canonical on one explicit contract.
+    base: '/',
     
     // 使用集中管理的 Markdown 配置
     markdown: markdownConfig,

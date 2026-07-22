@@ -29,3 +29,9 @@ pnpm-debug.log*
 # custom
 tmp/
 /content/
+
+# llmdoc local investigation cache
+.llmdoc-tmp/
+playwright-report/
+test-results/
+blob-report/
