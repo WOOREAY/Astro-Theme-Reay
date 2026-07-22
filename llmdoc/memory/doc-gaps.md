@@ -47,7 +47,7 @@
 
 ### 自动化测试仍不是全站与真实集成证明
 
-- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、首页错位编辑橱窗、个人/站点信息、配置化 Blog/项目/Plog 数量与热度表结构、config 驱动的全站/Markdown 字体、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、归档/详情去卡片墙合同、14 类代表路由的移动端溢出，以及三个页面的 Axe WCAG A/AA；仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
+- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、首页错位编辑橱窗、个人/站点信息、配置化 Blog/项目/Plog 数量与热度表结构、config 驱动的全站/Markdown 字体、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、Archives chronicle/topic/series 结构、Plog collection/moment 结构、About 配置化叙事、Links 视觉卡片、代表路由的移动端溢出，以及三个页面的 Axe WCAG A/AA；仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
 - 影响：现有门禁不证明全部动态路由、视觉像素、真实第三方服务和线上托管行为正确。
 - 来源：`package.json`、`scripts/`、`tests/e2e/core.spec.ts`、`.github/workflows/`。
 - 关闭条件：按风险补充全站 link crawl、关键 viewport visual baseline、键盘/屏幕阅读器人工清单、至少一个 live provider 测试，以及真实 Pages 部署验收。

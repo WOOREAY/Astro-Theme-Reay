@@ -23,10 +23,10 @@
 `user.config.ts` 把身份、联系方式、本地化叙事、站点事实和 About 专属集合分开：
 
 - `user.name/avatar/location` 是个人身份源。
-- `user.contact.email/website/additionalLinks` 是公开联系方式唯一来源，空值全站隐藏。
+- `user.contact.email/twitter/website/additionalLinks` 是公开联系方式唯一来源，空值全站隐藏；Hero 只消费 GitHub、Twitter/X 与 Email。
 - `user.github.username/token` 是 GitHub 唯一来源；公开主页 URL 从 username 派生，token 应保持为空并优先使用环境变量。
-- `userContent` 提供本地化 `role/status/focus/tagline/bio/greeting/description`；其中 `description` 同时作为本地化站点描述。
-- `site` 只保存 `since/builtWith/visitors/techStack` 等不应从身份或内容统计重复推导的事实；站点名、头像、URL、描述分别从 user/contact/userContent 派生。
+- `userContent` 提供本地化 `role/status/focus/tagline/bio/greeting/description/story`；`story` 保存 About 的标题、引言、正文和原则，其中 `description` 同时作为本地化站点描述。
+- `site` 只保存 `since/builtWith/techStack` 等不应从身份或内容统计重复推导的事实；站点名、头像、URL、描述分别从 user/contact/userContent 派生，文章、主题、字数和写作年份在构建期从内容集合计算。
 - `aboutConfig` 只保存 sections、education、experience、timeline，不再保存 socialNetworks 或第二份 site identity。
 
 客户端 `data-user-content` 支持 `focus.0` 形式的点路径。

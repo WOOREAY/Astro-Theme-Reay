@@ -2,7 +2,7 @@
 
 ## Intent
 
-Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页面身份和真实统计，再尽快暴露内容。设计避免居中大标题、统计卡墙、重复胶囊导航与每条内容一个独立表面；Gallery 可为影像保留更强的视觉容器，但仍遵循相同字号、间距和主题所有权。
+Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页面身份和真实统计，再尽快暴露内容。设计避免居中大标题、统计卡墙和重复胶囊导航；具体表面必须服从领域内容，Gallery 可保留影像容器，Links 可使用头像虚化视觉卡片，其余开放列表仍遵循相同字号、间距和主题所有权。
 
 首页 Hero 与其编辑橱窗合同继续由 `home-editorial-design-language.md` 负责，本文件不改变 Hero。
 
@@ -18,9 +18,12 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 
 - 桌面页首先左后右：左侧标题/说明，右侧线性统计；较窄视口自然叠放。
 - 页首之后直接进入导航、筛选或首组真实内容；不得再插入一层重复 summary cards。
-- Blog、归档、项目、友链和 About 工具列表使用开放式行、hairline 与轻微 hover tint。
+- Blog、归档、项目和 About 工具列表使用开放式行、hairline 与轻微 hover tint；Links 卡片用放大头像虚化背景、独立头像和轻量 tonal surface 表达站点身份，不再受旧 `.link-card` 兼容选择器影响。
 - 每个功能区最多使用一个明显 tonal surface。搜索面板、评论 provider、GitHub 热度图和项目 shelf 属于可接受的功能表面。
 - Gallery 以影像为主，可使用圆角 cover、overlay 和有限阴影；overlay 文字必须在 light/dark 下维持足够对比。
+- Archives 概览必须回答最近写了什么、年度节奏如何、主题集中在哪里和有哪些系列路径；Timeline 按年/月组织，Series 不虚构完成进度。
+- Plog 目录把共享 `album.id` 的 entries 组织成 collection，并把每个 entry 视作 moment；无真实图片时必须显式使用配置 gradient fallback。
+- About 可从 `userContent.story` 展示完整叙事，但教育、经历和公开联系仍只渲染配置中的真实字段；站点统计只使用内容集合可计算的数据。
 - 详情页不虚构阅读进度、完成度、访问量或其他统计；只展示内容、配置或外部 API 提供的数据。
 - 页面背景、主色和字体仍只消费 theme config -> MD3/Reay token 链，不建立领域级 palette 或页面底色。
 
@@ -45,9 +48,12 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 - `src/shared/components/EditorialPageHeader.astro`
 - `src/shared/components/EditorialSectionHeader.astro`
 - `src/app/layouts/archives/ArchiveLayout.astro`
+- `src/features/archives/components/ArchiveChronicle.astro`
 - `src/features/blog/components/BlogTimeline.astro`
 - `src/features/archives/components/TagCloud.astro`
 - `src/features/archives/components/SeriesCard.astro`
+- `src/features/about/components/AboutNarrative.astro`
+- `src/features/gallery/lib/plog.ts`
 - `src/features/projects/components/ProjectDetailHeader.astro`
 - `src/pages/`
 - `tests/e2e/core.spec.ts`

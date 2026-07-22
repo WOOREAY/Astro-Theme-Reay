@@ -38,7 +38,7 @@ Header 和 Footer 已提供全站导航；首页不再复制一组无上下文�
 
 `user.config.ts` 把公开基础字段与本地化叙事字段分开：
 
-- 基础字段：`name`、`avatar`、可选 `location`、`contact.email/website/additionalLinks` 和 GitHub；GitHub 公开链接只从 username 派生。
+- 基础字段：`name`、`avatar`、可选 `location`、`contact.email/twitter/website/additionalLinks` 和 GitHub；GitHub 公开链接只从 username 派生，Hero 联系入口按 GitHub、Twitter/X、Email 排序并对空值隐藏。
 - 本地化字段：`role`、`tagline`、`bio`、`status`、`focus`、`greeting` 和 `description`。
 - 可选字段为空时不渲染占位文案或空行。
 - 首页通过统一 contact getter 展示联系方式，与 About、Links、Footer 不维护各自副本。

@@ -1,4 +1,4 @@
-# Add a Plog Album
+# Add a Plog Moment or Collection
 
 ## Preconditions
 
@@ -8,7 +8,7 @@
 ## Steps
 
 1. 创建 `src/content/plog/<category>/<slug>/index.md`。
-2. 填写 title、publishDate 和必填 `album.id`/`album.title`。
+2. 填写 moment 的 title、publishDate 和必填 `album.id`/`album.title`；同一 collection 的多个 entries 复用相同 `album.id` 与合集元数据。
 3. 填写 description、location、camera、tags、gradient、accent 等相册元数据。
 4. 把照片放入同级 `images/`；支持 jpg/jpeg/png/webp/avif/gif 及大写扩展名。
 5. 需要单图覆盖时，在 `photos` 数组中用 `file` 匹配图片，并填写 caption、date、location、camera、tags、alt、featured 等。
@@ -16,7 +16,7 @@
 
 ## Verification
 
-- `/gallery` 显示合集，详情 slug 保留嵌套 category。
+- `/gallery` 按 `album.id` 显示合集并在合集内展示 moments，详情 slug 保留嵌套 category。
 - 图片按自然文件名顺序出现，缩略图/预览图构建成功。
 - 灯箱、下载名、alt、caption 和元数据正确。
 - 缺失图片时 empty/fallback 仍可用且不会误导访客。

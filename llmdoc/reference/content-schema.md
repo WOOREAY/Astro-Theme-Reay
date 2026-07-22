@@ -38,6 +38,8 @@ Loader: `src/content/plog/**/*.{md,mdx}`。
 - status: featured/draft `false`, published `true`, language `zh-CN`
 - visual: image asset、imageAlt、gradient、accent
 
+每个 Plog entry 是独立详情页；`album.id` 相同的 entries 在目录页归入同一 collection，`album.title/description/icon/accent` 应在同一合集内保持一致。
+
 `photos[]`：
 
 | Field | Type |

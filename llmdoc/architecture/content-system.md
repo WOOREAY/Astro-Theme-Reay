@@ -39,14 +39,16 @@ Markdown/MDX
 ```text
 Plog index.md + sibling images/
   -> plog collection + eager import.meta.glob
-  -> createPlogAlbum()
-  -> gallery list/detail
+  -> createPlogAlbum() per entry
+  -> createPlogCollections() by album.id
+  -> gallery collection list / moment detail
   -> Astro getImage() WebP derivatives
   -> Pagefind + Sitemap
 ```
 
 - 嵌套目录路径成为相册 slug。
 - 同级 `images/` 文件按自然文件名排序。
+- 每个 Markdown/MDX entry 是一个可独立访问的 photographic moment；共享 `album.id` 的 entries 在 `/gallery` 聚合成一个 collection，`album.title/description` 提供合集身份。
 - `photos[].file` 只覆盖匹配图片的元数据，不是图片发现清单。
 - 图片缺失时退化到条目封面或视觉占位，不应让构建崩溃。
 - 生产同样排除 `draft` 和 `published:false`，开发显示全部。

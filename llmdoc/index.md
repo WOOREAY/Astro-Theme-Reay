@@ -62,8 +62,8 @@
 - `llmdoc/memory/decisions/2026-07-21-feature-first-architecture.md`：采用 feature-first，同时保留 app/shared/design-system/薄路由边界的决定。
 - `llmdoc/memory/decisions/2026-07-22-home-asymmetric-activity-flow.md`：已被编辑式内容橱窗取代的旧错位活动流决定。
 - `llmdoc/memory/decisions/2026-07-22-home-editorial-showcase.md`：保留沉浸 Hero，并用个人摘要、错位 Blog/项目/Plog 橱窗与 Site Pulse 重构其余首页的决定。
-- `llmdoc/memory/reflections/2026-07-22-home-density-and-font-ownership.md`：减少栏目边界时仍需保留个人/站点信息，并用真实视口证明字体配置与密度的教训。
-- `llmdoc/memory/reflections/2026-07-22-reference-layout-not-content-model.md`：外部参考需区分布局与内容模型，并先明确 Home/About 职责边界的教训。
+- `llmdoc/memory/lessons-learned.md`：从已归档反思中提炼的跨任务规则，包括信息保留、参考层次和领域功能优先。
+- `llmdoc/memory/archive/`：已提炼的原始反思记录，供追溯信号与证据。
 - `llmdoc/memory/doc-gaps.md`：已确认但尚未统一的实现、运维、安全和文档合同，以及各自关闭条件。
 - `llmdoc/memory/reflections/`：仅在未来出现错误假设、失败或可复用过程教训时创建；执行相似任务前主动读取相关条目。
 

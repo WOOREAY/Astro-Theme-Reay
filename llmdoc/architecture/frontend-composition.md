@@ -58,10 +58,10 @@ design-system -> external Material color utility
 ## Domain Layouts
 
 - Blog detail 组合开放式文章头、正文、TOC、Markdown 样式、增强脚本和评论。
-- Archives 在共享编辑式页首之后添加归档 tabs；标签、系列和时间线继续由领域组件负责。
+- Archives 在共享编辑式页首之后添加归档 tabs；概览组合最近写作、年度节奏、主题地图与系列阅读路径，时间线按年/月组织，标签与系列继续由领域组件负责。
 - Projects/Project detail 分别约束项目索引与 README 阅读宽度，详情统计采用线性元信息而非统计卡。
-- Links 和 About 直接组合共享编辑式基础与领域 section，不再保留无消费者的专属 layout/header。
-- Gallery 目录页使用共享编辑式页首，详情页保留影像主导的领域 Hero。
+- Links 和 About 直接组合共享编辑式基础与领域 section；Links 使用头像虚化背景的视觉卡片，About 从统一用户配置读取个人摘要、完整叙事、工作流、联系人和真实站点统计。
+- Gallery 目录页使用共享编辑式页首，把 Plog entry 按 `album.id` 组织为 collection，再以错落 moment 展示；详情页使用开放式影像与文字双栏并保留灯箱。
 - Guestbook 和 Search 使用共享编辑式页首，只把评论载体和 Pagefind 保留为功能表面。
 
 ## Homepage Composition
@@ -85,7 +85,7 @@ design-system -> external Material color utility
 - `snap` 才能把 section 绝对堆叠并捕获 wheel/touch/keyboard。
 - 首页 section 顺序和 `data-section` 标记是 E2E 合同；`hero`、`activity`、`[data-home-stream]`、`[data-home-editorial]`、`[data-home-now]`、`[data-home-showcase]`、`[data-home-site]` 与 `[data-home-heatmap]` 必须各只有一个。
 - 配置中动态 icon 类必须通过 UnoCSS extraction/safelist，否则不会生成 CSS。
-- 个人邮箱、网站、GitHub 和 additional links 必须经 `getUserContactLinks()` 或 `getUserSocialLinks()` 消费；新增个人展示面时不得创建新的联系人配置数组。
+- 个人邮箱、Twitter/X、网站、GitHub 和 additional links 必须经 `getUserContactLinks()` 或 `getUserSocialLinks()` 消费；新增个人展示面时不得创建新的联系人配置数组。
 - 领域样式留在 feature；只有稳定跨域语义才进入 design-system。
 - 非首页公开目录页统一使用 `EditorialPageLayout` 与 `EditorialPageHeader`；完整规则见 `reference/site-editorial-page-language.md`。
 
