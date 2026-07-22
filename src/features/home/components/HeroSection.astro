@@ -15,7 +15,7 @@ const showHomeWave = effectsConfig.homeWave.enabled;
 const homeWaveIntensity = effectsConfig.homeWave.intensity;
 ---
 
-<section class="hero-section h-full w-full flex items-center justify-center relative overflow-hidden">
+<section class="hero-section h-full min-h-[calc(100dvh-4rem)] w-full flex items-center justify-center relative overflow-hidden">
   <div class="hero-light hero-light-a" aria-hidden="true"></div>
   <div class="hero-light hero-light-b" aria-hidden="true"></div>
 
@@ -29,8 +29,8 @@ const homeWaveIntensity = effectsConfig.homeWave.intensity;
         </div>
 
         <!-- Title with typewriter effect -->
-        <div class="min-h-[76px] sm:min-h-[96px]">
-          <h1 class="hero-title text-3xl sm:text-4xl md:text-5xl font-900 leading-[1.04]">
+        <div class="min-h-[68px] sm:min-h-[80px]">
+          <h1 class="hero-title">
             <span class="text-[var(--md-sys-color-on-surface)]" data-i18n="home.hero.greeting">{t('home.hero.greeting')}</span>
             <span class="text-[var(--md-sys-color-on-surface)]"> </span>
             <span
@@ -39,7 +39,7 @@ const homeWaveIntensity = effectsConfig.homeWave.intensity;
               data-text={user.name}
             ></span>
             <span class="title-icon inline-grid place-items-center align-middle ml-2">
-              <i class="i-carbon:sun text-[1.1rem] sm:text-[1.35rem]"></i>
+              <i class="i-carbon:sun text-[1rem] sm:text-[1.15rem]"></i>
             </span>
           </h1>
         </div>

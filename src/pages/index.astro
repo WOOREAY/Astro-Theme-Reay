@@ -1,60 +1,34 @@
 ---
 /**
- * Home Page - Fullscreen scrolling display
- * Layout: FullscreenLayout (fullscreen layout with fixed header)
- * Components: 
- *   - PageScrollContainer (fullscreen scroll container)
- *   - FullpageSection (scroll sections)
- *   - HeroSection, PostsSection, ProjectsSection, AboutSection, SiteInfoSection (section content)
+ * Home Page
+ * The signature Hero keeps its immersive viewport. Everything after it becomes
+ * one asymmetric editorial composition while retaining snap compatibility.
  */
 import FullscreenLayout from '@app/layouts/home/FullscreenLayout.astro';
 import PageScrollContainer from '@shared/components/layout/PageScrollContainer.astro';
 import FullPageSection from '@shared/components/layout/FullPageSection.astro';
 import HeroSection from '@features/home/components/HeroSection.astro';
-import PostsSection from '@features/home/components/PostsSection.astro';
-import ProjectsSection from '@features/home/components/ProjectsSection.astro';
-import AboutSection from '@features/home/components/AboutSection.astro';
-import SiteInfoSection from '@features/home/components/SiteInfoSection.astro';
+import ActivityStreamSection from '@features/home/components/ActivityStreamSection.astro';
 import { getFeaturesConfig } from '@app/config/site.config';
+import '@features/home/styles/editorial-home.css';
 
 const features = getFeaturesConfig();
 const sections = [
   { id: 'hero', label: 'Hero' },
-  { id: 'posts', label: 'Posts' },
-  ...(features.integrations.githubProjects ? [{ id: 'projects', label: 'Projects' }] : []),
-  { id: 'about', label: 'About' },
-  { id: 'site', label: 'Site' },
+  { id: 'activity', label: 'Activity' },
 ];
-const homeLayout = features.home.layout;
 ---
 
 <FullscreenLayout title="Home">
-  <PageScrollContainer sections={sections} mode={homeLayout}>
+  <PageScrollContainer sections={sections} mode={features.home.layout}>
     <!-- Section 1: Hero -->
-    <FullPageSection sectionId="hero">
+    <FullPageSection sectionId="hero" viewportSized>
       <HeroSection />
     </FullPageSection>
 
-    <!-- Section 2: Latest posts -->
-    <FullPageSection sectionId="posts">
-      <PostsSection />
-    </FullPageSection>
-
-    <!-- Section 3: Featured projects -->
-    {features.integrations.githubProjects && (
-      <FullPageSection sectionId="projects">
-        <ProjectsSection />
-      </FullPageSection>
-    )}
-
-    <!-- Section 4: Personal info -->
-    <FullPageSection sectionId="about">
-      <AboutSection />
-    </FullPageSection>
-
-    <!-- Section 5: Site info (includes Footer) -->
-    <FullPageSection sectionId="site">
-      <SiteInfoSection />
+    <!-- Profile snapshot, staggered content showcase, site pulse, and public activity. -->
+    <FullPageSection sectionId="activity">
+      <ActivityStreamSection />
     </FullPageSection>
   </PageScrollContainer>
 </FullscreenLayout>

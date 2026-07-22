@@ -72,11 +72,22 @@ function translateElement(element: Element, lang: Language) {
     }
   }
 
-  const userKey = element.getAttribute('data-user-content') as keyof typeof userContent.en | null;
+  const userKey = element.getAttribute('data-user-content');
   const localizedContent = userContent[lang] || userContent[defaultLang];
-  if (!userKey || !localizedContent[userKey]) return;
+  if (!userKey) return;
 
-  const value = localizedContent[userKey];
+  const value = userKey.split('.').reduce<unknown>((current, segment) => {
+    if (Array.isArray(current)) {
+      const index = Number.parseInt(segment, 10);
+      return Number.isInteger(index) ? current[index] : undefined;
+    }
+    if (current && typeof current === 'object') {
+      return (current as Record<string, unknown>)[segment];
+    }
+    return undefined;
+  }, localizedContent);
+
+  if (typeof value !== 'string' || !value) return;
   if (userKey === 'tagline' && element.hasAttribute('data-text')) {
     if (element.getAttribute('data-text') !== value) element.setAttribute('data-text', value);
   } else if (element.textContent !== value) {

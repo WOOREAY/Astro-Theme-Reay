@@ -11,6 +11,7 @@ const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const navigation = getNavigationConfig();
 const features = getFeaturesConfig();
+const { variant = 'default' } = Astro.props as { variant?: 'default' | 'seamless' };
 
 const year = new Date().getFullYear();
 const startYear = 2024;
@@ -25,7 +26,7 @@ const resourceLinks = navigation.resources.filter((link) => {
 });
 ---
 
-<footer class="site-footer">
+<footer class:list={['site-footer', variant === 'seamless' && 'site-footer--seamless']}>
   <div class="footer-inner">
     <div class="footer-main">
       <div class="footer-brand">
@@ -95,6 +96,22 @@ const resourceLinks = navigation.resources.filter((link) => {
     contain: layout paint style;
     transform: translateZ(0);
     backface-visibility: hidden;
+  }
+
+  .site-footer--seamless {
+    border-top: 0;
+    background: transparent;
+  }
+
+  .site-footer--seamless .footer-links a,
+  .site-footer--seamless .footer-resources a,
+  .site-footer--seamless .footer-socials a {
+    border-color: transparent;
+    background: transparent;
+  }
+
+  .site-footer--seamless .footer-bottom {
+    border-top-color: rgba(var(--md-sys-color-outline-variant-rgb), 0.2);
   }
 
   .footer-inner {
@@ -223,7 +240,7 @@ const resourceLinks = navigation.resources.filter((link) => {
   }
 
   .footer-stack {
-    opacity: 0.74;
+    color: var(--md-sys-color-on-surface-variant);
   }
 
   @media (max-width: 900px) {

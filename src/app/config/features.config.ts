@@ -2,6 +2,12 @@ export const featuresConfig = {
   home: {
     /** `flow` uses normal document scrolling; `snap` enables section-by-section navigation. */
     layout: 'flow' as 'flow' | 'snap',
+    /** Homepage showcase limits. Featured content is preferred before recent-content fallback. */
+    showcase: {
+      posts: 4,
+      projects: 2,
+      plogAlbums: 2,
+    },
   },
   search: {
     /** Search stays available at /search; this controls navigation exposure. */

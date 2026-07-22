@@ -5,12 +5,18 @@
  */
 interface Props {
   sectionId: string;
+  /** Only the Hero keeps a viewport-sized frame in normal flow mode. */
+  viewportSized?: boolean;
 }
 
-const { sectionId } = Astro.props;
+const { sectionId, viewportSized = false } = Astro.props;
 ---
 
-<div class="fullpage-section" data-section={sectionId}>
+<div
+  class="fullpage-section"
+  data-section={sectionId}
+  data-viewport-sized={viewportSized ? 'true' : undefined}
+>
   <slot />
 </div>
 
@@ -47,13 +53,18 @@ const { sectionId } = Astro.props;
     position: relative;
     inset: auto;
     height: auto;
-    min-height: min(860px, calc(100dvh - 4rem));
+    min-height: 0;
     transform: none;
     overflow: visible;
     contain: layout paint;
     content-visibility: auto;
-    contain-intrinsic-size: auto 760px;
+    contain-intrinsic-size: auto calc(100dvh - 4rem);
+    scroll-margin-top: 4rem;
     will-change: auto;
+  }
+
+  :global([data-home-layout='flow']) .fullpage-section[data-viewport-sized='true'] {
+    min-height: calc(100dvh - 4rem);
   }
 
   :global([data-home-layout='flow']) .fullpage-section[data-active='false'] * {

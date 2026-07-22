@@ -16,7 +16,10 @@ import { defaultLang, type Language } from './i18n.config';
 export const user = {
   name: 'WOOREAY',
   avatar: '/images/profile/avatar.png',
+  /** Optional public profile details. Leave empty to hide them everywhere. */
   location: '',
+  email: '',
+  website: 'https://wooreay.github.io',
   socials: [
     { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/WOOREAY' },
   ],
@@ -33,14 +36,20 @@ export const user = {
 
 export const userContent = {
   en: {
+    role: 'Open-source maker and technical writer',
     tagline: 'Open Source · Technical Notes · Project Practice',
     bio: 'Building Astro Theme Reay and documenting reusable engineering ideas, project decisions, and long-term learning.',
+    status: 'Currently refining Astro Theme Reay into a clearer, faster, and more reusable personal-site system.',
+    focus: ['Open Source', 'Web Engineering', 'Technical Writing', 'Design Systems'],
     greeting: 'Hello, I am',
     description: 'A personal site for open-source work, technical notes, and long-term learning.',
   },
   zh: {
+    role: '开源实践者与技术写作者',
     tagline: '开源实践 · 技术笔记 · 项目复盘',
     bio: '持续打磨 Astro Theme Reay，并记录可复用的工程经验、项目决策与长期学习成果。',
+    status: '目前正在把 Astro Theme Reay 打磨成更清晰、更快速，也更容易复用的个人网站系统。',
+    focus: ['开源实践', 'Web 工程', '技术写作', '设计系统'],
     greeting: '你好,我是',
     description: '一个记录开源实践、技术笔记与长期学习的个人站点。',
   },
@@ -171,14 +180,19 @@ export interface GithubUserConfig {
 export interface User {
   name: string;
   avatar: string;
-  location: string;
+  location?: string;
+  email?: string;
+  website?: string;
   socials: SocialLink[];
   github: GithubUserConfig;
 }
 
 export interface UserContentLanguage {
+  role?: string;
   tagline: string;
   bio: string;
+  status?: string;
+  focus?: string[];
   greeting: string;
   description: string;
 }
