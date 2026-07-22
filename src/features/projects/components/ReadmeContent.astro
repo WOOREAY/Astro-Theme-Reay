@@ -26,16 +26,14 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
 
 <style>
   .readme-content {
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
-    padding: 1.5rem;
     margin-top: 0;
+    padding-top: clamp(1.6rem, 4vw, 2.5rem);
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
   }
 
   @media (max-width: 768px) {
     .readme-content {
-      padding: 1rem;
+      padding-top: 1.35rem;
     }
   }
 </style>

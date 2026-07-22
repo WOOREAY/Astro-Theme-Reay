@@ -227,7 +227,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
 
 <style>
   .album-page {
-    padding: 2rem 0 4rem;
+    padding: 1.8rem 0 4rem;
   }
 
   .back-link {
@@ -236,16 +236,16 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     gap: 0.45rem;
     margin-bottom: 1rem;
     color: var(--md-sys-color-primary);
-    font-size: 0.9rem;
-    font-weight: 850;
+    font-size: 0.74rem;
+    font-weight: 780;
     text-decoration: none;
   }
 
   .album-hero {
     position: relative;
-    min-height: 34rem;
+    min-height: 25rem;
     display: grid;
-    grid-template-columns: minmax(0, 0.9fr) minmax(280px, 0.62fr);
+    grid-template-columns: minmax(0, 1fr) minmax(240px, 0.48fr);
     align-items: end;
     gap: 1rem;
     overflow: hidden;
@@ -333,8 +333,8 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
 
   .album-hero h1 {
     margin: 0;
-    font-size: clamp(2.7rem, 8vw, 5.6rem);
-    line-height: 0.92;
+    font-size: clamp(2rem, 5vw, 2.9rem);
+    line-height: 1.02;
     font-weight: 950;
     letter-spacing: 0;
   }
@@ -342,14 +342,14 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
   .album-hero p {
     max-width: 37rem;
     margin: 0;
-    color: rgba(var(--md-sys-color-surface-bright-rgb), 0.84);
+    color: color-mix(in srgb, var(--md-ref-palette-neutral100) 84%, transparent);
     line-height: 1.75;
   }
 
   .album-meta {
     flex-wrap: wrap;
     gap: 0.8rem;
-    color: rgba(var(--md-sys-color-surface-bright-rgb), 0.82);
+    color: color-mix(in srgb, var(--md-ref-palette-neutral100) 82%, transparent);
     font-size: 0.86rem;
     font-weight: 750;
   }
@@ -366,7 +366,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     padding: 0.22rem 0.48rem;
     border-radius: 999px;
     background: rgba(var(--md-sys-color-surface-bright-rgb), 0.14);
-    color: rgba(var(--md-sys-color-surface-bright-rgb), 0.84);
+    color: color-mix(in srgb, var(--md-ref-palette-neutral100) 84%, transparent);
     font-size: 0.72rem;
     font-weight: 750;
   }
@@ -731,7 +731,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     }
 
     .hero-copy {
-      min-height: 23rem;
+      min-height: 19rem;
     }
 
     .hero-preview {
@@ -754,11 +754,11 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     }
 
     .hero-copy {
-      min-height: 21rem;
+      min-height: 18rem;
     }
 
     .album-hero h1 {
-      font-size: clamp(2.4rem, 16vw, 4rem);
+      font-size: clamp(1.85rem, 10vw, 2.55rem);
     }
 
     .hero-preview {
