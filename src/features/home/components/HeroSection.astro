@@ -4,12 +4,19 @@
  * Fullscreen hero section with typewriter effects
  * Layout: text content (left) + avatar (right)
  */
-import { getLocalizedUserContent, getThemeConfig, getUserProfile, getUserSocialLinks } from '@app/config/site.config';
+import { getLocalizedUserContent, getThemeConfig, getUserContactLinks, getUserProfile } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t, currentLang } = useI18n();
 const user = getUserProfile();
-const socialLinks = getUserSocialLinks();
+const preferredHeroContactOrder = ['github', 'twitter', 'x', 'email'];
+const heroContactLinks = getUserContactLinks()
+  .filter((link) => preferredHeroContactOrder.includes(link.id))
+  .sort((left, right) => {
+    const leftIndex = preferredHeroContactOrder.indexOf(left.id);
+    const rightIndex = preferredHeroContactOrder.indexOf(right.id);
+    return (leftIndex < 0 ? 99 : leftIndex) - (rightIndex < 0 ? 99 : rightIndex);
+  });
 const userContent = getLocalizedUserContent(currentLang);
 const effectsConfig = getThemeConfig().effects;
 const showHomeWave = effectsConfig.homeWave.enabled;
@@ -79,18 +86,20 @@ const homeWaveIntensity = effectsConfig.homeWave.intensity;
         <!-- Social icons with scale animation -->
         <div id="social-icons-container" class="pt-1">
           <div class="flex items-center gap-2.5">
-            {socialLinks.map((social, index) => (
+            {heroContactLinks.map((contact, index) => (
               <a
-                href={social.href}
-                target="_blank"
-                rel="noopener noreferrer"
+                href={contact.href}
+                target={contact.external ? '_blank' : undefined}
+                rel={contact.external ? 'noopener noreferrer' : undefined}
                 class="social-icon group relative opacity-0 scale-80"
                 style={`animation-delay: ${index * 100}ms;`}
-                aria-label={social.label}
-                title={social.label}
+                aria-label={contact.label}
+                title={contact.label}
+                data-contact-id={contact.id}
+                data-contact-kind={contact.kind}
               >
                 <div class="social-button inline-flex items-center justify-center w-10 h-10 rounded-full">
-                  <i class={`${social.icon} text-base text-[var(--md-sys-color-on-surface-variant)] group-hover:text-[var(--md-sys-color-primary)] transition-colors`}></i>
+                  <i class={`${contact.icon} text-base text-[var(--md-sys-color-on-surface-variant)] group-hover:text-[var(--md-sys-color-primary)] transition-colors`}></i>
                 </div>
               </a>
             ))}

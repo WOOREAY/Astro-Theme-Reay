@@ -333,13 +333,8 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
   .links-grid {
     display: grid;
     grid-template-columns: repeat(2, minmax(0, 1fr));
-    gap: 0;
-    margin-top: 0;
-    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
-  }
-
-  .links-grid > :global(:nth-child(odd)) {
-    border-right: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.34);
+    gap: 0.9rem;
+    margin-top: 0.15rem;
   }
 
   /* Apply for link exchange section */
@@ -747,10 +742,6 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
 
     .links-grid {
       grid-template-columns: 1fr;
-    }
-
-    .links-grid > :global(:nth-child(odd)) {
-      border-right: 0;
     }
 
     .section-title {
