@@ -12,6 +12,7 @@ import PostFooter from '@features/blog/components/PostFooter.astro';
 import Comments from '@features/comments/components/Comments.astro';
 import type { CollectionEntry } from 'astro:content';
 import { useI18n } from '@features/i18n/lib/i18n';
+import { getSeriesUrl, getTagUrl } from '@features/blog/lib/blog';
 
 interface Props {
   post: CollectionEntry<'blog'>;
@@ -39,47 +40,43 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
     <link rel="stylesheet" href={`${baseUrl}markdown.css`} />
   </Fragment>
   <div class="article-back-row">
-    <a
-      href="/blog"
-      class="article-back-button"
-    >
+    <a href="/blog" class="article-back-button">
       <i class="i-carbon:arrow-left"></i>
       <span data-i18n="blog.back">{t('blog.back')}</span>
     </a>
   </div>
 
-  <div class="blog-post-container flex gap-8 lg:gap-12 relative">
-    <!-- Main content area -->
-    <article class="blog-post flex-1 min-w-0">
+  <div class="blog-post-container">
+    <article class="blog-post">
       <div class="article-intro">
-        <PostMeta 
-            publishDate={publishDate}
-            updatedDate={updatedDate}
-            readingMinutes={readingMinutes}
-            language={language}
-            tags={tags}
-          />
-
         <PostHeader title={title} description={description} />
+
+        <PostMeta
+          publishDate={publishDate}
+          updatedDate={updatedDate}
+          readingMinutes={readingMinutes}
+          language={language}
+          tags={tags}
+        />
 
         {(category || series || tags.length > 0) && (
           <div class="article-taxonomy">
             {category && (
               <span class="article-taxonomy-chip">
                 <i class="i-carbon:folder"></i>
-                <span>{t('blog.info.category')}</span>
+                <span data-i18n="blog.info.category">{t('blog.info.category')}</span>
                 <strong>{category}</strong>
               </span>
             )}
             {series && (
-              <span class="article-taxonomy-chip">
+              <a href={getSeriesUrl(series)} class="article-taxonomy-chip">
                 <i class="i-carbon:list-boxes"></i>
-                <span>{t('blog.info.series')}</span>
+                <span data-i18n="blog.info.series">{t('blog.info.series')}</span>
                 <strong>{series}</strong>
-              </span>
+              </a>
             )}
             {tags.map(tag => (
-              <span class="article-tag-chip">#{tag}</span>
+              <a href={getTagUrl(tag)} class="article-tag-chip">#{tag}</a>
             ))}
           </div>
         )}
@@ -100,17 +97,23 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
       />
     </article>
     
-    <!-- Right sidebar TOC (desktop only) -->
     <TableOfContents headings={headings} />
   </div>
 </DefaultLayout>
 
 <style is:global>
-  /* Blog post container */
   .blog-post-container {
-    max-width: 1400px;
+    display: grid;
+    grid-template-columns: minmax(0, 48rem) minmax(12rem, 14rem);
+    justify-content: center;
+    gap: clamp(2.5rem, 6vw, 5.5rem);
+    max-width: 74rem;
     margin: 0 auto;
     --blog-anchor-offset: 6.75rem;
+  }
+
+  .blog-post {
+    min-width: 0;
   }
 
   .post-content :is(h1, h2, h3, h4, h5, h6)[id] {
@@ -118,50 +121,42 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
   }
 
   .article-back-row {
-    max-width: 1400px;
-    margin: 2rem auto 1rem;
+    max-width: 74rem;
+    margin: 1.8rem auto 1.15rem;
   }
 
   .article-back-button {
     display: inline-flex;
     align-items: center;
-    gap: 0.5rem;
-    min-height: 2.35rem;
-    padding: 0.45rem 0.85rem;
-    border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
-    border-radius: 999px;
+    gap: 0.4rem;
+    padding: 0.25rem 0;
     color: var(--md-sys-color-on-surface-variant);
-    background: rgba(var(--md-sys-color-surface-container-rgb), 0.58);
     font: inherit;
-    font-size: 0.86rem;
-    font-weight: 680;
+    font-size: 0.72rem;
+    font-weight: 740;
     text-decoration: none;
-    cursor: pointer;
-    transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, transform 0.2s ease;
   }
 
   .article-back-button:hover {
     color: var(--md-sys-color-primary);
-    border-color: rgba(var(--md-sys-color-primary-rgb), 0.28);
-    background: rgba(var(--md-sys-color-primary-container-rgb), 0.36);
     transform: translateX(-2px);
   }
 
   .article-intro {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.62);
+    margin-bottom: clamp(2.2rem, 5vw, 3.4rem);
+    padding-bottom: 1.4rem;
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.52);
   }
 
   .article-intro .post-meta {
-    margin-bottom: 0.9rem;
+    margin-top: 1.2rem;
   }
 
   .article-taxonomy {
     display: flex;
     flex-wrap: wrap;
-    gap: 0.5rem;
-    margin-top: 1rem;
+    gap: 0.45rem 0.9rem;
+    margin-top: 0.9rem;
   }
 
   .article-taxonomy-chip,
@@ -169,14 +164,10 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
     display: inline-flex;
     align-items: center;
     gap: 0.35rem;
-    min-height: 2rem;
-    padding: 0.35rem 0.65rem;
-    border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.46);
-    border-radius: 999px;
+    padding: 0.2rem 0;
     color: var(--md-sys-color-on-surface-variant);
-    background: rgba(var(--md-sys-color-surface-container-rgb), 0.5);
-    font-size: 0.8rem;
-    font-weight: 650;
+    font-size: 0.67rem;
+    font-weight: 720;
   }
 
   .article-taxonomy-chip strong {
@@ -185,8 +176,11 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
 
   .article-tag-chip {
     color: var(--md-sys-color-primary);
-    border-color: rgba(var(--md-sys-color-primary-rgb), 0.2);
-    background: rgba(var(--md-sys-color-primary-container-rgb), 0.28);
+  }
+
+  .article-taxonomy a:hover,
+  .article-tag-chip:hover {
+    color: var(--md-sys-color-primary);
   }
 
   .post-content > :is(p, ul, ol, blockquote, pre, table, img, figure, details) {
@@ -197,6 +191,12 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
   .post-content > :is(pre, table, blockquote, figure, details),
   .post-content > .code-block-wrapper {
     contain-intrinsic-size: auto 14rem;
+  }
+
+  @media (max-width: 1024px) {
+    .blog-post-container {
+      grid-template-columns: minmax(0, 48rem);
+    }
   }
 </style>
 

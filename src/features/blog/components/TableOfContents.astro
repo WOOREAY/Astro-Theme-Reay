@@ -15,10 +15,10 @@ if (!headings || headings.length === 0) {
 }
 ---
 
-<aside class="toc-sidebar hidden lg:block w-64 xl:w-72 sticky top-24 self-start">
-  <div class="toc-container p-4 rounded-lg bg-[var(--md-sys-color-surface-variant)]/30 border border-[var(--md-sys-color-outline)]/20">
-    <div class="toc-header flex items-center justify-between mb-4">
-      <h2 class="toc-title text-sm font-600 uppercase tracking-wider text-[var(--md-sys-color-on-surface)]">
+<aside class="toc-sidebar hidden lg:block sticky top-24 self-start">
+  <div class="toc-container">
+    <div class="toc-header">
+      <h2 class="toc-title">
         Table of Contents
       </h2>
       <div class="toc-progress-circle" data-toc-progress-circle>
@@ -47,13 +47,13 @@ if (!headings || headings.length === 0) {
       </div>
     </div>
     
-    <nav class="toc-nav-wrapper relative">
+    <nav class="toc-nav-wrapper">
       <div class="toc-progress-indicator" data-toc-indicator>
         <div class="toc-indicator-line"></div>
       </div>
       
       <div class="toc-nav-scroll" data-toc-scroll>
-        <ul class="toc-list space-y-1">
+        <ul class="toc-list">
           {headings.map(({ depth, text, slug }) => (
             <li 
               class="toc-item"
@@ -62,7 +62,7 @@ if (!headings || headings.length === 0) {
             >
               <a 
                 href={`#${slug}`}
-                class="toc-link block py-1.5 px-2 rounded text-sm text-[var(--md-sys-color-on-surface-variant)] hover:text-[var(--md-sys-color-primary)] hover:bg-[var(--md-sys-color-primary-container)]/20 transition-all"
+                class="toc-link"
                 data-toc-link
                 data-heading-id={slug}
               >
@@ -77,34 +77,60 @@ if (!headings || headings.length === 0) {
 </aside>
 
 <style>
-  /* TOC navigation container */
+  .toc-sidebar {
+    width: 14rem;
+  }
+
+  .toc-container {
+    padding-left: 1rem;
+    border-left: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.5);
+  }
+
+  .toc-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 0.7rem;
+    margin-bottom: 0.65rem;
+  }
+
+  .toc-title {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.67rem;
+    font-weight: 820;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+
   .toc-nav-wrapper {
     position: relative;
   }
   
   /* Scrollable area with adaptive height */
   .toc-nav-scroll {
-    max-height: 65vh;
-    min-height: auto;
-    overflow-y: auto;
+    max-height: 62vh;
     overflow-x: hidden;
-    padding-right: 0.5rem;
+    overflow-y: auto;
+    padding-right: 0.35rem;
     scroll-behavior: smooth;
   }
-  
-  /* Auto-shrink when content is minimal */
-  .toc-nav-scroll:has(.toc-list) {
-    height: auto;
+
+  .toc-list {
+    display: grid;
+    gap: 0.1rem;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
   
   /* Custom scrollbar styling */
   .toc-nav-scroll::-webkit-scrollbar {
-    width: 4px;
+    width: 3px;
   }
   
   .toc-nav-scroll::-webkit-scrollbar-track {
-    background: var(--md-sys-color-surface-variant);
-    border-radius: 2px;
+    background: transparent;
   }
   
   .toc-nav-scroll::-webkit-scrollbar-thumb {
@@ -116,7 +142,6 @@ if (!headings || headings.length === 0) {
     background: var(--md-sys-color-primary);
   }
   
-  /* Progress indicator container */
   .toc-progress-indicator {
     position: absolute;
     left: 0;
@@ -133,14 +158,9 @@ if (!headings || headings.length === 0) {
     position: absolute;
     left: 0;
     width: 3px;
-    background: linear-gradient(
-      to bottom,
-      var(--md-sys-color-primary),
-      var(--md-sys-color-tertiary)
-    );
+    background: var(--md-sys-color-primary);
     border-radius: 2px;
     transition: transform 0.2s ease, height 0.2s ease;
-    box-shadow: 0 0 8px var(--md-sys-color-primary);
     transform-origin: top;
   }
   
@@ -151,7 +171,12 @@ if (!headings || headings.length === 0) {
   
   /* TOC link */
   .toc-link {
-    position: relative;
+    display: block;
+    padding: 0.38rem 0.45rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.69rem;
+    line-height: 1.4;
+    border-radius: 0.4rem;
     transition:
       color 0.2s ease,
       background-color 0.2s ease;
@@ -160,21 +185,21 @@ if (!headings || headings.length === 0) {
   /* Active state */
   .toc-link.active {
     color: var(--md-sys-color-primary);
-    background: rgba(var(--md-sys-color-primary-container-rgb), 0.3);
-    font-weight: 600;
+    background: rgba(var(--md-sys-color-primary-rgb), 0.07);
+    font-weight: 780;
   }
   
   /* Visible links in viewport */
   .toc-link.visible {
     color: var(--md-sys-color-on-surface);
-    font-weight: 500;
+    font-weight: 650;
   }
   
   /* Circular progress indicator */
   .toc-progress-circle {
     position: relative;
-    width: 44px;
-    height: 44px;
+    width: 2.25rem;
+    height: 2.25rem;
     display: flex;
     align-items: center;
     justify-content: center;
@@ -184,7 +209,9 @@ if (!headings || headings.length === 0) {
     position: absolute;
     top: 0;
     left: 0;
-    transform: rotate(-90deg);
+    width: 2.25rem;
+    height: 2.25rem;
+    transform: rotate(-90deg) scale(0.82);
   }
   
   .progress-ring-bg {
@@ -200,13 +227,12 @@ if (!headings || headings.length === 0) {
   
   .progress-text {
     position: relative;
-    font-size: 10px;
+    font-size: 0.55rem;
     font-weight: 700;
     color: var(--md-sys-color-primary);
     z-index: 1;
   }
   
-  /* Responsive adjustments */
   @media (max-height: 900px) {
     .toc-nav-scroll {
       max-height: 60vh;

@@ -1,71 +1,35 @@
 ---
-/**
- * PostHeader Component
- * Article header displaying title and description
- */
-import { currentMarkdownStyle } from '@app/config/markdown-style.config';
-
 interface Props {
   title: string;
   description?: string;
 }
 
 const { title, description } = Astro.props;
-const titleConfig = currentMarkdownStyle.postHeader;
 ---
 
-<header
-  class="post-header"
-  style={`
-    --post-title-size-base: ${titleConfig.fontSize};
-    --post-title-size-md: ${titleConfig.fontSizeMd};
-    --post-title-size-lg: ${titleConfig.fontSizeLg};
-  `}
->
-  <h1 
-    class="post-title"
-    style={`
-      font-weight: ${titleConfig.fontWeight};
-      color: ${titleConfig.color};
-      margin-bottom: ${titleConfig.marginBottom};
-      line-height: ${titleConfig.lineHeight};
-    `}
-  >
-    {title}
-  </h1>
-  
-  {description && (
-    <p 
-      class="post-description"
-      style={`
-        font-size: ${titleConfig.descriptionFontSize};
-        color: ${titleConfig.descriptionColor};
-        font-style: ${titleConfig.descriptionFontStyle};
-        margin-bottom: ${titleConfig.descriptionMarginBottom};
-        border-left: ${titleConfig.descriptionBorderWidth} solid ${titleConfig.descriptionBorderColor};
-        padding-left: ${titleConfig.descriptionPaddingLeft};
-        opacity: 0.8;
-      `}
-    >
-      "{description}"
-    </p>
-  )}
+<header class="post-header">
+  <h1>{title}</h1>
+  {description && <p>{description}</p>}
 </header>
 
 <style>
-  .post-title {
-    font-size: var(--post-title-size-base);
+  .post-header h1 {
+    max-width: 52rem;
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: clamp(1.85rem, 4.3vw, 2.7rem);
+    font-weight: 900;
+    line-height: 1.08;
+    letter-spacing: -0.035em;
+    text-wrap: balance;
   }
-  
-  @media (min-width: 768px) {
-    .post-title {
-      font-size: var(--post-title-size-md);
-    }
-  }
-  
-  @media (min-width: 1024px) {
-    .post-title {
-      font-size: var(--post-title-size-lg);
-    }
+
+  .post-header p {
+    max-width: 44rem;
+    margin: 0.8rem 0 0;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.9rem;
+    line-height: 1.7;
+    text-wrap: pretty;
   }
 </style>
