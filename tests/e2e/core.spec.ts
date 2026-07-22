@@ -102,6 +102,23 @@ test('homepage exposes the unchanged Hero and asymmetric editorial showcase', as
   expect(await page.locator('.home-heatmap-grid .home-heatmap-day').count()).toBeGreaterThanOrEqual(365);
 });
 
+test('configured contact and site identity propagate across public surfaces', async ({ page }) => {
+  const website = 'https://wooreay.github.io';
+
+  await page.goto('/');
+  await expect(page.locator('[data-home-now] [data-contact-kind="website"]')).toHaveAttribute('href', website);
+  await expect(page.locator('footer [data-contact-kind="website"]')).toHaveAttribute('href', website);
+
+  await page.goto('/about');
+  await expect(page.locator('.socials-section [data-contact-kind="website"]')).toHaveAttribute('href', website);
+  await expect(page.locator('.intro-name')).toHaveText('WOOREAY');
+
+  await page.goto('/links');
+  await expect(page.locator('.contact-buttons [data-contact-kind="website"]')).toHaveAttribute('href', website);
+  await expect(page.locator('.site-info-card [data-copy="WOOREAY"]')).toHaveCount(1);
+  await expect(page.locator(`.site-info-card [data-copy="${website}"]`)).toHaveCount(1);
+});
+
 test('homepage applies the compact config-driven typography scale', async ({ page }) => {
   await page.goto('/');
 

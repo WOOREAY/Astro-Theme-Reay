@@ -18,11 +18,12 @@
     "lint": "astro check",
     "test:routes": "node scripts/check-routes.mjs",
     "test:performance": "node scripts/check-performance-budget.mjs",
+    "test:config": "node --experimental-strip-types scripts/check-config-contracts.mjs",
     "test:security": "node --experimental-strip-types scripts/check-security-contracts.mjs",
     "test:e2e": "npm run build && playwright test",
     "test:e2e:dist": "playwright test",
     "audit": "npm audit --audit-level=high",
-    "verify": "npm run check && npm run build && npm run test:routes && npm run test:performance && npm run test:security && npm run test:e2e:dist"
+    "verify": "npm run check && npm run test:config && npm run build && npm run test:routes && npm run test:performance && npm run test:security && npm run test:e2e:dist"
   },
   "dependencies": {
     "@astrojs/mdx": "^7.0.3",
