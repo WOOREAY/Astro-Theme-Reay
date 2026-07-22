@@ -111,7 +111,7 @@ test('configured contact and site identity propagate across public surfaces', as
 
   await page.goto('/about');
   await expect(page.locator('.socials-section [data-contact-kind="website"]')).toHaveAttribute('href', website);
-  await expect(page.locator('.intro-name')).toHaveText('WOOREAY');
+  await expect(page.locator('[data-about-intro] h2')).toHaveText('WOOREAY');
 
   await page.goto('/links');
   await expect(page.locator('.contact-buttons [data-contact-kind="website"]')).toHaveAttribute('href', website);
@@ -184,6 +184,105 @@ test('desktop homepage keeps only the Hero viewport-sized', async ({ page }) => 
   for (const section of layout.content) {
     expect(section.position, `${section.id} should stay in normal flow`).toBe('relative');
     expect(section.minHeight, `${section.id} should use content height`).toBe('0px');
+  }
+});
+
+test('public index pages share the compact editorial page contract', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  const paths = [
+    '/blog',
+    '/archives',
+    '/archives/tags',
+    '/archives/series',
+    '/archives/timeline',
+    '/projects',
+    '/gallery',
+    '/about',
+    '/links',
+    '/guestbook',
+    '/search',
+  ];
+
+  for (const path of paths) {
+    await page.goto(path);
+    await expect(page.locator('[data-editorial-page]'), `${path} should use the editorial flow`).toHaveCount(1);
+    await expect(page.locator('[data-editorial-page-header]'), `${path} should use the shared page header`).toHaveCount(1);
+
+    const layout = await page.evaluate(() => {
+      const root = document.documentElement;
+      const header = document.querySelector<HTMLElement>('[data-editorial-page-header]')!;
+      const nextSection = header.nextElementSibling as HTMLElement | null;
+      return {
+        overflow: root.scrollWidth - root.clientWidth,
+        titleSize: Number.parseFloat(getComputedStyle(header.querySelector('h1')!).fontSize),
+        headerBottom: Math.round(header.getBoundingClientRect().bottom),
+        nextSectionTop: nextSection ? Math.round(nextSection.getBoundingClientRect().top) : 0,
+      };
+    });
+
+    expect(layout.overflow, `${path} should not overflow horizontally`).toBeLessThanOrEqual(0);
+    expect(layout.titleSize, `${path} title should stay compact`).toBeLessThanOrEqual(39);
+    expect(layout.headerBottom, `${path} header should stay above the fold`).toBeLessThanOrEqual(340);
+    expect(layout.nextSectionTop, `${path} should expose real content promptly`).toBeLessThanOrEqual(410);
+  }
+});
+
+test('editorial details and archives do not regress into card walls', async ({ page }) => {
+  await page.goto('/archives');
+  await expect(page.locator('[data-tag-index]')).toHaveCount(1);
+  expect(await page.locator('[data-series-entry]').count()).toBeGreaterThan(0);
+  await expect(page.locator('.archive-main .reay-card, .series-progress')).toHaveCount(0);
+
+  await page.goto('/links');
+  const linkEntryStyle = await page.locator('[data-link-card]').first().evaluate((element) => {
+    const style = getComputedStyle(element);
+    return {
+      background: style.backgroundColor,
+      radius: style.borderRadius,
+      shadow: style.boxShadow,
+    };
+  });
+  expect(linkEntryStyle.background).toBe('rgba(0, 0, 0, 0)');
+  expect(linkEntryStyle.radius).toBe('0px');
+  expect(linkEntryStyle.shadow).toBe('none');
+
+  await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
+  await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);
+  await expect(page.locator('.stat-card')).toHaveCount(0);
+});
+
+test('all representative route types remain overflow-free on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  const paths = [
+    '/blog',
+    '/archives',
+    '/archives/tags',
+    '/archives/series/Python%20%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B',
+    '/projects',
+    '/gallery',
+    '/about',
+    '/links',
+    '/guestbook',
+    '/search',
+    '/blog/test-markdown',
+    '/projects/WOOREAY/Astro-Theme-Reay',
+    '/gallery/daily/morning-window',
+    '/404',
+  ];
+
+  for (const path of paths) {
+    await page.goto(path);
+    const layout = await page.evaluate(() => {
+      const root = document.documentElement;
+      const title = document.querySelector<HTMLElement>('h1');
+      return {
+        overflow: root.scrollWidth - root.clientWidth,
+        titleSize: title ? Number.parseFloat(getComputedStyle(title).fontSize) : 0,
+      };
+    });
+
+    expect(layout.overflow, `${path} should not overflow horizontally`).toBeLessThanOrEqual(0);
+    expect(layout.titleSize, `${path} mobile title should remain compact`).toBeLessThanOrEqual(39);
   }
 });
 
