@@ -56,6 +56,14 @@
 
 完整结构与响应式约束见 `llmdoc/reference/home-editorial-design-language.md`。
 
+## Site Editorial Page Contract
+
+- Hero 之外的公开目录页通过 `EditorialPageLayout`、`EditorialPageHeader` 和 `EditorialSectionHeader` 共享紧凑左对齐骨架。
+- 统计使用线性 `dl` 与 hairline，不使用 summary cards；目录内容优先开放式列表，每个功能区最多保留一个明显 tonal surface。
+- Blog、Project 与 Gallery 详情可保留领域头部，但标题尺度、元信息密度、主题 token 和响应式边界必须与目录页一致。
+- Gallery 的影像 surface 是内容表达，不应扩散成其他页面的通用卡片 API。
+- 1440×900 必须看到首组真实内容，390×844 不得横向溢出；完整合同见 `llmdoc/reference/site-editorial-page-language.md`。
+
 ## Performance Contract
 
 - 默认关闭季节粒子和首页波浪；重新启用时尊重 reduced-motion，并单独测试移动端。
@@ -88,5 +96,8 @@ UnoCSS 静态扫描无法发现配置对象中的动态 icon classes。`uno.conf
 - `src/shared/components/Background.astro`
 - `src/design-system/styles/`
 - `src/features/home/styles/editorial-home.css`
+- `src/app/layouts/base/EditorialPageLayout.astro`
+- `src/shared/components/EditorialPageHeader.astro`
+- `src/shared/components/EditorialSectionHeader.astro`
 - `uno.config.ts`
 - `src/shared/client/runtime/theme-sync.ts`

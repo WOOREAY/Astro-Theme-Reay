@@ -54,6 +54,7 @@
 - `llmdoc/reference/client-lifecycle-contract.md`：文档级单例、页面级 disposer 和 Astro 事件合同。
 - `llmdoc/reference/design-system-contract.md`：MD3 token、CSS 变量、模式与主题生成合同。
 - `llmdoc/reference/home-editorial-design-language.md`：首页个人摘要、错位内容橱窗、Home/About 边界、GitHub 热度表、主题所有权与响应式合同。
+- `llmdoc/reference/site-editorial-page-language.md`：Hero 之外的共享编辑式页首、开放列表、详情页、功能表面、密度与响应式合同。
 - `llmdoc/reference/environment-and-dependencies.md`：环境变量、Node/npm、依赖角色与外部安全边界。
 
 ## Memory
