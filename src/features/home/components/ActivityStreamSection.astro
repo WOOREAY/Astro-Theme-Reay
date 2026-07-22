@@ -1,10 +1,12 @@
 ---
 import {
-  getAboutConfig,
   getFeaturesConfig,
+  getGitHubConfig,
   getLocalizedUserContent,
-  getProjectsConfig,
+  getSiteProfile,
+  getUserContactLinks,
   getUserProfile,
+  getUserSocialLinks,
 } from '@app/config/site.config';
 import {
   calculateReadingTime,
@@ -26,9 +28,11 @@ import ContributionHeatmap from './ContributionHeatmap.astro';
 const { currentLang, t } = useI18n();
 const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
-const about = getAboutConfig();
+const site = getSiteProfile(currentLang);
+const contactLinks = getUserContactLinks();
+const socialLinks = getUserSocialLinks();
 const features = getFeaturesConfig();
-const projectsConfig = getProjectsConfig();
+const github = getGitHubConfig();
 const showcaseConfig = features.home.showcase;
 
 const [posts, albums, archiveStats] = await Promise.all([
@@ -44,7 +48,7 @@ if (features.integrations.githubProjects) {
   try {
     projects = await getConfiguredProjects();
     contributionCalendar = await getGitHubContributionCalendar(
-      projectsConfig.githubUsername,
+      github.username,
       projects,
     );
   } catch (error) {
@@ -91,17 +95,8 @@ const profileRole = userContent.role || userContent.tagline;
 const profileStatusKey = userContent.status ? 'status' : 'bio';
 const profileStatus = userContent.status || userContent.bio;
 const profileFocus = userContent.focus ?? [];
-
-function getWebsiteLabel(url?: string) {
-  if (!url) return '';
-  try {
-    return new URL(url).hostname.replace(/^www\./, '');
-  } catch {
-    return url;
-  }
-}
-
-const websiteLabel = getWebsiteLabel(user.website);
+const websiteContact = contactLinks.find((link) => link.kind === 'website');
+const emailContact = contactLinks.find((link) => link.kind === 'email');
 ---
 
 <section
@@ -139,8 +134,8 @@ const websiteLabel = getWebsiteLabel(user.website);
       )}
 
       <div class="home-profile-links">
-        {user.socials.map((social) => (
-          <a href={social.url} target="_blank" rel="noopener noreferrer">
+        {socialLinks.map((social) => (
+          <a href={social.href} target="_blank" rel="noopener noreferrer">
             <i class={social.icon} aria-hidden="true"></i>
             <span>{social.label}</span>
           </a>
@@ -164,7 +159,7 @@ const websiteLabel = getWebsiteLabel(user.website);
       </div>
       <p data-user-content={profileStatusKey}>{profileStatus}</p>
 
-      {(user.location || user.website || user.email) && (
+      {(user.location || websiteContact || emailContact) && (
         <dl class="home-profile-facts">
           {user.location && (
             <div>
@@ -172,22 +167,22 @@ const websiteLabel = getWebsiteLabel(user.website);
               <dd><i class="i-carbon:location" aria-hidden="true"></i>{user.location}</dd>
             </div>
           )}
-          {user.website && (
+          {websiteContact && (
             <div>
               <dt data-i18n="home.profile.website">{t('home.profile.website')}</dt>
               <dd>
-                <a href={user.website} target="_blank" rel="noopener noreferrer">
-                  <i class="i-carbon:earth" aria-hidden="true"></i>{websiteLabel}
+                <a href={websiteContact.href} target="_blank" rel="noopener noreferrer" data-contact-kind="website">
+                  <i class={websiteContact.icon} aria-hidden="true"></i>{websiteContact.value}
                 </a>
               </dd>
             </div>
           )}
-          {user.email && (
+          {emailContact && (
             <div>
               <dt data-i18n="home.profile.email">{t('home.profile.email')}</dt>
               <dd>
-                <a href={`mailto:${user.email}`}>
-                  <i class="i-carbon:email" aria-hidden="true"></i>{user.email}
+                <a href={emailContact.href} data-contact-kind="email">
+                  <i class={emailContact.icon} aria-hidden="true"></i>{emailContact.value}
                 </a>
               </dd>
             </div>
@@ -368,16 +363,16 @@ const websiteLabel = getWebsiteLabel(user.website);
         <span class="home-section-index" data-i18n="home.site.eyebrow">
           {t('home.site.eyebrow')}
         </span>
-        <h2 id="home-site-title">{about.site.name}</h2>
+        <h2 id="home-site-title">{site.name}</h2>
         <p data-user-content="description">{userContent.description}</p>
       </div>
       <div class="home-site-note">
         <span>
           <i class="i-carbon:calendar" aria-hidden="true"></i>
           <span data-i18n="home.site.since">{t('home.site.since')}</span>
-          {about.site.since}
+          {site.since}
         </span>
-        <span>{about.site.builtWith}</span>
+        <span>{site.builtWith}</span>
       </div>
     </header>
 

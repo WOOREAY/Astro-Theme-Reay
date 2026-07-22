@@ -4,11 +4,12 @@
  * Fullscreen hero section with typewriter effects
  * Layout: text content (left) + avatar (right)
  */
-import { getLocalizedUserContent, getThemeConfig, getUserProfile } from '@app/config/site.config';
+import { getLocalizedUserContent, getThemeConfig, getUserProfile, getUserSocialLinks } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t, currentLang } = useI18n();
 const user = getUserProfile();
+const socialLinks = getUserSocialLinks();
 const userContent = getLocalizedUserContent(currentLang);
 const effectsConfig = getThemeConfig().effects;
 const showHomeWave = effectsConfig.homeWave.enabled;
@@ -78,9 +79,9 @@ const homeWaveIntensity = effectsConfig.homeWave.intensity;
         <!-- Social icons with scale animation -->
         <div id="social-icons-container" class="pt-1">
           <div class="flex items-center gap-2.5">
-            {user.socials.map((social, index) => (
+            {socialLinks.map((social, index) => (
               <a
-                href={social.url}
+                href={social.href}
                 target="_blank"
                 rel="noopener noreferrer"
                 class="social-icon group relative opacity-0 scale-80"

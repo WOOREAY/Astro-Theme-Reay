@@ -1,11 +1,11 @@
 import rss from '@astrojs/rss';
-import { getAboutConfig, getUserProfile } from '@app/config/site.config';
+import { getSiteProfile, getUserProfile } from '@app/config/site.config';
 import { getPostUrl, getSortedPosts } from '@features/blog/lib/blog';
 
 export async function GET(context: { site?: URL }) {
   const posts = await getSortedPosts();
   const user = getUserProfile();
-  const site = getAboutConfig().site;
+  const site = getSiteProfile('zh');
 
   return rss({
     title: `${site.name} · ${user.name}`,

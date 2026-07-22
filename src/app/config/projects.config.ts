@@ -1,19 +1,12 @@
 /**
  * Projects Configuration
  *
- * GitHub username and token are inherited from `user.config.ts` by default.
- * Most users only need to edit categories, display settings, or featured repos.
+ * GitHub identity and token live only in `user.config.ts`. This file owns
+ * project-catalog filtering, categories, display settings, and featured repos.
  */
 
-import { user } from './user.config';
-
-const defaultGitHubUsername = user.github.username;
-
 export const projectsConfig: ProjectsConfig = {
-  githubUsername: defaultGitHubUsername,
-  githubConfig: {
-    username: defaultGitHubUsername,
-    token: user.github.token,
+  source: {
     excludeRepos: [],
     includeForked: false,
   },
@@ -80,8 +73,6 @@ export const projectsConfig: ProjectsConfig = {
 
 // Backward-compatible exports for older custom code.
 export const projectCategories = projectsConfig.categories;
-export const githubUsername = projectsConfig.githubUsername;
-export const githubConfig = projectsConfig.githubConfig;
 export const projectDisplaySettings = projectsConfig.displaySettings;
 export const featuredRepos = projectsConfig.featuredRepos;
 
@@ -101,9 +92,7 @@ export interface ProjectRepo {
   tags?: string[];
 }
 
-export interface GithubConfig {
-  username: string;
-  token?: string;
+export interface ProjectSourceConfig {
   excludeRepos?: string[];
   includeForked?: boolean;
 }
@@ -118,8 +107,7 @@ export interface ProjectDisplaySettings {
 
 export interface ProjectsConfig {
   categories: ProjectCategory[];
-  githubUsername: string;
-  githubConfig: GithubConfig;
+  source: ProjectSourceConfig;
   displaySettings: ProjectDisplaySettings;
   featuredRepos: ProjectRepo[];
 }

@@ -4,29 +4,15 @@
  * About page - Social networks component
  */
 import { useI18n } from '@features/i18n/lib/i18n';
-
-interface SocialNetwork {
-  platform: string;
-  username: string;
-  url: string;
-  icon: string;
-  followers: number;
-}
+import type { UserContactLink } from '@app/config/site.config';
 
 interface Props {
-  socials: SocialNetwork[];
+  socials: UserContactLink[];
 }
 
 const { socials } = Astro.props;
 const { t } = useI18n();
 
-// Format numbers (display 'k' for values over 1000)
-function formatNumber(num: number): string {
-  if (num >= 1000) {
-    return `${(num / 1000).toFixed(1)}k`;
-  }
-  return num.toString();
-}
 ---
 
 <section class="socials-section">
@@ -40,19 +26,19 @@ function formatNumber(num: number): string {
 
   <div class="socials-grid">
     {socials.map((social) => (
-      <a href={social.url} target="_blank" rel="noopener noreferrer" class="social-card">
+      <a
+        href={social.href}
+        target={social.external ? '_blank' : undefined}
+        rel={social.external ? 'noopener noreferrer' : undefined}
+        class="social-card"
+        data-contact-kind={social.kind}
+      >
         <div class="social-icon">
           <i class={social.icon}></i>
         </div>
         <div class="social-info">
-          <h3 class="social-platform">{social.platform}</h3>
-          <p class="social-username">{social.username}</p>
-          {social.followers > 0 && (
-            <p class="social-followers">
-              <i class="i-carbon:user-multiple"></i>
-              {formatNumber(social.followers)} followers
-            </p>
-          )}
+          <h3 class="social-platform">{social.label}</h3>
+          <p class="social-username">{social.value}</p>
         </div>
       </a>
     ))}

@@ -8,15 +8,17 @@
  * - Avatar and featured badge
  * - Smooth animations
  */
-import { linksConfig, type FriendLink } from '@app/config/links.config';
+import { getLinksConfig } from '@app/config/site.config';
+import type { FriendLink } from '@app/config/links.config';
 
 interface Props {
   link: FriendLink;
 }
 
 const { link } = Astro.props;
-const previewUrl = link.screenshot || (linksConfig.previews.provider === 'microlink'
-  ? `${linksConfig.previews.endpoint}?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`
+const previews = getLinksConfig().previews;
+const previewUrl = link.screenshot || (previews.provider === 'microlink'
+  ? `${previews.endpoint}?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`
   : '');
 ---
 

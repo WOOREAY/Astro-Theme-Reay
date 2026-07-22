@@ -12,20 +12,20 @@ import SocialNetworks from '@features/about/components/SocialNetworks.astro';
 import EducationTimeline from '@features/about/components/EducationTimeline.astro';
 import ExperienceTimeline from '@features/about/components/ExperienceTimeline.astro';
 import SiteInfo from '@features/about/components/SiteInfo.astro';
-import { getAboutConfig } from '@app/config/site.config';
+import { getAboutConfig, getSiteProfile, getUserContactLinks } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 import { getAllPosts } from '@features/blog/lib/blog';
 
-const { t } = useI18n();
+const { t, currentLang } = useI18n();
 const aboutConfig = getAboutConfig();
+const contactLinks = getUserContactLinks();
+const site = getSiteProfile(currentLang);
 
 const {
   sections,
   timeline,
-  socialNetworks,
   education,
   experience,
-  site,
 } = aboutConfig;
 
 // Calculate actual site statistics
@@ -69,7 +69,7 @@ const siteWithStats = {
     {timeline && timeline.length > 0 && <Timeline events={timeline} />}
 
     <!-- Social networks -->
-    {socialNetworks.length > 0 && <SocialNetworks socials={socialNetworks} />}
+    {contactLinks.length > 0 && <SocialNetworks socials={contactLinks} />}
 
     <!-- Education history -->
     {education.length > 0 && <EducationTimeline education={education} />}

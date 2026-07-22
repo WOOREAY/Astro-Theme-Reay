@@ -1,14 +1,14 @@
 import { defineConfig, presetWind4, presetIcons } from 'unocss'
-import { aboutConfig, user } from './src/app/config/user.config'
+import { aboutConfig, site, user } from './src/app/config/user.config'
 import { mediaConfig } from './src/app/config/media.config'
 
 // 自动从配置文件中提取所有图标
 function extractIcons() {
   const icons = new Set<string>()
   
-  // 从 user.socials 提取图标
-  user.socials?.forEach(social => {
-    if (social.icon) icons.add(social.icon)
+  // 从用户统一联系方式提取自定义图标
+  user.contact.additionalLinks?.forEach(link => {
+    if (link.icon) icons.add(link.icon)
   })
   
   // 从 aboutConfig.sections 提取图标
@@ -19,13 +19,8 @@ function extractIcons() {
     })
   })
   
-  // 从 aboutConfig.socialNetworks 提取图标
-  aboutConfig.socialNetworks?.forEach(network => {
-    if (network.icon) icons.add(network.icon)
-  })
-  
-  // 从 aboutConfig.site.techStack 提取图标
-  aboutConfig.site?.techStack?.forEach(tech => {
+  // 从站点技术栈提取图标
+  site.techStack?.forEach(tech => {
     if (tech.icon) icons.add(tech.icon)
   })
 

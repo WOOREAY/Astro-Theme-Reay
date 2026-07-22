@@ -1,4 +1,4 @@
-import { getFeaturesConfig, getProjectsConfig } from '@app/config/site.config';
+import { getFeaturesConfig, getGitHubConfig, getProjectsConfig } from '@app/config/site.config';
 import type { ProjectsConfig } from '@app/config/projects.config';
 import { getGitHubRepo, getUserRepos, type GitHubRepo } from './github';
 
@@ -25,20 +25,24 @@ function sortProjects(
   });
 }
 
-export function buildProjectCatalog(repos: GitHubRepo[], config: ProjectsConfig) {
+export function buildProjectCatalog(
+  repos: GitHubRepo[],
+  config: ProjectsConfig,
+  githubUsername: string,
+) {
   const featured = new Map(
     config.featuredRepos.map((entry) => [projectKey(entry.owner, entry.repo), entry]),
   );
   const excluded = new Set(
-    (config.githubConfig.excludeRepos ?? []).flatMap((entry) => {
+    (config.source.excludeRepos ?? []).flatMap((entry) => {
       const normalized = entry.toLocaleLowerCase();
-      return normalized.includes('/') ? [normalized] : [normalized, projectKey(config.githubUsername, normalized)];
+      return normalized.includes('/') ? [normalized] : [normalized, projectKey(githubUsername, normalized)];
     }),
   );
 
   const projects = repos
     .filter((repo) => !repo.isArchived)
-    .filter((repo) => config.githubConfig.includeForked || !repo.isFork)
+    .filter((repo) => config.source.includeForked || !repo.isFork)
     .filter((repo) => !excluded.has(repo.name.toLocaleLowerCase()) && !excluded.has(projectKey(repo.owner, repo.name)))
     .map<ProjectCatalogItem>((repo) => {
       const override = featured.get(projectKey(repo.owner, repo.name));
@@ -59,7 +63,8 @@ export async function getConfiguredProjects() {
   if (!getFeaturesConfig().integrations.githubProjects) return [];
 
   const config = getProjectsConfig();
-  const userRepos = await getUserRepos(config.githubUsername);
+  const github = getGitHubConfig();
+  const userRepos = await getUserRepos(github.username);
   const known = new Set(userRepos.map((repo) => projectKey(repo.owner, repo.name)));
   const external = await Promise.all(
     config.featuredRepos
@@ -70,5 +75,6 @@ export async function getConfiguredProjects() {
   return buildProjectCatalog(
     [...userRepos, ...external.filter((repo): repo is GitHubRepo => Boolean(repo))],
     config,
+    github.username,
   );
 }

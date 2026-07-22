@@ -13,7 +13,7 @@ import ProjectHeader from '@features/projects/components/ProjectHeader.astro';
 import CategoryTabs from '@features/projects/components/CategoryTabs.astro';
 import ProjectCard from '@features/projects/components/ProjectCard.astro';
 import GitHubActivityPanel from '@features/projects/components/GitHubActivityPanel.astro';
-import { getProjectsConfig } from '@app/config/site.config';
+import { getGitHubConfig, getProjectsConfig } from '@app/config/site.config';
 import { getGitHubContributionCalendar, getLanguageColor } from '@features/projects/lib/github';
 import { getConfiguredProjects } from '@features/projects/lib/projects';
 import { useI18n } from '@features/i18n/lib/i18n';
@@ -21,7 +21,7 @@ import { useI18n } from '@features/i18n/lib/i18n';
 const { t } = useI18n();
 const projectsConfig = getProjectsConfig();
 const projectCategories = projectsConfig.categories;
-const githubUsername = projectsConfig.githubUsername;
+const githubUsername = getGitHubConfig().username;
 
 const loadTimerLabel = `⏱️  Total project load time ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 const repoTimerLabel = `⏱️  Fetch user repos ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;

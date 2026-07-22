@@ -14,19 +14,36 @@ import LinksLayout from '@app/layouts/links/LinksLayout.astro';
 import LinksHeader from '@features/links/components/LinksHeader.astro';
 import LinksCategoryTabs from '@features/links/components/LinksCategoryTabs.astro';
 import LinkCard from '@features/links/components/LinkCard.astro';
-import { getLinksConfig } from '@app/config/site.config';
+import {
+  getLinksConfig,
+  getSiteProfile,
+  getUserContactLinks,
+  getUserProfile,
+  getUserSocialLinks,
+} from '@app/config/site.config';
+import type { FriendLink } from '@app/config/links.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
-const { t } = useI18n();
-const { friendLinks, linkCategories, linkApplicationInfo, mySiteInfo } = getLinksConfig();
+const { t, currentLang } = useI18n();
+const { friendLinks, linkCategories, linkApplicationInfo } = getLinksConfig();
+const user = getUserProfile();
+const mySiteInfo = getSiteProfile(currentLang);
+const contactLinks = getUserContactLinks();
 
 // Group by type
 const friendsLinks = friendLinks.filter(link => link.type === 'friend');
 const sitesLinks = friendLinks.filter(link => link.type === 'site');
-const socialLinks = friendLinks.filter(link => link.type === 'social');
+const socialLinks: FriendLink[] = getUserSocialLinks().map((link) => ({
+  name: link.label,
+  url: link.href,
+  avatar: user.avatar,
+  description: link.value,
+  category: 'all',
+  type: 'social',
+}));
 
 // Calculate statistics
-const totalLinks = friendLinks.length;
+const totalLinks = friendLinks.length + socialLinks.length;
 const featuredLinks = friendLinks.filter(link => link.featured).length;
 const friendsCount = friendsLinks.length;
 const sitesCount = sitesLinks.length;
@@ -57,36 +74,6 @@ const requiredFields = [
   { icon: 'i-carbon:image', text: t('links.apply.field.avatar') },
   { icon: 'i-carbon:text-long-paragraph', text: t('links.apply.field.desc') },
 ];
-
-function getContactHref(value: string, label?: string) {
-  const raw = value.trim();
-  const lowerLabel = label?.toLowerCase() ?? '';
-
-  if (/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(raw)) {
-    return { href: `mailto:${raw}`, external: false, copyOnly: false };
-  }
-
-  if (/^https?:\/\//i.test(raw)) {
-    return { href: raw, external: true, copyOnly: false };
-  }
-
-  if (/^(github|twitter|x)\.com\//i.test(raw)) {
-    return { href: `https://${raw}`, external: true, copyOnly: false };
-  }
-
-  if (raw.startsWith('@')) {
-    const username = raw.slice(1);
-    const host = lowerLabel.includes('github') ? 'github.com' : 'x.com';
-    return { href: `https://${host}/${username}`, external: true, copyOnly: false };
-  }
-
-  return { href: '#', external: false, copyOnly: true };
-}
-
-const contactLinks = linkApplicationInfo.contacts.map((contact) => ({
-  ...contact,
-  ...getContactHref(contact.value, contact.label),
-}));
 
 console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${sitesLinks.length} sites, ${socialLinks.length} social`);
 ---
@@ -232,7 +219,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
             </div>
           </div>
 
-          <div class="contact-section">
+          {contactLinks.length > 0 && <div class="contact-section">
             <p class="contact-hint" data-i18n="links.apply.contactHint">{t('links.apply.contactHint')}</p>
             <div class="contact-buttons">
               {contactLinks.map((contact) => (
@@ -242,7 +229,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
                   target={contact.external ? '_blank' : undefined}
                   rel={contact.external ? 'noopener noreferrer' : undefined}
                   data-contact={contact.value}
-                  data-copy-only={contact.copyOnly ? 'true' : undefined}
+                  data-contact-kind={contact.kind}
                   aria-label={`${t('links.apply.contactOpen')} ${contact.label}`}
                 >
                   <i class={contact.icon}></i>
@@ -250,7 +237,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
                 </a>
               ))}
             </div>
-          </div>
+          </div>}
         </div>
       </div>
 
@@ -275,7 +262,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
                   <i class="i-carbon:copy"></i>
                 </button>
               </div>
-              <div class="info-row" data-copy={mySiteInfo.url}>
+              {mySiteInfo.url && <div class="info-row" data-copy={mySiteInfo.url}>
                 <div class="info-content">
                   <span class="info-label" data-i18n="links.apply.siteUrl">{t('links.apply.siteUrl')}</span>
                   <span class="info-value">{mySiteInfo.url}</span>
@@ -283,7 +270,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
                 <button class="copy-btn" title={t('links.copy')} data-i18n="links.copy" data-i18n-attr="title">
                   <i class="i-carbon:copy"></i>
                 </button>
-              </div>
+              </div>}
               <div class="info-row" data-copy={mySiteInfo.description}>
                 <div class="info-content">
                   <span class="info-label" data-i18n="links.apply.siteDesc">{t('links.apply.siteDesc')}</span>

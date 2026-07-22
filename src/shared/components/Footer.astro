@@ -3,19 +3,28 @@
  * Footer Component
  * Compact site-wide footer.
  */
-import { getFeaturesConfig, getLocalizedUserContent, getNavigationConfig, getUserProfile } from '@app/config/site.config';
+import {
+  getFeaturesConfig,
+  getLocalizedUserContent,
+  getNavigationConfig,
+  getSiteProfile,
+  getUserContactLinks,
+  getUserProfile,
+} from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t, currentLang } = useI18n();
 const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
+const site = getSiteProfile(currentLang);
+const contactLinks = getUserContactLinks();
 const navigation = getNavigationConfig();
 const features = getFeaturesConfig();
 const { variant = 'default' } = Astro.props as { variant?: 'default' | 'seamless' };
 
 const year = new Date().getFullYear();
-const startYear = 2024;
-const yearText = year === startYear ? `${year}` : `${startYear} - ${year}`;
+const startYear = Number.parseInt(site.since, 10);
+const yearText = Number.isFinite(startYear) && startYear < year ? `${startYear} - ${year}` : `${year}`;
 
 const quickLinks = navigation.primary.filter((item) => item.showInFooter);
 const resourceLinks = navigation.resources.filter((link) => {
@@ -53,15 +62,16 @@ const resourceLinks = navigation.resources.filter((link) => {
 
       <div class="footer-actions">
         <div class="footer-socials">
-          {user.socials.map(social => (
+          {contactLinks.map(contact => (
             <a
-              href={social.url}
-              target="_blank"
-              rel="noopener noreferrer"
-              aria-label={social.label}
-              title={social.label}
+              href={contact.href}
+              target={contact.external ? '_blank' : undefined}
+              rel={contact.external ? 'noopener noreferrer' : undefined}
+              aria-label={contact.label}
+              title={`${contact.label}: ${contact.value}`}
+              data-contact-kind={contact.kind}
             >
-              <i class={social.icon}></i>
+              <i class={contact.icon}></i>
             </a>
           ))}
         </div>
@@ -81,7 +91,7 @@ const resourceLinks = navigation.resources.filter((link) => {
 
     <div class="footer-bottom">
       <span>&copy; {yearText} {user.name}</span>
-      <span class="footer-stack">Astro · UnoCSS · TypeScript</span>
+      <span class="footer-stack">{site.builtWith}</span>
     </div>
   </div>
 </footer>

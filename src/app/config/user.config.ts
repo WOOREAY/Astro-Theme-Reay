@@ -1,29 +1,36 @@
 /**
  * User Configuration
  *
- * Edit the three sections below first:
- * 1. Basic profile
+ * Edit the four sections below first:
+ * 1. Identity and public contact
  * 2. Multilingual intro copy
- * 3. About page content
+ * 3. Site information
+ * 4. About page content
  */
 
 import { defaultLang, type Language } from './i18n.config';
 
 // ---------------------------------------------------------------------------
-// 1. Basic profile
+// 1. Identity and public contact
 // ---------------------------------------------------------------------------
 
 export const user = {
   name: 'WOOREAY',
   avatar: '/images/profile/avatar.png',
-  /** Optional public profile details. Leave empty to hide them everywhere. */
+  /** Optional public profile detail. Leave empty to hide it everywhere. */
   location: '',
-  email: '',
-  website: 'https://wooreay.github.io',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/WOOREAY' },
-  ],
 
+  /**
+   * The only source for public contact details.
+   * Home, About, Links, and Footer all consume these values through site.config.
+   */
+  contact: {
+    email: '',
+    website: 'https://wooreay.github.io',
+    additionalLinks: [] as AdditionalContactLink[],
+  },
+
+  /** The GitHub profile URL is derived from this username. */
   github: {
     username: 'WOOREAY',
     token: '',
@@ -56,7 +63,24 @@ export const userContent = {
 } satisfies UserContent;
 
 // ---------------------------------------------------------------------------
-// 3. About page content
+// 3. Site information
+// ---------------------------------------------------------------------------
+
+export const site = {
+  builtWith: 'Built with Astro, UnoCSS, and TypeScript',
+  since: '2025',
+  stats: {
+    visitors: 0,
+  },
+  techStack: [
+    { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+    { name: 'UnoCSS', description: 'Atomic CSS engine', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
+    { name: 'TypeScript', description: 'Type-safe JavaScript', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
+  ],
+} satisfies SiteDetails;
+
+// ---------------------------------------------------------------------------
+// 4. About page content
 // ---------------------------------------------------------------------------
 
 export const aboutConfig = {
@@ -73,7 +97,7 @@ export const aboutConfig = {
         { name: 'Astro', description: 'Static-first web framework', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
         { name: 'TypeScript', description: 'Type-safe application code', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
         { name: 'UnoCSS', description: 'On-demand atomic CSS', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
-        { name: 'GitHub', description: 'Open-source collaboration', url: 'https://github.com/WOOREAY', icon: 'i-carbon:logo-github' },
+        { name: 'GitHub', description: 'Open-source collaboration', url: 'https://github.com/', icon: 'i-carbon:logo-github' },
       ],
     },
     {
@@ -108,36 +132,9 @@ export const aboutConfig = {
     },
   ],
 
-  socialNetworks: [
-    {
-      platform: 'GitHub',
-      username: 'WOOREAY',
-      url: 'https://github.com/WOOREAY',
-      icon: 'i-carbon:logo-github',
-      followers: 0,
-    },
-  ],
-
   education: [] as Education[],
 
   experience: [] as Experience[],
-
-  site: {
-    name: 'WOOREAY',
-    description: 'Open-source projects, technical notes, and long-term learning.',
-    builtWith: 'Built with Astro, UnoCSS, and TypeScript',
-    since: '2025',
-    stats: {
-      posts: 0,
-      words: 0,
-      visitors: 0,
-    },
-    techStack: [
-      { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
-      { name: 'UnoCSS', description: 'Atomic CSS engine', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
-      { name: 'TypeScript', description: 'Type-safe JavaScript', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
-    ],
-  },
 
   timeline: [
     { year: '2026', event: 'Evolving Astro Theme Reay', description: 'Improving architecture, accessibility, and release confidence' },
@@ -159,6 +156,7 @@ export function getUserContent(lang: Language = defaultLang) {
 export const userConfig = {
   user,
   userContent,
+  site,
   aboutConfig,
 } satisfies UserConfig;
 
@@ -166,10 +164,14 @@ export const userConfig = {
 // Types
 // ---------------------------------------------------------------------------
 
-export interface SocialLink {
+export interface AdditionalContactLink {
+  /** Stable key used for deduplication and DOM hooks. */
+  id: string;
   icon: string;
   label: string;
   url: string;
+  /** Optional short value such as @username; the URL host is used otherwise. */
+  displayValue?: string;
 }
 
 export interface GithubUserConfig {
@@ -181,9 +183,11 @@ export interface User {
   name: string;
   avatar: string;
   location?: string;
-  email?: string;
-  website?: string;
-  socials: SocialLink[];
+  contact: {
+    email?: string;
+    website?: string;
+    additionalLinks: AdditionalContactLink[];
+  };
   github: GithubUserConfig;
 }
 
@@ -220,14 +224,6 @@ export interface AboutSection {
   items: AboutSectionItem[];
 }
 
-export interface SocialNetwork {
-  platform: string;
-  username: string;
-  url: string;
-  icon: string;
-  followers: number;
-}
-
 export interface Education {
   school: string;
   major?: string;
@@ -256,14 +252,10 @@ export interface TechStackItem {
   icon: string;
 }
 
-export interface SiteInfo {
-  name: string;
-  description: string;
+export interface SiteDetails {
   builtWith: string;
   since: string;
   stats: {
-    posts: number;
-    words: number;
     visitors: number;
   };
   techStack: TechStackItem[];
@@ -277,15 +269,14 @@ export interface TimelineEvent {
 
 export interface AboutConfig {
   sections: AboutSection[];
-  socialNetworks: SocialNetwork[];
   education: Education[];
   experience: Experience[];
-  site: SiteInfo;
   timeline: TimelineEvent[];
 }
 
 export interface UserConfig {
   user: User;
   userContent: UserContent;
+  site: SiteDetails;
   aboutConfig: AboutConfig;
 }

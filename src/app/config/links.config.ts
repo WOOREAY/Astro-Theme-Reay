@@ -1,8 +1,9 @@
 /**
  * Links Configuration
  *
- * Edit `linksConfig` first. Compatibility exports are provided below for older
- * custom code that imports `friendLinks`, `linkCategories`, and related values.
+ * This file owns link-page behavior and curated external entries only.
+ * Personal contact and site information come from `user.config.ts` through
+ * `site.config.ts`; do not duplicate them here.
  */
 
 export const linksConfig: LinksConfig = {
@@ -53,14 +54,6 @@ export const linksConfig: LinksConfig = {
       category: 'community',
       type: 'site',
     },
-    {
-      name: 'GitHub',
-      url: 'https://github.com/WOOREAY',
-      avatar: 'https://github.githubassets.com/favicons/favicon.png',
-      description: 'Code, project experiments, and open-source work',
-      category: 'social',
-      type: 'social',
-    },
   ],
 
   linkCategories: {
@@ -82,19 +75,7 @@ export const linksConfig: LinksConfig = {
   },
 
   linkApplicationInfo: {
-    title: 'Apply for Link Exchange',
     description: 'Share a personal site, technical blog, or useful resource.',
-    contacts: [
-      { label: 'GitHub', value: 'github.com/WOOREAY', icon: 'i-carbon:logo-github' },
-      { label: 'Website', value: 'https://wooreay.github.io', icon: 'i-carbon:earth' },
-    ],
-  },
-
-  mySiteInfo: {
-    name: 'WOOREAY',
-    url: 'https://wooreay.github.io',
-    avatar: '/images/profile/avatar.png',
-    description: 'Open-source projects, technical notes, and long-term learning',
   },
 };
 
@@ -102,7 +83,6 @@ export const linksConfig: LinksConfig = {
 export const friendLinks = linksConfig.friendLinks;
 export const linkCategories = linksConfig.linkCategories;
 export const linkApplicationInfo = linksConfig.linkApplicationInfo;
-export const mySiteInfo = linksConfig.mySiteInfo;
 
 export interface LinkPreviewConfig {
   provider: 'none' | 'microlink';
@@ -137,24 +117,13 @@ export interface LinkCategoriesConfig {
   social: LinkCategoryItem[];
 }
 
-export interface ContactInfo {
-  label: string;
-  value: string;
-  icon: string;
-}
-
 export interface LinkApplicationInfo {
-  title: string;
   description: string;
-  contacts: ContactInfo[];
 }
-
-export interface SiteInfo extends BaseLink {}
 
 export interface LinksConfig {
   previews: LinkPreviewConfig;
   friendLinks: FriendLink[];
   linkCategories: LinkCategoriesConfig;
   linkApplicationInfo: LinkApplicationInfo;
-  mySiteInfo: SiteInfo;
 }
