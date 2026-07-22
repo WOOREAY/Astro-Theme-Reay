@@ -12,6 +12,7 @@ const fixtureUser = {
   location: '',
   contact: {
     email: 'owner@example.com',
+    twitter: 'https://x.com/example_owner',
     website: 'https://example.com',
     additionalLinks: [
       {
@@ -40,6 +41,7 @@ assert.deepEqual(
   contacts.map(({ id, href }) => ({ id, href })),
   [
     { id: 'email', href: 'mailto:owner@example.com' },
+    { id: 'twitter', href: 'https://x.com/example_owner' },
     { id: 'website', href: 'https://example.com' },
     { id: 'github', href: 'https://github.com/example-owner' },
     { id: 'mastodon', href: 'https://social.example/@owner' },
@@ -49,6 +51,7 @@ assert.deepEqual(
 
 const consumerContracts = new Map([
   ['src/features/home/components/ActivityStreamSection.astro', 'getUserContactLinks'],
+  ['src/features/home/components/HeroSection.astro', 'getUserContactLinks'],
   ['src/pages/about/index.astro', 'getUserContactLinks'],
   ['src/pages/links/index.astro', 'getUserContactLinks'],
   ['src/shared/components/Footer.astro', 'getUserContactLinks'],

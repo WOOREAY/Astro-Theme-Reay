@@ -7,7 +7,7 @@ interface Props {
     description: string;
     builtWith: string;
     since: string;
-    stats: { posts: number; words: number; visitors: number };
+    stats: { posts: number; words: number; tags: number; years: number };
     techStack: Array<{ name: string; description: string; url: string; icon: string }>;
   };
 }
@@ -33,7 +33,8 @@ const { t } = useI18n();
       <dl>
         <div><dt data-i18n="about.site.stats.posts">{t('about.site.stats.posts')}</dt><dd>{site.stats.posts}</dd></div>
         <div><dt data-i18n="about.site.stats.words">{t('about.site.stats.words')}</dt><dd>{Math.round(site.stats.words / 1000)}k</dd></div>
-        <div><dt data-i18n="about.site.stats.visitors">{t('about.site.stats.visitors')}</dt><dd>{Math.round(site.stats.visitors / 1000)}k</dd></div>
+        <div><dt data-i18n="about.site.stats.tags">{t('about.site.stats.tags')}</dt><dd>{site.stats.tags}</dd></div>
+        <div><dt data-i18n="about.site.stats.years">{t('about.site.stats.years')}</dt><dd>{site.stats.years}</dd></div>
       </dl>
     </div>
 
@@ -109,7 +110,7 @@ const { t } = useI18n();
 
   dl {
     display: grid;
-    grid-template-columns: repeat(3, minmax(4rem, 1fr));
+    grid-template-columns: repeat(4, minmax(3.8rem, 1fr));
     align-items: center;
     margin: 0;
   }
@@ -158,6 +159,8 @@ const { t } = useI18n();
   }
 
   @media (max-width: 520px) {
+    dl { grid-template-columns: repeat(2, minmax(0, 1fr)); row-gap: 0.65rem; }
+    dl > div:nth-child(odd) { border-left: 0; padding-left: 0; }
     .tech-list { grid-template-columns: 1fr; }
     .tech-list a { border-right: 0; border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.34); }
   }

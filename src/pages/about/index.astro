@@ -5,6 +5,7 @@
  */
 import EditorialPageLayout from '@app/layouts/base/EditorialPageLayout.astro';
 import AboutIntro from '@features/about/components/AboutIntro.astro';
+import AboutNarrative from '@features/about/components/AboutNarrative.astro';
 import Section from '@features/about/components/Section.astro';
 import Timeline from '@features/about/components/Timeline.astro';
 import SocialNetworks from '@features/about/components/SocialNetworks.astro';
@@ -13,7 +14,7 @@ import ExperienceTimeline from '@features/about/components/ExperienceTimeline.as
 import SiteInfo from '@features/about/components/SiteInfo.astro';
 import { getAboutConfig, getSiteProfile, getUserContactLinks } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
-import { getAllPosts } from '@features/blog/lib/blog';
+import { getAllPosts, getArchiveStats } from '@features/blog/lib/blog';
 import EditorialPageHeader from '@shared/components/EditorialPageHeader.astro';
 
 const { t, currentLang } = useI18n();
@@ -29,7 +30,7 @@ const {
 } = aboutConfig;
 
 // Calculate actual site statistics
-const allPosts = await getAllPosts();
+const [allPosts, archiveStats] = await Promise.all([getAllPosts(), getArchiveStats()]);
 const totalWords = allPosts.reduce((sum, post) => sum + (post.body?.length || 0), 0);
 
 // Update site stats with real data
@@ -38,14 +39,20 @@ const siteWithStats = {
   stats: {
     posts: allPosts.length,
     words: totalWords,
-    visitors: site.stats.visitors, // This should be fetched from analytics if available
+    tags: archiveStats.totalTags,
+    years: archiveStats.totalYears,
   },
 };
 const headerStats = [
   { icon: 'i-carbon:document', labelKey: 'about.site.stats.posts', label: t('about.site.stats.posts'), value: allPosts.length },
-  { icon: 'i-carbon:time', labelKey: 'about.timeline.title', label: t('about.timeline.title'), value: timeline.length },
+  { icon: 'i-carbon:pen', labelKey: 'about.site.stats.words', label: t('about.site.stats.words'), value: new Intl.NumberFormat('zh-CN', { notation: 'compact' }).format(totalWords) },
+  { icon: 'i-carbon:calendar', labelKey: 'about.site.stats.years', label: t('about.site.stats.years'), value: archiveStats.totalYears },
   { icon: 'i-carbon:share', labelKey: 'about.social.title', label: t('about.social.title'), value: contactLinks.length },
-  { icon: 'i-carbon:calendar', label: 'Since', value: site.since },
+];
+const workflowItems = [
+  { name: 'about.workflow.think.title', description: 'about.workflow.think.desc', icon: 'i-carbon:idea' },
+  { name: 'about.workflow.build.title', description: 'about.workflow.build.desc', icon: 'i-carbon:tools' },
+  { name: 'about.workflow.share.title', description: 'about.workflow.share.desc', icon: 'i-carbon:share-knowledge' },
 ];
 ---
 
@@ -63,6 +70,20 @@ const headerStats = [
 
     <!-- Personal introduction -->
     <AboutIntro />
+
+    <!-- Why this site exists -->
+    <AboutNarrative />
+
+    <Section
+      id="workflow"
+      title="about.workflow.title"
+      description="about.workflow.subtitle"
+      icon="i-carbon:flow"
+      items={workflowItems}
+      columns={3}
+      compact={false}
+      colorTheme="primary"
+    />
 
     <!-- Dynamically render all custom categories -->
     {sections.map((section) => (

@@ -24,6 +24,7 @@ function getUrlLabel(url: string) {
 export function createUserContactLinks(user: User): UserContactLink[] {
   const links: UserContactLink[] = [];
   const email = user.contact.email?.trim();
+  const twitter = user.contact.twitter?.trim();
   const website = user.contact.website?.trim();
   const githubUsername = user.github.username.trim();
 
@@ -36,6 +37,18 @@ export function createUserContactLinks(user: User): UserContactLink[] {
       href: `mailto:${email}`,
       icon: 'i-carbon:email',
       external: false,
+    });
+  }
+
+  if (twitter) {
+    links.push({
+      id: 'twitter',
+      kind: 'social',
+      label: 'Twitter / X',
+      value: getUrlLabel(twitter),
+      href: twitter,
+      icon: 'i-carbon:logo-twitter',
+      external: true,
     });
   }
 

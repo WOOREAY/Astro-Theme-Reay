@@ -28,6 +28,8 @@ const isDescriptionKey = Boolean(description?.startsWith('about.'));
 const displayTitle = isTitleKey ? t(title as any) : title;
 const displayDescription = isDescriptionKey ? t(description as any) : description;
 const visibleColumns = Math.min(columns, 3);
+const getItemText = (value?: string) => value?.startsWith('about.') ? t(value as any) : value;
+const getItemKey = (value?: string) => value?.startsWith('about.') ? value : undefined;
 ---
 
 <section
@@ -55,8 +57,8 @@ const visibleColumns = Math.min(columns, 3);
               </span>
             )}
             <span class="about-item-copy">
-              <strong>{item.name}</strong>
-              {item.description && <span>{item.description}</span>}
+              <strong data-i18n={getItemKey(item.name)}>{getItemText(item.name)}</strong>
+              {item.description && <span data-i18n={getItemKey(item.description)}>{getItemText(item.description)}</span>}
             </span>
             <i class="i-carbon:arrow-up-right item-arrow" aria-hidden="true"></i>
           </a>
@@ -68,8 +70,8 @@ const visibleColumns = Math.min(columns, 3);
               </span>
             )}
             <span class="about-item-copy">
-              <strong>{item.name}</strong>
-              {item.description && <span>{item.description}</span>}
+              <strong data-i18n={getItemKey(item.name)}>{getItemText(item.name)}</strong>
+              {item.description && <span data-i18n={getItemKey(item.description)}>{getItemText(item.description)}</span>}
             </span>
           </div>
         )}
