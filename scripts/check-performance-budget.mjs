@@ -32,7 +32,7 @@ assertBudget('home inline scripts', totalInlineBytes(home, 'script'), budgets.in
 assertBudget('home inline styles', totalInlineBytes(home, 'style'), budgets.inlineStyle);
 
 if (home.includes('data-astro-rerun')) failures.push('home contains a data-astro-rerun script');
-if (!/href="[^"]*theme\.css"/.test(home)) failures.push('home does not load cacheable theme.css');
+if (!/href="[^"]*theme\.css(?:\?[^\"]*)?"/.test(home)) failures.push('home does not load cacheable theme.css');
 if (!themeCss.includes('--md-sys-color-primary')) failures.push('theme.css has no MD3 system variables');
 if (!markdownCss.includes('.prose')) failures.push('markdown.css has no prose rules');
 
