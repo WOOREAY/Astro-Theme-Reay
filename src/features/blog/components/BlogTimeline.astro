@@ -73,7 +73,7 @@ function calculateReadingTime(content?: string): number {
             {year}
           </h2>
           <span class="text-xs text-[var(--md-sys-color-on-primary-container)]/60">
-            {postsByYear[year].length} 篇
+            {postsByYear[year].length} <span data-i18n="archives.postsCount">篇文章</span>
           </span>
         </a>
       </div>
@@ -128,18 +128,21 @@ function calculateReadingTime(content?: string): number {
                 <div class="reay-meta">
                   <div class="reay-meta-item">
                     <i class="i-carbon:calendar text-xs"></i>
-                    <span>{formatFullDate(post.data.publishDate)}</span>
+                    <time
+                      datetime={post.data.publishDate.toISOString()}
+                      data-i18n-date={post.data.publishDate.toISOString()}
+                    >{formatFullDate(post.data.publishDate)}</time>
                   </div>
 
                   <div class="reay-meta-item">
                     <i class="i-carbon:time text-xs"></i>
-                    <span>阅读约 {calculateReadingTime(post.body)} 分钟</span>
+                    <span>{calculateReadingTime(post.body)} <span data-i18n="blog.readTime">分钟阅读</span></span>
                   </div>
 
                   {post.data.featured && (
                     <div class="reay-chip">
                       <i class="i-carbon:star-filled text-xs"></i>
-                      <span class="font-500">精选</span>
+                      <span class="font-500" data-i18n="posts.featured">精选</span>
                     </div>
                   )}
                 </div>

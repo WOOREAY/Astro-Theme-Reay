@@ -1,0 +1,89 @@
+---
+import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import { useI18n } from '@features/i18n/lib/i18n';
+
+const { t } = useI18n();
+---
+
+<DefaultLayout title={t('notFound.title')} description={t('notFound.description')}>
+  <section class="not-found" aria-labelledby="not-found-title" data-page-title-key="notFound.title">
+    <span class="not-found-code" aria-hidden="true">404</span>
+    <p class="not-found-eyebrow" data-i18n="notFound.eyebrow">Page not found</p>
+    <h1 id="not-found-title" data-i18n="notFound.title">This page wandered away</h1>
+    <p data-i18n="notFound.description">
+      The address may have changed, or the content is no longer available.
+    </p>
+    <div class="not-found-actions">
+      <a href="/" class="not-found-primary" data-i18n="notFound.home">Return home</a>
+      <a href="/archives" class="not-found-secondary" data-i18n="notFound.archives">Browse archives</a>
+    </div>
+  </section>
+</DefaultLayout>
+
+<style>
+  .not-found {
+    width: min(100%, 720px);
+    margin: clamp(3rem, 12vh, 8rem) auto;
+    padding: clamp(2rem, 6vw, 4rem);
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: var(--reay-card-radius, 1.5rem);
+    background: var(--md-sys-color-surface-container-low);
+    text-align: center;
+    box-shadow: var(--reay-shadow-panel);
+  }
+
+  .not-found-code {
+    display: block;
+    color: var(--md-sys-color-primary);
+    font-size: clamp(4rem, 14vw, 8rem);
+    font-weight: 850;
+    line-height: 0.9;
+    opacity: 0.18;
+  }
+
+  .not-found-eyebrow {
+    margin: 1rem 0 0.5rem;
+    color: var(--md-sys-color-primary);
+    font-size: 0.8rem;
+    font-weight: 750;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+  }
+
+  .not-found h1 {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: clamp(1.8rem, 5vw, 3rem);
+  }
+
+  .not-found > p:last-of-type {
+    margin: 1rem auto 0;
+    color: var(--md-sys-color-on-surface-variant);
+    line-height: 1.7;
+  }
+
+  .not-found-actions {
+    display: flex;
+    justify-content: center;
+    gap: 0.75rem;
+    margin-top: 2rem;
+    flex-wrap: wrap;
+  }
+
+  .not-found-actions a {
+    padding: 0.7rem 1.1rem;
+    border: 1px solid var(--md-sys-color-outline-variant);
+    border-radius: 999px;
+    font-weight: 700;
+  }
+
+  .not-found-primary {
+    border-color: var(--md-sys-color-primary) !important;
+    background: var(--md-sys-color-primary);
+    color: var(--md-sys-color-on-primary);
+  }
+
+  .not-found-secondary {
+    background: var(--md-sys-color-surface-container);
+  }
+</style>

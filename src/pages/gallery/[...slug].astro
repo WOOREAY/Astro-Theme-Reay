@@ -146,6 +146,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
                 class="photo-open"
                 type="button"
                 data-photo-id={photo.id}
+                aria-label={`${t('gallery.viewPhoto')}: ${photo.title}`}
               >
                 <span class="photo-card-visual" aria-hidden="true">
                   {photo.thumbnailImage || photo.image ? (
@@ -198,6 +199,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
       </button>
       <figure class="lightbox-visual">
         <img alt="" loading="lazy" decoding="async" data-lightbox-image />
+        <span class="image-fallback lightbox-fallback" data-lightbox-fallback hidden></span>
       </figure>
       <div class="lightbox-content">
         <span class="lightbox-album">{album.title}</span>
@@ -597,6 +599,18 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     object-fit: contain;
   }
 
+  .lightbox-fallback {
+    display: block;
+    width: 100%;
+    height: 100%;
+    min-height: inherit;
+    background: var(--fallback-bg, linear-gradient(135deg, #46646d, #6d556f));
+  }
+
+  .lightbox-fallback[hidden] {
+    display: none;
+  }
+
   .lightbox-content {
     display: flex;
     flex-direction: column;
@@ -780,91 +794,4 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
   }
 </style>
 
-<script is:inline define:vars={{ photoPayload }}>
-  (function() {
-    var photos = JSON.parse(photoPayload);
-    var currentIndex = 0;
-    var lightbox = document.getElementById('gallery-lightbox');
-    if (!lightbox || !photos.length) return;
-
-    var image = lightbox.querySelector('[data-lightbox-image]');
-    var title = lightbox.querySelector('[data-lightbox-title]');
-    var caption = lightbox.querySelector('[data-lightbox-caption]');
-    var signature = lightbox.querySelector('[data-lightbox-signature]');
-    var file = lightbox.querySelector('[data-lightbox-file]');
-    var date = lightbox.querySelector('[data-lightbox-date]');
-    var location = lightbox.querySelector('[data-lightbox-location]');
-    var camera = lightbox.querySelector('[data-lightbox-camera]');
-    var tags = lightbox.querySelector('[data-lightbox-tags]');
-    var download = lightbox.querySelector('[data-lightbox-download]');
-    var cards = Array.from(document.querySelectorAll('[data-photo-id]'));
-
-    function renderPhoto(photo) {
-      if (!photo || !image || !title || !caption || !signature || !file || !date || !location || !camera || !tags || !download) return;
-      image.src = photo.image;
-      image.alt = photo.imageAlt || photo.title;
-      title.textContent = photo.title;
-      caption.textContent = photo.caption || '';
-      signature.textContent = photo.signature || '';
-      signature.hidden = !photo.signature;
-      file.textContent = photo.fileName || photo.downloadName || '';
-      date.textContent = photo.date;
-      location.textContent = photo.location;
-      camera.textContent = photo.camera;
-      tags.innerHTML = '';
-      photo.tags.forEach(function(tag) {
-        var span = document.createElement('span');
-        span.textContent = tag;
-        tags.appendChild(span);
-      });
-      if (photo.downloadUrl) {
-        download.href = photo.downloadUrl;
-        download.setAttribute('download', photo.downloadName || photo.fileName || '');
-        download.hidden = false;
-      } else {
-        download.hidden = true;
-      }
-    }
-
-    function openPhoto(photoId) {
-      var nextIndex = photos.findIndex(function(photo) { return photo.id === photoId; });
-      currentIndex = Math.max(0, nextIndex);
-      renderPhoto(photos[currentIndex]);
-      lightbox.classList.add('is-open');
-      lightbox.setAttribute('aria-hidden', 'false');
-      document.documentElement.style.overflow = 'hidden';
-    }
-
-    function closePhoto() {
-      lightbox.classList.remove('is-open');
-      lightbox.setAttribute('aria-hidden', 'true');
-      document.documentElement.style.overflow = '';
-      if (image) image.removeAttribute('src');
-    }
-
-    function stepPhoto(direction) {
-      currentIndex = (currentIndex + direction + photos.length) % photos.length;
-      renderPhoto(photos[currentIndex]);
-    }
-
-    cards.forEach(function(card) {
-      card.addEventListener('click', function() {
-        openPhoto(card.getAttribute('data-photo-id'));
-      });
-    });
-
-    lightbox.querySelector('[data-lightbox-close]')?.addEventListener('click', closePhoto);
-    lightbox.querySelector('[data-lightbox-prev]')?.addEventListener('click', function() { stepPhoto(-1); });
-    lightbox.querySelector('[data-lightbox-next]')?.addEventListener('click', function() { stepPhoto(1); });
-    lightbox.addEventListener('click', function(event) {
-      if (event.target === lightbox) closePhoto();
-    });
-
-    window.addEventListener('keydown', function(event) {
-      if (!lightbox.classList.contains('is-open')) return;
-      if (event.key === 'Escape') closePhoto();
-      if (event.key === 'ArrowLeft') stepPhoto(-1);
-      if (event.key === 'ArrowRight') stepPhoto(1);
-    });
-  })();
-</script>
+<script is:inline type="application/json" data-gallery-lightbox-config set:html={photoPayload}></script>

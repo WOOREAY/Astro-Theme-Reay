@@ -351,56 +351,15 @@ const latestYear = postsByYear[0]?.[0];
 </style>
 
 <script>
-  // Back to top button logic
-  const backToTopBtn = document.getElementById('back-to-top');
-
-  if (backToTopBtn) {
-    // Listen for scroll events
-    window.addEventListener('scroll', () => {
-      if (window.scrollY > 300) {
-        backToTopBtn.classList.add('show');
-      } else {
-        backToTopBtn.classList.remove('show');
-      }
-    });
-
-    // Click to scroll to top
-    backToTopBtn.addEventListener('click', () => {
-      window.scrollTo({
-        top: 0,
-        behavior: 'smooth',
-      });
-    });
-  }
-
-  // Smooth scroll to anchors
-  document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
-    anchor.addEventListener('click', (e) => {
-      e.preventDefault();
-      const target = document.querySelector(anchor.getAttribute('href') as string);
-      if (target) {
-        target.scrollIntoView({
-          behavior: 'smooth',
-          block: 'start',
-        });
-      }
-    });
-  });
-
-  /**
-   * Save and restore scroll position
-   * When clicking post links, save current page scroll position
-   * When returning from post page, restore to previous scroll position
-   */
   const SCROLL_KEY = 'timeline-scroll-position';
   const PATH_KEY = 'timeline-scroll-path';
+  let cleanupTimelineRuntime = () => {};
 
   function saveScrollPosition() {
     sessionStorage.setItem(SCROLL_KEY, window.scrollY.toString());
     sessionStorage.setItem(PATH_KEY, window.location.pathname);
   }
 
-  // Restore scroll position
   function restoreScrollPosition() {
     const savedScroll = sessionStorage.getItem(SCROLL_KEY);
     const savedPath = sessionStorage.getItem(PATH_KEY);
@@ -418,12 +377,64 @@ const latestYear = postsByYear[0]?.[0];
     }
   }
 
-  // Save scroll position when clicking post links
-  document.querySelectorAll('a[href^="/blog/"]').forEach((link) => {
-    link.addEventListener('click', saveScrollPosition);
-  });
+  function initTimelineRuntime() {
+    cleanupTimelineRuntime();
 
-  // Execute on page load
-  // 1. Check if scroll position needs to be restored
-  restoreScrollPosition();
+    const backToTopBtn = document.getElementById('back-to-top');
+    if (!backToTopBtn) {
+      cleanupTimelineRuntime = () => {};
+      return;
+    }
+
+    const controller = new AbortController();
+    const { signal } = controller;
+    let scrollFrame = 0;
+
+    const updateBackToTop = () => {
+      scrollFrame = 0;
+      backToTopBtn.classList.toggle('show', window.scrollY > 300);
+    };
+
+    const scheduleBackToTop = () => {
+      if (!scrollFrame) scrollFrame = requestAnimationFrame(updateBackToTop);
+    };
+
+    window.addEventListener('scroll', scheduleBackToTop, { passive: true, signal });
+    backToTopBtn.addEventListener('click', () => {
+      window.scrollTo({ top: 0, behavior: 'smooth' });
+    }, { signal });
+
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="#"]').forEach((anchor) => {
+      anchor.addEventListener('click', (event) => {
+        const href = anchor.getAttribute('href');
+        if (!href) return;
+        const target = document.querySelector(href);
+        if (!target) return;
+        event.preventDefault();
+        target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+      }, { signal });
+    });
+
+    document.querySelectorAll<HTMLAnchorElement>('a[href^="/blog/"]').forEach((link) => {
+      link.addEventListener('click', saveScrollPosition, { signal });
+    });
+
+    restoreScrollPosition();
+    updateBackToTop();
+
+    cleanupTimelineRuntime = () => {
+      controller.abort();
+      if (scrollFrame) cancelAnimationFrame(scrollFrame);
+      scrollFrame = 0;
+    };
+  }
+
+  document.addEventListener('astro:before-swap', () => cleanupTimelineRuntime());
+  document.addEventListener('astro:page-load', initTimelineRuntime);
+
+  if (document.readyState === 'loading') {
+    document.addEventListener('DOMContentLoaded', initTimelineRuntime, { once: true });
+  } else {
+    initTimelineRuntime();
+  }
 </script>

@@ -164,15 +164,16 @@ const { t } = useI18n();
 
   // Restore scroll position
   function restoreScrollPosition() {
+    if (!window.location.pathname.startsWith('/archives/series/')) return;
     const saved = sessionStorage.getItem('scrollPosition');
     if (saved) {
       try {
         const { x, y, path } = JSON.parse(saved);
         // Only restore scroll position for the same path
         if (path === window.location.pathname) {
+          sessionStorage.removeItem('scrollPosition');
           setTimeout(() => {
             window.scrollTo(x, y);
-            sessionStorage.removeItem('scrollPosition');
           }, 100);
         }
       } catch (e) {
@@ -183,7 +184,10 @@ const { t } = useI18n();
 
   // Attach scroll save listeners to all post links
   function attachScrollSaveListeners() {
+    if (!window.location.pathname.startsWith('/archives/series/')) return;
     document.querySelectorAll('a[href^="/blog/"]').forEach(link => {
+      if ((link as HTMLElement).dataset.reayScrollBound === 'true') return;
+      (link as HTMLElement).dataset.reayScrollBound = 'true';
       link.addEventListener('click', saveScrollPosition);
     });
   }

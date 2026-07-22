@@ -84,12 +84,24 @@ function formatErrorMessage(error: unknown): string {
 
 async function fetchWithTimeout(url: string, init: RequestInit = {}) {
   const controller = new AbortController();
-  const timeoutId = setTimeout(() => controller.abort(), REQUEST_TIMEOUT_MS);
+  const timeoutError = new Error(`GitHub request timed out after ${REQUEST_TIMEOUT_MS}ms`);
+  timeoutError.name = 'TimeoutError';
+  const timeoutId = setTimeout(() => controller.abort(timeoutError), REQUEST_TIMEOUT_MS);
 
   try {
-    return await fetch(url, {
+    const response = await fetch(url, {
       ...init,
       signal: controller.signal,
+    });
+
+    // Buffer the body before clearing the timer. `fetch()` resolves as soon as
+    // response headers arrive, so timing only that promise can still leave a
+    // stalled response body blocking a static build indefinitely.
+    const body = response.body ? await response.arrayBuffer() : null;
+    return new Response(body, {
+      status: response.status,
+      statusText: response.statusText,
+      headers: response.headers,
     });
   } finally {
     clearTimeout(timeoutId);

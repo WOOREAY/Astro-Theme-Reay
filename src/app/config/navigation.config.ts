@@ -20,7 +20,6 @@ export const navigationConfig = {
       key: 'nav.projects',
       icon: 'i-carbon:application-web',
       showInFooter: true,
-      prefetch: 'idle',
     },
     { href: '/gallery', key: 'nav.gallery', icon: 'i-carbon:image', showInFooter: true },
     { href: '/links', key: 'nav.links', icon: 'i-carbon:link' },

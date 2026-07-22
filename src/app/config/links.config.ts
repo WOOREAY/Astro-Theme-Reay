@@ -6,6 +6,10 @@
  */
 
 export const linksConfig: LinksConfig = {
+  previews: {
+    provider: 'none',
+    endpoint: 'https://api.microlink.io/',
+  },
   friendLinks: [
     {
       name: 'Astro',
@@ -51,17 +55,9 @@ export const linksConfig: LinksConfig = {
     },
     {
       name: 'GitHub',
-      url: 'https://github.com/yourusername',
+      url: 'https://github.com/WOOREAY',
       avatar: 'https://github.githubassets.com/favicons/favicon.png',
       description: 'Code, project experiments, and open-source work',
-      category: 'social',
-      type: 'social',
-    },
-    {
-      name: 'Twitter',
-      url: 'https://twitter.com/yourusername',
-      avatar: 'https://abs.twimg.com/favicons/twitter.ico',
-      description: 'Short updates and technical notes',
       category: 'social',
       type: 'social',
     },
@@ -89,17 +85,16 @@ export const linksConfig: LinksConfig = {
     title: 'Apply for Link Exchange',
     description: 'Share a personal site, technical blog, or useful resource.',
     contacts: [
-      { label: 'Email', value: 'your.email@example.com', icon: 'i-carbon:email' },
-      { label: 'GitHub', value: 'github.com/yourusername', icon: 'i-carbon:logo-github' },
-      { label: 'Twitter', value: '@yourusername', icon: 'i-carbon:logo-twitter' },
+      { label: 'GitHub', value: 'github.com/WOOREAY', icon: 'i-carbon:logo-github' },
+      { label: 'Website', value: 'https://wooreay.github.io', icon: 'i-carbon:earth' },
     ],
   },
 
   mySiteInfo: {
-    name: 'Your Site Name',
-    url: 'https://your-site.example.com',
+    name: 'WOOREAY',
+    url: 'https://wooreay.github.io',
     avatar: '/images/profile/avatar.png',
-    description: 'Technical notes, project practice, and long-term learning logs',
+    description: 'Open-source projects, technical notes, and long-term learning',
   },
 };
 
@@ -108,6 +103,11 @@ export const friendLinks = linksConfig.friendLinks;
 export const linkCategories = linksConfig.linkCategories;
 export const linkApplicationInfo = linksConfig.linkApplicationInfo;
 export const mySiteInfo = linksConfig.mySiteInfo;
+
+export interface LinkPreviewConfig {
+  provider: 'none' | 'microlink';
+  endpoint: string;
+}
 
 export type LinkType = 'friend' | 'site' | 'social';
 
@@ -152,6 +152,7 @@ export interface LinkApplicationInfo {
 export interface SiteInfo extends BaseLink {}
 
 export interface LinksConfig {
+  previews: LinkPreviewConfig;
   friendLinks: FriendLink[];
   linkCategories: LinkCategoriesConfig;
   linkApplicationInfo: LinkApplicationInfo;

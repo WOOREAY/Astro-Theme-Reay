@@ -53,19 +53,20 @@ const latestPosts = allPosts.slice(0, 6);
 
                   <div class="relative z-10">
                     <div class="post-meta flex items-center justify-between mb-2">
-                      <time class="flex items-center gap-1 px-2 py-0.5 text-xs font-500 bg-[var(--md-sys-color-surface-container-highest)]/80 text-[var(--md-sys-color-on-surface-variant)] rounded-lg backdrop-blur-sm">
+                      <time
+                        class="flex items-center gap-1 px-2 py-0.5 text-xs font-500 bg-[var(--md-sys-color-surface-container-highest)]/80 text-[var(--md-sys-color-on-surface-variant)] rounded-lg backdrop-blur-sm"
+                        datetime={post.data.publishDate.toISOString()}
+                      >
                         <i class="i-carbon:calendar text-sm text-[var(--md-sys-color-primary)]"></i>
-                        {new Date(post.data.publishDate).toLocaleDateString('zh-CN', {
-                          year: 'numeric',
-                          month: '2-digit',
-                          day: '2-digit'
-                        })}
+                        <span data-i18n-date={post.data.publishDate.toISOString()} data-i18n-date-format="short">
+                          {new Date(post.data.publishDate).toLocaleDateString('zh-CN')}
+                        </span>
                       </time>
 
                       <!-- 阅读时间 -->
                       <span class="flex items-center gap-1 text-xs text-[var(--md-sys-color-on-surface-variant)]">
                         <i class="i-carbon:time text-sm"></i>
-                        {calculateReadingTime(post.body)} 分钟
+                        {calculateReadingTime(post.body)} <span data-i18n="blog.readTime">分钟阅读</span>
                       </span>
                     </div>
 
@@ -133,7 +134,7 @@ const latestPosts = allPosts.slice(0, 6);
           <div class="flex items-center justify-center gap-4 mt-4 text-xs text-[var(--md-sys-color-on-surface-variant)]">
             <span class="flex items-center gap-1.5">
               <i class="i-carbon:document text-sm text-[var(--md-sys-color-primary)]"></i>
-              <span data-i18n="posts.stats.total">共</span> {allPosts.length} <span data-i18n="posts.stats.total">篇文章</span>
+              <span data-i18n="posts.stats.total">笔记总数</span> {allPosts.length}
             </span>
             <span class="w-1 h-1 rounded-full bg-[var(--md-sys-color-outline)]"></span>
             <span class="flex items-center gap-1.5">
@@ -181,7 +182,7 @@ const latestPosts = allPosts.slice(0, 6);
 
   /* Icon wrapper pulsing glow animation */
   .icon-wrapper {
-    animation: pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 2s ease-in-out 3;
   }
 
   @keyframes pulse-glow {

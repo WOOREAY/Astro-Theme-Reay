@@ -8,7 +8,8 @@ import { getAboutConfig, getLocalizedUserContent, getUserProfile } from '@app/co
 import type { AboutSectionItem } from '@app/config/user.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
-const { currentLang } = useI18n();
+const { currentLang, t } = useI18n();
+type TranslationKey = Parameters<typeof t>[0];
 const user = getUserProfile();
 const aboutConfig = getAboutConfig();
 const userContent = getLocalizedUserContent(currentLang);
@@ -48,10 +49,25 @@ const labels = isZh
       more: 'Full About',
       empty: 'Being refined',
     };
+const labelKeys = {
+  profile: 'home.about.profile',
+  now: 'home.about.now',
+  education: 'home.about.education',
+  timeline: 'home.about.timeline',
+  focus: 'home.about.focus',
+  profileFocus: 'home.about.profileFocus',
+  interests: 'home.about.interests',
+  channels: 'home.about.channels',
+  contact: 'home.about.contact',
+  status: 'home.about.status',
+  available: 'home.about.available',
+  location: 'home.about.location',
+  more: 'home.about.more',
+} as const;
 
 const primaryEducation = aboutConfig.education[0];
 const latestTimeline = aboutConfig.timeline[0];
-const interestSection = aboutConfig.sections.find((section) => section.id === 'hobbies') ?? aboutConfig.sections[2];
+const interestSection = aboutConfig.sections.find((section) => section.id === 'interests' || section.id === 'hobbies') ?? aboutConfig.sections[2];
 const homeToolSections = aboutConfig.sections.slice(0, 2).map((section) => ({
   ...section,
   items: section.items.slice(0, 4),
@@ -67,19 +83,25 @@ const profileHighlights = [
   {
     icon: 'i-carbon:activity',
     label: labels.status,
+    labelKey: labelKeys.status,
     value: labels.available,
+    valueKey: labelKeys.available,
     tone: 'success',
   },
   {
     icon: focusChips[0]?.icon ?? 'i-carbon:center-circle',
     label: labels.profileFocus,
+    labelKey: labelKeys.profileFocus,
     value: focusChips[0]?.name ?? labels.empty,
+    valueKey: undefined,
     tone: 'secondary',
   },
   {
     icon: 'i-carbon:connect',
     label: labels.channels,
+    labelKey: labelKeys.channels,
     value: `${channelCount}`,
+    valueKey: undefined,
     tone: 'primary',
   },
 ];
@@ -88,28 +110,33 @@ const profileNotes = [
   {
     icon: 'i-carbon:time',
     label: labels.timeline,
+    labelKey: labelKeys.timeline,
     value: latestTimeline?.event ?? labels.empty,
   },
   {
     icon: interestSection?.icon ?? 'i-carbon:favorite',
     label: labels.interests,
+    labelKey: labelKeys.interests,
     value: interestSection?.items.slice(0, 2).map((item) => item.name).join(' / ') ?? labels.empty,
   },
 ];
 const snapshotCards = [
-  {
+  ...(user.location ? [{
     icon: 'i-carbon:location',
     label: labels.location,
+    labelKey: labelKeys.location,
     value: user.location,
-  },
-  {
+  }] : []),
+  ...(primaryEducation ? [{
     icon: 'i-carbon:education',
     label: labels.education,
+    labelKey: labelKeys.education,
     value: primaryEducation?.school ?? labels.empty,
-  },
+  }] : []),
   {
     icon: 'i-carbon:connect',
     label: labels.channels,
+    labelKey: labelKeys.channels,
     value: `${channelCount}`,
   },
 ];
@@ -154,12 +181,16 @@ const snapshotCards = [
           <div class="relative z-10 grid grid-cols-[auto_1fr] gap-4 md:gap-6">
             <div class="intro-left">
               <div class="avatar-wrapper relative">
-                <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] opacity-20 animate-pulse"></div>
+                <div class="absolute inset-0 rounded-full bg-gradient-to-br from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] opacity-20"></div>
                 <div class="absolute inset-[-4px] rounded-full bg-gradient-to-br from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] opacity-0 group-hover:opacity-100 blur-sm transition-opacity duration-500"></div>
 
                 <img
                   src={user.avatar}
                   alt={user.name}
+                  width="512"
+                  height="512"
+                  loading="lazy"
+                  decoding="async"
                   class="avatar relative z-10"
                 />
 
@@ -171,36 +202,38 @@ const snapshotCards = [
             </div>
 
             <div class="intro-right flex flex-col gap-2">
-              <span class="profile-eyebrow">{labels.profile}</span>
+              <span class="profile-eyebrow" data-i18n={labelKeys.profile}>{labels.profile}</span>
               <h3 class="name text-xl md:text-2xl font-700 bg-gradient-to-r from-[var(--md-sys-color-secondary)] to-[var(--md-sys-color-primary)] bg-clip-text text-transparent mb-1">
                 {user.name}
               </h3>
 
               <p class="tagline">{userContent.tagline}</p>
 
-              <p class="location flex items-center gap-1.5 text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)]">
-                <i class="i-carbon:location text-base text-[var(--md-sys-color-secondary)]"></i>
-                {user.location}
-              </p>
+              {user.location && (
+                <p class="location flex items-center gap-1.5 text-xs md:text-sm text-[var(--md-sys-color-on-surface-variant)]">
+                  <i class="i-carbon:location text-base text-[var(--md-sys-color-secondary)]"></i>
+                  {user.location}
+                </p>
+              )}
 
               <p class="bio text-xs md:text-sm leading-relaxed text-[var(--md-sys-color-on-surface-variant)]/90 mt-1" data-user-content="bio">
                 {userContent.bio}
               </p>
 
-              <div class="profile-meta-grid" aria-label={labels.profile}>
+              <div class="profile-meta-grid" aria-label={labels.profile} data-i18n={labelKeys.profile} data-i18n-attr="aria-label">
                 {profileHighlights.map((item) => (
                   <div class={`profile-meta-card tone-${item.tone}`}>
                     <span class="profile-meta-icon" aria-hidden="true">
                       <i class={item.icon}></i>
                     </span>
-                    <span class="profile-meta-label">{item.label}</span>
-                    <strong>{item.value}</strong>
+                    <span class="profile-meta-label" data-i18n={item.labelKey}>{item.label}</span>
+                    <strong data-i18n={item.valueKey}>{item.value}</strong>
                   </div>
                 ))}
               </div>
 
               <!-- 社交链接 - 美化版 -->
-              <div class="social-links" aria-label={labels.contact}>
+              <div class="social-links" aria-label={labels.contact} data-i18n={labelKeys.contact} data-i18n-attr="aria-label">
                 {contactLinks.map((social, index) => (
                   <a
                     href={social.url}
@@ -220,13 +253,13 @@ const snapshotCards = [
                 ))}
               </div>
 
-              <div class="profile-note-strip" aria-label={labels.timeline}>
+              <div class="profile-note-strip" aria-label={labels.timeline} data-i18n={labelKeys.timeline} data-i18n-attr="aria-label">
                 {profileNotes.map((item) => (
                   <div class="profile-note-card">
                     <span class="profile-note-icon" aria-hidden="true">
                       <i class={item.icon}></i>
                     </span>
-                    <span class="profile-note-label">{item.label}</span>
+                    <span class="profile-note-label" data-i18n={item.labelKey}>{item.label}</span>
                     <strong>{item.value}</strong>
                   </div>
                 ))}
@@ -241,7 +274,7 @@ const snapshotCards = [
               <span class="snapshot-icon" aria-hidden="true">
                 <i class={card.icon}></i>
               </span>
-              <span class="snapshot-label">{card.label}</span>
+              <span class="snapshot-label" data-i18n={card.labelKey}>{card.label}</span>
               <strong>{card.value}</strong>
             </div>
           ))}
@@ -252,11 +285,11 @@ const snapshotCards = [
         <div class="about-current-card animate-fade-in" style="animation-delay: 250ms;">
           <div class="about-card-heading">
             <div>
-              <span>{labels.now}</span>
-              <h3>{labels.focus}</h3>
+              <span data-i18n={labelKeys.now}>{labels.now}</span>
+              <h3 data-i18n={labelKeys.focus}>{labels.focus}</h3>
             </div>
             <a href="/about" class="about-more-link">
-              <span>{labels.more}</span>
+              <span data-i18n={labelKeys.more}>{labels.more}</span>
               <i class="i-carbon:arrow-up-right"></i>
             </a>
           </div>
@@ -268,7 +301,7 @@ const snapshotCards = [
                   <i class="i-carbon:education"></i>
                 </span>
                 <div>
-                  <span class="current-label">{labels.education}</span>
+                  <span class="current-label" data-i18n={labelKeys.education}>{labels.education}</span>
                   <strong>{primaryEducation.school}</strong>
                   <p>{[primaryEducation.major, primaryEducation.degree].filter(Boolean).join(' · ') || primaryEducation.description}</p>
                 </div>
@@ -307,9 +340,13 @@ const snapshotCards = [
                 <div class="icon-wrapper inline-flex items-center justify-center w-8 h-8 bg-gradient-to-br from-[var(--md-sys-color-secondary-container)] to-[var(--md-sys-color-primary-container)] rounded-lg">
                   <i class={`${section.icon} text-base text-[var(--md-sys-color-secondary)]`}></i>
                 </div>
-                <h3 class="text-base md:text-lg font-700 text-[var(--md-sys-color-on-surface)]" data-i18n={`about.${section.id}.title`}>{section.title}</h3>
+                <h3 class="text-base md:text-lg font-700 text-[var(--md-sys-color-on-surface)]" data-i18n={section.title.startsWith('about.') ? section.title : `about.${section.id}.title`}>
+                  {section.title.startsWith('about.') ? t(section.title as TranslationKey) : section.title}
+                </h3>
               </div>
-              <p class="tools-description text-xs text-[var(--md-sys-color-on-surface-variant)] mb-3" data-i18n={`about.${section.id}.subtitle`}>{section.description}</p>
+              <p class="tools-description text-xs text-[var(--md-sys-color-on-surface-variant)] mb-3" data-i18n={section.description?.startsWith('about.') ? section.description : `about.${section.id}.subtitle`}>
+                {section.description?.startsWith('about.') ? t(section.description as TranslationKey) : section.description}
+              </p>
 
               <div class={`tools-grid cols-${section.columns} ${section.compact ? 'compact' : ''}`}>
                 {section.items.map((item: AboutSectionItem, itemIndex: number) => (
@@ -354,8 +391,10 @@ const snapshotCards = [
         {interestSection && (
           <div class="interest-card animate-fade-in" style="animation-delay: 620ms;">
             <div class="interest-heading">
-              <span>{labels.interests}</span>
-              <strong data-i18n={`about.${interestSection.id}.title`}>{interestSection.title}</strong>
+              <span data-i18n={labelKeys.interests}>{labels.interests}</span>
+              <strong data-i18n={interestSection.title.startsWith('about.') ? interestSection.title : `about.${interestSection.id}.title`}>
+                {interestSection.title.startsWith('about.') ? t(interestSection.title as TranslationKey) : interestSection.title}
+              </strong>
             </div>
             <div class="interest-grid">
               {interestSection.items.slice(0, 4).map((item) => (

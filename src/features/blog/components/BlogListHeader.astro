@@ -16,10 +16,10 @@ interface Props {
 const { totalPosts, totalTags = 0, totalSeries = 0, latestDate } = Astro.props;
 const { t } = useI18n();
 const stats = [
-  { icon: 'i-carbon:document', label: t('blog.stats.posts'), value: String(totalPosts) },
-  { icon: 'i-carbon:tag', label: t('blog.stats.tags'), value: String(totalTags) },
-  { icon: 'i-carbon:list-boxes', label: t('blog.stats.series'), value: String(totalSeries) },
-  { icon: 'i-carbon:recently-viewed', label: t('blog.stats.updated'), value: latestDate ? formatDate(latestDate) : '-' },
+  { icon: 'i-carbon:document', key: 'blog.stats.posts', label: t('blog.stats.posts'), value: String(totalPosts) },
+  { icon: 'i-carbon:tag', key: 'blog.stats.tags', label: t('blog.stats.tags'), value: String(totalTags) },
+  { icon: 'i-carbon:list-boxes', key: 'blog.stats.series', label: t('blog.stats.series'), value: String(totalSeries) },
+  { icon: 'i-carbon:recently-viewed', key: 'blog.stats.updated', label: t('blog.stats.updated'), value: latestDate ? formatDate(latestDate) : '-', date: latestDate },
 ];
 ---
 
@@ -32,12 +32,12 @@ const stats = [
     <p class="page-subtitle" data-i18n="blog.subtitle">
       {t('blog.subtitle')}
     </p>
-    <div class="blog-stats" aria-label="Blog statistics">
+    <div class="blog-stats" aria-label={t('blog.statistics')} data-i18n="blog.statistics" data-i18n-attr="aria-label">
       {stats.map(item => (
         <div class="blog-stat-item">
           <i class={item.icon}></i>
-          <span>{item.label}</span>
-          <strong>{item.value}</strong>
+          <span data-i18n={item.key}>{item.label}</span>
+          <strong data-i18n-date={item.date?.toISOString()}>{item.value}</strong>
         </div>
       ))}
     </div>

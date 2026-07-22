@@ -3,7 +3,7 @@
  * Lazy comment system wrapper.
  * Supports static-site friendly providers used by common personal blog themes.
  */
-import { getCommentsConfig } from '@app/config/site.config';
+import { getCommentsConfig, getFeaturesConfig } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 import type { CommentProvider } from '@app/config/comments.config';
 
@@ -48,11 +48,14 @@ function hasProviderConfig() {
 }
 
 const modeEnabled = mode === 'guestbook' ? config.guestbook.enabled : config.article.enabled;
-const isEnabled = Boolean(config.enabled && modeEnabled && enabled);
+const isEnabled = Boolean(
+  getFeaturesConfig().integrations.comments && config.enabled && modeEnabled && enabled,
+);
 const isConfigured = isEnabled && hasProviderConfig();
 const sectionTitle = mode === 'guestbook' ? t('guestbook.commentsTitle') : t('comments.title');
 const sectionDescription = description ?? (mode === 'guestbook' ? t('guestbook.commentsDesc') : t('comments.description'));
 const loadLabel = mode === 'guestbook' ? t('guestbook.load') : t('comments.load');
+const loadHint = config.autoLoad ? t('comments.lazyHint') : t('comments.manualHint');
 const threadKey = pageKey.replace(/^\/+|\/+$/g, '') || 'home';
 
 const clientConfig = {
@@ -118,7 +121,7 @@ const clientConfigJson = JSON.stringify(clientConfig).replace(/</g, '\\u003c');
         </button>
         <span class="comment-lazy-hint">
           <i class="i-carbon:timer"></i>
-          {t('comments.lazyHint')}
+          {loadHint}
         </span>
       </div>
       <div class="comment-host-shell">

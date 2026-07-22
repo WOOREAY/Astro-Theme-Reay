@@ -15,10 +15,12 @@ const defaultRepo =
     : '';
 
 export const commentsConfig = {
-  enabled: Boolean(defaultRepo),
+  /** Enable only after the selected provider has been configured and verified. */
+  enabled: false,
   provider: 'utterances' as CommentProvider,
   lazy: true,
-  autoLoad: true,
+  /** Third-party scripts require an explicit visitor action by default. */
+  autoLoad: false,
   article: {
     enabled: true,
   },

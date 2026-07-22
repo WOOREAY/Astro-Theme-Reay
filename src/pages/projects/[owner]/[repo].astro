@@ -3,27 +3,19 @@
  * Project Detail Page
  * Display GitHub README as blog post
  */
-import { marked } from 'marked';
 import ProjectDetailLayout from '@app/layouts/projects/ProjectDetailLayout.astro';
 import ProjectDetailHeader from '@features/projects/components/ProjectDetailHeader.astro';
 import ReadmeContent from '@features/projects/components/ReadmeContent.astro';
-import { getGitHubRepo, getRepoReadme, getUserRepos } from '@features/projects/lib/github';
-import { getProjectsConfig } from '@app/config/site.config';
+import { getGitHubRepo, getRepoReadme } from '@features/projects/lib/github';
+import { getConfiguredProjects } from '@features/projects/lib/projects';
 import { useI18n } from '@features/i18n/lib/i18n';
+import { renderSafeReadme } from '@features/projects/lib/readme';
 
 const { t } = useI18n();
 
 // Generate static paths
 export async function getStaticPaths() {
-  const { githubUsername } = getProjectsConfig();
-  // Only fetch user's public repositories
-  const userRepos = await getUserRepos(githubUsername);
-  const projects = userRepos
-    .filter(repo => !repo.isFork && !repo.isArchived)
-    .map(repo => ({
-      owner: repo.owner,
-      name: repo.name,
-    }));
+  const projects = await getConfiguredProjects();
   return projects.map(project => ({
     params: {
       owner: project.owner,
@@ -50,17 +42,7 @@ if (!readmeContent) {
   return Astro.redirect('/404');
 }
 
-// Remove YAML front matter (if exists)
-// Match YAML blocks in the form --- ... ---
-let processedContent = readmeContent;
-const yamlFrontMatterRegex = /^---\s*\n([\s\S]*?)\n---\s*\n/;
-const match = processedContent.match(yamlFrontMatterRegex);
-if (match) {
-  processedContent = processedContent.replace(yamlFrontMatterRegex, '');
-}
-
-// Convert Markdown to HTML
-const htmlContent = await marked(processedContent);
+const htmlContent = await renderSafeReadme(readmeContent);
 ---
 
 <ProjectDetailLayout

@@ -4,6 +4,7 @@
  * Individual project card display
  */
 import { formatNumber, formatDate, getLanguageColor } from '@features/projects/lib/github';
+import { getProjectsConfig } from '@app/config/site.config';
 
 interface Props {
   project: {
@@ -23,6 +24,8 @@ interface Props {
 }
 
 const { project } = Astro.props;
+const { displaySettings } = getProjectsConfig();
+const showStats = displaySettings.showStars || displaySettings.showForks || displaySettings.showLastUpdate;
 ---
 
 <a
@@ -30,9 +33,7 @@ const { project } = Astro.props;
   class="reay-card project-card"
   data-category={project.category}
   data-featured={project.featured}
-  data-reay-prefetch="hover"
   data-astro-prefetch="hover"
-  rel="prefetch"
 >
   <div class="project-main">
     <div class="project-header">
@@ -53,7 +54,7 @@ const { project } = Astro.props;
     </p>
 
     <div class="project-tags">
-      {project.language && (
+      {displaySettings.showLanguages && project.language && (
         <span class="tag tag-language reay-chip" style={`--lang-color: ${getLanguageColor(project.language)}`}>
           <span class="lang-dot"></span>
           {project.language}
@@ -66,20 +67,20 @@ const { project } = Astro.props;
   </div>
 
   <!-- 右侧：统计信息 -->
-  <div class="project-stats">
-    <div class="stat">
+  {showStats && <div class="project-stats">
+    {displaySettings.showStars && <div class="stat">
       <i class="i-carbon:star"></i>
       <span>{formatNumber(project.stars)}</span>
-    </div>
-    <div class="stat">
+    </div>}
+    {displaySettings.showForks && <div class="stat">
       <i class="i-carbon:branch"></i>
       <span>{formatNumber(project.forks)}</span>
-    </div>
-    <div class="stat stat-updated">
+    </div>}
+    {displaySettings.showLastUpdate && <div class="stat stat-updated">
       <i class="i-carbon:time"></i>
       <span>{formatDate(project.updatedAt)}</span>
-    </div>
-  </div>
+    </div>}
+  </div>}
 </a>
 
 <style>

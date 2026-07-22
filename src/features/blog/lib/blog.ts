@@ -5,6 +5,7 @@
 
 import { getCollection } from 'astro:content'
 import type { CollectionEntry } from 'astro:content'
+import { isPublishableContentVisible } from './visibility'
 
 const BLOG_FILE_EXTENSION_PATTERN = /\.(md|mdx)$/i
 
@@ -74,12 +75,7 @@ export function getSeriesUrl(series: string): string {
  * Get all blog posts excluding drafts and unpublished content
  */
 export async function getAllPosts() {
-  const posts = await getCollection('blog', ({ data }) => {
-    if (import.meta.env.DEV) {
-      return true;
-    }
-    return !data.draft && data.published !== false;
-  })
+  const posts = await getCollection('blog', ({ data }) => isPublishableContentVisible(data))
   return posts
 }
 

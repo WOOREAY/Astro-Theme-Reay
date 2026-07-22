@@ -18,7 +18,7 @@ export interface CommentClientConfig {
 export type CommentProviderLoader = (
   host: HTMLElement,
   config: CommentClientConfig,
-) => void | Promise<void>;
+) => void | (() => void) | Promise<void | (() => void)>;
 
 interface TwikooClient {
   init(options: {

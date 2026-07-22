@@ -5,38 +5,14 @@
  * This file keeps global media settings that are not content entries.
  */
 
-export const musicConfig = {
+export const musicConfig: MusicConfig = {
   player: {
-    defaultTrackId: 'background-music',
+    defaultTrackId: '',
     autoAdvance: true,
   },
-  playlists: [
-    {
-      id: 'background',
-      title: '背景音乐',
-      description: '站点背景音乐播放列表。',
-      icon: 'i-carbon:music',
-      accent: '#2563eb',
-    },
-  ],
-  tracks: [
-    {
-      id: 'background-music',
-      playlistId: 'background',
-      title: 'Background Music',
-      artist: 'Your Artist',
-      album: 'Site Playlist',
-      duration: '00:00',
-      durationSeconds: 0,
-      src: '/audio/background.mp3',
-      cover: '',
-      tone: 'calm',
-      tags: ['Background'],
-      accent: '#2563eb',
-      featured: true,
-    },
-  ],
-} satisfies MusicConfig;
+  playlists: [],
+  tracks: [],
+};
 
 export const mediaConfig = {
   music: musicConfig,

@@ -1,7 +1,9 @@
 import { commentProviderLoaders } from './providers';
 import type { CommentClientConfig } from './types';
 
-const initializedSections = new WeakSet<HTMLElement>();
+type Cleanup = () => void;
+
+const sectionCleanups = new Map<HTMLElement, Cleanup>();
 let runtimeBound = false;
 
 function clearHost(host: HTMLElement) {
@@ -19,7 +21,7 @@ function parseConfig(node: HTMLScriptElement): CommentClientConfig | null {
 }
 
 function initCommentSection(root: HTMLElement) {
-  if (initializedSections.has(root)) return;
+  if (sectionCleanups.has(root)) return;
 
   const host = root.querySelector<HTMLElement>('[data-comment-host]');
   const button = root.querySelector<HTMLButtonElement>('[data-comment-load]');
@@ -29,8 +31,23 @@ function initCommentSection(root: HTMLElement) {
   const config = parseConfig(configNode);
   if (!config) return;
 
-  initializedSections.add(root);
+  const controller = new AbortController();
+  let observer: IntersectionObserver | null = null;
+  let providerCleanup: Cleanup | null = null;
   let loaded = false;
+
+  const cleanup = () => {
+    controller.abort();
+    observer?.disconnect();
+    observer = null;
+    providerCleanup?.();
+    providerCleanup = null;
+    clearHost(host);
+    root.classList.remove('is-loading', 'is-loaded', 'is-error');
+    button.hidden = false;
+    sectionCleanups.delete(root);
+  };
+  sectionCleanups.set(root, cleanup);
 
   const loadComments = async () => {
     if (loaded) return;
@@ -42,7 +59,12 @@ function initCommentSection(root: HTMLElement) {
     clearHost(host);
 
     try {
-      await commentProviderLoaders[config.provider](host, config);
+      const providerDisposer = await commentProviderLoaders[config.provider](host, config);
+      if (controller.signal.aborted) {
+        providerDisposer?.();
+        return;
+      }
+      providerCleanup = providerDisposer ?? null;
       root.classList.remove('is-loading');
       root.classList.add('is-loaded');
     } catch (error) {
@@ -55,7 +77,7 @@ function initCommentSection(root: HTMLElement) {
     }
   };
 
-  button.addEventListener('click', loadComments);
+  button.addEventListener('click', loadComments, { signal: controller.signal });
 
   if (!config.autoLoad) return;
 
@@ -64,9 +86,9 @@ function initCommentSection(root: HTMLElement) {
     return;
   }
 
-  const observer = new IntersectionObserver((entries) => {
+  observer = new IntersectionObserver((entries) => {
     if (entries.some((entry) => entry.isIntersecting)) {
-      observer.disconnect();
+      observer?.disconnect();
       void loadComments();
     }
   }, { rootMargin: '280px 0px' });
@@ -80,10 +102,16 @@ export function initCommentSections() {
     .forEach(initCommentSection);
 }
 
+export function cleanupCommentSections() {
+  [...sectionCleanups.values()].forEach((cleanup) => cleanup());
+  sectionCleanups.clear();
+}
+
 export function initCommentsRuntime() {
   initCommentSections();
   if (runtimeBound) return;
 
   runtimeBound = true;
+  document.addEventListener('astro:before-swap', cleanupCommentSections);
   document.addEventListener('astro:page-load', initCommentSections);
 }

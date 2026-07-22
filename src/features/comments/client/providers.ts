@@ -4,8 +4,10 @@ import type {
   DisqusConfigContext,
 } from './types';
 
-const WALINE_MODULE_URL = 'https://unpkg.com/@waline/client@v3/dist/waline.js';
-const ARTALK_MODULE_URL = 'https://cdn.jsdelivr.net/npm/artalk@2/dist/Artalk.js';
+const WALINE_VERSION = '3.15.2';
+const ARTALK_VERSION = '2.9.1';
+const WALINE_MODULE_URL = `https://unpkg.com/@waline/client@${WALINE_VERSION}/dist/waline.js`;
+const ARTALK_MODULE_URL = `https://cdn.jsdelivr.net/npm/artalk@${ARTALK_VERSION}/dist/Artalk.js`;
 
 function getThemeName() {
   return document.documentElement.getAttribute('data-theme') === 'dark' ? 'dark' : 'light';
@@ -54,12 +56,12 @@ const loadUtterances: CommentProviderLoader = (host, config) => {
 };
 
 const loadWaline: CommentProviderLoader = async (host, config) => {
-  addStylesheet('waline-css', 'https://unpkg.com/@waline/client@v3/dist/waline.css');
+  addStylesheet('waline-css', `https://unpkg.com/@waline/client@${WALINE_VERSION}/dist/waline.css`);
   const waline = await import(/* @vite-ignore */ WALINE_MODULE_URL) as {
-    init(options: Record<string, unknown>): void;
+    init(options: Record<string, unknown>): { destroy?: () => void } | void;
   };
 
-  waline.init({
+  const instance = waline.init({
     el: host,
     serverURL: config.waline.serverURL,
     path: config.pageKey,
@@ -67,6 +69,8 @@ const loadWaline: CommentProviderLoader = async (host, config) => {
     reaction: config.waline.reaction,
     dark: config.waline.dark || 'html[data-theme="dark"]',
   });
+
+  return () => instance?.destroy?.();
 };
 
 const loadTwikoo: CommentProviderLoader = (host, config) => new Promise((resolve, reject) => {
@@ -87,12 +91,12 @@ const loadTwikoo: CommentProviderLoader = (host, config) => new Promise((resolve
 });
 
 const loadArtalk: CommentProviderLoader = async (host, config) => {
-  addStylesheet('artalk-css', 'https://cdn.jsdelivr.net/npm/artalk@2/dist/Artalk.css');
+  addStylesheet('artalk-css', `https://cdn.jsdelivr.net/npm/artalk@${ARTALK_VERSION}/dist/Artalk.css`);
   const artalk = await import(/* @vite-ignore */ ARTALK_MODULE_URL) as {
-    default: { init(options: Record<string, unknown>): void };
+    default: { init(options: Record<string, unknown>): { destroy?: () => void } | void };
   };
 
-  artalk.default.init({
+  const instance = artalk.default.init({
     el: host,
     pageKey: config.pageKey,
     pageTitle: config.pageTitle,
@@ -100,6 +104,8 @@ const loadArtalk: CommentProviderLoader = async (host, config) => {
     site: config.artalk.site,
     locale: config.artalk.locale || 'zh-CN',
   });
+
+  return () => instance?.destroy?.();
 };
 
 const loadDisqus: CommentProviderLoader = (host, config) => {
@@ -117,7 +123,11 @@ const loadDisqus: CommentProviderLoader = (host, config) => {
   script.src = `https://${config.disqus.shortname}.disqus.com/embed.js`;
   script.async = true;
   script.setAttribute('data-timestamp', String(Date.now()));
-  document.body.appendChild(script);
+  host.appendChild(script);
+
+  return () => {
+    delete window.disqus_config;
+  };
 };
 
 export const commentProviderLoaders = {

@@ -9,7 +9,7 @@ import { user } from './user.config';
 
 const defaultGitHubUsername = user.github.username;
 
-export const projectsConfig = {
+export const projectsConfig: ProjectsConfig = {
   githubUsername: defaultGitHubUsername,
   githubConfig: {
     username: defaultGitHubUsername,
@@ -19,7 +19,6 @@ export const projectsConfig = {
   },
 
   displaySettings: {
-    itemsPerPage: 12,
     showLanguages: true,
     showStars: true,
     showForks: true,
@@ -77,7 +76,7 @@ export const projectsConfig = {
     //   tags: ['astro', 'typescript', 'material-design'],
     // },
   ],
-} satisfies ProjectsConfig;
+};
 
 // Backward-compatible exports for older custom code.
 export const projectCategories = projectsConfig.categories;
@@ -110,7 +109,6 @@ export interface GithubConfig {
 }
 
 export interface ProjectDisplaySettings {
-  itemsPerPage: number;
   showLanguages: boolean;
   showStars: boolean;
   showForks: boolean;

@@ -8,14 +8,16 @@
  * - Avatar and featured badge
  * - Smooth animations
  */
-import type { FriendLink } from '@app/config/links.config';
+import { linksConfig, type FriendLink } from '@app/config/links.config';
 
 interface Props {
   link: FriendLink;
 }
 
 const { link } = Astro.props;
-const previewUrl = link.screenshot || `https://api.microlink.io/?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`;
+const previewUrl = link.screenshot || (linksConfig.previews.provider === 'microlink'
+  ? `${linksConfig.previews.endpoint}?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`
+  : '');
 ---
 
 <a
@@ -26,7 +28,7 @@ const previewUrl = link.screenshot || `https://api.microlink.io/?url=${encodeURI
   data-link-card
   data-category={link.category}
   data-featured={link.featured}
-  data-preview-src={previewUrl}
+  data-preview-src={previewUrl || undefined}
 >
   <!-- Background: Website screenshot -->
   <div class="link-background">

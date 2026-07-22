@@ -15,7 +15,14 @@ const content = getLocalizedUserContent(currentLang);
 <section class="intro-section">
   <div class="intro-container">
     <div class="intro-avatar">
-      <img src={user.avatar} alt={user.name} class="avatar-image" />
+      <img
+        src={user.avatar}
+        alt={user.name}
+        width="512"
+        height="512"
+        decoding="async"
+        class="avatar-image"
+      />
       <div class="avatar-decoration"></div>
     </div>
     

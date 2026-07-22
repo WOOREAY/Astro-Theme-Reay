@@ -340,7 +340,7 @@
 
   /* Icon wrapper pulsing glow animation */
   .section-header .icon-wrapper {
-    animation: pulse-glow 2s ease-in-out infinite;
+    animation: pulse-glow 2s ease-in-out 3;
   }
   
   @keyframes pulse-glow {

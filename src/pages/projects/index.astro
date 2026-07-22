@@ -14,7 +14,8 @@ import CategoryTabs from '@features/projects/components/CategoryTabs.astro';
 import ProjectCard from '@features/projects/components/ProjectCard.astro';
 import GitHubActivityPanel from '@features/projects/components/GitHubActivityPanel.astro';
 import { getProjectsConfig } from '@app/config/site.config';
-import { getGitHubContributionCalendar, getLanguageColor, getUserRepos } from '@features/projects/lib/github';
+import { getGitHubContributionCalendar, getLanguageColor } from '@features/projects/lib/github';
+import { getConfiguredProjects } from '@features/projects/lib/projects';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t } = useI18n();
@@ -26,23 +27,9 @@ const loadTimerLabel = `⏱️  Total project load time ${Date.now().toString(36
 const repoTimerLabel = `⏱️  Fetch user repos ${Date.now().toString(36)}-${Math.random().toString(36).slice(2, 7)}`;
 console.time(loadTimerLabel);
 
-// Only fetch user's all public repositories
 console.time(repoTimerLabel);
-const userRepos = await getUserRepos(githubUsername);
+const allRepos = await getConfiguredProjects();
 console.timeEnd(repoTimerLabel);
-
-const allRepos = userRepos
-  .filter(repo => !repo.isFork && !repo.isArchived)
-  .map(repo => ({
-    ...repo,
-    category: 'all',
-    featured: false,
-    customDescription: undefined,
-    customTags: [],
-  }));
-
-// Sort by update time
-allRepos.sort((a, b) => new Date(b.updatedAt).getTime() - new Date(a.updatedAt).getTime());
 
 // Statistics
 const totalProjects = allRepos.length;
@@ -69,8 +56,10 @@ const projectCounts: Record<string, number> = {};
 projectCategories.forEach(category => {
   if (category.id === 'all') {
     projectCounts[category.id] = allRepos.length;
+  } else if (category.id === 'featured') {
+    projectCounts[category.id] = allRepos.filter((project) => project.featured).length;
   } else {
-    projectCounts[category.id] = 0;
+    projectCounts[category.id] = allRepos.filter((project) => project.category === category.id).length;
   }
 });
 

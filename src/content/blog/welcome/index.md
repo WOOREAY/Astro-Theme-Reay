@@ -4,8 +4,6 @@ description: '这是我的第一篇博客文章，介绍了博客的主要功能
 publishDate: 2024-01-15
 category: '其他'
 tags: ['博客', '介绍']
-cover: '/images/welcome.jpg'
-coverAlt: '欢迎页面'
 featured: true
 ---
 

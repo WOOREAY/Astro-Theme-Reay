@@ -11,8 +11,6 @@ import TableOfContents from '@features/blog/components/TableOfContents.astro';
 import PostFooter from '@features/blog/components/PostFooter.astro';
 import Comments from '@features/comments/components/Comments.astro';
 import type { CollectionEntry } from 'astro:content';
-import { currentMarkdownStyle } from '@app/config/markdown-style.config';
-import { generateMarkdownStyles } from '@features/blog/lib/markdown-style-generator';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 interface Props {
@@ -31,11 +29,15 @@ const siteOrigin = import.meta.env.PROD
 const postUrl = new URL(Astro.url.pathname, siteOrigin).toString();
 const commentsEnabled = comment !== false;
 
-// Generate Markdown styles
-const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 ---
 
 <DefaultLayout title={title} description={description}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`${baseUrl}markdown.css`} />
+  </Fragment>
   <div class="article-back-row">
     <a
       href="/blog"
@@ -103,7 +105,7 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
   </div>
 </DefaultLayout>
 
-<style define:vars={{ markdownStyles }} is:global>
+<style is:global>
   /* Blog post container */
   .blog-post-container {
     max-width: 1400px;
@@ -198,8 +200,6 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
   }
 </style>
 
-<style is:global set:html={markdownStyles}></style>
-
 <script>
   /**
    * Unify in-article anchor behavior with sidebar TOC behavior.
@@ -291,6 +291,7 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
    */
   
   function enhanceCodeBlocks() {
+    if (!document.querySelector('.blog-post-container')) return;
     // Get all code blocks
     const codeBlocks = document.querySelectorAll('.prose pre');
     
@@ -453,11 +454,14 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
    */
   
   function enhanceTaskLists() {
+    if (!document.querySelector('.blog-post-container')) return;
     // Get all task list items
     const taskItems = document.querySelectorAll('.prose input[type="checkbox"]');
     
     taskItems.forEach((checkbox) => {
       const input = checkbox as HTMLInputElement;
+      if (input.dataset.reayTaskBound === 'true') return;
+      input.dataset.reayTaskBound = 'true';
       
       // Remove disabled attribute to make it interactive
       input.removeAttribute('disabled');
@@ -537,17 +541,17 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
 
   // Restore scroll position
   function restoreScrollPosition() {
+    if (!document.querySelector('.blog-post-container')) return;
     const saved = sessionStorage.getItem('scrollPosition');
     if (saved) {
       try {
         const { x, y, path } = JSON.parse(saved);
         // Only restore scroll position for same path
         if (path === window.location.pathname) {
+          sessionStorage.removeItem('scrollPosition');
           // Use setTimeout to ensure page is fully loaded before scrolling
           setTimeout(() => {
             window.scrollTo(x, y);
-            // Clear saved position after restoration
-            sessionStorage.removeItem('scrollPosition');
           }, 100);
         }
       } catch (e) {
@@ -558,7 +562,10 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
 
   // Save scroll position on all link clicks
   function attachScrollSaveListeners() {
+    if (!document.querySelector('.blog-post-container')) return;
     document.querySelectorAll('a[href^="/blog/"]').forEach(link => {
+      if ((link as HTMLElement).dataset.reayScrollBound === 'true') return;
+      (link as HTMLElement).dataset.reayScrollBound = 'true';
       link.addEventListener('click', saveScrollPosition);
     });
   }

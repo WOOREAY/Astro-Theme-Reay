@@ -17,14 +17,15 @@ import AboutSection from '@features/home/components/AboutSection.astro';
 import SiteInfoSection from '@features/home/components/SiteInfoSection.astro';
 import { getFeaturesConfig } from '@app/config/site.config';
 
+const features = getFeaturesConfig();
 const sections = [
   { id: 'hero', label: 'Hero' },
   { id: 'posts', label: 'Posts' },
-  { id: 'projects', label: 'Projects' },
+  ...(features.integrations.githubProjects ? [{ id: 'projects', label: 'Projects' }] : []),
   { id: 'about', label: 'About' },
   { id: 'site', label: 'Site' },
 ];
-const homeLayout = getFeaturesConfig().home.layout;
+const homeLayout = features.home.layout;
 ---
 
 <FullscreenLayout title="Home">
@@ -40,9 +41,11 @@ const homeLayout = getFeaturesConfig().home.layout;
     </FullPageSection>
 
     <!-- Section 3: Featured projects -->
-    <FullPageSection sectionId="projects">
-      <ProjectsSection />
-    </FullPageSection>
+    {features.integrations.githubProjects && (
+      <FullPageSection sectionId="projects">
+        <ProjectsSection />
+      </FullPageSection>
+    )}
 
     <!-- Section 4: Personal info -->
     <FullPageSection sectionId="about">

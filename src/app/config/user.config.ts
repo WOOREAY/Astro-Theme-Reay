@@ -14,17 +14,15 @@ import { defaultLang, type Language } from './i18n.config';
 // ---------------------------------------------------------------------------
 
 export const user = {
-  name: 'Your Name',
+  name: 'WOOREAY',
   avatar: '/images/profile/avatar.png',
-  location: 'Your Location',
+  location: '',
   socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
-    { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/yourusername' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
+    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/WOOREAY' },
   ],
 
   github: {
-    username: 'yourusername',
+    username: 'WOOREAY',
     token: '',
   },
 } satisfies User;
@@ -35,16 +33,16 @@ export const user = {
 
 export const userContent = {
   en: {
-    tagline: 'Software Developer · Technical Notes · Project Practice',
-    bio: 'Write a short intro about your engineering focus, current projects, and the technical problems you like to explore.',
+    tagline: 'Open Source · Technical Notes · Project Practice',
+    bio: 'Building Astro Theme Reay and documenting reusable engineering ideas, project decisions, and long-term learning.',
     greeting: 'Hello, I am',
-    description: 'A personal technology blog for notes, projects, and long-term learning.',
+    description: 'A personal site for open-source work, technical notes, and long-term learning.',
   },
   zh: {
-    tagline: '软件开发者 · 技术笔记 · 项目实践',
-    bio: '在这里写下你的工程方向、正在打磨的项目，以及你持续探索的技术问题。',
+    tagline: '开源实践 · 技术笔记 · 项目复盘',
+    bio: '持续打磨 Astro Theme Reay，并记录可复用的工程经验、项目决策与长期学习成果。',
     greeting: '你好,我是',
-    description: '一个记录技术笔记、项目实践与长期学习的个人博客。',
+    description: '一个记录开源实践、技术笔记与长期学习的个人站点。',
   },
 } satisfies UserContent;
 
@@ -63,10 +61,10 @@ export const aboutConfig = {
       compact: false,
       colorTheme: 'primary',
       items: [
-        { name: 'VS Code', description: 'Code editor', url: 'https://code.visualstudio.com/', icon: 'i-carbon:code' },
-        { name: 'Terminal', description: 'Command line interface', url: '#', icon: 'i-carbon:terminal' },
-        { name: 'GitHub', description: 'Code hosting platform', url: 'https://github.com/', icon: 'i-carbon:logo-github' },
-        { name: 'Figma', description: 'Design collaboration', url: 'https://www.figma.com/', icon: 'i-carbon:pen' },
+        { name: 'Astro', description: 'Static-first web framework', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+        { name: 'TypeScript', description: 'Type-safe application code', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
+        { name: 'UnoCSS', description: 'On-demand atomic CSS', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
+        { name: 'GitHub', description: 'Open-source collaboration', url: 'https://github.com/WOOREAY', icon: 'i-carbon:logo-github' },
       ],
     },
     {
@@ -78,14 +76,14 @@ export const aboutConfig = {
       compact: true,
       colorTheme: 'secondary',
       items: [
-        { name: 'Browser', description: 'Modern web browser', url: '#', icon: 'i-carbon:cloud' },
-        { name: 'Launcher', description: 'Quick access tool', url: '#', icon: 'i-carbon:rocket' },
-        { name: 'Notes', description: 'Knowledge management', url: '#', icon: 'i-carbon:notebook' },
-        { name: 'Editor', description: 'Markdown editing', url: '#', icon: 'i-carbon:edit' },
+        { name: 'Git', description: 'Version control', url: 'https://git-scm.com/', icon: 'i-carbon:branch' },
+        { name: 'Markdown', description: 'Portable technical writing', url: 'https://commonmark.org/', icon: 'i-carbon:document' },
+        { name: 'Pagefind', description: 'Static local search', url: 'https://pagefind.app/', icon: 'i-carbon:search' },
+        { name: 'Playwright', description: 'Browser verification', url: 'https://playwright.dev/', icon: 'i-carbon:test-tool' },
       ],
     },
     {
-      id: 'hobbies',
+      id: 'interests',
       title: 'about.interests.title',
       description: 'about.interests.subtitle',
       icon: 'i-carbon:favorite',
@@ -93,10 +91,10 @@ export const aboutConfig = {
       compact: true,
       colorTheme: 'accent',
       items: [
-        { name: 'Photography', description: 'Capturing moments', icon: 'i-carbon:camera' },
-        { name: 'Reading', description: 'Books and articles', icon: 'i-carbon:book' },
-        { name: 'Music', description: 'Various genres', icon: 'i-carbon:music' },
-        { name: 'Sports', description: 'Staying active', icon: 'i-carbon:bicycle' },
+        { name: 'Open Source', description: 'Reusable public work', icon: 'i-carbon:logo-github' },
+        { name: 'Technical Writing', description: 'Durable engineering notes', icon: 'i-carbon:book' },
+        { name: 'Web Design', description: 'Clear and expressive interfaces', icon: 'i-carbon:color-palette' },
+        { name: 'Performance', description: 'Fast, resilient experiences', icon: 'i-carbon:chart-line' },
       ],
     },
   ],
@@ -104,51 +102,22 @@ export const aboutConfig = {
   socialNetworks: [
     {
       platform: 'GitHub',
-      username: 'yourusername',
-      url: 'https://github.com/yourusername',
+      username: 'WOOREAY',
+      url: 'https://github.com/WOOREAY',
       icon: 'i-carbon:logo-github',
       followers: 0,
     },
-    {
-      platform: 'Twitter',
-      username: '@yourusername',
-      url: 'https://twitter.com/yourusername',
-      icon: 'i-carbon:logo-twitter',
-      followers: 0,
-    },
   ],
 
-  education: [
-    {
-      school: 'Your University',
-      major: 'Your Major',
-      degree: 'Bachelor / Master / PhD',
-      startDate: '2020-09',
-      endDate: '2024-06',
-      logo: '/images/education/school-logo.png',
-      url: 'https://www.example.edu/',
-      description: 'Brief description of your studies',
-    },
-  ],
+  education: [] as Education[],
 
-  experience: [
-    // Uncomment and customize as needed.
-    // {
-    //   company: 'Company Name',
-    //   position: 'Your Position',
-    //   startDate: '2024-07',
-    //   endDate: 'present',
-    //   logo: '/images/company-logo.png',
-    //   url: 'https://www.company.com/',
-    //   description: 'Brief description of your role',
-    // },
-  ],
+  experience: [] as Experience[],
 
   site: {
-    name: 'Your Site Name',
-    description: 'A personal technology blog for notes, projects, and long-term learning.',
+    name: 'WOOREAY',
+    description: 'Open-source projects, technical notes, and long-term learning.',
     builtWith: 'Built with Astro, UnoCSS, and TypeScript',
-    since: '2024',
+    since: '2025',
     stats: {
       posts: 0,
       words: 0,
@@ -162,8 +131,8 @@ export const aboutConfig = {
   },
 
   timeline: [
-    { year: '2024', event: 'Started the technical blog', description: 'Organized project notes and learning logs' },
-    { year: '2023', event: 'Explored the web stack', description: 'Built small projects while learning frontend fundamentals' },
+    { year: '2026', event: 'Evolving Astro Theme Reay', description: 'Improving architecture, accessibility, and release confidence' },
+    { year: '2025', event: 'Started Astro Theme Reay', description: 'Built a configuration-driven personal site theme with Astro' },
   ],
 } satisfies AboutConfig;
 

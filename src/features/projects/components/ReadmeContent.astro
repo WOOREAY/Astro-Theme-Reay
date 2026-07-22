@@ -175,6 +175,8 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
     
     taskItems.forEach((checkbox) => {
       const input = checkbox as HTMLInputElement;
+      if (input.dataset.reayTaskBound === 'true') return;
+      input.dataset.reayTaskBound = 'true';
       input.removeAttribute('disabled');
       
       const articlePath = window.location.pathname;

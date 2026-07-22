@@ -106,7 +106,7 @@
     border-radius: 999px;
     background: var(--reay-color-success);
     box-shadow: 0 0 14px rgba(var(--reay-color-success-rgb), 0.8);
-    animation: status-pulse 1.8s ease-in-out infinite;
+    animation: status-pulse 1.8s ease-in-out 3;
   }
 
   .hero-title {
@@ -118,7 +118,7 @@
     position: relative;
     filter: drop-shadow(0 12px 30px rgba(var(--md-sys-color-primary-rgb), 0.24));
     background-size: 180% 100%;
-    animation: name-gradient-flow 8s ease-in-out infinite alternate;
+    animation: none;
   }
 
   .title-icon {
@@ -129,7 +129,7 @@
     background: rgba(var(--reay-color-warning-rgb), 0.14);
     border: 1px solid rgba(var(--reay-color-warning-rgb), 0.28);
     box-shadow: 0 0 22px rgba(var(--reay-color-warning-rgb), 0.22);
-    animation: title-icon-glow 2.8s ease-in-out infinite;
+    animation: none;
   }
 
   .hero-tagline {
@@ -246,7 +246,7 @@
     border-radius: inherit;
     background: linear-gradient(115deg, transparent 0 38%, rgba(var(--md-sys-color-surface-bright-rgb), 0.2) 48%, transparent 58% 100%);
     transform: translateX(-130%);
-    animation: avatar-sweep 8s var(--reay-ease-out, ease-out) infinite;
+    animation: none;
   }
 
   .avatar-panel-lines {
@@ -275,7 +275,7 @@
       0 26px 52px -28px rgba(var(--md-sys-color-shadow-rgb), 0.72),
       0 0 42px rgba(var(--md-sys-color-primary-rgb), 0.24);
     transform: translateZ(48px);
-    animation: avatar-float 7s ease-in-out infinite;
+    animation: none;
   }
 
   .avatar-image-wrap img {
@@ -376,7 +376,7 @@
 
   .scroll-cue {
     z-index: 10;
-    animation: scroll-cue 1.8s ease-in-out infinite;
+    animation: scroll-cue 1.8s ease-in-out 3;
   }
 
   /* Typewriter cursor animation */

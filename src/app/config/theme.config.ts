@@ -24,7 +24,7 @@ export const themeConfig = {
 
   background: {
     type: 'gradient',
-    blur: true,
+    blur: false,
     blurIntensity: 'light',
 
     // Uncomment and set `type: 'image'` to use a custom background image.
@@ -45,15 +45,15 @@ export const themeConfig = {
 
   effects: {
     homeWave: {
-      enabled: true,
-      intensity: 'high',
+      enabled: false,
+      intensity: 'low',
     },
     seasonal: {
-      enabled: true,
+      enabled: false,
       season: 'auto',
-      density: 'medium',
-      showOnMobile: true,
-      respectReducedMotion: false,
+      density: 'low',
+      showOnMobile: false,
+      respectReducedMotion: true,
       seasons: {
         spring: true,
         summer: true,
