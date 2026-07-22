@@ -3,7 +3,7 @@
 Astro Theme Reay includes two personal blog media pages:
 
 - `/gallery` for photo albums
-- a global floating music dock on every page
+- an optional global floating music dock, disabled by default for performance and until real audio is configured
 
 The gallery is driven by `src/content/plog/`. The music dock is driven by `src/app/config/media.config.ts`.
 
@@ -100,6 +100,8 @@ If no cover or photo image is found, the page uses `gradient` as a placeholder.
 
 ## Music Configuration
 
+先在 `src/app/config/features.config.ts` 把 `integrations.music` 改为 `true`，并确保下列音频路径真实存在。默认关闭避免模板缺失音频时仍向每个页面挂载播放器。
+
 Edit `musicConfig.playlists` and `musicConfig.tracks` in `src/app/config/media.config.ts`:
 
 ```typescript
@@ -156,7 +158,7 @@ Labels are defined in `src/app/config/i18n.config.ts` as `nav.gallery` and `page
 
 ## Global Music Dock
 
-`src/features/media/components/MusicDock.astro` is mounted by both layout files:
+`src/features/media/components/MusicDock.astro` is conditionally mounted by the shared Header when `integrations.music` is enabled:
 
 - `src/app/layouts/base/DefaultLayout.astro`
 - `src/app/layouts/home/FullscreenLayout.astro`

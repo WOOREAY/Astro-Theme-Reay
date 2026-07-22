@@ -1,0 +1,84 @@
+# Client Runtime Architecture
+
+## Purpose
+
+说明 Astro ClientRouter 下的浏览器生命周期、主题、语言、首页导航和 feature-local runtime 合同。
+
+## Core Bootstrap
+
+`src/shared/client/runtime/client-runtime.ts` (`initReayClientRuntime`) 只启动一次，并区分两类行为。
+
+文档级单例：
+
+- route transition
+- theme sync
+- i18n runtime
+
+站内预取由 Astro ClientRouter 的 `data-astro-prefetch` 负责，不再安装第二套全局预取 runtime。
+
+页面级实例：
+
+- mobile menu
+- theme toggle
+- floating header
+- fullpage scroll
+- generic page interactions
+- seasonal effects
+- flow section visibility
+- music dock
+- gallery lightbox
+- typewriter
+- language toggle DOM binding
+
+`astro:before-swap` 清理页面级实例；`astro:page-load` 先清理再重建。新增页面级全局行为必须提供 `destroy()` 或 cleanup function。
+
+## Theme Flow
+
+```text
+theme.config.ts
+  -> createTheme()
+  -> generateMaterialPalettes()
+  -> themeToCSSVars()
+  -> static /theme.css
+```
+
+首屏 inline script 在绘制前解析 `localStorage.theme` 或系统偏好，并把 `data-theme` 设置为 resolved `light`/`dark`。持久化值还可为 `system`；`theme-sync.ts` 在系统变化和 Astro swap 前后保持 resolved attribute。
+
+## i18n Flow
+
+构建输出始终使用默认语言。`I18nRuntime.astro` 只在 head 中设置首绘语言属性；翻译字典和逻辑由可缓存 client module 维护：
+
+- `localStorage.language`
+- `html.lang` 与 `html[data-lang]`
+- `data-i18n`、`data-i18n-attr`、`data-i18n-attrs`
+- `data-i18n-date` 与 locale-aware 日期格式
+- `data-page-title-key` 声明式页面标题
+- `data-user-content`、`data-text`
+- `languagechange` custom event
+- incoming document translation on Astro swap
+
+Incoming document 在 swap 前翻译一次；after-swap 只同步 document lang/title，不再重复扫描整棵 DOM，也不安装全局 MutationObserver。
+
+当前实现是硬编码中英切换的客户端策略。`featuresConfig.i18n.strategy` 没有运行时消费者；添加字典本身不会自动增加语言或 SEO 路由。
+
+## Flow and Snap
+
+- flow 不构造 FullPageScroll，section 保持普通文档流。
+- flow 用 IntersectionObserver 标记视口附近 section；离屏 section 暂停动画并使用 `content-visibility`。
+- snap 依赖 `#fullpage-container[data-home-layout="snap"]`、`.fullpage-section` 和可选 `.section-dot`。
+- snap 捕获全局 wheel/touch/navigation keys，但必须让内部可滚动 active element 优先。
+- 实例销毁时必须移除 listener、timer 和 animation frame。
+
+## Route Transitions
+
+当前自定义 transition runtime 保存原生 `document.startViewTransition`，再安装 resolved shim；实际动画只使用短时 opacity/transform，不对整页使用 filter，也不启用跨文档 `@view-transition navigation: auto`。Chrome 的站内导航复测无 transition console error；恢复原生 View Transitions 仍需要独立浏览器测试。
+
+## Feature-local Runtimes
+
+MusicDock、Gallery lightbox、seasonal、fullpage 与通用交互由中心 runtime 按 DOM 动态导入，并在 before-swap cleanup。Gallery 在缺少图片时显示显式渐变 fallback，打开时聚焦关闭按钮，关闭后把焦点交还触发按钮。Search 会在换页前 destroy；Comments 会清理 observer、button listener 和 host。TOC 有独立 cleanup；文章与 README 增强依靠 DOM marker 保证幂等，剩余边界见 lifecycle reference 和 doc gaps。
+
+## Related Docs
+
+- `llmdoc/reference/client-lifecycle-contract.md`
+- `llmdoc/reference/design-system-contract.md`
+- `llmdoc/architecture/external-integrations.md`

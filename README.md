@@ -107,9 +107,13 @@ draft: false
 | `npm run dev` | 启动开发服务器 |
 | `npm run check` | 执行 Astro、TypeScript 和内容校验 |
 | `npm run build` | 构建静态站点并生成 Pagefind 索引 |
+| `npm run check:production` | 校验生产 `SITE`、根路径部署与模板占位值 |
 | `npm run test:routes` | 校验关键生产路由与产物 |
+| `npm run test:performance` | 校验 HTML/inline 预算与共享 CSS 合同 |
+| `npm run test:security` | 校验内容可见性与远程 README 净化合同 |
+| `npm run test:e2e` | 构建后运行 Playwright/Axe 核心浏览器测试 |
 | `npm run audit` | 检查高危依赖漏洞 |
-| `npm run verify` | 依次执行检查、构建和路由校验 |
+| `npm run verify` | 执行检查、完整构建、静态门禁、安全合同和浏览器 E2E |
 | `npm run preview` | 预览 `dist/`；应先执行构建 |
 
 ## 环境变量
@@ -123,7 +127,7 @@ GITHUB_TOKEN=
 ```
 
 - `SITE` 必须是生产站点 origin，用于 canonical、RSS、Sitemap 和 robots。
-- `BASE` 仅在部署到子目录时设置。
+- 当前只支持根路径部署，`BASE` 必须保持 `/`；GitHub Pages 项目子路径暂不受支持。
 - `GITHUB_TOKEN` 可提高构建期 GitHub API 限额，禁止提交真实令牌。
 
 ## 部署
@@ -139,7 +143,8 @@ GITHUB_TOKEN=
 
 ```bash
 npm ci
-npm run verify
+SITE=https://wooreay.github.io npm run check:production
+SITE=https://wooreay.github.io npm run verify
 npm run audit
 ```
 

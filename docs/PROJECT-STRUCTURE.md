@@ -124,7 +124,7 @@ Astro 7 的 entry URL 标识由 `entry.id` 派生，不使用已删除的 `entry
 | `/robots.txt` | robots endpoint |
 | `/sitemap-index.xml` | Sitemap integration |
 
-`npm run build` 先生成 Astro 静态页面，再生成 `dist/pagefind`。`npm run test:routes` 校验关键路由和构建产物。
+`npm run build` 先生成 Astro 静态页面、`theme.css`、`markdown.css`，再生成 `dist/pagefind`。`npm run test:routes` 校验关键路由和构建产物，`npm run test:performance` 校验公共页面体积与 inline 预算。
 
 ## 路径别名
 
