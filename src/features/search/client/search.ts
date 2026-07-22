@@ -38,7 +38,11 @@ function currentLanguage() {
 
 export function initSearch() {
   const host = document.querySelector<HTMLElement>('[data-pagefind-search]');
-  if (!host) return;
+  if (!host) {
+    searchInstance?.destroy();
+    searchInstance = null;
+    return;
+  }
 
   searchInstance?.destroy();
   host.replaceChildren();
@@ -67,6 +71,10 @@ export function initSearchRuntime() {
   if (runtimeBound) return;
 
   runtimeBound = true;
+  document.addEventListener('astro:before-swap', () => {
+    searchInstance?.destroy();
+    searchInstance = null;
+  });
   document.addEventListener('astro:page-load', initSearch);
   window.addEventListener('languagechange', initSearch);
 }

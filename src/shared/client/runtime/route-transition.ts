@@ -65,10 +65,10 @@ function runInitialEnter() {
   if (root.dataset.reayInitialAnimated === 'true') return;
 
   root.dataset.reayInitialAnimated = 'true';
-  setPhase('initial', { clearAfter: 680 });
+  setPhase('initial', { clearAfter: 360 });
 }
 
-function scheduleEnter(clearAfter = 820) {
+function scheduleEnter(clearAfter = 480) {
   if (enterFrame) {
     window.cancelAnimationFrame(enterFrame);
   }
@@ -192,7 +192,7 @@ export function initRouteTransitions() {
   window.addEventListener('pagehide', clearPhase);
   window.addEventListener('pageshow', (event) => {
     if (event.persisted) {
-      scheduleEnter(680);
+      scheduleEnter(360);
     }
   });
 

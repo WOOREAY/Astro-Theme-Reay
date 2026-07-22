@@ -196,8 +196,6 @@ body.layout-default::before {
 .guestbook-stat-item,
 .comment-section {
   isolation: isolate;
-  transform: translateZ(0);
-  backface-visibility: hidden;
 }
 
 :root[data-theme='light'] .card,
@@ -645,25 +643,25 @@ a:focus-visible {
   transform: translateY(var(--reay-hover-lift)) scale(var(--reay-hover-scale));
 }
 
-.layout-default .reay-card,
-.layout-default .glass-card,
-.layout-default .glass-card-interactive,
-.layout-default .glass-card-stat,
-.layout-default .stat-card,
-.layout-default .summary-card,
-.layout-default .summary-item,
-.layout-default .apply-card,
-.layout-default .tag-info-card,
-.layout-default .series-info-card,
-.layout-default .info-card,
-.layout-default .quick-nav-card,
-.layout-default .link-card,
-.layout-default .link-card-simple,
-.layout-default .reay-button,
-.layout-default .btn,
-.layout-default .btn-outline,
-.layout-default .btn-tonal,
-.layout-default .reay-chip {
+:is(.layout-default, .layout-home) .reay-card,
+:is(.layout-default, .layout-home) .glass-card,
+:is(.layout-default, .layout-home) .glass-card-interactive,
+:is(.layout-default, .layout-home) .glass-card-stat,
+:is(.layout-default, .layout-home) .stat-card,
+:is(.layout-default, .layout-home) .summary-card,
+:is(.layout-default, .layout-home) .summary-item,
+:is(.layout-default, .layout-home) .apply-card,
+:is(.layout-default, .layout-home) .tag-info-card,
+:is(.layout-default, .layout-home) .series-info-card,
+:is(.layout-default, .layout-home) .info-card,
+:is(.layout-default, .layout-home) .quick-nav-card,
+:is(.layout-default, .layout-home) .link-card,
+:is(.layout-default, .layout-home) .link-card-simple,
+:is(.layout-default, .layout-home) .reay-button,
+:is(.layout-default, .layout-home) .btn,
+:is(.layout-default, .layout-home) .btn-outline,
+:is(.layout-default, .layout-home) .btn-tonal,
+:is(.layout-default, .layout-home) .reay-chip {
   backdrop-filter: none !important;
   -webkit-backdrop-filter: none !important;
   contain: paint;

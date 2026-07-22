@@ -4,11 +4,16 @@
  * 精致圆润风格主题切换按钮：light / dark / system
  * 更小巧、更优雅的图标按钮
  */
+import { useI18n } from '@features/i18n/lib/i18n';
+
+const { t } = useI18n();
 ---
 <button
   class="header-tool-button theme-toggle"
-  aria-label="切换主题"
-  title="切换主题"
+  aria-label={t('theme.toggle.system')}
+  title={t('theme.toggle.system')}
+  data-i18n="theme.toggle.system"
+  data-i18n-attrs="aria-label,title"
   data-theme-toggle>
   <i class="theme-icon i-carbon:sun" data-theme-icon></i>
 </button>

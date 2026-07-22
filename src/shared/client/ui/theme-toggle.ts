@@ -4,6 +4,14 @@
  */
 
 type ThemeMode = 'light' | 'dark' | 'system';
+type Language = 'en' | 'zh';
+
+type I18nWindow = Window & {
+  __REAY_I18N__?: {
+    getCurrentLang: () => Language;
+    translate: (key: string, lang: Language) => string;
+  };
+};
 
 export interface ThemeToggleConfig {
   btnId?: string;
@@ -23,7 +31,9 @@ export class ThemeToggle {
   private config: ThemeToggleConfig;
   private order: ThemeMode[] = ['light', 'dark', 'system'];
   private buttonHandlers = new Map<HTMLButtonElement, EventListener>();
+  private iconTimers = new Set<number>();
   private mediaQueryList?: MediaQueryList;
+  private handleLanguageChange = () => this.updateButtons(this.read(), false);
   private handleSystemThemeChange = () => {
     if (this.read() === 'system') {
       this.apply('system');
@@ -70,6 +80,7 @@ export class ThemeToggle {
     });
 
     this.mediaQueryList = window.matchMedia('(prefers-color-scheme: dark)');
+    window.addEventListener('languagechange', this.handleLanguageChange);
 
     if (this.mediaQueryList.addEventListener) {
       this.mediaQueryList.addEventListener('change', this.handleSystemThemeChange);
@@ -108,14 +119,35 @@ export class ThemeToggle {
    * @returns Localized label text
    */
   private label(mode: ThemeMode): string {
-    switch (mode) {
-      case 'dark':
-        return '暗色';
-      case 'light':
-        return '亮色';
-      case 'system':
-        return '跟随系统';
-    }
+    const runtime = (window as I18nWindow).__REAY_I18N__;
+    const key = `theme.toggle.${mode}`;
+    const fallback = `Switch theme (current: ${mode})`;
+    return runtime?.translate(key, runtime.getCurrentLang()) ?? fallback;
+  }
+
+  private updateButtons(mode: ThemeMode, animateIcon = true) {
+    const labelText = this.label(mode);
+    const key = `theme.toggle.${mode}`;
+
+    this.buttons.forEach((button) => {
+      const icon = button.querySelector<HTMLElement>('[data-theme-icon]') ||
+        document.getElementById(this.config.iconId!) as HTMLElement | null;
+
+      if (icon) {
+        if (animateIcon) icon.style.transform = 'rotate(360deg)';
+        const timer = window.setTimeout(() => {
+          icon.className = this.iconClass(mode);
+          icon.style.transform = '';
+          this.iconTimers.delete(timer);
+        }, animateIcon ? 150 : 0);
+        this.iconTimers.add(timer);
+      }
+
+      button.dataset.i18n = key;
+      button.dataset.i18nAttrs = 'aria-label,title';
+      button.setAttribute('aria-label', labelText);
+      button.title = labelText;
+    });
   }
 
   /**
@@ -140,23 +172,7 @@ export class ThemeToggle {
     // Save to localStorage
     localStorage.setItem(this.config.storageKey!, mode);
 
-    // Update aria-label for accessibility
-    const labelText = `切换主题（当前：${this.label(mode)}）`;
-    this.buttons.forEach((button) => {
-      const icon = button.querySelector<HTMLElement>('[data-theme-icon]') ||
-        document.getElementById(this.config.iconId!) as HTMLElement | null;
-
-      if (icon) {
-        icon.style.transform = 'rotate(360deg)';
-        setTimeout(() => {
-          icon.className = this.iconClass(mode);
-          icon.style.transform = '';
-        }, 150);
-      }
-
-      button.setAttribute('aria-label', labelText);
-      button.title = labelText;
-    });
+    this.updateButtons(mode);
   }
 
   /**
@@ -184,6 +200,9 @@ export class ThemeToggle {
       delete button.dataset.bound;
     });
     this.buttonHandlers.clear();
+    window.removeEventListener('languagechange', this.handleLanguageChange);
+    this.iconTimers.forEach((timer) => window.clearTimeout(timer));
+    this.iconTimers.clear();
 
     if (this.mediaQueryList?.removeEventListener) {
       this.mediaQueryList.removeEventListener('change', this.handleSystemThemeChange);

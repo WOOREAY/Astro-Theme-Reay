@@ -3,10 +3,10 @@
  * SeasonalEffects.astro
  * Lightweight global ambience layer driven by theme config.
  */
-import { getEffectsConfig } from '@app/config/site.config';
+import { getEffectsConfig, getFeaturesConfig } from '@app/config/site.config';
 
 const seasonalConfig = getEffectsConfig().seasonal;
-const isEnabled = seasonalConfig.enabled;
+const isEnabled = getFeaturesConfig().integrations.seasonalEffects && seasonalConfig.enabled;
 const settings = {
   season: seasonalConfig.season,
   density: seasonalConfig.density,

@@ -12,13 +12,19 @@ import LanguageToggle from '@features/i18n/components/LanguageToggle.astro';
 import { useI18n } from '@features/i18n/lib/i18n';
 import ThemeToggle from './ThemeToggle.astro';
 import SearchButton from './SearchButton.astro';
-import MusicDock from '@features/media/components/MusicDock.astro';
+import type { NavigationItem } from '@app/config/navigation.config';
 
 const { t } = useI18n();
 const user = getUserProfile();
 const navigation = getNavigationConfig();
 const features = getFeaturesConfig();
-const links = navigation.primary.map((item) => ({ ...item, label: t(item.key) }));
+const MusicDock = features.integrations.music
+  ? (await import('@features/media/components/MusicDock.astro')).default
+  : null;
+const links: Array<NavigationItem & { label: string }> = navigation.primary.map((item) => ({
+  ...item,
+  label: t(item.key),
+}));
 
 const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
 const isActive = (href: string) => href === '/' ? currentPath === '/' : currentPath.startsWith(href);
@@ -35,6 +41,9 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
         <img 
           src="/images/profile/avatar.png" 
           alt={user.name}
+          width="32"
+          height="32"
+          decoding="async"
           class="brand-avatar w-8 h-8 rounded-full object-cover"
         />
       </span>
@@ -46,7 +55,6 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
       {links.map(l => (
         <a 
           href={l.href} 
-          data-reay-prefetch={l.prefetch ?? 'hover'}
           data-astro-prefetch={l.prefetch === 'idle' ? 'load' : 'hover'}
           class:list={[
             'nav-link px-3 py-2 text-sm font-600',
@@ -61,17 +69,20 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 
     <!-- Header controls group -->
     <div class="header-actions flex items-center gap-2">
-      {features.search.enabled && <SearchButton />}
-      {features.i18n.enabled && <LanguageToggle />}
+      {features.search.showInNavigation && <SearchButton />}
+      {features.i18n.showLanguageSwitcher && <LanguageToggle />}
       <ThemeToggle />
-      {features.integrations.music && <MusicDock />}
+      {MusicDock && <MusicDock />}
       <slot />
       <button
         id="menu-btn"
         class="menu-button lg:hidden inline-flex items-center justify-center w-9 h-9"
-        aria-label="Open menu"
+        aria-label={t('nav.openMenu')}
+        title={t('nav.openMenu')}
         aria-controls="mobile-menu"
         aria-expanded="false"
+        data-i18n="nav.openMenu"
+        data-i18n-attrs="aria-label,title"
       >
         <i class="i-carbon:menu text-[1.25rem] text-[var(--md-sys-color-on-surface)]"></i>
       </button>
@@ -84,7 +95,6 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
       {links.map(l => (
         <a 
           href={l.href} 
-          data-reay-prefetch={l.prefetch ?? 'hover'}
           data-astro-prefetch={l.prefetch === 'idle' ? 'load' : 'hover'}
           class:list={[
             'mobile-nav-link px-4 py-2.5 text-sm font-600',

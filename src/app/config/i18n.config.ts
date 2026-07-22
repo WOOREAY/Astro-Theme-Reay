@@ -23,6 +23,8 @@ export const translations = {
     'nav.guestbook': 'Guestbook',
     'nav.about': 'About',
     'nav.search': 'Search',
+    'nav.openMenu': 'Open menu',
+    'nav.closeMenu': 'Close menu',
     
     // Home page
     'home.hero.subtitle': 'Technical notes, project practice, and long-term learning',
@@ -75,6 +77,20 @@ export const translations = {
     'about.workflow.build.desc': 'Turn ideas into tangible interfaces and tools',
     'about.workflow.share.title': 'Share',
     'about.workflow.share.desc': 'Turn lessons into reusable notes and project updates',
+    'home.about.profile': 'Profile',
+    'home.about.now': 'Now',
+    'home.about.education': 'Studying',
+    'home.about.timeline': 'Recent note',
+    'home.about.focus': 'Focus',
+    'home.about.profileFocus': 'Current focus',
+    'home.about.interests': 'Life fragments',
+    'home.about.channels': 'Channels',
+    'home.about.contact': 'Quick contact',
+    'home.about.status': 'Status',
+    'home.about.available': 'Available',
+    'home.about.location': 'Location',
+    'home.about.more': 'Full About',
+    'home.about.empty': 'Being refined',
     
     // Site info section
     'site.title': 'About This Site',
@@ -100,6 +116,7 @@ export const translations = {
     // Theme
     'theme.toggle.light': 'Switch theme (current: light)',
     'theme.toggle.dark': 'Switch theme (current: dark)',
+    'theme.toggle.system': 'Switch theme (current: system)',
     
     // Language
     'lang.switch': 'Switch Language',
@@ -114,6 +131,11 @@ export const translations = {
     'page.title.guestbook': 'Guestbook',
     'page.title.about': 'About',
     'page.title.search': 'Search',
+    'notFound.eyebrow': 'Page not found',
+    'notFound.title': 'This page wandered away',
+    'notFound.description': 'The address may have changed, or the content is no longer available.',
+    'notFound.home': 'Return home',
+    'notFound.archives': 'Browse archives',
 
     // Search page
     'search.eyebrow': 'Local Index',
@@ -144,6 +166,7 @@ export const translations = {
     'blog.info.tags': 'Tags',
     'blog.back': 'Back to Blog',
     'blog.stats.posts': 'Posts',
+    'blog.statistics': 'Blog statistics',
     'blog.stats.tags': 'Tags',
     'blog.stats.series': 'Series',
     'blog.stats.updated': 'Latest',
@@ -157,6 +180,7 @@ export const translations = {
     'comments.provider': 'Provider',
     'comments.thread': 'Thread',
     'comments.lazyHint': 'Loads only when this section enters the viewport.',
+    'comments.manualHint': 'Connects to the third-party service only after you choose to load comments.',
     'comments.setupTitle': 'Comment system is not configured',
     'comments.setupDesc': 'Set provider credentials in src/app/config/comments.config.ts to enable article comments and the guestbook.',
     'guestbook.title': 'Guestbook',
@@ -221,6 +245,7 @@ export const translations = {
     'gallery.photos': 'Photos',
     'gallery.filter.all': 'All',
     'gallery.viewAlbum': 'View Album',
+    'gallery.viewPhoto': 'View photo',
     'gallery.backToAlbums': 'Back to Albums',
     'gallery.download': 'Download Original',
     'gallery.close': 'Close',
@@ -397,6 +422,8 @@ export const translations = {
     'nav.guestbook': '留言',
     'nav.about': '关于',
     'nav.search': '搜索',
+    'nav.openMenu': '打开菜单',
+    'nav.closeMenu': '关闭菜单',
     
     // Home page
     'home.hero.subtitle': '技术笔记、项目实践与长期学习',
@@ -449,6 +476,20 @@ export const translations = {
     'about.workflow.build.desc': '把想法落成真实可用的界面与工具',
     'about.workflow.share.title': '分享',
     'about.workflow.share.desc': '把经验整理成可复用的笔记与项目更新',
+    'home.about.profile': '个人快照',
+    'home.about.now': '当前状态',
+    'home.about.education': '正在学习',
+    'home.about.timeline': '近期记录',
+    'home.about.focus': '关注方向',
+    'home.about.profileFocus': '最近聚焦',
+    'home.about.interests': '生活切片',
+    'home.about.channels': '可联系渠道',
+    'home.about.contact': '快速联系',
+    'home.about.status': '在线状态',
+    'home.about.available': '保持连接',
+    'home.about.location': '常驻位置',
+    'home.about.more': '完整关于页',
+    'home.about.empty': '持续整理中',
     
     // Site info section
     'site.title': '关于本站',
@@ -474,6 +515,7 @@ export const translations = {
     // Theme
     'theme.toggle.light': '切换主题（当前：亮色）',
     'theme.toggle.dark': '切换主题（当前：暗色）',
+    'theme.toggle.system': '切换主题（当前：跟随系统）',
     
     // Language
     'lang.switch': '切换语言',
@@ -488,6 +530,11 @@ export const translations = {
     'page.title.guestbook': '留言',
     'page.title.about': '关于',
     'page.title.search': '搜索',
+    'notFound.eyebrow': '页面未找到',
+    'notFound.title': '这个页面暂时走丢了',
+    'notFound.description': '页面地址可能已经改变，或者内容已不再提供。',
+    'notFound.home': '返回首页',
+    'notFound.archives': '浏览归档',
 
     // 搜索页
     'search.eyebrow': '本地索引',
@@ -518,6 +565,7 @@ export const translations = {
     'blog.info.tags': '标签',
     'blog.back': '返回博客',
     'blog.stats.posts': '文章',
+    'blog.statistics': '博客统计',
     'blog.stats.tags': '标签',
     'blog.stats.series': '系列',
     'blog.stats.updated': '最近',
@@ -531,6 +579,7 @@ export const translations = {
     'comments.provider': '服务',
     'comments.thread': '页面标识',
     'comments.lazyHint': '滚动到此区域附近时才加载评论服务。',
+    'comments.manualHint': '只有在你主动点击加载后，页面才会连接第三方评论服务。',
     'comments.setupTitle': '评论系统尚未配置',
     'comments.setupDesc': '在 src/app/config/comments.config.ts 填入评论服务配置后，文章评论和留言板会自动启用。',
     'guestbook.title': '留言板',
@@ -595,6 +644,7 @@ export const translations = {
     'gallery.photos': '照片',
     'gallery.filter.all': '全部',
     'gallery.viewAlbum': '查看合集',
+    'gallery.viewPhoto': '查看照片',
     'gallery.backToAlbums': '返回相册',
     'gallery.download': '下载原图',
     'gallery.close': '关闭',

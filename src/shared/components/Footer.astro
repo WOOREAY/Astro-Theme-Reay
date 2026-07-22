@@ -3,27 +3,41 @@
  * Footer Component
  * Compact site-wide footer.
  */
-import { getLocalizedUserContent, getNavigationConfig, getUserProfile } from '@app/config/site.config';
+import { getFeaturesConfig, getLocalizedUserContent, getNavigationConfig, getUserProfile } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t, currentLang } = useI18n();
 const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const navigation = getNavigationConfig();
+const features = getFeaturesConfig();
 
 const year = new Date().getFullYear();
 const startYear = 2024;
 const yearText = year === startYear ? `${year}` : `${startYear} - ${year}`;
 
 const quickLinks = navigation.primary.filter((item) => item.showInFooter);
-const resourceLinks = navigation.resources;
+const resourceLinks = navigation.resources.filter((link) => {
+  if (link.href === '/search') return features.search.showInNavigation;
+  if (link.href === '/rss.xml') return features.discovery.showRssLink;
+  if (link.href === '/sitemap-index.xml') return features.discovery.showSitemapLink;
+  return true;
+});
 ---
 
 <footer class="site-footer">
   <div class="footer-inner">
     <div class="footer-main">
       <div class="footer-brand">
-        <img src={user.avatar} alt={user.name} class="footer-avatar" />
+        <img
+          src={user.avatar}
+          alt={user.name}
+          width="32"
+          height="32"
+          loading="lazy"
+          decoding="async"
+          class="footer-avatar"
+        />
         <div class="footer-copy">
           <strong>{user.name}</strong>
           <p data-user-content="description">{userContent.description}</p>

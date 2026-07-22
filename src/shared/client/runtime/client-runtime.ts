@@ -1,12 +1,10 @@
 import { initMobileMenu, type MobileMenu } from '../mobile-menu';
-import { initFullPageScroll, type FullPageScroll } from '../navigation/fullpage-scroll';
+import type { FullPageScroll } from '../navigation/fullpage-scroll';
 import { initThemeToggle, type ThemeToggle } from '../ui/theme-toggle';
-import { initTypewriterEffect, type TypewriterEffect } from '../animations/typewriter-effect';
+import type { TypewriterEffect } from '../animations/typewriter-effect';
 import { initLanguageToggle } from '@features/i18n/client/language-toggle';
-import { initPageInteractions } from './page-interactions';
-import { initRoutePrefetch } from './route-prefetch';
 import { initRouteTransitions } from './route-transition';
-import { initSeasonalEffects } from './seasonal-effects';
+import { initSectionVisibility } from './section-visibility';
 import { initThemeSync } from './theme-sync';
 
 type Cleanup = () => void;
@@ -19,6 +17,10 @@ let floatingHeaderCleanup: Cleanup | null = null;
 let pageInteractionsCleanup: Cleanup | null = null;
 let typewriterEffect: TypewriterEffect | null = null;
 let seasonalEffectsCleanup: Cleanup | null = null;
+let sectionVisibilityCleanup: Cleanup | null = null;
+let musicDockCleanup: Cleanup | null = null;
+let galleryLightboxCleanup: Cleanup | null = null;
+let pageRuntimeGeneration = 0;
 
 function initFloatingHeader(): Cleanup | null {
   const header = document.querySelector<HTMLElement>('[data-floating-header]');
@@ -76,6 +78,8 @@ function initFloatingHeader(): Cleanup | null {
 }
 
 function cleanupPageRuntime() {
+  pageRuntimeGeneration += 1;
+
   fullPageScroll?.destroy();
   fullPageScroll = null;
 
@@ -94,23 +98,70 @@ function cleanupPageRuntime() {
   seasonalEffectsCleanup?.();
   seasonalEffectsCleanup = null;
 
+  sectionVisibilityCleanup?.();
+  sectionVisibilityCleanup = null;
+
+  musicDockCleanup?.();
+  musicDockCleanup = null;
+
+  galleryLightboxCleanup?.();
+  galleryLightboxCleanup = null;
+
   typewriterEffect?.destroy();
   typewriterEffect = null;
 }
 
 function initPageRuntime() {
   cleanupPageRuntime();
+  const generation = pageRuntimeGeneration;
+  const isCurrent = () => generation === pageRuntimeGeneration;
 
   mobileMenu = initMobileMenu();
   themeToggle = initThemeToggle();
   floatingHeaderCleanup = initFloatingHeader();
-  fullPageScroll = initFullPageScroll();
-  pageInteractionsCleanup = initPageInteractions();
-  seasonalEffectsCleanup = initSeasonalEffects();
+  sectionVisibilityCleanup = initSectionVisibility();
   initLanguageToggle();
 
+  if (document.querySelector('#fullpage-container[data-home-layout="snap"]')) {
+    void import('../navigation/fullpage-scroll').then(({ initFullPageScroll }) => {
+      if (!isCurrent()) return;
+      fullPageScroll = initFullPageScroll();
+    });
+  }
+
+  if (document.querySelector('.category-tabs-container, [data-link-card], .copy-btn, #projects-list')) {
+    void import('./page-interactions').then(({ initPageInteractions }) => {
+      if (!isCurrent()) return;
+      pageInteractionsCleanup = initPageInteractions();
+    });
+  }
+
+  if (document.querySelector('[data-seasonal-effects]')) {
+    void import('./seasonal-effects').then(({ initSeasonalEffects }) => {
+      if (!isCurrent()) return;
+      seasonalEffectsCleanup = initSeasonalEffects();
+    });
+  }
+
+  if (document.querySelector('[data-music-dock]')) {
+    void import('@features/media/client/music-dock').then(({ initMusicDock }) => {
+      if (!isCurrent()) return;
+      musicDockCleanup = initMusicDock();
+    });
+  }
+
+  if (document.getElementById('gallery-lightbox')) {
+    void import('@features/gallery/client/gallery-lightbox').then(({ initGalleryLightbox }) => {
+      if (!isCurrent()) return;
+      galleryLightboxCleanup = initGalleryLightbox();
+    });
+  }
+
   if (document.getElementById('name-typewriter')) {
-    typewriterEffect = initTypewriterEffect();
+    void import('../animations/typewriter-effect').then(({ initTypewriterEffect }) => {
+      if (!isCurrent()) return;
+      typewriterEffect = initTypewriterEffect();
+    });
   }
 }
 
@@ -119,7 +170,6 @@ export function initReayClientRuntime() {
   bootstrapped = true;
 
   initRouteTransitions();
-  initRoutePrefetch();
   initThemeSync();
 
   document.addEventListener('astro:before-swap', cleanupPageRuntime);

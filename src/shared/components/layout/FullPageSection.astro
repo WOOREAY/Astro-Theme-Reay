@@ -22,7 +22,7 @@ const { sectionId } = Astro.props;
     inset: 0;
     transform: translate3d(0, 100%, 0);
     transition: none;
-    will-change: transform;
+    will-change: auto;
     backface-visibility: hidden;
     contain: layout paint;
     overflow-y: hidden;
@@ -51,10 +51,21 @@ const { sectionId } = Astro.props;
     transform: none;
     overflow: visible;
     contain: layout paint;
+    content-visibility: auto;
+    contain-intrinsic-size: auto 760px;
+    will-change: auto;
   }
 
   :global([data-home-layout='flow']) .fullpage-section[data-active='false'] * {
     animation-play-state: running !important;
+  }
+
+  :global([data-home-layout='flow']) .fullpage-section[data-in-viewport='false'] * {
+    animation-play-state: paused !important;
+  }
+
+  :global([data-home-layout='snap']) .fullpage-section[data-ready='true'] {
+    will-change: transform;
   }
 
   @media (max-width: 768px) {

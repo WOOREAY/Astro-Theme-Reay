@@ -4,21 +4,23 @@ export const featuresConfig = {
     layout: 'flow' as 'flow' | 'snap',
   },
   search: {
-    enabled: true,
+    /** Search stays available at /search; this controls navigation exposure. */
+    showInNavigation: true,
   },
-  feeds: {
-    rss: true,
-    sitemap: true,
+  discovery: {
+    /** RSS and Sitemap endpoints are always generated; these control footer links. */
+    showRssLink: true,
+    showSitemapLink: true,
   },
   i18n: {
-    enabled: true,
-    strategy: 'client' as 'client' | 'routes',
+    /** The client translation runtime is always present; this controls the switcher. */
+    showLanguageSwitcher: true,
   },
   integrations: {
     comments: true,
     githubProjects: true,
-    music: true,
-    seasonalEffects: true,
+    music: false,
+    seasonalEffects: false,
   },
 } as const
 

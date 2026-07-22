@@ -10,6 +10,15 @@ export interface MobileMenuConfig {
   closeIconClass?: string;
 }
 
+type Language = 'en' | 'zh';
+
+type I18nWindow = Window & {
+  __REAY_I18N__?: {
+    getCurrentLang: () => Language;
+    translate: (key: string, lang: Language) => string;
+  };
+};
+
 const DEFAULT_CONFIG: MobileMenuConfig = {
   btnId: 'menu-btn',
   menuId: 'mobile-menu',
@@ -25,6 +34,7 @@ export class MobileMenu {
   private isOpen: boolean = false;
   private linkHandlers = new Map<Element, EventListener>();
   private handleButtonClick = () => this.toggle();
+  private handleLanguageChange = () => this.updateButtonA11y();
   private handleKeydown = (e: KeyboardEvent) => {
     if (e.key === 'Escape' && this.isOpen) {
       this.close();
@@ -51,6 +61,8 @@ export class MobileMenu {
    */
   private init() {
     this.btn?.addEventListener('click', this.handleButtonClick);
+    window.addEventListener('languagechange', this.handleLanguageChange);
+    this.updateButtonA11y();
     
     this.menu?.querySelectorAll('a').forEach(link => {
       const handler = () => {
@@ -86,6 +98,7 @@ export class MobileMenu {
     this.isOpen = true;
     this.menu.classList.remove('hidden');
     this.btn.setAttribute('aria-expanded', 'true');
+    this.updateButtonA11y();
     
     // Update icon to close state
     if (this.icon && this.config.closeIconClass) {
@@ -102,6 +115,7 @@ export class MobileMenu {
     this.isOpen = false;
     this.menu.classList.add('hidden');
     this.btn.setAttribute('aria-expanded', 'false');
+    this.updateButtonA11y();
     
     // Update icon to open state
     if (this.icon && this.config.openIconClass) {
@@ -117,12 +131,27 @@ export class MobileMenu {
     return this.isOpen;
   }
 
+  private updateButtonA11y() {
+    if (!this.btn) return;
+
+    const runtime = (window as I18nWindow).__REAY_I18N__;
+    const key = this.isOpen ? 'nav.closeMenu' : 'nav.openMenu';
+    const fallback = this.isOpen ? 'Close menu' : 'Open menu';
+    const label = runtime?.translate(key, runtime.getCurrentLang()) ?? fallback;
+
+    this.btn.dataset.i18n = key;
+    this.btn.dataset.i18nAttrs = 'aria-label,title';
+    this.btn.setAttribute('aria-label', label);
+    this.btn.setAttribute('title', label);
+  }
+
   /**
    * Remove event listeners before Astro swaps the page.
    */
   public destroy() {
     this.close();
     this.btn?.removeEventListener('click', this.handleButtonClick);
+    window.removeEventListener('languagechange', this.handleLanguageChange);
 
     this.linkHandlers.forEach((handler, link) => {
       link.removeEventListener('click', handler);
