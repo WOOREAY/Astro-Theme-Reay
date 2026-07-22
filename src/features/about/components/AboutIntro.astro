@@ -1,9 +1,5 @@
 ---
-/**
- * AboutIntro.astro
- * About page - Personal introduction component
- * Uses centralized site configuration for multilingual user content
- */
+/** Compact personal introduction sourced from the central user profile. */
 import { getLocalizedUserContent, getUserProfile } from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
@@ -12,179 +8,107 @@ const user = getUserProfile();
 const content = getLocalizedUserContent(currentLang);
 ---
 
-<section class="intro-section">
-  <div class="intro-container">
-    <div class="intro-avatar">
-      <img
-        src={user.avatar}
-        alt={user.name}
-        width="512"
-        height="512"
-        decoding="async"
-        class="avatar-image"
-      />
-      <div class="avatar-decoration"></div>
-    </div>
-    
-    <div class="intro-content">
-      <p class="intro-greeting" data-user-content="greeting">{content.greeting}</p>
-      <h1 class="intro-name">{user.name}</h1>
-      <p class="intro-tagline" data-user-content="tagline">{content.tagline}</p>
-      <div class="intro-description">
-        <p data-user-content="bio">{content.bio}</p>
-      </div>
-    </div>
+<section class="intro-section" data-about-intro>
+  <div class="intro-avatar">
+    <img src={user.avatar} alt={user.name} width="512" height="512" decoding="async" />
+  </div>
+  <div class="intro-content">
+    <p class="intro-greeting" data-user-content="greeting">{content.greeting}</p>
+    <h2>{user.name}</h2>
+    <p class="intro-tagline" data-user-content="tagline">{content.tagline}</p>
+    <p class="intro-description" data-user-content="bio">{content.bio}</p>
   </div>
 </section>
 
 <style>
   .intro-section {
-    margin-bottom: 3rem;
-    padding: 1.5rem;
-    background: var(--md-sys-color-surface-variant);
-    border-radius: 16px;
-    border: 1px solid var(--md-sys-color-outline-variant);
-    box-shadow: 
-      0 2px 12px -2px rgba(var(--md-sys-color-shadow-rgb), 0.06),
-      0 1px 4px -1px rgba(var(--md-sys-color-shadow-rgb), 0.03);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .intro-section:hover {
-    box-shadow: 
-      0 4px 20px -2px rgba(var(--md-sys-color-shadow-rgb), 0.08),
-      0 2px 8px -2px rgba(var(--md-sys-color-shadow-rgb), 0.04);
-  }
-
-  .intro-container {
-    display: flex;
-    gap: 2rem;
-    align-items: flex-start;
+    display: grid;
+    grid-template-columns: 6.5rem minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 2.5rem);
+    align-items: center;
+    margin-bottom: 2.4rem;
+    padding: 0 0 2rem;
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
   }
 
   .intro-avatar {
     position: relative;
-    flex-shrink: 0;
+    width: 6.5rem;
+    height: 6.5rem;
   }
 
-  .avatar-image {
-    width: 120px;
-    height: 120px;
-    border-radius: 16px;
-    object-fit: cover;
-    box-shadow: 0 6px 24px rgba(var(--md-sys-color-shadow-rgb), 0.12);
-    border: 2px solid var(--md-sys-color-surface);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .avatar-image:hover {
-    transform: scale(1.05) rotate(2deg);
-    box-shadow: 0 8px 32px rgba(var(--md-sys-color-shadow-rgb), 0.16);
-  }
-
-  .avatar-decoration {
+  .intro-avatar::after {
+    content: '';
     position: absolute;
-    inset: -4px;
-    border-radius: 16px;
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary),
-      var(--md-sys-color-tertiary)
-    );
-    opacity: 0.2;
-    z-index: -1;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    right: -0.35rem;
+    bottom: -0.35rem;
+    width: 2.3rem;
+    height: 2.3rem;
+    border: 1px solid rgba(var(--md-sys-color-primary-rgb), 0.42);
+    border-radius: 0.85rem;
+    background: rgba(var(--md-sys-color-primary-container-rgb), 0.48);
   }
 
-  .intro-avatar:hover .avatar-decoration {
-    opacity: 0.35;
+  img {
+    display: block;
+    width: 100%;
+    height: 100%;
+    border-radius: 1.35rem;
+    object-fit: cover;
+    box-shadow: 0 16px 48px -32px rgba(var(--md-sys-color-shadow-rgb), 0.7);
   }
 
   .intro-content {
-    flex: 1;
     min-width: 0;
   }
 
   .intro-greeting {
-    font-size: 0.8125rem;
-    font-weight: 600;
+    margin: 0 0 0.22rem;
     color: var(--md-sys-color-primary);
-    margin: 0 0 0.5rem 0;
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
     text-transform: uppercase;
-    letter-spacing: 0.5px;
   }
 
-  .intro-name {
-    font-size: 1.75rem;
+  h2 {
+    margin: 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: clamp(1.55rem, 3vw, 2rem);
     font-weight: 900;
-    background: linear-gradient(
-      135deg,
-      var(--md-sys-color-primary) 0%,
-      var(--md-sys-color-secondary) 50%,
-      var(--md-sys-color-tertiary) 100%
-    );
-    -webkit-background-clip: text;
-    -webkit-text-fill-color: transparent;
-    background-clip: text;
-    margin: 0 0 0.5rem 0;
-    letter-spacing: -0.02em;
+    line-height: 1.1;
   }
 
   .intro-tagline {
-    font-size: 0.9375rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0 0 1rem 0;
+    margin: 0.42rem 0 0;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.88rem;
+    font-weight: 730;
   }
 
   .intro-description {
-    font-size: 0.875rem;
-    line-height: 1.7;
+    max-width: 48rem;
+    margin: 0.68rem 0 0;
     color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.83rem;
+    line-height: 1.7;
   }
 
-  .intro-description p {
-    margin: 0 0 0.75rem 0;
-  }
-
-  .intro-description p:last-child {
-    margin-bottom: 0;
-  }
-
-  /* Responsive */
-  @media (max-width: 768px) {
+  @media (max-width: 520px) {
     .intro-section {
-      padding: 1.25rem;
-      border-radius: 14px;
+      grid-template-columns: 4.5rem minmax(0, 1fr);
+      gap: 1rem;
     }
 
-    .intro-container {
-      flex-direction: column;
-      gap: 1.5rem;
-      align-items: center;
-      text-align: center;
+    .intro-avatar {
+      width: 4.5rem;
+      height: 4.5rem;
     }
 
-    .avatar-image {
-      width: 100px;
-      height: 100px;
-      border-radius: 14px;
-    }
-
-    .avatar-decoration {
-      border-radius: 14px;
-    }
-
-    .intro-name {
-      font-size: 1.5rem;
-    }
-
-    .intro-tagline {
-      font-size: 0.875rem;
-    }
-
-    .intro-description {
-      font-size: 0.8125rem;
+    .intro-avatar::after {
+      width: 1.6rem;
+      height: 1.6rem;
+      border-radius: 0.55rem;
     }
   }
 </style>

@@ -1,17 +1,13 @@
 ---
-/**
- * Section.astro
- * General content section component - supports fully customizable card display
- * Supports Carbon icons and custom image logos
- */
+/** Configurable About section using the shared editorial split layout. */
 import { useI18n } from '@features/i18n/lib/i18n';
 
 interface Item {
   name: string;
   description?: string;
   url?: string;
-  icon?: string;  // Carbon icon, e.g., 'i-carbon:code'
-  logo?: string;  // Custom image logo, e.g., '/images/logo.png' (higher priority than icon)
+  icon?: string;
+  logo?: string;
 }
 
 interface Props {
@@ -25,401 +21,210 @@ interface Props {
   colorTheme?: 'primary' | 'secondary' | 'tertiary' | 'accent';
 }
 
-const { 
-  id,
-  title, 
-  description,
-  icon,
-  items, 
-  columns = 3,
-  compact = false,
-  colorTheme = 'primary',
-} = Astro.props;
-
+const { id, title, description, icon, items, columns = 3, compact = false, colorTheme = 'primary' } = Astro.props;
 const { t } = useI18n();
-
-// Check if title is a translation key (format: 'about.xxx.title')
-const isTitleTranslationKey = title.startsWith('about.') && title.includes('.title');
-const isDescTranslationKey = description && description.startsWith('about.');
-const displayTitle = isTitleTranslationKey ? t(title as any) : title;
-const displayDescription = isDescTranslationKey ? t(description as any) : description;
+const isTitleKey = title.startsWith('about.') && title.includes('.title');
+const isDescriptionKey = Boolean(description?.startsWith('about.'));
+const displayTitle = isTitleKey ? t(title as any) : title;
+const displayDescription = isDescriptionKey ? t(description as any) : description;
+const visibleColumns = Math.min(columns, 3);
 ---
 
-<section class={`content-section theme-${colorTheme}`} id={id}>
-  <div class="section-header">
-    <div class="header-content">
-      {icon && <i class={`header-icon ${icon}`}></i>}
-      <h2 
-        class="section-title" 
-        data-i18n={isTitleTranslationKey ? title : undefined}
-      >
-        {displayTitle}
-      </h2>
-    </div>
-    {displayDescription && (
-      <p 
-        class="section-description"
-        data-i18n={isDescTranslationKey ? description : undefined}
-      >
-        {displayDescription}
-      </p>
-    )}
-  </div>
+<section
+  class:list={['content-section', `theme-${colorTheme}`, compact && 'is-compact']}
+  id={id}
+  style={`--section-columns: ${visibleColumns};`}
+>
+  <header class="section-header">
+    <p class="section-kicker">
+      {icon && <i class={icon} aria-hidden="true"></i>}
+      <span>{String(items.length).padStart(2, '0')}</span>
+    </p>
+    <h2 data-i18n={isTitleKey ? title : undefined}>{displayTitle}</h2>
+    {displayDescription && <p data-i18n={isDescriptionKey ? description : undefined}>{displayDescription}</p>}
+  </header>
 
-  <div class={`items-grid cols-${columns} ${compact ? 'compact' : ''}`}>
+  <div class="items-grid">
     {items.map((item) => (
-      <div class="item-card">
+      <article class="item-row">
         {item.url ? (
-          <a href={item.url} target="_blank" rel="noopener noreferrer" class="item-link">
+          <a href={item.url} target="_blank" rel="noopener noreferrer">
             {(item.logo || item.icon) && (
-              <div class="item-icon">
-                {item.logo ? (
-                  <img src={item.logo} alt={item.name} class="item-logo-img" />
-                ) : (
-                  <i class={item.icon}></i>
-                )}
-              </div>
+              <span class="about-item-icon">
+                {item.logo ? <img src={item.logo} alt="" /> : <i class={item.icon}></i>}
+              </span>
             )}
-            <div class="item-content">
-              <h3 class="item-name">{item.name}</h3>
-              {item.description && <p class="item-description">{item.description}</p>}
-            </div>
-            <i class="i-carbon:arrow-up-right item-arrow"></i>
+            <span class="about-item-copy">
+              <strong>{item.name}</strong>
+              {item.description && <span>{item.description}</span>}
+            </span>
+            <i class="i-carbon:arrow-up-right item-arrow" aria-hidden="true"></i>
           </a>
         ) : (
-          <div class="item-content-only">
+          <div class="item-static">
             {(item.logo || item.icon) && (
-              <div class="item-icon">
-                {item.logo ? (
-                  <img src={item.logo} alt={item.name} class="item-logo-img" />
-                ) : (
-                  <i class={item.icon}></i>
-                )}
-              </div>
+              <span class="about-item-icon">
+                {item.logo ? <img src={item.logo} alt="" /> : <i class={item.icon}></i>}
+              </span>
             )}
-            <div class="item-content">
-              <h3 class="item-name">{item.name}</h3>
-              {item.description && <p class="item-description">{item.description}</p>}
-            </div>
+            <span class="about-item-copy">
+              <strong>{item.name}</strong>
+              {item.description && <span>{item.description}</span>}
+            </span>
           </div>
         )}
-      </div>
+      </article>
     ))}
   </div>
 </section>
 
 <style>
   .content-section {
-    margin-bottom: 3rem;
+    --section-accent: var(--md-sys-color-primary);
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 2.75rem);
+    margin-bottom: 2.7rem;
   }
 
-  /* Concise header styling */
+  .theme-secondary { --section-accent: var(--md-sys-color-secondary); }
+  .theme-tertiary { --section-accent: var(--md-sys-color-tertiary); }
+
   .section-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--section-accent);
+    padding-top: 0.2rem;
   }
 
-  .header-content {
+  .section-kicker {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .header-icon {
-    font-size: 1.5rem;
+    gap: 0.42rem;
+    margin: 0 0 0.4rem;
     color: var(--section-accent);
+    font-size: 0.68rem;
+    font-weight: 850;
+    letter-spacing: 0.08em;
   }
 
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
+  .section-kicker i {
+    font-size: 0.95rem;
+  }
+
+  .section-header h2 {
+    margin: 0;
     color: var(--md-sys-color-on-surface);
-    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 860;
+    line-height: 1.25;
   }
 
-  .section-description {
-    font-size: 0.9375rem;
+  .section-header > p:last-child:not(.section-kicker) {
+    margin: 0.38rem 0 0;
     color: var(--md-sys-color-on-surface-variant);
-    margin: 0;
-    line-height: 1.6;
+    font-size: 0.73rem;
+    line-height: 1.55;
   }
 
-  /* Theme color variables for accent highlights */
-  .theme-primary {
-    --section-accent: var(--md-sys-color-primary);
-  }
-
-  .theme-secondary {
-    --section-accent: var(--md-sys-color-secondary);
-  }
-
-  .theme-tertiary {
-    --section-accent: var(--md-sys-color-tertiary);
-  }
-
-  .theme-accent {
-    --section-accent: var(--md-sys-color-primary);
-  }
-
-  /* Grid layout with optimized responsive breakpoints */
   .items-grid {
     display: grid;
-    gap: 1rem;
+    grid-template-columns: repeat(var(--section-columns), minmax(0, 1fr));
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.46);
   }
 
-  /* 2-column layout: suitable for detailed content */
-  .items-grid.cols-2 {
-    grid-template-columns: repeat(auto-fit, minmax(360px, 1fr));
+  .item-row {
+    min-width: 0;
+    border-right: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.34);
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.4);
   }
 
-  /* 3-column layout: default recommended */
-  .items-grid.cols-3 {
-    grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+  .item-row:nth-child(3n) {
+    border-right: 0;
   }
 
-  /* 4-column layout: compact display */
-  .items-grid.cols-4 {
-    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-  }
-
-  /* 5-column layout: icon wall style */
-  .items-grid.cols-5 {
-    grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-  }
-
-  .items-grid.compact {
-    gap: 0.875rem;
-  }
-
-  /* Responsive breakpoint optimization */
-  @media (max-width: 1200px) {
-    .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-    }
-  }
-
-  @media (max-width: 992px) {
-    .items-grid.cols-4,
-    .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(260px, 1fr));
-    }
-  }
-
-  @media (max-width: 768px) {
-    .items-grid.cols-3,
-    .items-grid.cols-4,
-    .items-grid.cols-5 {
-      grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
-    }
-  }
-
-  @media (max-width: 576px) {
-    .items-grid {
-      grid-template-columns: 1fr !important;
-    }
-  }
-
-  /* Unified card styling */
-  .item-card {
-    position: relative;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    overflow: hidden;
-  }
-
-  .item-card::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--section-accent);
-    opacity: 0;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .item-card:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--section-accent);
-    transform: translateY(-2px);
-    box-shadow: 
-      0 8px 16px rgba(var(--md-sys-color-shadow-rgb), 0.08),
-      0 2px 4px rgba(var(--md-sys-color-shadow-rgb), 0.04);
-  }
-
-  .item-card:hover::before {
-    opacity: 1;
-  }
-
-  .item-link,
-  .item-content-only {
+  .item-row > a,
+  .item-static {
     display: flex;
     align-items: center;
-    gap: 1rem;
-    padding: 1.125rem;
-    position: relative;
-    z-index: 1;
-    min-height: 80px; /* Ensure consistent minimum card height */
-  }
-
-  .item-link {
-    text-decoration: none;
+    gap: 0.72rem;
+    min-height: 4.55rem;
+    padding: 0.72rem;
     color: inherit;
   }
 
-  .item-icon {
-    flex-shrink: 0;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    width: 48px;
-    height: 48px;
-    background: var(--md-sys-color-primary-container);
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .item-card:hover .item-icon {
-    background: var(--section-accent);
-    transform: scale(1.05);
-  }
-
-  .item-icon i {
-    font-size: 24px; /* Larger icon size for better visibility */
-    line-height: 1;
-    color: var(--md-sys-color-on-primary-container);
-    transition: color 0.3s ease;
-    display: block; /* Ensure proper icon rendering */
-  }
-
-  .item-card:hover .item-icon i {
-    color: var(--md-sys-color-on-primary);
-  }
-
-  /* Custom logo image styling */
-  .item-logo-img {
-    width: 100%;
-    height: 100%;
-    object-fit: contain;
-    transition: transform 0.3s ease;
-  }
-
-  .item-card:hover .item-logo-img {
-    transform: scale(1.1);
-  }
-
-  .item-content {
-    flex: 1;
-    min-width: 0;
-    display: flex;
-    flex-direction: column;
-    justify-content: center;
-    gap: 0.25rem;
-  }
-
-  .item-name {
-    font-size: 1rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface);
-    margin: 0;
-    line-height: 1.4;
-    transition: color 0.3s ease;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
-  }
-
-  .item-card:hover .item-name {
-    color: var(--section-accent);
-  }
-
-  .item-description {
-    font-size: 0.875rem;
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0;
-    line-height: 1.5;
-    overflow: hidden;
-    text-overflow: ellipsis;
-    display: -webkit-box;
-    -webkit-line-clamp: 2;
-    -webkit-box-orient: vertical;
+  .item-row > a:hover {
+    background: linear-gradient(110deg, rgba(var(--md-sys-color-primary-rgb), 0.08), transparent 70%);
   }
 
   .item-arrow {
-    flex-shrink: 0;
-    font-size: 18px;
+    flex: 0 0 auto;
+    color: var(--md-sys-color-primary);
+    font-size: 0.78rem;
+  }
+
+  .about-item-icon {
+    display: grid;
+    width: 2.15rem;
+    height: 2.15rem;
+    flex: 0 0 auto;
+    place-items: center;
+    border-radius: 0.72rem;
+    background: rgba(var(--md-sys-color-primary-container-rgb), 0.55);
+    color: var(--md-sys-color-primary);
+  }
+
+  .about-item-icon img {
+    width: 1.3rem;
+    height: 1.3rem;
+    object-fit: contain;
+  }
+
+  .about-item-copy {
+    min-width: 0;
+    flex: 1;
+  }
+
+  .about-item-copy strong {
+    display: block;
+    overflow: hidden;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.8rem;
+    font-weight: 800;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+
+  .about-item-copy span {
+    display: -webkit-box;
+    margin-top: 0.18rem;
+    overflow: hidden;
+    -webkit-box-orient: vertical;
+    -webkit-line-clamp: 2;
     color: var(--md-sys-color-on-surface-variant);
-    opacity: 0;
-    transform: translate(-4px, 4px);
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+    font-size: 0.67rem;
+    line-height: 1.4;
   }
 
-  .item-link:hover .item-arrow {
-    opacity: 1;
-    transform: translate(0, 0);
-    color: var(--section-accent);
+  @media (max-width: 900px) {
+    .items-grid {
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+    }
+
+    .item-row:nth-child(3n) { border-right: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.34); }
+    .item-row:nth-child(2n) { border-right: 0; }
   }
 
-  /* Compact mode for 4-5 column layouts */
-  .items-grid.compact .item-card {
-    border-radius: 10px;
-  }
-
-  .items-grid.compact .item-link,
-  .items-grid.compact .item-content-only {
-    padding: 1rem;
-    gap: 0.875rem;
-    min-height: 72px;
-  }
-
-  .items-grid.compact .item-icon {
-    width: 44px;
-    height: 44px;
-    border-radius: 10px;
-  }
-
-  .items-grid.compact .item-icon i {
-    font-size: 22px;
-  }
-
-  .items-grid.compact .item-logo-img {
-    width: 100%;
-    height: 100%;
-  }
-
-  .items-grid.compact .item-name {
-    font-size: 0.9375rem;
-    -webkit-line-clamp: 1; /* Single line title in compact mode */
-  }
-
-  .items-grid.compact .item-description {
-    font-size: 0.8125rem;
-    -webkit-line-clamp: 1; /* Single line description in compact mode */
-  }
-
-  /* Responsive optimization */
-  @media (max-width: 768px) {
+  @media (max-width: 660px) {
     .content-section {
-      margin-bottom: 2.5rem;
+      grid-template-columns: 1fr;
+      gap: 0.8rem;
+      margin-bottom: 2.2rem;
     }
 
-    .section-title {
-      font-size: 1.375rem;
+    .items-grid {
+      grid-template-columns: 1fr;
     }
 
-    .section-description {
-      font-size: 0.875rem;
-    }
-
-    .item-card:hover {
-      transform: translateY(-1px);
+    .item-row {
+      border-right: 0 !important;
     }
   }
 </style>

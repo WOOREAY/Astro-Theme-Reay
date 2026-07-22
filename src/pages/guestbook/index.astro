@@ -1,183 +1,77 @@
 ---
-import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
-import Comments from '@features/comments/components/Comments.astro';
+import EditorialPageLayout from '@app/layouts/base/EditorialPageLayout.astro';
 import { getCommentsConfig } from '@app/config/site.config';
+import Comments from '@features/comments/components/Comments.astro';
 import { useI18n } from '@features/i18n/lib/i18n';
+import EditorialPageHeader from '@shared/components/EditorialPageHeader.astro';
 
 const { t } = useI18n();
 const commentsConfig = getCommentsConfig();
-const featureCards = [
-  {
-    icon: 'i-carbon:chat',
-    title: t('guestbook.card.comments'),
-    description: t('guestbook.card.commentsDesc'),
-  },
-  {
-    icon: 'i-carbon:user-follow',
-    title: t('guestbook.card.identity'),
-    description: t('guestbook.card.identityDesc'),
-  },
-  {
-    icon: 'i-carbon:email',
-    title: t('guestbook.card.contact'),
-    description: t('guestbook.card.contactDesc'),
-  },
+const notes = [
+  { icon: 'i-carbon:chat', title: t('guestbook.card.comments'), titleKey: 'guestbook.card.comments', description: t('guestbook.card.commentsDesc'), descriptionKey: 'guestbook.card.commentsDesc' },
+  { icon: 'i-carbon:user-follow', title: t('guestbook.card.identity'), titleKey: 'guestbook.card.identity', description: t('guestbook.card.identityDesc'), descriptionKey: 'guestbook.card.identityDesc' },
+  { icon: 'i-carbon:email', title: t('guestbook.card.contact'), titleKey: 'guestbook.card.contact', description: t('guestbook.card.contactDesc'), descriptionKey: 'guestbook.card.contactDesc' },
+];
+const headerStats = [
+  { icon: 'i-carbon:connect', labelKey: 'comments.provider', label: t('comments.provider'), value: commentsConfig.provider },
 ];
 ---
 
-<DefaultLayout title={t('page.title.guestbook')} description={t('guestbook.subtitle')}>
-  <div class="guestbook-page">
-    <section class="guestbook-header">
-      <div class="header-content">
-        <h1 class="page-title">
-          <i class="i-carbon:send-alt"></i>
-          <span data-i18n="guestbook.title">{t('guestbook.title')}</span>
-        </h1>
-        <p class="page-subtitle" data-i18n="guestbook.subtitle">
-          {t('guestbook.subtitle')}
-        </p>
-        <div class="guestbook-provider reay-chip">
-          <i class="i-carbon:connect"></i>
-          <span data-i18n="guestbook.eyebrow">{t('guestbook.eyebrow')}</span>
-          <strong>{commentsConfig.provider}</strong>
-        </div>
-      </div>
+<EditorialPageLayout title={t('page.title.guestbook')} description={t('guestbook.subtitle')} pageClass="guestbook-page">
+  <EditorialPageHeader
+    title={t('guestbook.title')}
+    description={t('guestbook.subtitle')}
+    titleKey="guestbook.title"
+    descriptionKey="guestbook.subtitle"
+    eyebrow={t('guestbook.eyebrow')}
+    eyebrowKey="guestbook.eyebrow"
+    icon="i-carbon:send-alt"
+    stats={headerStats}
+  />
 
-      <div class="guestbook-stats" aria-label="Guestbook information">
-        {featureCards.map(card => (
-        <article class="guestbook-stat-item">
-          <i class={card.icon}></i>
-          <span>{card.title}</span>
-          <strong>{card.description}</strong>
-        </article>
-        ))}
+  <aside class="guestbook-notes" aria-label={t('guestbook.eyebrow')}>
+    {notes.map((note) => (
+      <div>
+        <i class={note.icon} aria-hidden="true"></i>
+        <span><strong data-i18n={note.titleKey}>{note.title}</strong><small data-i18n={note.descriptionKey}>{note.description}</small></span>
       </div>
-    </section>
+    ))}
+  </aside>
 
-    <Comments
-      mode="guestbook"
-      pageKey="/guestbook"
-      pageTitle={t('guestbook.title')}
-      description={t('guestbook.commentsDesc')}
-    />
-  </div>
-</DefaultLayout>
+  <Comments
+    mode="guestbook"
+    pageKey="/guestbook"
+    pageTitle={t('guestbook.title')}
+    description={t('guestbook.commentsDesc')}
+  />
+</EditorialPageLayout>
 
 <style>
-  .guestbook-page {
-    width: min(100%, 960px);
-    margin: 0 auto;
-    padding: clamp(2rem, 5vw, 4rem) 0 4rem;
-  }
-
-  .guestbook-header {
-    margin-bottom: 2rem;
-    padding-bottom: 1.5rem;
-    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.58);
-  }
-
-  .header-content {
-    text-align: center;
-  }
-
-  .page-title {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.5rem;
-    font-size: 1.75rem;
-    font-weight: 600;
-    color: var(--md-sys-color-on-surface);
-    margin: 0 0 0.5rem 0;
-  }
-
-  .page-title i {
-    font-size: 1.5rem;
-    color: var(--md-sys-color-primary);
-  }
-
-  .page-subtitle {
-    font-size: 0.875rem;
-    color: var(--md-sys-color-on-surface-variant);
-    margin: 0 0 0.75rem 0;
-    opacity: 0.9;
-  }
-
-  .guestbook-provider {
-    display: inline-flex;
-    align-items: center;
-    gap: 0.45rem;
-    min-height: 2rem;
-    padding: 0.42rem 0.75rem;
-    font-size: 0.78rem;
-    font-weight: 700;
-    color: var(--md-sys-color-primary);
-  }
-
-  .guestbook-provider strong {
-    color: var(--md-sys-color-on-surface);
-    font-size: 0.72rem;
-    text-transform: uppercase;
-  }
-
-  .guestbook-stats {
+  .guestbook-notes {
     display: grid;
     grid-template-columns: repeat(3, minmax(0, 1fr));
-    gap: 0.75rem;
-    margin-top: 1.3rem;
-    text-align: left;
+    margin-bottom: 2rem;
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
   }
 
-  .guestbook-stat-item {
-    min-height: 6.75rem;
-    padding: 0.85rem;
-    border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
-    border-radius: 0.75rem;
-    background:
-      linear-gradient(135deg, rgba(var(--md-sys-color-surface-container-rgb), 0.72), rgba(var(--md-sys-color-surface-rgb), 0.52));
-    box-shadow: 0 18px 42px -38px rgba(var(--md-sys-color-shadow-rgb), 0.62);
+  .guestbook-notes > div {
+    display: grid;
+    grid-template-columns: 1.4rem minmax(0, 1fr);
+    gap: 0.65rem;
+    padding: 0.9rem 1rem;
+    border-left: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
   }
 
-  .guestbook-stat-item i {
-    color: var(--md-sys-color-primary);
-    font-size: 1.05rem;
-  }
+  .guestbook-notes > div:first-child { padding-left: 0; border-left: 0; }
+  .guestbook-notes i { color: var(--md-sys-color-primary); font-size: 0.9rem; }
+  .guestbook-notes strong, .guestbook-notes small { display: block; }
+  .guestbook-notes strong { color: var(--md-sys-color-on-surface); font-size: 0.72rem; }
+  .guestbook-notes small { margin-top: 0.22rem; color: var(--md-sys-color-on-surface-variant); font-size: 0.65rem; line-height: 1.45; }
 
-  .guestbook-stat-item span {
-    display: block;
-    margin-top: 0.5rem;
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.72rem;
-    font-weight: 700;
-    text-transform: uppercase;
-    letter-spacing: 0.06em;
-  }
-
-  .guestbook-stat-item strong {
-    display: block;
-    margin-top: 0.18rem;
-    color: var(--md-sys-color-on-surface);
-    font-size: 0.86rem;
-    font-weight: 650;
-    line-height: 1.5;
-  }
-
-  @media (max-width: 820px) {
-    .guestbook-stats {
-      grid-template-columns: 1fr;
-    }
-  }
-
-  @media (max-width: 768px) {
-    .page-title {
-      font-size: 1.5rem;
-    }
-
-    .page-title i {
-      font-size: 1.25rem;
-    }
-
-    .page-subtitle {
-      font-size: 0.8125rem;
-    }
+  @media (max-width: 720px) {
+    .guestbook-notes { grid-template-columns: 1fr; }
+    .guestbook-notes > div:nth-child(n) { padding-right: 0; padding-left: 0; border-left: 0; border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.36); }
+    .guestbook-notes > div:first-child { border-top: 0; }
   }
 </style>

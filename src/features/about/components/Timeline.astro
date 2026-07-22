@@ -1,210 +1,101 @@
 ---
-/**
- * Timeline.astro
- * Simple timeline component
- */
 import { useI18n } from '@features/i18n/lib/i18n';
 
-interface TimelineEvent {
-  year: string;
-  event: string;
-  description?: string;
-}
-
-interface Props {
-  events: TimelineEvent[];
-}
+interface TimelineEvent { year: string; event: string; description?: string; }
+interface Props { events: TimelineEvent[]; }
 
 const { events } = Astro.props;
 const { t } = useI18n();
 ---
 
 <section class="timeline-section">
-  <div class="section-header">
-    <div class="header-content">
-      <i class="header-icon i-carbon:time"></i>
-      <h2 class="section-title" data-i18n="about.timeline.title">{t('about.timeline.title')}</h2>
-    </div>
-    <p class="section-description" data-i18n="about.timeline.description">{t('about.timeline.description')}</p>
-  </div>
-
-  <div class="timeline">
-    {events.map((event, index) => (
-      <div class="timeline-item" style={`--index: ${index}`}>
-        <div class="timeline-marker">
-          <div class="timeline-dot"></div>
-          {index < events.length - 1 && <div class="timeline-line"></div>}
+  <header>
+    <p><i class="i-carbon:time" aria-hidden="true"></i>{String(events.length).padStart(2, '0')}</p>
+    <h2 data-i18n="about.timeline.title">{t('about.timeline.title')}</h2>
+    <span data-i18n="about.timeline.description">{t('about.timeline.description')}</span>
+  </header>
+  <ol>
+    {events.map((event) => (
+      <li>
+        <time>{event.year}</time>
+        <div>
+          <h3>{event.event}</h3>
+          {event.description && <p>{event.description}</p>}
         </div>
-        <div class="timeline-content">
-          <div class="timeline-year">{event.year}</div>
-          <h3 class="timeline-event">{event.event}</h3>
-          {event.description && <p class="timeline-description">{event.description}</p>}
-        </div>
-      </div>
+      </li>
     ))}
-  </div>
+  </ol>
 </section>
 
 <style>
   .timeline-section {
-    margin-bottom: 3rem;
+    display: grid;
+    grid-template-columns: 11rem minmax(0, 1fr);
+    gap: clamp(1.25rem, 4vw, 2.75rem);
+    margin-bottom: 2.7rem;
   }
 
-  /* Unified header styling */
-  .timeline-header {
-    margin-bottom: 1.5rem;
-    padding-bottom: 0.75rem;
-    border-bottom: 2px solid var(--md-sys-color-primary);
-  }
-
-  .header-content {
+  header > p {
     display: flex;
     align-items: center;
-    gap: 0.75rem;
-    margin-bottom: 0.5rem;
-  }
-
-  .header-icon {
-    font-size: 1.5rem;
+    gap: 0.42rem;
+    margin: 0 0 0.4rem;
     color: var(--md-sys-color-primary);
+    font-size: 0.68rem;
+    font-weight: 850;
   }
 
-  .section-title {
-    font-size: 1.5rem;
-    font-weight: 700;
+  header h2 {
+    margin: 0;
     color: var(--md-sys-color-on-surface);
-    margin: 0;
+    font-size: 1.12rem;
+    font-weight: 860;
   }
 
-  .section-description {
-    font-size: 0.9375rem;
+  header > span {
+    display: block;
+    margin-top: 0.38rem;
     color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.73rem;
+    line-height: 1.55;
+  }
+
+  ol {
     margin: 0;
-    line-height: 1.6;
+    padding: 0;
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.46);
+    list-style: none;
   }
 
-  .timeline {
-    position: relative;
-    padding-left: 2rem;
+  li {
+    display: grid;
+    grid-template-columns: 4.5rem minmax(0, 1fr);
+    gap: 1rem;
+    padding: 0.9rem 0.65rem;
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.4);
   }
 
-  @media (max-width: 640px) {
-    .timeline {
-      padding-left: 1.5rem;
-    }
+  time {
+    color: var(--md-sys-color-primary);
+    font-size: 0.76rem;
+    font-weight: 850;
   }
 
-  .timeline-item {
-    position: relative;
-    padding-bottom: 2rem;
-    opacity: 0;
-    transform: translateX(-20px);
-    animation: slideIn 0.5s ease forwards;
-    animation-delay: calc(var(--index) * 0.1s);
-  }
-
-  @keyframes slideIn {
-    to {
-      opacity: 1;
-      transform: translateX(0);
-    }
-  }
-
-  .timeline-item:last-child {
-    padding-bottom: 0;
-  }
-
-  .timeline-marker {
-    position: absolute;
-    left: -2rem;
-    top: 0.25rem;
-  }
-
-  @media (max-width: 640px) {
-    .timeline-marker {
-      left: -1.5rem;
-    }
-  }
-
-  .timeline-dot {
-    width: 14px;
-    height: 14px;
-    background: var(--md-sys-color-primary);
-    border: 3px solid var(--md-sys-color-surface);
-    border-radius: 50%;
-    box-shadow: 0 0 0 3px var(--md-sys-color-primary-container);
-    z-index: 2;
-    position: relative;
-  }
-
-  .timeline-line {
-    position: absolute;
-    left: 50%;
-    top: 14px;
-    width: 2px;
-    height: calc(100% + 2rem);
-    background: var(--md-sys-color-outline-variant);
-    transform: translateX(-50%);
-    z-index: 1;
-  }
-
-  .timeline-content {
-    padding: 1rem 1.25rem;
-    background: var(--md-sys-color-surface-container-low);
-    border: 1px solid var(--md-sys-color-outline-variant);
-    border-radius: 12px;
-    transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-    position: relative;
-  }
-
-  .timeline-content::before {
-    content: '';
-    position: absolute;
-    top: 0;
-    left: 0;
-    width: 3px;
-    height: 100%;
-    background: var(--md-sys-color-primary);
-    opacity: 0;
-    border-radius: 12px 0 0 12px;
-    transition: opacity 0.3s cubic-bezier(0.4, 0, 0.2, 1);
-  }
-
-  .timeline-content:hover {
-    background: var(--md-sys-color-surface-container);
-    border-color: var(--md-sys-color-primary);
-    transform: translateX(4px);
-    box-shadow: 
-      0 4px 12px rgba(var(--md-sys-color-shadow-rgb), 0.05),
-      0 2px 6px rgba(var(--md-sys-color-shadow-rgb), 0.03);
-  }
-
-  .timeline-content:hover::before {
-    opacity: 1;
-  }
-
-  .timeline-year {
-    display: inline-block;
-    padding: 0.25rem 0.75rem;
-    background: var(--md-sys-color-primary-container);
-    color: var(--md-sys-color-on-primary-container);
-    font-size: 0.75rem;
-    font-weight: 600;
-    border-radius: 6px;
-    margin-bottom: 0.5rem;
-  }
-
-  .timeline-event {
-    font-size: 1.125rem;
-    font-weight: 600;
+  h3 {
+    margin: 0;
     color: var(--md-sys-color-on-surface);
-    margin: 0 0 0.5rem 0;
+    font-size: 0.84rem;
+    font-weight: 820;
   }
 
-  .timeline-description {
-    font-size: 0.875rem;
+  li p {
+    margin: 0.22rem 0 0;
     color: var(--md-sys-color-on-surface-variant);
-    line-height: 1.6;
-    margin: 0;
+    font-size: 0.7rem;
+    line-height: 1.5;
+  }
+
+  @media (max-width: 660px) {
+    .timeline-section { grid-template-columns: 1fr; gap: 0.8rem; }
   }
 </style>

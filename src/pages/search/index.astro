@@ -1,11 +1,21 @@
 ---
-import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
+import EditorialPageLayout from '@app/layouts/base/EditorialPageLayout.astro';
 import SearchPanel from '@features/search/components/SearchPanel.astro';
 import { useI18n } from '@features/i18n/lib/i18n';
+import EditorialPageHeader from '@shared/components/EditorialPageHeader.astro';
 
 const { t } = useI18n();
 ---
 
-<DefaultLayout title={t('page.title.search')} description={t('search.description')}>
+<EditorialPageLayout title={t('page.title.search')} description={t('search.description')} pageClass="search-index-page">
+  <EditorialPageHeader
+    title={t('search.title')}
+    description={t('search.description')}
+    titleKey="search.title"
+    descriptionKey="search.description"
+    eyebrow={t('search.eyebrow')}
+    eyebrowKey="search.eyebrow"
+    icon="i-carbon:search"
+  />
   <SearchPanel />
-</DefaultLayout>
+</EditorialPageLayout>
