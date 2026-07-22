@@ -27,7 +27,7 @@ npm run verify
 npm run audit
 ```
 
-- `verify`: `astro check` -> 完整构建 -> 16 个关键产物 smoke test -> 静态性能预算 -> 发布可见性/README 净化安全合同 -> Playwright/Axe E2E。
+- `verify`: `astro check` -> 个人配置单一来源合同 -> 完整构建 -> 16 个关键产物 smoke test -> 静态性能预算 -> 发布可见性/README 净化安全合同 -> Playwright/Axe E2E。
 - `verify` 不包含安全审计，必须显式运行 `npm run audit`。
 - E2E 覆盖核心导航、主题/语言持久化、Pagefind、404、图库兜底、移动菜单和三个页面的 WCAG A/AA 自动检查；它仍不等价于全站链接 crawl、视觉回归或真实 provider 测试。
 

@@ -38,9 +38,10 @@ Header 和 Footer 已提供全站导航；首页不再复制一组无上下文�
 
 `user.config.ts` 把公开基础字段与本地化叙事字段分开：
 
-- 基础字段：`name`、`avatar`、可选 `location/email/website`、`socials` 和 GitHub。
+- 基础字段：`name`、`avatar`、可选 `location`、`contact.email/website/additionalLinks` 和 GitHub；GitHub 公开链接只从 username 派生。
 - 本地化字段：`role`、`tagline`、`bio`、`status`、`focus`、`greeting` 和 `description`。
 - 可选字段为空时不渲染占位文案或空行。
+- 首页通过统一 contact getter 展示联系方式，与 About、Links、Footer 不维护各自副本。
 - `data-user-content` 支持 `focus.0` 形式的点路径，使数组项也能随客户端语言切换更新。
 
 About 可继续读取同一配置，但应展示更完整的信息；首页只消费短摘要字段。

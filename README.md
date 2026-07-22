@@ -90,7 +90,7 @@ draft: false
 | 文件 | 用途 |
 | --- | --- |
 | `src/app/config/site.config.ts` | 应用读取配置的统一入口，通常无需修改 |
-| `src/app/config/user.config.ts` | 个人资料、双语简介、关于页和站点信息 |
+| `src/app/config/user.config.ts` | 身份与联系方式的单一来源、双语简介、关于页和站点信息 |
 | `src/app/config/features.config.ts` | 首页模式、搜索、Feed 和集成功能开关 |
 | `src/app/config/navigation.config.ts` | Header 与 Footer 导航 |
 | `src/app/config/theme.config.ts` | 主题、背景和动效 |
@@ -110,6 +110,7 @@ draft: false
 | `npm run check:production` | 校验生产 `SITE`、根路径部署与模板占位值 |
 | `npm run test:routes` | 校验关键生产路由与产物 |
 | `npm run test:performance` | 校验 HTML/inline 预算与共享 CSS 合同 |
+| `npm run test:config` | 校验个人信息单一来源与跨页面消费合同 |
 | `npm run test:security` | 校验内容可见性与远程 README 净化合同 |
 | `npm run test:e2e` | 构建后运行 Playwright/Axe 核心浏览器测试 |
 | `npm run audit` | 检查高危依赖漏洞 |

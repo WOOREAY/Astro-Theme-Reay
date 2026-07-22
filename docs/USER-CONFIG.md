@@ -1,391 +1,152 @@
 # User Configuration Guide
 
-Complete reference for configuring your personal information and site settings.
+`src/app/config/user.config.ts` is the single editable source for personal identity, public contact details, GitHub identity, localized introduction copy, and site facts. Application code reads normalized values through `src/app/config/site.config.ts`.
 
-## Configuration Layers
+## Ownership
 
-Editable settings are split by feature under `src/app/config/`. Application code reads those files through `src/app/config/site.config.ts`, which is the central read layer.
+| Value | Edit here | Reused by |
+| --- | --- | --- |
+| Name and avatar | `user.name`, `user.avatar` | Header, Hero, About, Links site card, Footer, RSS |
+| Location | `user.location` | Home profile |
+| Email | `user.contact.email` | Home, About contacts, Links application, Footer |
+| Website | `user.contact.website` | Home, About contacts, Links application/site card, Footer |
+| GitHub username | `user.github.username` | Hero, Home, About, Links, Footer, Projects, comment defaults |
+| Other public profiles | `user.contact.additionalLinks` | Hero, Home, About, Links, Footer |
+| Site name | derived from `user.name` | Home, About, Links, RSS |
+| Site description | `userContent.<lang>.description` | Home, About, Links, RSS |
 
-| File | Purpose |
-| --- | --- |
-| `src/app/config/user.config.ts` | Profile, social links, multilingual personal content, about page data |
-| `src/app/config/theme.config.ts` | Colors, typography, and background |
-| `src/app/config/projects.config.ts` | GitHub project fetching and display options |
-| `src/app/config/links.config.ts` | Friend links, resource links, and link application info |
-| `src/app/config/i18n.config.ts` | Default language and UI translations |
-| `src/app/config/site.config.ts` | Central app-facing access layer; usually do not edit |
+Do not copy these values into `links.config.ts`, `projects.config.ts`, About data, or page components.
 
-## Basic Information
+## Identity and Contact
 
-### User Profile (Language-Independent)
-
-```typescript
+```ts
 export const user = {
   name: 'Your Name',
   avatar: '/images/profile/avatar.png',
-  location: 'Your Location',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
-    { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/yourusername' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
-  ],
-  github: {
-    username: 'yourusername',
-    token: '', // Use environment variables instead
-  },
-}
-```
+  location: '',
 
-### Multilingual User Content (Single Source of Truth)
-
-**Important**: This is the **only place** to define your personal content. All pages (home, about, etc.) will read from here.
-
-```typescript
-export const userContent = {
-  en: {
-    tagline: 'Software Developer · Technical Notes · Project Practice',
-    bio: 'Write a short intro about your engineering focus, current projects, and the technical problems you like to explore.',
-    greeting: 'Hello, I am',
-    description: 'A personal technology blog for notes, projects, and long-term learning.',
-  },
-  zh: {
-    tagline: '软件开发者 · 技术笔记 · 项目实践',
-    bio: '在这里写下你的工程方向、正在打磨的项目，以及你持续探索的技术问题。',
-    greeting: '你好，我是',
-    description: '一个记录技术笔记、项目实践与长期学习的个人博客。',
-  },
-}
-```
-
-**Fields**:
-- **tagline**: Short professional tagline (shown on home page and about page)
-- **bio**: Brief personal introduction (shown on home page and about page intro)
-- **greeting**: Greeting text for about page (e.g., "Hello, I am" or "你好，我是")
-- **description**: Site-level intro sentence used by layouts and meta information
-
-**Why Single Source?**
-- ✅ Define once, use everywhere
-- ✅ Automatic language switching
-- ✅ Easy maintenance
-- ✅ No content duplication
-
-### Usage in Components
-
-```typescript
-import { getLocalizedUserContent, getUserProfile } from '../../data/site.config';
-import { useI18n } from '../../utils/i18n';
-
-const { currentLang } = useI18n();
-const user = getUserProfile();
-const content = getLocalizedUserContent(currentLang);
-
-// Now use: user.name, user.avatar, content.tagline, content.bio, content.greeting
-```
-
-### Fields
-
-- **name**: Your display name (shown in all pages)
-- **avatar**: Path to avatar image (store in `public/`)
-- **location**: Where you're based
-- **socials**: Array of social links with icons
-- **github.username**: For fetching repository stats
-- **github.token**: Optional, use environment variables for higher API limits
-
-## Social Links
-
-Social links are defined in the `user.socials` array:
-
-```typescript
-export const user = {
-  socials: [
-    { 
-      icon: 'i-carbon:logo-github',  // UnoCSS icon class
-      label: 'GitHub',                // Platform name
-      url: 'https://github.com/yourusername'  // Profile URL
-    },
-    { 
-      icon: 'i-carbon:logo-twitter', 
-      label: 'Twitter', 
-      url: 'https://twitter.com/yourusername' 
-    },
-    { 
-      icon: 'i-carbon:email', 
-      label: 'Email', 
-      url: 'mailto:your.email@example.com' 
-    },
-  ],
-}
-```
-
-### Supported Icons (UnoCSS Carbon Icons)
-
-| Platform | Icon Class | Example URL |
-|----------|------------|-------------|
-| GitHub | `i-carbon:logo-github` | `https://github.com/username` |
-| Twitter/X | `i-carbon:logo-twitter` | `https://twitter.com/username` |
-| LinkedIn | `i-carbon:logo-linkedin` | `https://linkedin.com/in/username` |
-| Email | `i-carbon:email` | `mailto:your@email.com` |
-| Instagram | `i-carbon:logo-instagram` | `https://instagram.com/username` |
-| YouTube | `i-carbon:logo-youtube` | `https://youtube.com/@username` |
-| Discord | `i-carbon:logo-discord` | `https://discord.gg/invite` |
-
-For more icons, see [Icônes](https://icones.js.org/collection/carbon)
-
-## GitHub Configuration
-
-```typescript
-export const user = {
-  github: {
-    username: 'yourusername',
-    token: '', // Keep tokens in environment variables instead
-  }
-}
-```
-
-### Why GitHub Token?
-
-- **Without token**: 60 API requests/hour
-- **With token**: 5,000 requests/hour
-
-### Creating a Token
-
-1. Go to GitHub → Settings → Developer settings → Personal access tokens
-2. Generate new token (classic)
-3. Select scopes: `public_repo` (read-only)
-4. Copy the token
-5. Create `.env` file:
-   ```env
-   GITHUB_TOKEN=<your-github-token>
-   ```
-
-Do not commit `.env` or hard-code tokens in `user.config.ts`.
-
-## About Site Information
-
-```typescript
-export const aboutConfig = {
-  site: {
-    name: 'Your Site Name',
-    description: 'A personal technology blog for notes, projects, and long-term learning.',
-    builtWith: 'Built with Astro, UnoCSS, and TypeScript',
-    since: '2024',
-    stats: {
-      posts: 0,
-      words: 0,
-      visitors: 0,
-    },
-    techStack: [
-      { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+  contact: {
+    email: 'you@example.com',
+    website: 'https://example.com',
+    additionalLinks: [
+      {
+        id: 'mastodon',
+        label: 'Mastodon',
+        url: 'https://social.example/@you',
+        displayValue: '@you',
+        icon: 'i-simple-icons:mastodon',
+      },
     ],
   },
+
+  github: {
+    username: 'yourusername',
+    token: '',
+  },
 }
 ```
 
-### Fields
+Empty optional values are hidden everywhere. GitHub is not repeated in `additionalLinks`: its public URL is derived automatically from `github.username`. `additionalLinks[].id` must be stable and each icon must be an UnoCSS/Iconify class.
 
-- **name**: Site name displayed on the about/site section
-- **description**: Short site description
-- **builtWith**: Technology summary
-- **since**: Start year
-- **stats**: Initial stats; some page stats are calculated at build time
-- **techStack**: Technologies displayed in the site info section
+Keep `github.token` empty in committed code. Use `GITHUB_TOKEN` in `.env` or CI secrets when a higher API limit is needed.
 
-## About Page Configuration
+## Localized Personal Content
 
-```typescript
-export const aboutConfig = {
-  sections: [
+```ts
+export const userContent = {
+  en: {
+    role: 'Software developer and technical writer',
+    tagline: 'Open Source · Technical Notes · Project Practice',
+    bio: 'A short introduction.',
+    status: 'What you are working on now.',
+    focus: ['Open Source', 'Web Engineering'],
+    greeting: 'Hello, I am',
+    description: 'A personal site for notes, projects, and long-term learning.',
+  },
+  zh: {
+    role: '软件开发者与技术写作者',
+    tagline: '开源实践 · 技术笔记 · 项目复盘',
+    bio: '一段简短的个人介绍。',
+    status: '当前正在做的事情。',
+    focus: ['开源实践', 'Web 工程'],
+    greeting: '你好，我是',
+    description: '一个记录技术笔记、项目实践与长期学习的个人站点。',
+  },
+}
+```
+
+`description` is also the localized site description. Do not add another site-description field.
+
+## Site Facts
+
+```ts
+export const site = {
+  builtWith: 'Built with Astro, UnoCSS, and TypeScript',
+  since: '2025',
+  stats: {
+    visitors: 0,
+  },
+  techStack: [
     {
-      id: 'dev-tools',
-      title: 'about.dev-tools.title',
-      description: 'about.dev-tools.subtitle',
-      icon: 'i-carbon:development',
-      columns: 3,
-      compact: false,
-      colorTheme: 'primary',
-      items: [
-        { name: 'VS Code', description: 'Code editor', url: 'https://code.visualstudio.com/', icon: 'i-carbon:code' },
-      ],
+      name: 'Astro',
+      description: 'Modern static site generator',
+      url: 'https://astro.build/',
+      icon: 'i-carbon:rocket',
     },
   ],
-  socialNetworks: [],
+}
+```
+
+Article and word counts are calculated from real content at build time. Only an externally measured visitor count remains configurable.
+
+## About Content
+
+`aboutConfig` owns only About-specific collections:
+
+```ts
+export const aboutConfig = {
+  sections: [],
   education: [],
   experience: [],
   timeline: [],
-  site: {
-    name: 'Your Site Name',
-    description: 'A personal technology blog for notes, projects, and long-term learning.',
-    builtWith: 'Built with Astro, UnoCSS, and TypeScript',
-    since: '2024',
-    stats: { posts: 0, words: 0, visitors: 0 },
-    techStack: [],
-  },
 }
 ```
 
-## Statistics Configuration
+Contacts and site identity are intentionally absent. About receives them from the same normalized getters as the other pages.
 
-```typescript
-export const aboutConfig = {
-  // ...
-  site: {
-    since: '2024',
-    stats: {
-      posts: 0,
-      words: 0,
-      visitors: 0,
-    },
-    techStack: [
-      { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
-    ],
-  },
-}
+## App-facing Getters
+
+Components should import from `@app/config/site.config`:
+
+```ts
+const user = getUserProfile();
+const contact = getUserContact();
+const contactLinks = getUserContactLinks();
+const socialLinks = getUserSocialLinks();
+const content = getLocalizedUserContent(currentLang);
+const site = getSiteProfile(currentLang);
+const github = getGitHubConfig();
 ```
 
-## Navigation Menu
+- `getUserContactLinks()` normalizes email, website, GitHub, and additional profiles and removes duplicate URLs.
+- `getUserSocialLinks()` returns GitHub and additional public profiles for social-only UI.
+- `getSiteProfile()` derives name, avatar, URL, and localized description instead of storing copies.
+- `getGitHubConfig()` combines the one GitHub identity with project filtering options.
 
-Declare routes in `src/app/config/navigation.config.ts` and add their labels in `src/app/config/i18n.config.ts`:
+## Verification
 
-```typescript
-export const translations = {
-  en: {
-    'nav.home': 'Home',
-    'nav.blog': 'Blog',
-    'nav.projects': 'Projects',
-    'nav.about': 'About',
-    'nav.archives': 'Archives',
-  },
-  zh: {
-    'nav.home': '首页',
-    'nav.blog': '博客',
-    'nav.projects': '项目',
-    'nav.about': '关于',
-    'nav.archives': '归档',
-  }
-}
+```bash
+npm run test:config
+npm run check
+npm run verify
 ```
 
-Header and Footer both consume `navigation.config.ts`; do not duplicate route arrays inside components.
+`test:config` proves the normalizer handles a fixture email/website/GitHub profile once and asserts that Home, About, Links, and Footer consume the central getter.
 
-## Language Configuration
+## Common Failures
 
-```typescript
-export const defaultLang = 'zh' as const;
-
-export const languages = {
-  en: 'English',
-  zh: '中文',
-} as const;
-```
-
-## Examples
-
-### Personal Blog
-```typescript
-export const user = {
-  name: 'Jane Doe',
-  avatar: '/images/jane.jpg',
-  location: 'Your City',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/janedoe' },
-    { icon: 'i-carbon:logo-linkedin', label: 'LinkedIn', url: 'https://linkedin.com/in/janedoe' },
-  ],
-  github: {
-    username: 'janedoe',
-    token: '',
-  },
-}
-
-export const userContent = {
-  en: {
-    tagline: 'Full-stack developer · Tech writer',
-    bio: 'Full-stack developer and tech writer.',
-    greeting: 'Hello, I am',
-    description: 'Notes on web development and product building.',
-  },
-  zh: {
-    tagline: '全栈开发者 · 技术作者',
-    bio: '全栈开发者与技术作者。',
-    greeting: '你好,我是',
-    description: '记录 Web 开发和产品实践。',
-  },
-}
-```
-
-### Developer Portfolio
-```typescript
-export const user = {
-  name: 'John Smith',
-  avatar: '/images/profile/avatar.png',
-  location: 'Remote',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/johnsmith' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:john@example.com' },
-  ],
-  github: {
-    username: 'johnsmith',
-    token: '',
-  },
-}
-```
-
-### Chinese Blog
-```typescript
-export const user = {
-  name: '张三',
-  avatar: '/images/profile/avatar.png',
-  location: '北京，中国',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/zhangsan' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:zhangsan@example.com' },
-  ],
-  github: {
-    username: 'zhangsan',
-    token: '',
-  },
-}
-```
-
-## Best Practices
-
-1. **Avatar Image**: Use square image, at least 400x400px
-2. **Bio**: Keep it under 200 characters
-3. **Social Links**: Only add platforms you actively use
-4. **Site URL**: Use production URL, not localhost
-5. **GitHub Token**: Keep it secret, never commit to Git
-6. **SEO**: Fill all meta fields for better search visibility
-
-## Testing Your Configuration
-
-After making changes:
-
-1. Restart dev server: `npm run dev`
-2. Check homepage for updated info
-3. Visit About page to verify details
-4. Test social links work correctly
-5. Check browser tab title
-6. Verify dark/light mode displays correctly
-
-## Troubleshooting
-
-### Avatar not showing
-- Check file exists in `public/images/`
-- Verify path starts with `/`
-- Try absolute URL as fallback
-
-### Social links not appearing
-- Ensure field name matches supported platforms
-- Check value is not empty string
-- Verify icon name is correct
-
-### GitHub API rate limit
-- Add GitHub token to `.env`
-- Check token has correct permissions
-- Verify token is not expired
-
-## Related Documentation
-
-- [Theme Configuration](./THEME-CONFIG.md)
-- [Blog System](./BLOG-SYSTEM.md)
-- [Projects Configuration](./PROJECTS.md)
-- [Deployment](./DEPLOYMENT.md)
+- Adding GitHub to `additionalLinks`: this duplicates the URL derived from `github.username`.
+- Adding contact buttons to `links.config.ts`: the Links page already reads `getUserContactLinks()`.
+- Adding `githubUsername` to `projects.config.ts`: Projects already reads `getGitHubConfig()`.
+- Adding name or description to About site data: both are derived from `user` and `userContent`.
+- Committing a GitHub token: use `.env` or CI secrets.

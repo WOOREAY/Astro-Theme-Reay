@@ -27,10 +27,11 @@ export const user = {
   name: 'Your Name',
   avatar: '/images/profile/avatar.png',
   location: 'Your Location',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your.email@example.com' },
-  ],
+  contact: {
+    email: 'your.email@example.com',
+    website: 'https://example.com',
+    additionalLinks: [],
+  },
   github: {
     username: 'yourusername',
     token: '',
@@ -53,7 +54,7 @@ export const userContent = {
 }
 ```
 
-Save and the site will auto-reload with your information!
+Save and the site will auto-reload with your information. Email, website, and GitHub links are reused automatically by Home, About, Links, and Footer.
 
 ## Step 3: Write Your First Post (1 minute)
 
@@ -96,7 +97,7 @@ export const themeConfig = {
 Just create more `.md` files in `src/content/blog/`
 
 ### Add Projects
-Configure GitHub projects in `src/app/config/projects.config.ts`
+Set the GitHub username once in `user.config.ts`, then configure project filters and featured repositories in `src/app/config/projects.config.ts`.
 
 ### Customize Styles
 Modify Markdown styles in `src/app/config/markdown-style.config.ts`

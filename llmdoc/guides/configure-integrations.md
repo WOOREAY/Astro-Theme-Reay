@@ -7,7 +7,7 @@
 3. 运行生产构建，核对公开非 fork、非 archived 仓库结果和贡献 source。
 4. 远程 README 会经过白名单净化；仍只展示可信仓库并核对外链与内容来源。
 
-当前目录自动枚举公开仓库，并消费 `excludeRepos`、`includeForked`、`defaultSort` 与 `featuredRepos`；显式 featured 还可引入外部仓库并覆盖 category/description/tags。
+当前目录从 `user.github` 读取唯一 username/token，从 `projectsConfig.source` 消费 `excludeRepos/includeForked`，并继续读取 `defaultSort` 与 `featuredRepos`；显式 featured 还可引入外部仓库并覆盖 category/description/tags。
 
 ## Comments and Guestbook
 

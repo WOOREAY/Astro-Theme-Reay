@@ -100,9 +100,11 @@ export const user = {
   name: 'Your Name',
   avatar: '/images/profile/avatar.png',
   location: 'Your Location',
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/yourusername' },
-  ],
+  contact: {
+    email: 'you@example.com',
+    website: 'https://example.com',
+    additionalLinks: [],
+  },
   github: {
     username: 'yourusername',
     token: '',
@@ -147,18 +149,21 @@ Edit `src/app/config/user.config.ts`:
 
 ```typescript
 export const user = {
-  socials: [
-    { icon: 'i-carbon:logo-github', label: 'GitHub', url: 'https://github.com/username' },
-    { icon: 'i-carbon:logo-twitter', label: 'Twitter', url: 'https://twitter.com/username' },
-    { icon: 'i-carbon:email', label: 'Email', url: 'mailto:your@email.com' },
-  ],
+  contact: {
+    email: 'your@email.com',
+    website: 'https://example.com',
+    additionalLinks: [
+      { id: 'x', icon: 'i-carbon:logo-twitter', label: 'X', url: 'https://x.com/username', displayValue: '@username' },
+    ],
+  },
+  github: {
+    username: 'username',
+    token: '',
+  },
 }
 ```
 
-Supported platforms:
-- GitHub, Twitter/X, LinkedIn
-- Instagram, YouTube, Mastodon
-- Email, RSS, Website
+Email, website, and GitHub have dedicated fields. Put other public profiles in `contact.additionalLinks`; all configured contacts are reused by Home, About, Links, and Footer.
 
 ### Can I use Google Analytics?
 

@@ -13,6 +13,18 @@
 - `src/design-system/`: MD3 palette、token、CSS 变量和全局视觉基础。
 - `src/app/config/`: 用户配置源与 `site.config.ts` 读取门面。
 
+## Configuration Composition
+
+个人与站点信息遵循单向派生链：
+
+```text
+user.config.ts identity/contact/github/content/site facts
+  -> user-contact.ts normalization + site.config.ts getters
+  -> Home / About / Links / Footer / Projects / RSS
+```
+
+页面不得回写或复制个人字段。Links 只拥有外部链接与交换文案；Projects 只拥有目录过滤/分类/featured；About 只拥有完整档案集合。GitHub URL、站点名/头像/URL/描述和所有公开联系人均由门面派生。
+
 ## Actual Dependency Shape
 
 ```text
@@ -72,6 +84,7 @@ design-system -> external Material color utility
 - `snap` 才能把 section 绝对堆叠并捕获 wheel/touch/keyboard。
 - 首页 section 顺序和 `data-section` 标记是 E2E 合同；`hero`、`activity`、`[data-home-stream]`、`[data-home-editorial]`、`[data-home-now]`、`[data-home-showcase]`、`[data-home-site]` 与 `[data-home-heatmap]` 必须各只有一个。
 - 配置中动态 icon 类必须通过 UnoCSS extraction/safelist，否则不会生成 CSS。
+- 个人邮箱、网站、GitHub 和 additional links 必须经 `getUserContactLinks()` 或 `getUserSocialLinks()` 消费；新增个人展示面时不得创建新的联系人配置数组。
 - 领域样式留在 feature；只有稳定跨域语义才进入 design-system。
 
 ## Related Docs
