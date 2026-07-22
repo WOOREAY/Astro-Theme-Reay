@@ -46,7 +46,7 @@ test('custom 404 title follows the selected language', async ({ page }) => {
 
 test('gallery lightbox renders an image or an explicit fallback', async ({ page }) => {
   await page.goto('/gallery/daily/morning-window/');
-  const trigger = page.getByRole('button', { name: /查看照片/ });
+  const trigger = page.locator('.photo-journal .photo-open');
   await expect(page.locator('#gallery-lightbox')).toHaveAttribute('data-initialized', 'true');
   await trigger.click();
 
@@ -229,7 +229,8 @@ test('public index pages share the compact editorial page contract', async ({ pa
 
 test('editorial details and archives do not regress into card walls', async ({ page }) => {
   await page.goto('/archives');
-  await expect(page.locator('[data-tag-index]')).toHaveCount(1);
+  await expect(page.locator('[data-archive-chronicle]')).toHaveCount(1);
+  await expect(page.locator('[data-tag-map]')).toHaveCount(1);
   expect(await page.locator('[data-series-entry]').count()).toBeGreaterThan(0);
   await expect(page.locator('.archive-main .reay-card, .series-progress')).toHaveCount(0);
 
@@ -242,13 +243,26 @@ test('editorial details and archives do not regress into card walls', async ({ p
       shadow: style.boxShadow,
     };
   });
-  expect(linkEntryStyle.background).toBe('rgba(0, 0, 0, 0)');
-  expect(linkEntryStyle.radius).toBe('0px');
-  expect(linkEntryStyle.shadow).toBe('none');
+  expect(linkEntryStyle.background).not.toBe('rgba(0, 0, 0, 0)');
+  expect(Number.parseFloat(linkEntryStyle.radius)).toBeGreaterThan(0);
+  expect(linkEntryStyle.shadow).not.toBe('none');
+  await expect(page.locator('[data-link-card] .link-backdrop').first()).toHaveCount(1);
 
   await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
   await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);
   await expect(page.locator('.stat-card')).toHaveCount(0);
+});
+
+test('Plog groups moments into collections and About exposes its narrative', async ({ page }) => {
+  await page.goto('/gallery');
+  await expect(page.locator('[data-plog-index]')).toHaveCount(1);
+  await expect(page.locator('[data-plog-collection]')).toHaveCount(3);
+  await expect(page.locator('.moment-entry')).toHaveCount(6);
+
+  await page.goto('/about');
+  await expect(page.locator('[data-about-narrative]')).toHaveCount(1);
+  await expect(page.locator('[data-about-intro] [data-user-content="status"]')).toHaveCount(1);
+  await expect(page.getByText('访问', { exact: true })).toHaveCount(0);
 });
 
 test('all representative route types remain overflow-free on mobile', async ({ page }) => {
