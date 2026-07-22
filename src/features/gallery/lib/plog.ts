@@ -43,6 +43,9 @@ export interface PlogAlbum {
   id: string;
   slug: string;
   href: string;
+  collectionId: string;
+  collectionTitle: string;
+  collectionDescription: string;
   title: string;
   description: string;
   date: string;
@@ -61,8 +64,27 @@ export interface PlogAlbum {
   photos: PlogPhoto[];
 }
 
+export interface PlogCollection {
+  id: string;
+  title: string;
+  description: string;
+  icon: string;
+  accent: string;
+  featured: boolean;
+  entryCount: number;
+  photoCount: number;
+  locations: string[];
+  tags: string[];
+  latestDate: string;
+  cover: string;
+  coverAsset?: ImageMetadata;
+  gradient: string;
+  entries: PlogAlbum[];
+}
+
 export interface PlogGallery {
   albums: PlogAlbum[];
+  collections: PlogCollection[];
   photos: PlogPhoto[];
 }
 
@@ -241,6 +263,9 @@ export function createPlogAlbum(entry: PlogEntry): PlogAlbum {
     id: slug,
     slug,
     href: `/gallery/${slug}/`,
+    collectionId: entry.data.album.id,
+    collectionTitle: entry.data.album.title,
+    collectionDescription: entry.data.album.description ?? '',
     title: entry.data.title,
     description: entry.data.description,
     date: entry.data.publishDate.toISOString().slice(0, 10),
@@ -271,11 +296,43 @@ export async function getPlogAlbumBySlug(slug: string) {
   return albums.find((album) => getPlogLookupSlug(album.slug) === lookupSlug);
 }
 
+export function createPlogCollections(albums: PlogAlbum[]): PlogCollection[] {
+  const collections = new Map<string, PlogAlbum[]>();
+
+  albums.forEach((album) => {
+    const entries = collections.get(album.collectionId) ?? [];
+    entries.push(album);
+    collections.set(album.collectionId, entries);
+  });
+
+  return [...collections.entries()].map(([id, entries]) => {
+    const lead = entries.find((entry) => entry.featured) ?? entries[0];
+    return {
+      id,
+      title: lead.collectionTitle,
+      description: lead.collectionDescription,
+      icon: lead.icon,
+      accent: lead.accent,
+      featured: entries.some((entry) => entry.featured),
+      entryCount: entries.length,
+      photoCount: entries.reduce((sum, entry) => sum + entry.photoCount, 0),
+      locations: [...new Set(entries.map((entry) => entry.location).filter(Boolean))],
+      tags: [...new Set(entries.flatMap((entry) => entry.tags))],
+      latestDate: entries[0].date,
+      cover: lead.cover,
+      coverAsset: lead.coverAsset,
+      gradient: lead.gradient,
+      entries,
+    };
+  });
+}
+
 export async function getPlogGallery(): Promise<PlogGallery> {
   const albums = await getPlogAlbums();
 
   return {
     albums,
+    collections: createPlogCollections(albums),
     photos: albums.flatMap((album) => album.photos),
   };
 }
