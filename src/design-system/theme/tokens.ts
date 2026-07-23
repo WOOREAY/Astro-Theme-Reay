@@ -4,7 +4,7 @@
  * 
  * @module theme/tokens
  */
-import type { Typography, Shape } from './types';
+import type { FontFamilyRoles, Typography, Shape } from './types';
 
 /**
  * Default primary color - Bright blue representing a sunny and tech-forward aesthetic
@@ -22,11 +22,23 @@ export const DEFAULT_PRIMARY = '#5B8CFF';
  * - lineHeight: 1.7 for comfortable reading
  * - scale: Responsive type scale from xs (0.75) to 3xl (1.875)
  */
+const defaultRoundedFont = `"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif`;
+const defaultMonoFont = `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`;
+
+export const defaultFontFamilies: FontFamilyRoles = {
+  global: defaultRoundedFont,
+  brand: defaultRoundedFont,
+  navigation: defaultRoundedFont,
+  heading: defaultRoundedFont,
+  body: defaultRoundedFont,
+  metadata: defaultRoundedFont,
+  prose: defaultRoundedFont,
+  proseHeading: defaultRoundedFont,
+  mono: defaultMonoFont,
+};
+
 export const defaultTypography: Typography = {
-  fontFamily:
-    `"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif`,
-  fontFamilyMono:
-    `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`,
+  fontFamilies: defaultFontFamilies,
   baseSize: 16,
   lineHeight: 1.7,
   scale: { xs: .75, sm: .875, md: 1, lg: 1.125, xl: 1.25, '2xl': 1.5, '3xl': 1.875 },

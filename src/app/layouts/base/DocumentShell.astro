@@ -38,7 +38,7 @@ const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
   ? (await import('@features/effects/components/SeasonalEffects.astro')).default
   : null;
 
-const themeCssSchemaVersion = 2;
+const themeCssSchemaVersion = 3;
 const themeSignature = `${themeCssSchemaVersion}:${JSON.stringify(getThemeConfig())}`;
 let themeHash = 2166136261;
 for (let index = 0; index < themeSignature.length; index += 1) {
@@ -74,7 +74,7 @@ const themeStylesheetHref = `/theme.css?v=${(themeHash >>> 0).toString(36)}`;
 
     <style is:inline>
       html {
-        font-family: var(--reay-font-sans);
+        font-family: var(--reay-font-global);
         font-size: var(--text-base);
         scroll-behavior: smooth;
         overscroll-behavior-x: none;
@@ -91,11 +91,19 @@ const themeStylesheetHref = `/theme.css?v=${(themeHash >>> 0).toString(36)}`;
         overscroll-behavior-y: none;
         background: var(--md-sys-color-background);
         color: var(--md-sys-color-on-background);
-        font-family: var(--reay-font-sans);
+        font-family: var(--reay-font-body);
         font-size: 1rem;
         line-height: var(--leading);
         -webkit-font-smoothing: antialiased;
         -moz-osx-font-smoothing: grayscale;
+      }
+
+      :where(h1, h2, h3, h4, h5, h6) {
+        font-family: var(--reay-font-heading);
+      }
+
+      :where(time, [data-font-role="metadata"]) {
+        font-family: var(--reay-font-metadata);
       }
 
       @supports (min-height: 100dvh) {

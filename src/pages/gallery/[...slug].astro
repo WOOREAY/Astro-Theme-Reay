@@ -4,21 +4,29 @@
  * Shows every photo in one plog collection with metadata and download links.
  */
 import DefaultLayout from '@app/layouts/base/DefaultLayout.astro';
-import { getPlogAlbums } from '@features/gallery/lib/plog';
+import { createPlogAlbum, getAllPlogEntries, getPlogSlug } from '@features/gallery/lib/plog';
 import { useI18n } from '@features/i18n/lib/i18n';
+import { render, type CollectionEntry } from 'astro:content';
 import { getImage } from 'astro:assets';
 
 export async function getStaticPaths() {
-  const albums = await getPlogAlbums();
+  const entries = await getAllPlogEntries();
 
-  return albums.map(album => ({
-    params: { slug: album.slug },
-    props: { album },
+  return entries.map(entry => ({
+    params: { slug: getPlogSlug(entry) },
+    props: { entry, album: createPlogAlbum(entry) },
   }));
 }
 
 const { t } = useI18n();
-const { album: sourceAlbum } = Astro.props;
+const { album: sourceAlbum, entry } = Astro.props as {
+  album: ReturnType<typeof createPlogAlbum>;
+  entry: CollectionEntry<'plog'>;
+};
+const { Content } = await render(entry);
+const baseUrl = import.meta.env.BASE_URL.endsWith('/')
+  ? import.meta.env.BASE_URL
+  : `${import.meta.env.BASE_URL}/`;
 
 const optimizedImageCache = new Map<string, Promise<string>>();
 
@@ -68,6 +76,10 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
 ---
 
 <DefaultLayout title={`${album.title} | ${t('page.title.gallery')}`} description={album.description}>
+  <Fragment slot="head">
+    <link rel="stylesheet" href={`${baseUrl}markdown.css`} />
+  </Fragment>
+
   <div class="album-page">
     <a class="back-link" href="/gallery">
       <i class="i-carbon:arrow-left"></i>
@@ -112,6 +124,12 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
         </div>
       </div>
     </header>
+
+    {entry.body?.trim() && (
+      <section class="moment-narrative prose" aria-label={album.title} data-plog-prose>
+        <Content />
+      </section>
+    )}
 
     <section class="photo-section">
       <div class="section-heading">
@@ -324,6 +342,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     color: var(--md-sys-color-on-surface-variant);
     font-size: 0.82rem;
     line-height: 1.7;
+    font-family: var(--reay-font-prose);
   }
 
   .album-meta {
@@ -368,6 +387,15 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     margin-top: clamp(3.5rem, 8vw, 6rem);
     content-visibility: auto;
     contain-intrinsic-size: auto 80rem;
+  }
+
+  :global(.moment-narrative) {
+    width: min(100%, 48rem);
+    margin: clamp(2rem, 5vw, 3.5rem) auto 0;
+    padding: clamp(1rem, 3vw, 1.6rem) 0;
+    border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.44);
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.44);
+    font-family: var(--reay-font-prose);
   }
 
   .section-heading h2 {
@@ -504,6 +532,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
     color: var(--md-sys-color-on-surface-variant);
     font-size: 0.76rem;
     line-height: 1.7;
+    font-family: var(--reay-font-prose);
   }
 
   .photo-footnote { display: flex; flex-wrap: wrap; gap: 0.7rem; margin-top: 0.8rem; color: var(--md-sys-color-on-surface-variant); font-size: 0.61rem; }
@@ -612,6 +641,7 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
   .lightbox-content p {
     margin: 0;
     color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-prose);
     line-height: 1.7;
   }
 

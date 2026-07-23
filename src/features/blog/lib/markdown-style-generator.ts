@@ -66,6 +66,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
 
     /* === 标题样式 === */
     .prose h1 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h1.fontSize};
       font-weight: ${config.headings.h1.fontWeight};
       color: ${config.headings.h1.color};
@@ -107,6 +108,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
     ` : ''}
 
     .prose h2 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h2.fontSize};
       font-weight: ${config.headings.h2.fontWeight};
       color: ${config.headings.h2.color};
@@ -148,6 +150,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
     ` : ''}
 
     .prose h3 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h3.fontSize};
       font-weight: ${config.headings.h3.fontWeight};
       color: ${config.headings.h3.color};
@@ -189,6 +192,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
     ` : ''}
 
     .prose h4 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h4.fontSize};
       font-weight: ${config.headings.h4.fontWeight};
       color: ${config.headings.h4.color};
@@ -230,6 +234,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
     ` : ''}
 
     .prose h5 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h5.fontSize};
       font-weight: ${config.headings.h5.fontWeight};
       color: ${config.headings.h5.color};
@@ -271,6 +276,7 @@ export function generateMarkdownStyles(config: MarkdownStyleConfig): string {
     ` : ''}
 
     .prose h6 {
+      font-family: var(--reay-font-prose-heading);
       font-size: ${config.headings.h6.fontSize};
       font-weight: ${config.headings.h6.fontWeight};
       color: ${config.headings.h6.color};

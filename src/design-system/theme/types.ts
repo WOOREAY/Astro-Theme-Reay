@@ -92,9 +92,20 @@ export type ThemeColorSource = {
  * - lineHeight: Default line height multiplier
  * - scale: Responsive type scale with named sizes
  */
+export type FontFamilyRoles = {
+  global: string;
+  brand: string;
+  navigation: string;
+  heading: string;
+  body: string;
+  metadata: string;
+  prose: string;
+  proseHeading: string;
+  mono: string;
+};
+
 export type Typography = {
-  fontFamily: string;
-  fontFamilyMono: string;
+  fontFamilies: FontFamilyRoles;
   baseSize: number;
   lineHeight: number;
   scale: {
@@ -160,6 +171,13 @@ export type UserThemeOverrides = Partial<{
   mode: 'light' | 'dark' | 'system';
   primary: string;   // Provide only primary color - MD3 color roles generated automatically
   source: Partial<ThemeColorSource>; // Optional MD3 key colors for advanced palette control
-  typography: Partial<Omit<Typography, 'scale'>> & Partial<{ scale: Partial<Typography['scale']> }>;
+  typography: Partial<Omit<Typography, 'scale' | 'fontFamilies'>> & {
+    fontFamilies?: Partial<FontFamilyRoles>;
+    /** Legacy alias; new configuration should use `fontFamilies.global`. */
+    fontFamily?: string;
+    /** Legacy alias; new configuration should use `fontFamilies.mono`. */
+    fontFamilyMono?: string;
+    scale?: Partial<Typography['scale']>;
+  };
   shape: Partial<Shape>;
 }>;

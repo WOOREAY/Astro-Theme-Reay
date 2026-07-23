@@ -191,9 +191,17 @@ export function themeToCSSVars(theme: ThemeConfig) {
   const baseTokens = `
 :root{
   /* typography */
-  --reay-font-sans:${t.fontFamily};
-  --reay-font-mono:${t.fontFamilyMono};
-  --font-sans:var(--reay-font-sans);
+  --reay-font-global:${t.fontFamilies.global};
+  --reay-font-brand:${t.fontFamilies.brand};
+  --reay-font-navigation:${t.fontFamilies.navigation};
+  --reay-font-heading:${t.fontFamilies.heading};
+  --reay-font-body:${t.fontFamilies.body};
+  --reay-font-metadata:${t.fontFamilies.metadata};
+  --reay-font-prose:${t.fontFamilies.prose};
+  --reay-font-prose-heading:${t.fontFamilies.proseHeading};
+  --reay-font-mono:${t.fontFamilies.mono};
+  --reay-font-sans:var(--reay-font-global);
+  --font-sans:var(--reay-font-global);
   --font-mono:var(--reay-font-mono);
   --text-base:${t.baseSize}px;
   --leading:${t.lineHeight};

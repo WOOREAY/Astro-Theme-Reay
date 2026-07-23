@@ -298,8 +298,13 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
 
   .brand-link {
     position: relative;
+    font-family: var(--reay-font-brand);
     transform-origin: left center;
     transition: transform 0.35s var(--reay-ease-spring, ease);
+  }
+
+  .site-header nav {
+    font-family: var(--reay-font-navigation);
   }
 
   .brand-link:hover {

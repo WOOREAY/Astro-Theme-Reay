@@ -5,19 +5,27 @@
  * editable configuration so this file stays easy to scan.
  */
 
-import type { UserThemeOverrides } from '@design/theme';
+import type { FontFamilyRoles, UserThemeOverrides } from '@design/theme';
 
 /**
- * Global font stacks.
+ * Role-based font stacks.
  *
- * Change these two values to replace the typeface across the site. Interface
- * text and Markdown inherit `sans`; code, keyboard hints, and preformatted
- * content inherit `mono`.
+ * `global` is the site-wide fallback. Leave any semantic role empty to inherit
+ * `global`; `mono` keeps its own code-oriented fallback. This lets a site owner
+ * change one font once, while still allowing deliberate exceptions for brand,
+ * navigation, headings, metadata, and Markdown/Plog prose.
  */
 export const fontFamilies = {
-  sans: '"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, system-ui, sans-serif',
+  global: '"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, system-ui, sans-serif',
+  brand: '',
+  navigation: '',
+  heading: '',
+  body: '',
+  metadata: '',
+  prose: '',
+  proseHeading: '',
   mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-} as const;
+} satisfies FontFamilyRoles;
 
 export const themeConfig = {
   // Primary color used to generate the Material Design 3 palette.
@@ -30,8 +38,7 @@ export const themeConfig = {
   // },
 
   typography: {
-    fontFamily: fontFamilies.sans,
-    fontFamilyMono: fontFamilies.mono,
+    fontFamilies,
     // The root size scales rem-based typography and spacing across the site.
     baseSize: 15,
     lineHeight: 1.6,

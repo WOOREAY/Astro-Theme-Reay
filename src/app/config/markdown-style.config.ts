@@ -462,7 +462,7 @@ export const defaultMarkdownStyle: MarkdownStyleConfig = {
     fontSizeLg: '15px',
     lineHeight: '1.55',
     letterSpacing: '0.003em',
-    fontFamily: 'var(--reay-font-sans)',
+    fontFamily: 'var(--reay-font-prose)',
     color: 'var(--md-sys-color-on-surface)',
     maxWidth: '100%',
     textRendering: 'optimizeLegibility',

@@ -140,22 +140,62 @@ test('homepage applies the compact config-driven typography scale', async ({ pag
   expect(typography.feature).toBeLessThanOrEqual(22.2);
 });
 
-test('Markdown and code inherit the configured global font stacks', async ({ page }) => {
+test('role-based typography falls back globally and propagates to the intended surfaces', async ({ page }) => {
   await page.goto('/blog/test-markdown');
 
   const typography = await page.evaluate(() => ({
-    sans: getComputedStyle(document.documentElement).getPropertyValue('--reay-font-sans'),
+    roles: [
+      'global', 'brand', 'navigation', 'heading', 'body', 'metadata', 'prose', 'prose-heading',
+    ].map((role) => getComputedStyle(document.documentElement).getPropertyValue(`--reay-font-${role}`)),
     mono: getComputedStyle(document.documentElement).getPropertyValue('--reay-font-mono'),
-    body: getComputedStyle(document.body).fontFamily,
-    prose: getComputedStyle(document.querySelector('.prose')!).fontFamily,
-    code: getComputedStyle(document.querySelector('.prose pre')!).fontFamily,
   }));
 
-  expect(typography.sans).toContain('Nunito Variable');
+  for (const role of typography.roles) expect(role).toContain('Nunito Variable');
   expect(typography.mono).toContain('SFMono-Regular');
-  expect(typography.body).toContain('Nunito Variable');
-  expect(typography.prose).toContain('Nunito Variable');
-  expect(typography.code).toContain('SFMono-Regular');
+
+  const propagated = await page.evaluate(() => {
+    const root = document.documentElement.style;
+    root.setProperty('--reay-font-brand', 'serif');
+    root.setProperty('--reay-font-navigation', 'monospace');
+    root.setProperty('--reay-font-heading', 'cursive');
+    root.setProperty('--reay-font-body', 'sans-serif');
+    root.setProperty('--reay-font-metadata', 'serif');
+    root.setProperty('--reay-font-prose', 'serif');
+    root.setProperty('--reay-font-prose-heading', 'cursive');
+    const family = (selector: string) => getComputedStyle(document.querySelector(selector)!).fontFamily;
+
+    return {
+      brand: family('.brand-link'),
+      navigation: family('.site-header nav'),
+      heading: family('.post-title'),
+      body: getComputedStyle(document.body).fontFamily,
+      metadata: family('.post-meta time'),
+      prose: family('.prose'),
+      proseHeading: family('.prose h2'),
+      code: family('.prose pre'),
+    };
+  });
+
+  expect(propagated).toEqual({
+    brand: 'serif',
+    navigation: 'monospace',
+    heading: 'cursive',
+    body: 'sans-serif',
+    metadata: 'serif',
+    prose: 'serif',
+    proseHeading: 'cursive',
+    code: expect.stringContaining('SFMono-Regular'),
+  });
+
+  await page.goto('/gallery/daily/morning-window');
+  const plogTypography = await page.evaluate(() => {
+    document.documentElement.style.setProperty('--reay-font-prose', 'serif');
+    return {
+      narrative: getComputedStyle(document.querySelector('[data-plog-prose]')!).fontFamily,
+      caption: getComputedStyle(document.querySelector('.photo-note > p')!).fontFamily,
+    };
+  });
+  expect(plogTypography).toEqual({ narrative: 'serif', caption: 'serif' });
 });
 
 test('desktop homepage keeps only the Hero viewport-sized', async ({ page }) => {
