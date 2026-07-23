@@ -2,7 +2,7 @@
 
 ## Theme Pipeline
 
-`presets/themes/` 提供完整可复用视觉参数；`src/app/config/theme.config.ts` 用一个 `defineTheme({ preset, ...overrides })` 对象解析最终主题。简单 `primary` 会从新主色重建 MD3 source，显式 `source` 才控制高级 key colors；解析结果再交给 `createTheme()`，以 Tonal Spot 或 Monochrome variant 生成 light/dark palette。`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`；DocumentShell 根据包含 preset 元数据的完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
+`presets/themes/` 提供完整可复用视觉参数；`src/app/config/theme.config.ts` 用一个 `defineTheme({ preset, ...overrides })` 对象解析最终主题。简单 `primary` 会从新主色重建 MD3 source，显式 `source` 才控制高级 key colors；解析结果再交给 `createTheme()`，以 Tonal Spot、Neutral 或 Monochrome variant 生成 light/dark palette。`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`；DocumentShell 根据包含 preset 元数据的完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
 
 页面级背景只由最终 `themeConfig.background` 与 `src/shared/components/Background.astro` 解释；`aurora`、`paper`、`eink`、`plain` decoration 分别提供科技光场、纸纤维、电子纸点阵和无装饰背景，feature 不再建立第二套页面底色配置。
 
@@ -89,7 +89,7 @@ UnoCSS 静态扫描无法发现配置对象中的动态 icon classes。`uno.conf
 - localStorage `theme` 可为 `light`、`dark`、`system`。
 - DocumentShell 必须统一输出主题变量、首屏解析逻辑和带版本的 theme.css 链接。
 - reduced-motion 和背景 fallback behavior 需要保留。
-- `source.variant` 只允许 `tonal-spot` 或 `monochrome`；单色模式仍必须由 MD3 生成成对 on-color，不手写灰度页面色。
+- `source.variant` 只允许 `tonal-spot`、`neutral` 或 `monochrome`；paper 使用 Neutral 抑制赭黄彩度，eink 使用 Monochrome，二者仍由 MD3 生成成对 on-color，不手写页面色板。
 
 ## Sources of Truth
 

@@ -15,7 +15,7 @@ export const themeConfig = defineTheme({
 | ID | 中文名 | 视觉特点 |
 | --- | --- | --- |
 | `technology` | 科技流光 | 默认青蓝配色、圆体、柔和光晕与轻网格 |
-| `paper` | 暖纸手记 | 茶褐色、宋体正文、纸纤维与克制阴影 |
+| `paper` | 米纸手记 | 米黄色、Neutral 低彩度色板、宋体正文与纸纤维 |
 | `eink` | 墨水屏 | 单色 MD3、近直角、无抬升阴影与电子纸颗粒 |
 | `forest` | 青苔护眼 | 鼠尾草绿、柔和圆角和低刺激纸面纹理 |
 | `editorial` | 朱砂刊物 | 朱砂红、衬线标题和独立杂志式边界 |
@@ -52,7 +52,7 @@ export const themeConfig = defineTheme({
 配置系统区分三个明确层级：
 
 1. 不填写 `primary` 或 `source`：完整保留预设关键色。
-2. 填写 `primary`：以它重新生成整套 MD3 色板，不继承预设固定的 secondary、tertiary 或 neutral；预设的算法变体会保留，因此 `eink` 仍是 monochrome。
+2. 填写 `primary`：以它重新生成整套 MD3 色板，不继承预设固定的 secondary、tertiary 或 neutral；预设的算法变体会保留，因此 `paper` 仍是低彩度 neutral、`eink` 仍是 monochrome。
 3. 填写 `source`：进入高级模式，只使用你显式填写的关键色，其余由 MD3 推导。`source.primary` 比顶层 `primary` 优先。
 
 最常用的方式只有一行：
@@ -77,7 +77,7 @@ export const themeConfig = defineTheme({
     tertiary: '#805532',
     neutral: '#777171',
     neutralVariant: '#7D6D70',
-    variant: 'tonal-spot', // 或 'monochrome'
+    variant: 'tonal-spot', // 也可使用低彩度 'neutral' 或单色 'monochrome'
   },
 });
 ```

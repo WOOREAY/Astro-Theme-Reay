@@ -50,6 +50,7 @@ Page lifetime：
 - Gallery E2E 验证 fallback、初始焦点和关闭后的焦点恢复。
 - 移动菜单 E2E 与 Chrome 390×844 复测验证 label、`aria-expanded` 和无横向溢出。
 - Guestbook E2E 与 Chrome 1440×900 / 390×844 复测验证默认关闭状态、统一联系人、双语属性、首屏完成、light/dark MD3 表面和无横向溢出；真实 provider 生命周期仍不在该证据范围内。
+- Blog TOC E2E 与 Chrome 1440×900 复测验证正文边界 0%/100%、居中完整圆环、标准化 dash offset 和同步 `aria-valuenow`；页面交换仍复用单例 runtime 并在 before-swap cleanup。
 
 ## Sources of Truth
 

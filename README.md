@@ -50,7 +50,7 @@ npm run dev
 4. `src/app/config/comments.config.ts`：评论服务。
 5. `SITE`：生产站点的完整 URL，避免 RSS 和 Sitemap 使用示例域名。
 
-`theme.config.ts` 使用一个 `defineTheme({ ... })` 对象：修改 `preset` 即可切换科技、暖纸、墨水屏、护眼森林或编辑刊物风格，也能在同一对象直接设置主色、图片/渐变背景、字体、圆角和动效。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
+`theme.config.ts` 使用一个 `defineTheme({ ... })` 对象：修改 `preset` 即可切换科技、米纸、墨水屏、护眼森林或编辑刊物风格，也能在同一对象直接设置主色、图片/渐变背景、字体、圆角和动效。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
 
 ## 架构
 
