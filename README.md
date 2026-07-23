@@ -50,7 +50,7 @@ npm run dev
 4. `src/app/config/comments.config.ts`：评论服务。
 5. `SITE`：生产站点的完整 URL，避免 RSS 和 Sitemap 使用示例域名。
 
-`theme.config.ts` 默认使用 `technology` 科技流光预设；也可一行切换为暖纸、墨水屏、护眼森林或编辑刊物风格。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
+`theme.config.ts` 使用一个 `defineTheme({ ... })` 对象：修改 `preset` 即可切换科技、暖纸、墨水屏、护眼森林或编辑刊物风格，也能在同一对象直接设置主色、图片/渐变背景、字体、圆角和动效。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
 
 ## 架构
 
@@ -95,7 +95,7 @@ draft: false
 | `src/app/config/user.config.ts` | 身份与联系方式的单一来源、双语简介、关于页和站点信息 |
 | `src/app/config/features.config.ts` | 首页模式、搜索、Feed 和集成功能开关 |
 | `src/app/config/navigation.config.ts` | Header 与 Footer 导航 |
-| `src/app/config/theme.config.ts` | 主题预设选择、局部覆盖、背景和动效 |
+| `src/app/config/theme.config.ts` | 单对象主题入口：预设、MD3 配色、字体、背景、shape 和动效 |
 | `presets/themes/` | 可复用的科技、纸张、墨水屏、护眼与刊物视觉预设 |
 | `src/app/config/media.config.ts` | 音乐播放列表 |
 | `src/app/config/comments.config.ts` | 评论 provider 与凭据 |

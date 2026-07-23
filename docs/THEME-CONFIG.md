@@ -1,108 +1,98 @@
-# 主题与预设配置
+# 主题配置
 
-Astro Theme Reay 使用 Material Design 3（MD3）从少量关键色生成完整浅色、深色调色板。主题入口是 `src/app/config/theme.config.ts`，可复用预设位于 `presets/themes/`。
+Astro Theme Reay 使用一个 `defineTheme({ ... })` 对象管理预设、MD3 配色、字体、圆角、背景和动效。用户只需编辑 `src/app/config/theme.config.ts`；`presets/themes/` 保存可复用基础方案，不保存姓名、内容或凭据。
 
-## 快速选择预设
-
-只需修改一行：
+## 最小配置
 
 ```ts
-export const activeThemePreset = 'paper' satisfies ThemePresetName;
+export const themeConfig = defineTheme({
+  preset: 'technology',
+});
 ```
 
-内置预设：
+将 `preset` 改成下列任一值即可切换完整视觉基础：
 
 | ID | 中文名 | 视觉特点 |
 | --- | --- | --- |
 | `technology` | 科技流光 | 默认青蓝配色、圆体、柔和光晕与轻网格 |
 | `paper` | 暖纸手记 | 茶褐色、宋体正文、纸纤维与克制阴影 |
-| `eink` | 墨水屏 | 低彩度、近直角、无抬升阴影与电子纸颗粒 |
+| `eink` | 墨水屏 | 单色 MD3、近直角、无抬升阴影与电子纸颗粒 |
 | `forest` | 青苔护眼 | 鼠尾草绿、柔和圆角和低刺激纸面纹理 |
 | `editorial` | 朱砂刊物 | 朱砂红、衬线标题和独立杂志式边界 |
 
-预设只包含视觉参数，不会覆盖姓名、联系方式、导航、文章、项目或第三方凭据。
+## 同一对象直接修改
 
-## 在预设上局部修改
-
-`themeOverrides` 会深度合并常用嵌套配置：
+不需要再维护单独的 `activeThemePreset` 和 `themeOverrides`：
 
 ```ts
-export const themeOverrides = {
-  primary: '#5F7355',
+export const themeConfig = defineTheme({
+  preset: 'paper',
+  mode: 'system',
+  primary: '#4E6B50',
+
   typography: {
     baseSize: 16,
     lineHeight: 1.72,
   },
+
   shape: {
     radiusLg: '18px',
   },
+
   background: {
     decoration: 'paper',
   },
-} satisfies ThemePresetOverrides;
+});
 ```
 
-未填写的值继续继承当前预设。修改 `primary` 时，合并器也会同步 MD3 `source.primary`，确保新主色真正进入调色板。
+所有字段都是可选覆盖。未填写的普通字段继续继承预设；typography/fontFamilies/scale、shape、background/imageStyle/gradient 和 effects/seasonal/seasons 会按层级合并。
 
-## MD3 关键色
+## 配色规则
 
-只设置 `primary` 即可生成完整配色。需要更细控制时覆盖 `source`：
+配置系统区分三个明确层级：
+
+1. 不填写 `primary` 或 `source`：完整保留预设关键色。
+2. 填写 `primary`：以它重新生成整套 MD3 色板，不继承预设固定的 secondary、tertiary 或 neutral；预设的算法变体会保留，因此 `eink` 仍是 monochrome。
+3. 填写 `source`：进入高级模式，只使用你显式填写的关键色，其余由 MD3 推导。`source.primary` 比顶层 `primary` 优先。
+
+最常用的方式只有一行：
 
 ```ts
-export const themeOverrides = {
+export const themeConfig = defineTheme({
+  preset: 'paper',
+  primary: '#4E6B50',
+});
+```
+
+纸张纹理、字体、圆角与阴影仍来自 `paper`，但完整配色会从 `#4E6B50` 重新生成。
+
+需要分别控制关键色时再使用 `source`：
+
+```ts
+export const themeConfig = defineTheme({
+  preset: 'editorial',
   source: {
-    primary: '#765B35',
-    variant: 'tonal-spot', // 墨水屏可使用 'monochrome'
-    secondary: '#756B4E',
-    tertiary: '#8A6047',
-    neutral: '#746F65',
-    neutralVariant: '#7C7162',
+    primary: '#8B2635',
+    secondary: '#76565A',
+    tertiary: '#805532',
+    neutral: '#777171',
+    neutralVariant: '#7D6D70',
+    variant: 'tonal-spot', // 或 'monochrome'
   },
-} satisfies ThemePresetOverrides;
+});
 ```
 
-生成结果包含 `primary`、`secondary`、`tertiary`、surface/container、outline、error 及对应 on-color，组件只消费这些语义角色。
+无论哪种方式，最终都会生成 light/dark 的 primary、secondary、tertiary、surface/container、outline、error 和对应 on-color。
 
-## 字体角色
+## 背景
 
-字体按用途拆分，空缺时由预设提供完整回退栈：
-
-| 角色 | 使用位置 |
-| --- | --- |
-| `global` | 全站基础回退 |
-| `brand` | 品牌名和 Hero 姓名 |
-| `navigation` | Header、Footer 和按钮 |
-| `heading` | 页面与章节标题 |
-| `body` | 普通界面正文 |
-| `metadata` | 日期、统计和标签 |
-| `prose` | Blog/Plog Markdown 正文 |
-| `proseHeading` | Markdown 内部标题 |
-| `mono` | 代码和键盘输入 |
-
-示例：保留纸张预设，只把界面改回圆体：
-
-```ts
-export const themeOverrides = {
-  typography: {
-    fontFamilies: {
-      global: fontStacks.rounded.global,
-      navigation: fontStacks.rounded.global,
-      body: fontStacks.rounded.global,
-    },
-  },
-} satisfies ThemePresetOverrides;
-```
-
-当前仓库自托管 Nunito Variable、寒蝉全圆体和 Noto Sans SC Variable。纸张/刊物预设使用系统衬线字体回退，不增加网络字体请求。引入新字体时需同时在 `DocumentShell.astro` 加载相应资源。
-
-## 背景与纹理
+### MD3 渐变
 
 ```ts
 background: {
-  type: 'gradient',       // 'gradient' | 'image' | 'none'
-  decoration: 'paper',   // 'aurora' | 'paper' | 'eink' | 'plain'
+  type: 'gradient',
+  decoration: 'paper',
   blur: false,
-  blurIntensity: 'light',
   gradient: {
     useMD3Colors: true,
     direction: '155deg',
@@ -110,14 +100,60 @@ background: {
 }
 ```
 
-- `aurora`：光晕和轻量网格，适合科技风。
-- `paper`：细微纤维和颗粒，适合暖纸或护眼主题。
-- `eink`：低对比点阵与扫描纹理，适合墨水屏主题。
-- `plain`：不叠加装饰，只保留背景色或渐变。
+### 自定义渐变
 
-图片背景可填写 `imageUrl` 与 `imageStyle`。`blur` 会增加合成成本，默认关闭；移动端和长页面优先使用无模糊方案。
+```ts
+background: {
+  type: 'gradient',
+  decoration: 'plain',
+  gradient: {
+    useMD3Colors: false,
+    colors: ['#f5f0e7', '#ddd5c5'],
+    direction: '145deg',
+  },
+}
+```
 
-## 圆角与阴影
+### 图片背景
+
+```ts
+background: {
+  type: 'image',
+  decoration: 'plain',
+  imageUrl: '/images/background.jpg',
+  blur: false,
+  imageStyle: {
+    size: 'cover',
+    position: 'center',
+    repeat: 'no-repeat',
+    opacity: 0.72,
+  },
+}
+```
+
+`decoration` 可为 `aurora | paper | eink | plain`。切换为图片且不希望保留预设纹理时，应同时设置 `decoration: 'plain'`。`type: 'none'` 会关闭全局背景层。
+
+## 字体
+
+字体按用途分成 global、brand、navigation、heading、body、metadata、prose、proseHeading 和 mono。只改 `global` 时，原本继承预设 global 的角色会自动跟随；预设刻意设置的差异角色仍保留，也可以逐项覆盖。
+
+```ts
+typography: {
+  baseSize: 16,
+  lineHeight: 1.72,
+  fontFamilies: {
+    global: fontStacks.rounded.global,
+    prose: fontStacks.paper.global,
+  },
+  scale: {
+    '2xl': 1.55,
+  },
+}
+```
+
+当前仓库自托管 Nunito Variable、寒蝉全圆体和 Noto Sans SC Variable。引入新的 WebFont 时仍需在 `DocumentShell.astro` 加载相应资源。
+
+## 圆角、阴影和动效
 
 ```ts
 shape: {
@@ -131,54 +167,37 @@ shape: {
   shadowSm: 'none',
   shadowMd: 'none',
   shadowLg: 'none',
-}
-```
-
-这些值会输出为共享 CSS 变量，并由 Reay 卡片、按钮和功能表面消费。墨水屏预设使用近直角和无阴影；科技与护眼预设使用更圆润的层级。
-
-## 动效
-
-```ts
+},
 effects: {
-  homeWave: {
-    enabled: false,
-    intensity: 'low',
-  },
+  homeWave: { enabled: false },
   seasonal: {
     enabled: false,
-    season: 'auto',
-    density: 'low',
-    showOnMobile: false,
     respectReducedMotion: true,
-    seasons: {
-      spring: true,
-      summer: true,
-      autumn: true,
-      winter: true,
-    },
+    seasons: { autumn: true },
   },
 }
 ```
 
-预设默认关闭持续动效。重新启用时保留 `respectReducedMotion: true`，并单独检查移动端性能。
+只需填写准备修改的字段。重新启用持续动效时建议保留 `respectReducedMotion: true` 并单独检查移动端性能。
+
+## 兼容导出
+
+`activeThemePreset`、`fontFamilies` 和 `backgroundConfig` 仍会从最终 `themeConfig` 派生，供已有代码兼容。它们不是新的编辑入口，不要分别维护。
 
 ## 创建自己的预设
 
 1. 复制 `presets/themes/` 中最接近的一套 `.ts` 文件。
-2. 修改名称、说明和 `config`。
+2. 修改名称、说明和完整 `config`。
 3. 在 `presets/themes/index.ts` 的 `themePresets` 注册新 ID。
-4. 在 `theme.config.ts` 选择它。
+4. 在 `theme.config.ts` 的 `preset` 选择它。
 5. 运行验证。
-
-所有已注册预设都会被 TypeScript 校验，即使当前没有启用。预设目录的简表见 [`presets/themes/README.md`](../presets/themes/README.md)。
 
 ## 验证
 
 ```bash
 npm run check
 npm run test:config
-npm run build
-npm run test:e2e:dist
+npm run verify
 ```
 
-至少检查首页、Blog 详情、归档和相册，并分别验证浅色、深色、1440×900 与 390×844。确认 `scrollWidth <= clientWidth`、字体资源正常加载，背景纹理不会遮挡文字。
+至少检查首页、Blog 详情、归档和相册，并覆盖浅色、深色、1440×900 与 390×844。确认没有横向溢出、字体资源正常加载，背景纹理不会遮挡文字。

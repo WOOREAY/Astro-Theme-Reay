@@ -2,9 +2,9 @@
 
 ## Theme Pipeline
 
-`presets/themes/` 提供完整可复用视觉参数；`src/app/config/theme.config.ts` 选择一个预设并深度合并站点 overrides。`createTheme()` 调用 Material utilities，以 Tonal Spot 或 Monochrome variant 生成 light/dark palette，`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`。DocumentShell 根据完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
+`presets/themes/` 提供完整可复用视觉参数；`src/app/config/theme.config.ts` 用一个 `defineTheme({ preset, ...overrides })` 对象解析最终主题。简单 `primary` 会从新主色重建 MD3 source，显式 `source` 才控制高级 key colors；解析结果再交给 `createTheme()`，以 Tonal Spot 或 Monochrome variant 生成 light/dark palette。`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`；DocumentShell 根据包含 preset 元数据的完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
 
-页面级背景只由选中预设/`themeOverrides.background` 与 `src/shared/components/Background.astro` 解释；`aurora`、`paper`、`eink`、`plain` decoration 分别提供科技光场、纸纤维、电子纸点阵和无装饰背景，feature 不再建立第二套页面底色配置。
+页面级背景只由最终 `themeConfig.background` 与 `src/shared/components/Background.astro` 解释；`aurora`、`paper`、`eink`、`plain` decoration 分别提供科技光场、纸纤维、电子纸点阵和无装饰背景，feature 不再建立第二套页面底色配置。
 
 ## Variable Layers
 
@@ -20,7 +20,7 @@
 ## Typography Contract
 
 - 默认拉丁字体是自托管 `Nunito Variable`，默认中文字体是更圆润的自托管 `寒蝉全圆体` Regular；中文圆体通过 `@chinese-fonts/hcqyt` 按 Unicode range 切分并使用 `font-display: swap`，缺字依次回退到 `Noto Sans SC Variable`、PingFang SC、Microsoft YaHei 和系统 sans-serif。
-- 主题预设的 `fontStacks` 组合 rounded/paper/clean/mono，`fontFamilies` 再划分 semantic roles；`themeOverrides.typography` 可只覆盖单一角色、`baseSize`、`lineHeight` 或 scale。global 是未覆盖角色的基线，mono 独立解析。
+- 主题预设的 `fontStacks` 组合 rounded/paper/clean/mono，`fontFamilies` 再划分 semantic roles；`themeConfig.typography` 可只覆盖单一角色、`baseSize`、`lineHeight` 或 scale。修改 global 时，只把 base 中等于 base global 的角色迁移到新 global，保留预设明确差异化的角色；mono 独立解析。
 - `html` 使用 `--text-base` 和 `--reay-font-global`；body、品牌、导航、标题、元信息、Markdown/Plog prose 与 prose heading 分别消费对应角色，代码/键盘提示消费 `--reay-font-mono`。
 - `technology` 的 `global` 是 Nunito Variable + 寒蝉全圆体 + Noto Sans SC Variable fallback；`createFontRoles()` 默认让 brand/navigation/heading/body/metadata/prose/proseHeading 继承同一 global 栈，因此修改预设的 global 即可覆盖整套角色，单独填写角色时仍应提供完整语言回退栈。
 - UI 序号、日期、统计与标签使用 metadata/global，不借用 mono 制造第二套界面字体；mono 只用于代码、键盘输入等技术文本。

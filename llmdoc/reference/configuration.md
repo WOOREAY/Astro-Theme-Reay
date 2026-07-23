@@ -9,7 +9,7 @@
 | 文件 | 稳定职责 |
 | --- | --- |
 | `user.config.ts` | 身份、统一公开联系方式、GitHub、双语个人文案、About 内容与站点事实的唯一编辑源 |
-| `theme.config.ts` | 主题预设选择与站点级深度覆盖；聚合 MD3 source、字体、shape、背景和 effects |
+| `theme.config.ts` | 唯一 `defineTheme` 对象；聚合预设、MD3 source、字体、shape、背景和 effects |
 | `presets/themes/` | technology/paper/eink/forest/editorial 可复用视觉参数与注册表，不包含个人或内容数据 |
 | `features.config.ts` | 首页模式、入口显示与 comments/GitHub/music/seasonal 集成 gate |
 | `navigation.config.ts` | Header 主导航与 Footer resources |
@@ -34,7 +34,7 @@
 
 `user-contact.ts` 把 email、website、派生 GitHub URL 和 additionalLinks 规范化为同一联系人集合并按 URL 去重。Home、About、Links、Footer 都通过 getter 读取；Links 的个人 social cards 和站点交换卡也在页面层从同一数据生成。
 
-`theme.config.ts` 是全站视觉选择入口：`activeThemePreset` 默认 `technology`，`themeOverrides` 在选中预设上深度合并而不复制整套对象。五套预设都提供完整 `fontFamilies` 角色、`typography.baseSize/lineHeight`、六级 radius、三档 shadow、MD3 source 和 background decoration；`paper/eink/forest/editorial` 分别表达暖纸、单色电子纸、护眼绿色和朱砂刊物。`source.variant` 默认 `tonal-spot`，eink 使用 `monochrome`，避免灰色 seed 被 Tonal Spot 自动补成彩色 palette。Header/Hero/Footer、共享表面与首页功能区消费生成的字体、radius 和 shadow token；头像等固有圆形媒体仍保持圆形。
+`theme.config.ts` 是全站视觉唯一用户编辑入口：`themeConfig = defineTheme({ preset: 'technology', ... })` 在一个对象中选择预设并填写站点差异。未填写 primary/source 时完整采用预设 key colors；填写 `primary` 时清除预设 secondary/tertiary/neutral 并由 MD3 从新主色重推，只有 variant（例如 eink 的 monochrome）随预设保留；填写 `source` 时仅采用显式 key colors，`source.primary` 优先于顶层 primary。typography/fontFamilies/scale、shape、background/imageStyle/gradient、effects/seasonal/seasons 深度合并；global 字体改变会传播到原本继承 base global 的角色，但不抹掉预设刻意不同的字体角色。五套预设提供完整视觉基础，兼容导出的 `activeThemePreset`、`fontFamilies`、`backgroundConfig` 只从最终对象派生。Header/Hero/Footer、共享表面与首页功能区消费生成的字体、radius 和 shadow token；头像等固有圆形媒体仍保持圆形。
 
 ## site.config.ts Getters
 

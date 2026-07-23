@@ -65,7 +65,8 @@
 - `llmdoc/memory/lessons-learned.md`：从已归档反思中提炼的跨任务规则，包括信息保留、参考层次和领域功能优先。
 - `llmdoc/memory/archive/`：已提炼的原始反思记录，供追溯信号与证据。
 - `llmdoc/memory/doc-gaps.md`：已确认但尚未统一的实现、运维、安全和文档合同，以及各自关闭条件。
-- `llmdoc/memory/reflections/`：仅在未来出现错误假设、失败或可复用过程教训时创建；执行相似任务前主动读取相关条目。
+- `llmdoc/memory/reflections/2026-07-23-theme-config-usability.md`：预设能力不应隐藏用户原有直接配置入口的可用性教训。
+- `llmdoc/memory/reflections/`：执行相似配置或模板工作前主动读取相关条目。
 
 ## Routing Rules
 
