@@ -75,16 +75,21 @@ assert.doesNotMatch(projectsConfig, /^\s*(githubUsername|githubConfig):/m, 'Proj
 assert.doesNotMatch(userConfig, /^\s*socialNetworks:/m, 'About config must not redefine social contacts');
 assert.match(header, /src=\{user\.avatar\}/, 'Header avatar must come from the user profile');
 
-const [themeConfig, presetIndex, backgroundComponent] = await Promise.all([
+const [themeConfig, presetIndex, backgroundComponent, documentShell, presetIdentities] = await Promise.all([
   readSource('src/app/config/theme.config.ts'),
   readSource('presets/themes/index.ts'),
   readSource('src/shared/components/Background.astro'),
+  readSource('src/app/layouts/base/DocumentShell.astro'),
+  readSource('src/design-system/styles/preset-identities.css'),
 ]);
 
 assert.match(themeConfig, /defineTheme\(\{[\s\S]*?preset:\s*'technology'/, 'technology should remain the default theme preset');
 assert.doesNotMatch(themeConfig, /export const themeOverrides/, 'theme settings should use one user-facing configuration object');
 assert.match(themeConfig, /background:\s*\{[\s\S]*?type:\s*'image'/, 'theme config should expose a discoverable background example');
 assert.match(presetIndex, /export function defineTheme/, 'the preset registry must expose the unified theme builder');
+assert.match(documentShell, /data-theme-preset=\{themeConfig\.preset\}/, 'the resolved preset identity must reach the document root');
+assert.match(documentShell, /data-theme-default=\{themeConfig\.mode\}/, 'the configured default mode must reach the document root');
+assert.match(documentShell, /preset-identities\.css/, 'the document shell must load preset component identities');
 
 const presetDecorations = {
   technology: 'aurora',
@@ -118,5 +123,20 @@ assert.match(einkPreset, /variant:\s*'monochrome'/, 'eink should keep the MD3 Mo
 for (const decoration of ['paper', 'eink', 'plain', 'inkwash', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'terminal']) {
   assert.match(backgroundComponent, new RegExp(`decoration-${decoration}`), `Background must implement the ${decoration} decoration`);
 }
+
+for (const preset of ['inkwash', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'retro-terminal']) {
+  assert.match(
+    presetIdentities,
+    new RegExp(`data-theme-preset=['\"]${preset}['\"]`),
+    `${preset} must define a component-level visual identity`,
+  );
+}
+
+assert.match(presetIdentities, /--md-sys-color-background:\s*#020503/, 'retro terminal must enforce a near-black CRT background');
+assert.match(presetIdentities, /--md-sys-color-primary:\s*#72ff92/, 'retro terminal must expose a phosphor-green primary color');
+assert.match(presetIdentities, /repeating-linear-gradient\(to bottom/, 'retro terminal must include scanlines');
+assert.match(backgroundComponent, /decoration-inkwash \.scene-back/, 'inkwash must render a distant mountain layer');
+assert.match(backgroundComponent, /decoration-inkwash \.scene-mid/, 'inkwash must render a middle mountain layer');
+assert.match(backgroundComponent, /decoration-inkwash \.scene-front/, 'inkwash must render a foreground ink and mist layer');
 
 console.log('Configuration single-source contracts passed.');
