@@ -22,7 +22,7 @@ export const DEFAULT_PRIMARY = '#5B8CFF';
  * - lineHeight: 1.7 for comfortable reading
  * - scale: Responsive type scale from xs (0.75) to 3xl (1.875)
  */
-const defaultRoundedFont = `"Nunito Variable", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif`;
+const defaultRoundedFont = `"Nunito Variable", "寒蝉全圆体", "Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif`;
 const defaultMonoFont = `ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace`;
 
 export const defaultFontFamilies: FontFamilyRoles = {

@@ -29,6 +29,7 @@
     "@astrojs/mdx": "^7.0.3",
     "@astrojs/rss": "^4.0.19",
     "@astrojs/sitemap": "^3.7.3",
+    "@chinese-fonts/hcqyt": "^2.0.0",
     "@fontsource-variable/noto-sans-sc": "^5.3.0",
     "@fontsource-variable/nunito": "^5.3.0",
     "@material/material-color-utilities": "^0.3.0",

@@ -124,6 +124,10 @@ test('homepage applies the compact config-driven typography scale', async ({ pag
 
   await expect.poll(() => page.evaluate(() => document.fonts.check('15px "Nunito Variable"'))).toBe(true);
   await expect.poll(() => page.evaluate(async () => {
+    const faces = await document.fonts.load('15px "寒蝉全圆体"', '中文归档');
+    return faces.length > 0 && document.fonts.check('15px "寒蝉全圆体"', '中文归档');
+  })).toBe(true);
+  await expect.poll(() => page.evaluate(async () => {
     const faces = await document.fonts.load('15px "Noto Sans SC Variable"', '中文归档');
     return faces.length > 0 && document.fonts.check('15px "Noto Sans SC Variable"', '中文归档');
   })).toBe(true);
@@ -137,8 +141,10 @@ test('homepage applies the compact config-driven typography scale', async ({ pag
   }));
 
   expect(typography.configuredFamily).toContain('Nunito Variable');
+  expect(typography.configuredFamily).toContain('寒蝉全圆体');
   expect(typography.configuredFamily).toContain('Noto Sans SC Variable');
   expect(typography.family).toContain('Nunito Variable');
+  expect(typography.family).toContain('寒蝉全圆体');
   expect(typography.family).toContain('Noto Sans SC Variable');
   expect(typography.root).toBe(15);
   expect(typography.hero).toBeLessThanOrEqual(36);
@@ -158,6 +164,7 @@ test('role-based typography falls back globally and propagates to the intended s
 
   for (const role of typography.roles) {
     expect(role).toContain('Nunito Variable');
+    expect(role).toContain('寒蝉全圆体');
     expect(role).toContain('Noto Sans SC Variable');
   }
   expect(typography.mono).toContain('SFMono-Regular');

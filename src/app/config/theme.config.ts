@@ -11,14 +11,15 @@ import type { FontFamilyRoles, UserThemeOverrides } from '@design/theme';
  * Script-aware font sources.
  *
  * Latin text uses Nunito's rounded forms while Chinese text uses the locally
- * hosted Noto Sans SC variable font. Change `latin` and `cjk` independently,
- * or point both at one family that covers both scripts. Keep quoted family
- * names here; semantic page roles are configured separately below.
+ * hosted Chill Round font. Noto Sans SC remains the full-coverage CJK fallback.
+ * Change `latin` and `cjk` independently, or point both at one family that
+ * covers both scripts. Keep quoted family names here; semantic page roles are
+ * configured separately below.
  */
 export const fontStacks = {
   latin: '"Nunito Variable"',
-  cjk: '"Noto Sans SC Variable"',
-  fallback: '"PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif',
+  cjk: '"寒蝉全圆体"',
+  fallback: '"Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif',
   mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
 } as const;
 
