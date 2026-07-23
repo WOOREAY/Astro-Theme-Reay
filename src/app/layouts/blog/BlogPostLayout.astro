@@ -9,20 +9,22 @@ import PostMeta from '@features/blog/components/PostMeta.astro';
 import PostHeader from '@features/blog/components/PostHeader.astro';
 import TableOfContents from '@features/blog/components/TableOfContents.astro';
 import PostFooter from '@features/blog/components/PostFooter.astro';
+import PostSeriesNavigation from '@features/blog/components/PostSeriesNavigation.astro';
 import Comments from '@features/comments/components/Comments.astro';
 import type { CollectionEntry } from 'astro:content';
 import { useI18n } from '@features/i18n/lib/i18n';
-import { getSeriesUrl, getTagUrl } from '@features/blog/lib/blog';
+import { getTagUrl } from '@features/blog/lib/blog';
 
 interface Props {
   post: CollectionEntry<'blog'>;
   headings?: Array<{ depth: number; text: string; slug: string }>;
   readingTime?: string;
   readingMinutes?: number;
+  seriesPosts?: CollectionEntry<'blog'>[];
 }
 
 const { t } = useI18n();
-const { post, headings = [], readingMinutes } = Astro.props;
+const { post, headings = [], readingMinutes, seriesPosts = [] } = Astro.props;
 const { title, description, publishDate, updatedDate, tags, author, language, category, series, comment } = post.data;
 const siteOrigin = import.meta.env.PROD
   ? (Astro.site?.toString() || Astro.url.origin)
@@ -59,7 +61,11 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
           tags={tags}
         />
 
-        {(category || series || tags.length > 0) && (
+        {series && seriesPosts.length > 0 && (
+          <PostSeriesNavigation post={post} posts={seriesPosts} variant="context" />
+        )}
+
+        {(category || tags.length > 0) && (
           <div class="article-taxonomy">
             {category && (
               <span class="article-taxonomy-chip">
@@ -67,13 +73,6 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
                 <span data-i18n="blog.info.category">{t('blog.info.category')}</span>
                 <strong>{category}</strong>
               </span>
-            )}
-            {series && (
-              <a href={getSeriesUrl(series)} class="article-taxonomy-chip">
-                <i class="i-carbon:list-boxes"></i>
-                <span data-i18n="blog.info.series">{t('blog.info.series')}</span>
-                <strong>{series}</strong>
-              </a>
             )}
             {tags.map(tag => (
               <a href={getTagUrl(tag)} class="article-tag-chip">#{tag}</a>
@@ -89,6 +88,10 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
       
       <!-- Post footer -->
       <PostFooter author={author} postUrl={postUrl} />
+
+      {series && seriesPosts.length > 0 && (
+        <PostSeriesNavigation post={post} posts={seriesPosts} variant="navigation" />
+      )}
 
       <Comments
         pageKey={Astro.url.pathname}

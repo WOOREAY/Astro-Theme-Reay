@@ -197,6 +197,14 @@ export const translations = {
     'blog.stats.tags': 'Tags',
     'blog.stats.series': 'Series',
     'blog.stats.updated': 'Latest',
+    'blog.series.context': 'In this series',
+    'blog.series.chapter': 'Chapter',
+    'blog.series.chapterPrefix': 'Chapter',
+    'blog.series.chapterSuffix': 'of the series',
+    'blog.series.directory': 'Series directory',
+    'blog.series.previous': 'Previous chapter',
+    'blog.series.next': 'Next chapter',
+    'blog.series.navigation': 'Series navigation',
 
     // Comments and guestbook
     'comments.title': 'Comments',
@@ -671,6 +679,14 @@ export const translations = {
     'blog.stats.tags': '标签',
     'blog.stats.series': '系列',
     'blog.stats.updated': '最近',
+    'blog.series.context': '本系列',
+    'blog.series.chapter': '章节',
+    'blog.series.chapterPrefix': '第',
+    'blog.series.chapterSuffix': '篇',
+    'blog.series.directory': '系列目录',
+    'blog.series.previous': '上一篇',
+    'blog.series.next': '下一篇',
+    'blog.series.navigation': '系列阅读导航',
 
     // Comments and guestbook
     'comments.title': '评论',

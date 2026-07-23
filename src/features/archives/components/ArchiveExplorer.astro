@@ -158,7 +158,13 @@ const topicDialogPanels = [
 ---
 
 <section class="archive-explorer" data-archive-explorer>
-  <nav class="archive-toolbar" aria-label={t('archives.filter.label')} data-archive-toolbar>
+  <nav
+    class="archive-toolbar"
+    aria-label={t('archives.filter.label')}
+    data-archive-toolbar
+    data-i18n="archives.filter.label"
+    data-i18n-attr="aria-label"
+  >
     <div class="archive-filter-tabs">
       <button type="button" class="is-active" data-archive-filter="all" aria-pressed="true" data-i18n="archives.filter.all">{t('archives.filter.all')}</button>
       <button type="button" data-archive-filter="blog" aria-pressed="false">Blog</button>
@@ -170,11 +176,26 @@ const topicDialogPanels = [
         <span data-i18n="archives.filter.results">{t('archives.filter.results')}</span>
         <span data-archive-active-topic hidden></span>
       </p>
-      <button type="button" class="archive-topics-trigger" data-archive-topic-dialog-open>
+      <button
+        type="button"
+        class="archive-topics-trigger"
+        data-archive-topic-dialog-open
+        aria-label={t('archives.filter.topics')}
+        data-i18n="archives.filter.topics"
+        data-i18n-attr="aria-label"
+      >
         <i class="i-carbon:tag-group" aria-hidden="true"></i>
         <span data-i18n="archives.filter.topics">{t('archives.filter.topics')}</span>
       </button>
-      <button type="button" class="archive-clear-filter" data-archive-clear hidden>
+      <button
+        type="button"
+        class="archive-clear-filter"
+        data-archive-clear
+        hidden
+        aria-label={t('archives.filter.clear')}
+        data-i18n="archives.filter.clear"
+        data-i18n-attr="aria-label"
+      >
         <i class="i-carbon:close" aria-hidden="true"></i>
         <span data-i18n="archives.filter.clear">{t('archives.filter.clear')}</span>
       </button>
@@ -285,7 +306,7 @@ const topicDialogPanels = [
     </div>
 
     <aside class="archive-rail">
-      <nav class="archive-year-index" aria-label={t('archives.yearIndex')}>
+      <nav class="archive-year-index" aria-label={t('archives.yearIndex')} data-i18n="archives.yearIndex" data-i18n-attr="aria-label">
         <span data-i18n="archives.yearIndex">{t('archives.yearIndex')}</span>
         <div>
           {[...rowsByYear.entries()].map(([year, yearRows]) => (
@@ -297,10 +318,10 @@ const topicDialogPanels = [
       </nav>
 
       {seriesItems.length > 0 && (
-        <nav class="archive-series-compact" data-archive-series-compact aria-label={t('archives.series.title')}>
+        <nav class="archive-series-compact" data-archive-series-compact aria-label={t('archives.series.title')} data-i18n="archives.series.title" data-i18n-attr="aria-label">
           <header>
             <h2 data-i18n="archives.series.title">{t('archives.series.title')}</h2>
-            <a href="/archives/series" aria-label={t('archives.viewAllSeries')}><i class="i-carbon:arrow-up-right" aria-hidden="true"></i></a>
+            <a href="/archives/series" aria-label={t('archives.viewAllSeries')} data-i18n="archives.viewAllSeries" data-i18n-attr="aria-label"><i class="i-carbon:arrow-up-right" aria-hidden="true"></i></a>
           </header>
           {seriesItems.map((item) => (
             <a href={item.href} data-astro-prefetch="hover">
@@ -370,7 +391,7 @@ const topicDialogPanels = [
           <h2 id="archive-topic-dialog-title" data-i18n="archives.topics.dialogTitle">{t('archives.topics.dialogTitle')}</h2>
           <span data-i18n="archives.topics.dialogDescription">{t('archives.topics.dialogDescription')}</span>
         </div>
-        <button type="button" data-archive-topic-dialog-close aria-label={t('gallery.close')}>
+        <button type="button" data-archive-topic-dialog-close aria-label={t('gallery.close')} data-i18n="gallery.close" data-i18n-attr="aria-label">
           <i class="i-carbon:close" aria-hidden="true"></i>
         </button>
       </header>
@@ -386,7 +407,7 @@ const topicDialogPanels = [
             data-i18n-attr="placeholder"
           />
         </label>
-        <div role="group" aria-label={t('archives.topics.sort')}>
+        <div role="group" aria-label={t('archives.topics.sort')} data-i18n="archives.topics.sort" data-i18n-attr="aria-label">
           <button type="button" class="is-active" data-archive-topic-sort="popular" aria-pressed="true" data-i18n="archives.topics.sortPopular">{t('archives.topics.sortPopular')}</button>
           <button type="button" data-archive-topic-sort="alphabetical" aria-pressed="false" data-i18n="archives.topics.sortAlphabetical">{t('archives.topics.sortAlphabetical')}</button>
         </div>
