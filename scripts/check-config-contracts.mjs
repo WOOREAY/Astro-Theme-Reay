@@ -81,8 +81,10 @@ const [themeConfig, presetIndex, backgroundComponent] = await Promise.all([
   readSource('src/shared/components/Background.astro'),
 ]);
 
-assert.match(themeConfig, /activeThemePreset\s*=\s*'technology'/, 'technology should remain the default theme preset');
-assert.match(themeConfig, /createThemePreset\(activeThemePreset, themeOverrides\)/, 'theme config must compose the selected preset and local overrides');
+assert.match(themeConfig, /defineTheme\(\{[\s\S]*?preset:\s*'technology'/, 'technology should remain the default theme preset');
+assert.doesNotMatch(themeConfig, /export const themeOverrides/, 'theme settings should use one user-facing configuration object');
+assert.match(themeConfig, /background:\s*\{[\s\S]*?type:\s*'image'/, 'theme config should expose a discoverable background example');
+assert.match(presetIndex, /export function defineTheme/, 'the preset registry must expose the unified theme builder');
 
 for (const preset of ['technology', 'paper', 'eink', 'forest', 'editorial']) {
   const source = await readSource(`presets/themes/${preset}.ts`);

@@ -10,7 +10,7 @@ import { defaultLang, languages, translations, type Language } from './i18n.conf
 import { linksConfig } from './links.config';
 import { mediaConfig, musicConfig } from './media.config';
 import { projectsConfig } from './projects.config';
-import { backgroundConfig, themeConfig } from './theme.config';
+import { themeConfig } from './theme.config';
 import { aboutConfig, getUserContent, site, user, userContent } from './user.config';
 import { commentsConfig } from './comments.config';
 import { featuresConfig } from './features.config';
@@ -32,7 +32,7 @@ export const siteConfig = {
   site,
   about: aboutConfig,
   theme: themeConfig,
-  background: backgroundConfig,
+  background: themeConfig.background,
   links: linksConfig,
   media: mediaConfig,
   comments: commentsConfig,

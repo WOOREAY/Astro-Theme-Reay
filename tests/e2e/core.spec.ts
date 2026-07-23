@@ -1,5 +1,60 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
+import { defineTheme, fontStacks } from '../../presets/themes';
+
+test('one theme object combines presets with intuitive color and nested overrides', () => {
+  const theme = defineTheme({
+    preset: 'paper',
+    primary: '#336699',
+    typography: {
+      fontFamilies: { global: '"Example Rounded"' },
+    },
+    background: {
+      type: 'image',
+      decoration: 'plain',
+      imageUrl: '/images/background.jpg',
+      imageStyle: { opacity: 0.72 },
+    },
+  });
+
+  expect(theme.preset).toBe('paper');
+  expect(theme.primary).toBe('#336699');
+  expect(theme.source).toEqual({ primary: '#336699' });
+  expect(theme.shape.radiusLg).toBe('14px');
+  expect(theme.background).toMatchObject({
+    type: 'image',
+    decoration: 'plain',
+    imageUrl: '/images/background.jpg',
+    imageStyle: { size: 'cover', opacity: 0.72 },
+    gradient: { useMD3Colors: true, direction: '155deg' },
+  });
+  expect(theme.typography.fontFamilies.global).toBe('"Example Rounded"');
+  expect(theme.typography.fontFamilies.heading).toBe('"Example Rounded"');
+  expect(theme.typography.fontFamilies.navigation).toBe(fontStacks.rounded.global);
+
+  const recoloredEink = defineTheme({ preset: 'eink', primary: '#3A4A52' });
+  expect(recoloredEink.source).toEqual({
+    primary: '#3A4A52',
+    variant: 'monochrome',
+  });
+
+  const advanced = defineTheme({
+    preset: 'forest',
+    primary: '#111111',
+    source: {
+      primary: '#222222',
+      secondary: '#777777',
+      variant: 'monochrome',
+    },
+  });
+
+  expect(advanced.primary).toBe('#222222');
+  expect(advanced.source).toEqual({
+    primary: '#222222',
+    secondary: '#777777',
+    variant: 'monochrome',
+  });
+});
 
 test('language, theme, and client navigation stay synchronized', async ({ page }) => {
   await page.goto('/');
