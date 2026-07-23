@@ -316,6 +316,80 @@ test('editorial details and archives do not regress into card walls', async ({ p
   await expect(page.locator('.stat-card')).toHaveCount(0);
 });
 
+test('archives keeps popular topics concise and returns topic discovery to filtered results', async ({ page }) => {
+  await page.goto('/archives');
+
+  const popularTopics = page.locator('[data-archive-topic-panel="all"] .archive-popular-topics [data-archive-topic]');
+  expect(await popularTopics.count()).toBeLessThanOrEqual(12);
+
+  await page.locator('[data-archive-filter="blog"]').click();
+  await expect(page.locator('[data-archive-series-shelf]')).toBeVisible();
+  const seriesLink = page.locator('[data-archive-series-entry] > a').first();
+  await expect(seriesLink).toHaveAttribute('href', /\/archives\/series\//);
+  await seriesLink.click();
+  await expect(page).toHaveURL(/\/archives\/series\//);
+  await expect(page.locator('.series-chapters')).toBeVisible();
+
+  await page.goto('/archives');
+  const topicTrigger = page.locator('[data-archive-toolbar] [data-archive-topic-dialog-open]');
+  await expect(topicTrigger).toHaveAttribute('aria-label', '主题');
+  await topicTrigger.click();
+  const dialog = page.locator('[data-archive-topic-dialog]');
+  await expect(dialog).toBeVisible();
+
+  await dialog.locator('[data-archive-topic-sort="alphabetical"]').click();
+  await expect(dialog.locator('[data-archive-topic-sort="alphabetical"]')).toHaveAttribute('aria-pressed', 'true');
+  await dialog.locator('[data-archive-topic-search]').fill('OOP');
+  const matchingTopics = dialog.locator('[data-archive-topic-item]:visible');
+  await expect(matchingTopics).toHaveCount(1);
+  await expect(matchingTopics).toContainText('#OOP');
+  await matchingTopics.click();
+
+  await expect(dialog).not.toBeVisible();
+  await expect(page).toHaveURL(/type=blog/);
+  await expect(page).toHaveURL(/topic=blog-tag%3AOOP/);
+  await expect(page.locator('[data-archive-results]')).toBeFocused();
+  await expect(page.locator('[data-archive-row][data-archive-kind="blog"]:visible')).toHaveCount(1);
+  await expect(page.locator('[data-archive-active-topic]')).toContainText('OOP');
+
+  await page.locator('[data-archive-clear]').click();
+  await expect(page).not.toHaveURL(/topic=/);
+  await expect(page.locator('[data-archive-clear]')).toBeHidden();
+  expect(await page.locator('[data-archive-row][data-archive-kind="blog"]:visible').count()).toBeGreaterThan(1);
+});
+
+test('blog series context exposes structural position and adjacent chapters', async ({ page }) => {
+  await page.goto('/blog/python-tutorial-03');
+
+  const context = page.locator('[data-post-series-context]');
+  const navigation = page.locator('[data-post-series-navigation]');
+  await expect(context).toBeVisible();
+  await expect(context.locator('[data-series-position-value]:visible')).toHaveText('3 / 5');
+  await expect(context.getByRole('link', { name: /Python 入门教程/ })).toHaveAttribute(
+    'href',
+    '/archives/series/Python%20%E5%85%A5%E9%97%A8%E6%95%99%E7%A8%8B',
+  );
+
+  await expect(navigation).toBeVisible();
+  await expect(navigation.locator('[data-series-position-value]:visible')).toHaveText('3 / 5');
+  await expect(navigation.locator('[data-series-previous]')).toHaveAttribute('href', '/blog/python-tutorial-02');
+  await expect(navigation.locator('[data-series-next]')).toHaveAttribute('href', '/blog/python-tutorial-04');
+  await expect(navigation.locator('[data-series-previous]')).toContainText('数据结构与函数');
+  await expect(navigation.locator('[data-series-next]')).toContainText('文件操作与异常处理');
+});
+
+test('archive topic dialog remains usable and overflow-free on mobile', async ({ page }) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/archives');
+  await page.locator('[data-archive-toolbar] [data-archive-topic-dialog-open]').click();
+
+  const dialog = page.locator('[data-archive-topic-dialog]');
+  await expect(dialog).toBeVisible();
+  await expect(dialog.locator('[data-archive-topic-search]')).toBeFocused();
+  await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
+  await expect.poll(() => dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
+});
+
 test('Plog groups moments into collections and About exposes its narrative', async ({ page }) => {
   await page.goto('/gallery');
   await expect(page.locator('[data-plog-index]')).toHaveCount(1);
@@ -363,7 +437,7 @@ test('all representative route types remain overflow-free on mobile', async ({ p
   }
 });
 
-for (const path of ['/', '/search', '/404']) {
+for (const path of ['/', '/archives', '/search', '/404']) {
   test(`has no automated WCAG A/AA violations on ${path}`, async ({ page }) => {
     await page.goto(path);
     const results = await new AxeBuilder({ page })
