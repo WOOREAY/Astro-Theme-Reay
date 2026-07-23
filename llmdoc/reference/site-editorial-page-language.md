@@ -27,6 +27,8 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 - About 可从 `userContent.story` 展示完整叙事，但教育、经历和公开联系仍只渲染配置中的真实字段；站点统计只使用内容集合可计算的数据。
 - Guestbook 使用最多 52rem 的居中内容流、三条线性留言准则和单一 MD3 tonal 对话表面。关闭状态面向访客说明“尚未开放”，并显示从统一用户配置派生的可用联系方式；不得暴露 provider、thread、源码配置路径或重复统计卡。启用状态仍要求显式点击后连接第三方，并提供本地化加载、错误、重试与焦点反馈。
 - Blog 系列文章可展示由 `seriesOrder` 排序后计算出的结构位置、系列目录和上一篇/下一篇，但不得把它描述为用户阅读进度；其他详情页也不虚构完成度、访问量或统计，只展示内容、配置或外部 API 提供的数据。
+- Blog/Plog 详情页返回入口使用共享 `data-history-back` 合同恢复上一个站内发现界面和筛选 URL；静态 href 只作为直接打开、存储不可用或历史不可恢复时的领域兜底。
+- Search 只保留一个明显 tonal 工作台，输入、隐私提示、构建期热门主题、idle/loading/empty/fallback/results 状态与开放式结果列表必须在首屏形成清晰层级；生产使用 Pagefind 全站索引，开发/失败回退只覆盖 Blog/Plog 标题、摘要和主题并明确告知范围，查询写入 `q` 且结果不采用重复卡片墙。
 - Blog 详情页 TOC 的百分比只表示 `.post-content` 正文区间，不把页首、PostFooter、系列导航或评论计入阅读进度；圆环使用标准化 SVG path length，百分比、dash offset 与 `aria-valuenow` 必须同步，0%/100% 时仍保持完整居中且不裁切。
 - 页面背景、主色和字体仍只消费 theme config -> MD3/Reay token 链，不建立领域级 palette 或页面底色。
 

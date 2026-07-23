@@ -57,6 +57,10 @@ Plog index.md + sibling images/
 
 `src/app/config/markdown.config.ts` 统一 GFM、数学、heading slug、KaTeX、阅读时间与 Shiki transformers。`markdown-style.config.ts` 和生成器管理文章视觉样式，Blog detail、Plog detail 的 entry 叙事与项目 README 复用该视觉层。Blog/Plog 正文消费 `--reay-font-prose`，其中 Markdown heading 消费 `--reay-font-prose-heading`；代码继续消费 `--reay-font-mono`。
 
+## Search Discovery
+
+生产构建仍由 Pagefind 索引 `data-pagefind-body` 下的全站公开内容。搜索页同时在构建期从可见 Blog/Plog 集合派生一份轻量文档，只包含 URL、标题、摘要、日期和主题关键词；它不复制正文，也不形成第三套内容源。浏览器在开发环境或 Pagefind 模块加载失败时使用这份文档进行本地匹配，使搜索不依赖生产索引才能完成基本发现。
+
 ## Publishing Invariants
 
 - 改 schema 后同时更新内容 reference、写作 guide 和示例。

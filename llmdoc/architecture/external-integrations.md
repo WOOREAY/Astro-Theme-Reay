@@ -9,7 +9,7 @@
 | 集成 | 阶段 | 失败/降级 | 信任边界 |
 | --- | --- | --- | --- |
 | GitHub REST/GraphQL | 构建期 | stale cache、匿名请求、近似活动或空数据 | token、远程元数据、README HTML |
-| Pagefind | 构建后 + 浏览器本地 | 无索引则搜索不可用 | 本地生成文件，不发送查询 |
+| Pagefind | 构建后 + 浏览器本地 | 无索引时回退 Blog/Plog 轻量文档 | 本地生成文件，不发送查询 |
 | Comments | 浏览器显式触发后懒加载 | 默认关闭时显示访客友好状态与站点联系人；加载失败可重试 | 外部脚本、cookies、隐私、provider 数据 |
 | Microlink preview | fine pointer 悬停或键盘聚焦后加载的远程 screenshot | 默认 `microlink`；显式 screenshot 优先，失败回退 avatar；可改 `none` | 请求会暴露目标 URL/访客网络 |
 | KaTeX CSS | 浏览器 CDN | 数学样式降级 | jsDelivr availability/SRI version |
@@ -39,7 +39,7 @@ Comments 先检查全局/模式/组件开关和 provider 必填配置，再把�
 
 ## Pagefind Flow
 
-两个根布局用 `data-pagefind-body` 标记内容，搜索页用 `data-pagefind-ignore` 排除 UI。`npm run build` 的第二阶段输出 `dist/pagefind`；客户端加载根路径本地索引和中英文 UI 文案。
+两个根布局用 `data-pagefind-body` 标记内容，搜索页用 `data-pagefind-ignore` 排除 UI。`npm run build` 的第二阶段输出 `dist/pagefind`；客户端按需动态加载根路径索引并用自有中英文编辑式界面渲染结果，查询同步到 `?q=` 且不发送给外部服务。搜索页还嵌入由同一可见内容集合派生的轻量 Blog/Plog 文档；开发环境直接使用该文档，生产索引加载失败时自动降级并显示明确状态。
 
 ## Feature Flags
 

@@ -10,7 +10,7 @@ Document lifetime：
 
 - 只启动一次。
 - 可持有全局 listener，但 initializer 必须有幂等 guard。
-- 当前包括 route transition、theme sync 和可缓存 i18n runtime；prefetch 由 Astro ClientRouter 管理。
+- 当前包括 route transition、站内导航来源记录、theme sync 和可缓存 i18n runtime；prefetch 由 Astro ClientRouter 管理。
 
 Page lifetime：
 
@@ -32,6 +32,7 @@ Page lifetime：
 | Contract | Consumers |
 | --- | --- |
 | `astro:before-swap`, `astro:page-load` | runtime、i18n、search、comments、TOC 等 |
+| history state `__reayReturnTo`, `data-history-back` | 站内来源记录、Blog/Plog 详情返回、文章 hash history |
 | `data-theme`, localStorage `theme` | inline bootstrap、toggle、theme-sync、comments |
 | localStorage `language`, `languagechange` | i18n、toggle、typewriter、search、comments feedback |
 | `data-i18n`, `data-i18n-attr(s)`, `data-i18n-date`, `data-page-title-key`, `data-user-content`, `data-text` | static HTML + client translation、属性、日期与标题 |
@@ -51,6 +52,7 @@ Page lifetime：
 - 移动菜单 E2E 与 Chrome 390×844 复测验证 label、`aria-expanded` 和无横向溢出。
 - Guestbook E2E 与 Chrome 1440×900 / 390×844 复测验证默认关闭状态、统一联系人、双语属性、首屏完成、light/dark MD3 表面和无横向溢出；真实 provider 生命周期仍不在该证据范围内。
 - Blog TOC E2E 与 Chrome 1440×900 复测验证正文边界 0%/100%、居中完整圆环、标准化 dash offset 和同步 `aria-valuenow`；页面交换仍复用单例 runtime 并在 before-swap cleanup。
+- Search E2E/Chrome 验证 Pagefind 全站结果、`q` URL、开发环境 Blog/Plog 回退、桌面/移动布局、无溢出和无控制台错误；详情返回 E2E/Chrome 验证从带类型筛选的 Archives 进入 Blog/Plog 后恢复原 URL 与筛选状态。
 
 ## Sources of Truth
 
