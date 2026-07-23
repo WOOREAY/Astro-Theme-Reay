@@ -180,6 +180,50 @@ test('default technology preset reaches the rendered background and component sh
   });
 });
 
+test('blog table of contents keeps its reading percentage centered in a complete progress ring', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/blog/test-markdown');
+
+  const progress = page.locator('[data-toc-progress-circle]');
+  await expect(progress).toHaveCount(1);
+  await expect(progress).toHaveAttribute('aria-valuenow', '0');
+
+  await page.evaluate(() => {
+    const content = document.querySelector<HTMLElement>('[data-post-reading-content]')!;
+    const contentBottom = content.getBoundingClientRect().bottom + window.scrollY;
+    window.scrollTo(0, contentBottom - window.innerHeight);
+  });
+
+  await expect.poll(async () => progress.getAttribute('aria-valuenow')).toBe('100');
+
+  const geometry = await progress.evaluate((element) => {
+    const wrapper = element.getBoundingClientRect();
+    const svg = element.querySelector<SVGElement>('.progress-ring')!.getBoundingClientRect();
+    const text = element.querySelector<HTMLElement>('[data-toc-progress]')!.getBoundingClientRect();
+    const ring = element.querySelector<SVGCircleElement>('[data-progress-ring]')!;
+
+    return {
+      wrapper: { width: wrapper.width, height: wrapper.height },
+      svg: { width: svg.width, height: svg.height },
+      centerDelta: {
+        x: Math.abs((text.left + text.width / 2) - (wrapper.left + wrapper.width / 2)),
+        y: Math.abs((text.top + text.height / 2) - (wrapper.top + wrapper.height / 2)),
+      },
+      dasharray: getComputedStyle(ring).strokeDasharray,
+      dashoffset: ring.style.strokeDashoffset,
+      transform: getComputedStyle(element.querySelector<SVGElement>('.progress-ring')!).transform,
+    };
+  });
+
+  expect(geometry.svg.width).toBeCloseTo(geometry.wrapper.width, 1);
+  expect(geometry.svg.height).toBeCloseTo(geometry.wrapper.height, 1);
+  expect(geometry.centerDelta.x).toBeLessThanOrEqual(1);
+  expect(geometry.centerDelta.y).toBeLessThanOrEqual(1);
+  expect(geometry.dasharray).toBe('100px');
+  expect(geometry.dashoffset).toBe('0');
+  expect(geometry.transform).toBe('none');
+});
+
 test('configured contact and site identity propagate across public surfaces', async ({ page }) => {
   const website = 'https://wooreay.github.io';
 
