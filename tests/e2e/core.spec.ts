@@ -406,6 +406,15 @@ test('archives keeps popular topics concise and returns topic discovery to filte
   await topicTrigger.click();
   const dialog = page.locator('[data-archive-topic-dialog]');
   await expect(dialog).toBeVisible();
+  const desktopDialogCenter = await dialog.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      horizontal: Math.abs(rect.left + rect.right - document.documentElement.clientWidth),
+      vertical: Math.abs(rect.top + rect.bottom - document.documentElement.clientHeight),
+    };
+  });
+  expect(desktopDialogCenter.horizontal).toBeLessThanOrEqual(2);
+  expect(desktopDialogCenter.vertical).toBeLessThanOrEqual(2);
 
   await dialog.locator('[data-archive-topic-sort="alphabetical"]').click();
   await expect(dialog.locator('[data-archive-topic-sort="alphabetical"]')).toHaveAttribute('aria-pressed', 'true');
@@ -456,6 +465,15 @@ test('archive topic dialog remains usable and overflow-free on mobile', async ({
   const dialog = page.locator('[data-archive-topic-dialog]');
   await expect(dialog).toBeVisible();
   await expect(dialog.locator('[data-archive-topic-search]')).toBeFocused();
+  const mobileDialogCenter = await dialog.evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return {
+      horizontal: Math.abs(rect.left + rect.right - document.documentElement.clientWidth),
+      vertical: Math.abs(rect.top + rect.bottom - document.documentElement.clientHeight),
+    };
+  });
+  expect(mobileDialogCenter.horizontal).toBeLessThanOrEqual(2);
+  expect(mobileDialogCenter.vertical).toBeLessThanOrEqual(2);
   await expect.poll(() => page.evaluate(() => document.documentElement.scrollWidth <= document.documentElement.clientWidth)).toBe(true);
   await expect.poll(() => dialog.evaluate((element) => element.scrollWidth <= element.clientWidth)).toBe(true);
 });

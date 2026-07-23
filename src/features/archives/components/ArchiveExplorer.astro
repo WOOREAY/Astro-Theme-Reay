@@ -611,7 +611,7 @@ const topicDialogPanels = [
   .archive-popular-topics small { color: var(--md-sys-color-on-surface-variant); font-size: 0.5rem; }
   .archive-all-topics { display: flex; align-items: center; justify-content: space-between; width: 100%; margin-top: 0.75rem; padding: 0.55rem 0 0; border: 0; border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.36); background: transparent; color: var(--md-sys-color-primary); font-size: 0.64rem; font-weight: 700; cursor: pointer; }
 
-  .archive-topic-dialog { width: min(calc(100% - 2rem), 52rem); max-height: min(84vh, 46rem); padding: 0; overflow: hidden; border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.54); border-radius: 1.2rem; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); box-shadow: 0 32px 100px -35px rgba(var(--md-sys-color-shadow-rgb), 0.78); }
+  .archive-topic-dialog { position: fixed; inset: 0; width: min(calc(100% - 2rem), 52rem); max-height: min(84vh, 46rem); margin: auto; padding: 0; overflow: hidden; border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.54); border-radius: 1.2rem; background: var(--md-sys-color-surface); color: var(--md-sys-color-on-surface); box-shadow: 0 32px 100px -35px rgba(var(--md-sys-color-shadow-rgb), 0.78); }
   .archive-topic-dialog::backdrop { background: rgba(var(--md-sys-color-scrim-rgb), 0.58); backdrop-filter: blur(4px); }
   .archive-topic-dialog-shell { display: grid; grid-template-rows: auto auto minmax(0, 1fr); max-height: min(84vh, 46rem); }
   .archive-topic-dialog-shell > header { display: flex; justify-content: space-between; gap: 1rem; padding: 1.15rem 1.2rem 0.95rem; border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42); }
@@ -666,7 +666,7 @@ const topicDialogPanels = [
     .archive-year-index { display: none; }
     .archive-topic-surface,
     .archive-collections { display: none; }
-    .archive-topic-dialog { width: calc(100% - 1rem); max-height: 88vh; margin-bottom: 0.5rem; border-radius: 1.1rem; }
+    .archive-topic-dialog { width: calc(100% - 1rem); max-height: 88vh; border-radius: 1.1rem; }
     .archive-topic-dialog-shell { max-height: 88vh; }
     .archive-topic-controls { align-items: stretch; flex-direction: column; gap: 0.55rem; }
     [data-archive-topic-list] { grid-template-columns: repeat(2, minmax(0, 1fr)); }
