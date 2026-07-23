@@ -24,7 +24,15 @@ const backgroundConfig = {
   },
 };
 
-const { type, blur, blurIntensity, imageUrl, imageStyle, gradient } = backgroundConfig;
+const {
+  type,
+  decoration = 'aurora',
+  blur,
+  blurIntensity,
+  imageUrl,
+  imageStyle,
+  gradient,
+} = backgroundConfig;
 
 // 模糊程度映射
 const blurMap = {
@@ -84,13 +92,14 @@ if (type === 'gradient') {
 
 {type !== 'none' && (
   <div 
-    class={`app-background ${useImage ? 'image-bg' : 'gradient-bg'}`}
+    class={`app-background ${useImage ? 'image-bg' : 'gradient-bg'} decoration-${decoration}`}
     style={`${backgroundStyle} --image-opacity: ${imageOpacity};`}
     aria-hidden="true"
   >
     <div class="aurora-field"></div>
     <div class="motion-grid"></div>
     <div class="light-sweep"></div>
+    <div class="texture-layer"></div>
     {blur && (
       <div 
         class="background-overlay" 
@@ -123,7 +132,8 @@ if (type === 'gradient') {
 
   .aurora-field,
   .motion-grid,
-  .light-sweep {
+  .light-sweep,
+  .texture-layer {
     position: absolute;
     inset: -20%;
     pointer-events: none;
@@ -161,6 +171,52 @@ if (type === 'gradient') {
     opacity: 0.34;
     transform: translateX(-18%);
     animation: sweep 12s var(--reay-ease-out, ease-out) infinite;
+  }
+
+  .texture-layer {
+    display: none;
+    z-index: 2;
+    inset: 0;
+  }
+
+  .decoration-paper .aurora-field,
+  .decoration-paper .motion-grid,
+  .decoration-paper .light-sweep,
+  .decoration-eink .aurora-field,
+  .decoration-eink .motion-grid,
+  .decoration-eink .light-sweep,
+  .decoration-plain .aurora-field,
+  .decoration-plain .motion-grid,
+  .decoration-plain .light-sweep {
+    display: none;
+  }
+
+  .decoration-paper .texture-layer {
+    display: block;
+    background:
+      repeating-linear-gradient(8deg, rgba(var(--md-sys-color-on-surface-rgb), 0.018) 0 1px, transparent 1px 5px),
+      repeating-linear-gradient(97deg, rgba(var(--md-sys-color-on-surface-rgb), 0.014) 0 1px, transparent 1px 7px),
+      radial-gradient(circle at 18% 23%, rgba(var(--md-sys-color-on-surface-rgb), 0.045) 0 0.5px, transparent 0.8px),
+      radial-gradient(circle at 73% 61%, rgba(var(--md-sys-color-on-surface-rgb), 0.036) 0 0.45px, transparent 0.8px);
+    background-size: auto, auto, 11px 13px, 17px 19px;
+    mix-blend-mode: multiply;
+    opacity: 0.42;
+  }
+
+  .decoration-eink .texture-layer {
+    display: block;
+    background:
+      radial-gradient(circle, rgba(var(--md-sys-color-on-surface-rgb), 0.1) 0 0.42px, transparent 0.7px),
+      repeating-linear-gradient(0deg, transparent 0 3px, rgba(var(--md-sys-color-on-surface-rgb), 0.025) 3px 4px);
+    background-size: 3px 3px, auto;
+    mix-blend-mode: multiply;
+    opacity: 0.34;
+  }
+
+  :global([data-theme='dark']) .decoration-paper .texture-layer,
+  :global([data-theme='dark']) .decoration-eink .texture-layer {
+    mix-blend-mode: screen;
+    opacity: 0.16;
   }
 
   /* 模糊遮罩层 */

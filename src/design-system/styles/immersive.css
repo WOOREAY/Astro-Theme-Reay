@@ -7,12 +7,12 @@
   --reay-ease-out: cubic-bezier(0.16, 1, 0.3, 1);
   --reay-ease-spring: cubic-bezier(0.34, 1.56, 0.64, 1);
   --reay-ease-smooth: cubic-bezier(0.2, 0.8, 0.2, 1);
-  --reay-radius-xs: 0.6rem;
-  --reay-radius-sm: 0.86rem;
-  --reay-radius-md: 1.08rem;
-  --reay-radius-lg: 1.48rem;
-  --reay-radius-xl: 1.86rem;
-  --reay-radius-pill: 999px;
+  --reay-radius-xs: var(--radius-xs, 0.6rem);
+  --reay-radius-sm: var(--radius-sm, 0.86rem);
+  --reay-radius-md: var(--radius-md, 1.08rem);
+  --reay-radius-lg: var(--radius-lg, 1.48rem);
+  --reay-radius-xl: var(--radius-xl, 1.86rem);
+  --reay-radius-pill: var(--radius-pill, 999px);
   --reay-glass-blur: 14px;
   --reay-glass-border: rgba(var(--md-sys-color-outline-variant-rgb), 0.24);
   --reay-glow-primary: rgba(var(--md-sys-color-primary-rgb), 0.28);
@@ -35,20 +35,14 @@
     linear-gradient(315deg, rgba(var(--md-sys-color-primary-rgb), 0.13), rgba(var(--md-sys-color-tertiary-rgb), 0.09));
   --reay-surface-border: rgba(var(--md-sys-color-outline-variant-rgb), 0.22);
   --reay-surface-border-hover: rgba(var(--md-sys-color-primary-rgb), 0.54);
-  --reay-surface-shadow:
-    0 16px 42px -34px rgba(var(--md-sys-color-shadow-rgb), 0.42),
-    0 7px 18px -18px rgba(var(--md-sys-color-primary-rgb), 0.18),
-    var(--reay-border-glow);
-  --reay-surface-shadow-hover:
-    0 30px 82px -52px rgba(var(--md-sys-color-primary-rgb), 0.62),
-    0 14px 34px -26px rgba(var(--md-sys-color-shadow-rgb), 0.46),
-    var(--reay-border-glow-hover);
+  --reay-surface-shadow: var(--shadow-md, 0 16px 42px -34px rgba(var(--md-sys-color-shadow-rgb), 0.42));
+  --reay-surface-shadow-hover: var(--shadow-lg, 0 30px 82px -52px rgba(var(--md-sys-color-primary-rgb), 0.62));
   --reay-card-radius: var(--reay-radius-lg);
   --reay-card-radius-compact: var(--reay-radius-md);
   --reay-card-padding: 1.1rem;
   --reay-card-gap: 0.85rem;
   --reay-button-radius: var(--reay-radius-pill);
-  --reay-icon-button-radius: 1rem;
+  --reay-icon-button-radius: var(--reay-radius-sm);
   --reay-button-bg:
     linear-gradient(135deg, rgba(var(--md-sys-color-surface-bright-rgb), 0.15), transparent 64%),
     rgba(var(--md-sys-color-surface-container-rgb), 0.5);
@@ -56,15 +50,8 @@
     linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.1)),
     rgba(var(--md-sys-color-primary-container-rgb), 0.38);
   --reay-button-border: rgba(var(--md-sys-color-outline-variant-rgb), 0.28);
-  --reay-button-shadow:
-    0 12px 30px -24px rgba(var(--md-sys-color-shadow-rgb), 0.5),
-    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.28),
-    inset 0 0 0 1px rgba(var(--md-sys-color-surface-bright-rgb), 0.06);
-  --reay-button-shadow-hover:
-    0 20px 56px -32px rgba(var(--md-sys-color-primary-rgb), 0.76),
-    0 10px 24px -20px rgba(var(--md-sys-color-shadow-rgb), 0.42),
-    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.42),
-    inset 0 0 0 1px rgba(var(--md-sys-color-primary-rgb), 0.14);
+  --reay-button-shadow: var(--shadow-sm, 0 12px 30px -24px rgba(var(--md-sys-color-shadow-rgb), 0.5));
+  --reay-button-shadow-hover: var(--shadow-md, 0 20px 56px -32px rgba(var(--md-sys-color-primary-rgb), 0.76));
   --reay-chip-bg:
     linear-gradient(135deg, rgba(var(--md-sys-color-surface-bright-rgb), 0.1), transparent 64%),
     rgba(var(--md-sys-color-surface-container-rgb), 0.42);
@@ -81,15 +68,8 @@
     linear-gradient(315deg, rgba(var(--md-sys-color-primary-rgb), 0.16), rgba(var(--md-sys-color-tertiary-rgb), 0.12));
   --reay-surface-border: rgba(var(--md-sys-color-outline-variant-rgb), 0.2);
   --reay-surface-border-hover: rgba(var(--md-sys-color-primary-rgb), 0.48);
-  --reay-surface-shadow:
-    0 22px 58px -38px rgba(var(--md-sys-color-shadow-rgb), 0.84),
-    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.12),
-    inset 0 0 0 1px rgba(var(--md-sys-color-surface-bright-rgb), 0.035);
-  --reay-surface-shadow-hover:
-    0 30px 82px -46px rgba(var(--md-sys-color-primary-rgb), 0.42),
-    0 16px 38px -24px rgba(var(--md-sys-color-shadow-rgb), 0.86),
-    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.2),
-    inset 0 0 0 1px rgba(var(--md-sys-color-primary-rgb), 0.1);
+  --reay-surface-shadow: var(--shadow-md, 0 22px 58px -38px rgba(var(--md-sys-color-shadow-rgb), 0.84));
+  --reay-surface-shadow-hover: var(--shadow-lg, 0 30px 82px -46px rgba(var(--md-sys-color-primary-rgb), 0.42));
   --reay-button-bg:
     linear-gradient(135deg, rgba(var(--md-sys-color-surface-bright-rgb), 0.08), transparent 64%),
     rgba(var(--md-sys-color-surface-container-rgb), 0.42);

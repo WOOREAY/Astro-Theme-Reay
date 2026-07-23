@@ -74,6 +74,7 @@ export type Palette = {
 
 export type ThemeColorSource = {
   primary: string;
+  variant?: 'tonal-spot' | 'monochrome';
   secondary?: string;
   tertiary?: string;
   neutral?: string;
@@ -121,7 +122,8 @@ export type Typography = {
  * for consistent component shapes and depth hierarchy
  */
 export type Shape = {
-  radiusSm: string; radiusMd: string; radiusLg: string;
+  radiusXs: string; radiusSm: string; radiusMd: string;
+  radiusLg: string; radiusXl: string; radiusPill: string;
   borderWidth: string;
   shadowSm: string; shadowMd: string; shadowLg: string;
 };

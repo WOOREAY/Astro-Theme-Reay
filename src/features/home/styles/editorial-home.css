@@ -169,7 +169,7 @@
   margin-top: clamp(2.6rem, 5vw, 4.2rem);
   padding: clamp(1.25rem, 2.6vw, 1.65rem);
   overflow: hidden;
-  border-radius: clamp(1.25rem, 2.5vw, 1.75rem);
+  border-radius: var(--reay-radius-xl);
   background:
     radial-gradient(circle at 100% 0%, rgba(var(--md-sys-color-tertiary-container-rgb), 0.5), transparent 52%),
     linear-gradient(145deg, rgba(var(--md-sys-color-primary-container-rgb), 0.62), rgba(var(--md-sys-color-surface-container-rgb), 0.55));
@@ -500,7 +500,7 @@
 
 .home-project-shelf {
   padding: 1.25rem 1.25rem 0.35rem;
-  border-radius: 1.55rem;
+  border-radius: var(--reay-radius-lg);
   background:
     radial-gradient(circle at 0 100%, rgba(var(--md-sys-color-tertiary-container-rgb), 0.32), transparent 45%),
     rgba(var(--md-sys-color-surface-container-rgb), 0.48);
@@ -607,7 +607,7 @@
   display: block;
   min-height: 15rem;
   overflow: hidden;
-  border-radius: 1.35rem;
+  border-radius: var(--reay-radius-lg);
   background: var(--home-plog-fallback, var(--md-sys-color-surface-container));
   box-shadow: 0 24px 58px -48px rgba(var(--md-sys-color-shadow-rgb), 0.9);
   isolation: isolate;
@@ -682,7 +682,7 @@
 .home-site-pulse {
   margin-top: clamp(6rem, 10vw, 8rem);
   padding: clamp(1.5rem, 4vw, 2.5rem);
-  border-radius: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--reay-radius-xl);
   background:
     radial-gradient(circle at 100% 0%, rgba(var(--md-sys-color-primary-container-rgb), 0.33), transparent 42%),
     rgba(var(--md-sys-color-surface-container-low-rgb), 0.48);
@@ -850,7 +850,7 @@
   display: block;
   width: var(--reay-home-heat-cell);
   height: var(--reay-home-heat-cell);
-  border-radius: 0.19rem;
+  border-radius: var(--reay-radius-xs);
   background: rgba(var(--md-sys-color-outline-variant-rgb), 0.2);
 }
 
@@ -921,7 +921,7 @@
 .home-heatmap-legend .home-heatmap-day {
   width: 0.62rem;
   height: 0.62rem;
-  border-radius: 0.16rem;
+  border-radius: var(--reay-radius-xs);
 }
 
 .home-heatmap-source {
@@ -937,7 +937,7 @@
 .home-profile-facts a:focus-visible,
 .home-showcase a:focus-visible,
 .home-heatmap-header a:focus-visible {
-  border-radius: 0.35rem;
+  border-radius: var(--reay-radius-xs);
   outline: 3px solid rgba(var(--md-sys-color-primary-rgb), 0.56);
   outline-offset: 0.3rem;
 }

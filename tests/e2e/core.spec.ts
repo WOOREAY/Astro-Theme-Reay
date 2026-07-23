@@ -102,6 +102,29 @@ test('homepage exposes the unchanged Hero and asymmetric editorial showcase', as
   expect(await page.locator('.home-heatmap-grid .home-heatmap-day').count()).toBeGreaterThanOrEqual(365);
 });
 
+test('default technology preset reaches the rendered background and component shape tokens', async ({ page }) => {
+  await page.goto('/');
+
+  await expect(page.locator('.app-background.decoration-aurora')).toHaveCount(1);
+
+  const theme = await page.evaluate(() => {
+    const root = getComputedStyle(document.documentElement);
+    const primaryButton = document.querySelector<HTMLElement>('.hero-primary-btn')!;
+
+    return {
+      radiusLg: root.getPropertyValue('--radius-lg').trim(),
+      radiusPill: root.getPropertyValue('--radius-pill').trim(),
+      buttonRadius: getComputedStyle(primaryButton).borderRadius,
+    };
+  });
+
+  expect(theme).toEqual({
+    radiusLg: '1.48rem',
+    radiusPill: '999px',
+    buttonRadius: '999px',
+  });
+});
+
 test('configured contact and site identity propagate across public surfaces', async ({ page }) => {
   const website = 'https://wooreay.github.io';
 

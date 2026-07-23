@@ -246,7 +246,7 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
   .site-header.is-floating .site-header-inner::before {
     inset: 0.52rem 0.9rem;
     border-color: rgba(var(--md-sys-color-outline-variant-rgb), 0.52);
-    border-radius: 999px;
+    border-radius: var(--reay-radius-pill);
     background:
       linear-gradient(135deg, rgba(var(--md-sys-color-surface-rgb), 0.88), rgba(var(--md-sys-color-surface-container-rgb), 0.68)),
       linear-gradient(100deg, rgba(var(--md-sys-color-primary-rgb), 0.18), rgba(var(--md-sys-color-tertiary-rgb), 0.13));
@@ -346,7 +346,7 @@ const isActive = (href: string) => href === '/' ? currentPath === '/' : currentP
   .nav-link,
   .mobile-nav-link {
     position: relative;
-    border-radius: 999px;
+    border-radius: var(--reay-radius-pill);
     border: 1px solid transparent;
     transition:
       color 0.3s var(--reay-ease-out, ease),

@@ -2,6 +2,7 @@ import type { Palette, ReferencePalettes, ThemeColorSource, TonePalette } from '
 import {
   DynamicScheme,
   Hct,
+  SchemeMonochrome,
   SchemeTonalSpot,
   TonalPalette,
   argbFromHex,
@@ -35,6 +36,7 @@ function resolveSource(source: string | ThemeColorSource): ThemeColorSource {
   const primary = normalizeHex(source.primary);
   return {
     primary,
+    variant: source.variant,
     secondary: source.secondary ? normalizeHex(source.secondary, primary) : undefined,
     tertiary: source.tertiary ? normalizeHex(source.tertiary, primary) : undefined,
     neutral: source.neutral ? normalizeHex(source.neutral, primary) : undefined,
@@ -67,7 +69,9 @@ function buildReferencePalettes(scheme: DynamicScheme): ReferencePalettes {
 function createScheme(source: ThemeColorSource, isDark: boolean): DynamicScheme {
   const sourceColorArgb = toArgb(source.primary);
   const sourceColorHct = Hct.fromInt(sourceColorArgb);
-  const baseScheme = new SchemeTonalSpot(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL);
+  const baseScheme = source.variant === 'monochrome'
+    ? new SchemeMonochrome(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL)
+    : new SchemeTonalSpot(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL);
 
   if (!source.secondary && !source.tertiary && !source.neutral && !source.neutralVariant) {
     return baseScheme;

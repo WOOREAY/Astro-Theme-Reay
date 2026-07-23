@@ -49,14 +49,17 @@ export const defaultTypography: Typography = {
  * 
  * @remarks
  * Defines border radius, widths, and shadows for consistent component shapes
- * - radiusSm/Md/Lg: Progressive border radius from subtle to prominent
+ * - radiusXs/Sm/Md/Lg/Xl/Pill: Progressive border radius from subtle to prominent
  * - borderWidth: Standard border thickness
  * - shadowSm/Md/Lg: Elevation shadows for depth hierarchy
  */
 export const defaultShape: Shape = {
+  radiusXs: '6px',
   radiusSm: '8px',
   radiusMd: '16px',
   radiusLg: '24px',
+  radiusXl: '30px',
+  radiusPill: '999px',
   borderWidth: '1px',
   shadowSm: '0 1px 2px rgba(var(--md-sys-color-shadow-rgb), .06)',
   shadowMd: '0 8px 30px rgba(var(--md-sys-color-shadow-rgb), .08)',

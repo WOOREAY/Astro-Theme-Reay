@@ -209,7 +209,8 @@ export function themeToCSSVars(theme: ThemeConfig) {
   --fs-lg:${t.scale.lg}rem; --fs-xl:${t.scale.xl}rem; --fs-2xl:${t.scale['2xl']}rem; --fs-3xl:${t.scale['3xl']}rem;
 
   /* shape */
-  --radius-sm:${s.radiusSm}; --radius-md:${s.radiusMd}; --radius-lg:${s.radiusLg};
+  --radius-xs:${s.radiusXs}; --radius-sm:${s.radiusSm}; --radius-md:${s.radiusMd};
+  --radius-lg:${s.radiusLg}; --radius-xl:${s.radiusXl}; --radius-pill:${s.radiusPill};
   --border-w:${s.borderWidth};
   --shadow-sm:${s.shadowSm}; --shadow-md:${s.shadowMd}; --shadow-lg:${s.shadowLg};
 }

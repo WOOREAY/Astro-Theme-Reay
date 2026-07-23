@@ -1,161 +1,47 @@
 /**
  * Theme Configuration
  *
- * Edit `themeConfig` first. Types and compatibility exports are kept below the
- * editable configuration so this file stays easy to scan.
+ * Choose one visual preset, then add only the overrides that belong to this
+ * site. Presets never contain identity, navigation, content, or credentials.
  */
 
-import type { FontFamilyRoles, UserThemeOverrides } from '@design/theme';
+import {
+  createThemePreset,
+  fontStacks,
+  themePresets,
+  type ThemePresetName,
+  type ThemePresetOverrides,
+} from '../../../presets/themes';
+
+/** Change this one value to switch the complete visual language. */
+export const activeThemePreset = 'technology' satisfies ThemePresetName;
 
 /**
- * Script-aware font sources.
- *
- * Latin text uses Nunito's rounded forms while Chinese text uses the locally
- * hosted Chill Round font. Noto Sans SC remains the full-coverage CJK fallback.
- * Change `latin` and `cjk` independently, or point both at one family that
- * covers both scripts. Keep quoted family names here; semantic page roles are
- * configured separately below.
+ * Optional site-specific changes layered over the selected preset.
+ * Nested color, typography, shape, background, and effect values are merged.
  */
-export const fontStacks = {
-  latin: '"Nunito Variable"',
-  cjk: '"寒蝉全圆体"',
-  fallback: '"Noto Sans SC Variable", "PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif',
-  mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
-} as const;
+export const themeOverrides = {
+  // primary: '#5B8CFF',
+  // typography: { baseSize: 16 },
+  // background: { decoration: 'plain' },
+} satisfies ThemePresetOverrides;
 
-const globalFontStack = [fontStacks.latin, fontStacks.cjk, fontStacks.fallback].join(', ');
+export const themeConfig = createThemePreset(activeThemePreset, themeOverrides);
 
-/**
- * Role-based font stacks.
- *
- * `global` is the site-wide fallback. Leave any semantic role empty to inherit
- * `global`; `mono` is reserved for code and keyboard input. This lets a site
- * owner change both language fonts once, while still allowing deliberate
- * exceptions for brand, navigation, headings, metadata, and prose.
- */
-export const fontFamilies = {
-  global: globalFontStack,
-  brand: '',
-  navigation: '',
-  heading: '',
-  body: '',
-  metadata: '',
-  prose: '',
-  proseHeading: '',
-  mono: fontStacks.mono,
-} satisfies FontFamilyRoles;
+/** Discoverable metadata for a future settings UI or documentation tooling. */
+export const availableThemePresets = themePresets;
 
-export const themeConfig = {
-  // Primary color used to generate the Material Design 3 palette.
-  primary: '#00eeff',
-  // Optional advanced key colors. Leave commented to derive the full palette from primary.
-  // source: {
-  //   primary: '#00eeff',
-  //   secondary: '#6fd4d8',
-  //   tertiary: '#b8c6ff',
-  // },
+/** Backward-compatible exports for existing user customizations. */
+export { fontStacks };
+export const fontFamilies = themeConfig.typography.fontFamilies;
+export const backgroundConfig = themeConfig.background;
 
-  typography: {
-    fontFamilies,
-    // The root size scales rem-based typography and spacing across the site.
-    baseSize: 15,
-    lineHeight: 1.6,
-  },
-
-  background: {
-    type: 'gradient',
-    blur: false,
-    blurIntensity: 'light',
-
-    // Uncomment and set `type: 'image'` to use a custom background image.
-    // imageUrl: '/images/background.jpg',
-    imageStyle: {
-      size: 'cover',
-      position: 'center',
-      repeat: 'no-repeat',
-      opacity: 0.6,
-    },
-
-    gradient: {
-      useMD3Colors: true,
-      direction: '135deg',
-      // colors: ['#5B8CFF', '#00D4AA'],
-    },
-  },
-
-  effects: {
-    homeWave: {
-      enabled: false,
-      intensity: 'low',
-    },
-    seasonal: {
-      enabled: false,
-      season: 'auto',
-      density: 'low',
-      showOnMobile: false,
-      respectReducedMotion: true,
-      seasons: {
-        spring: true,
-        summer: true,
-        autumn: true,
-        winter: true,
-      },
-    },
-  },
-} satisfies ThemeConfig;
-
-/**
- * Backward-compatible export for older user customizations.
- */
-export const backgroundConfig: BackgroundConfig = themeConfig.background;
-
-export interface BackgroundConfig {
-  type: 'gradient' | 'image' | 'none';
-  blur: boolean;
-  blurIntensity: 'light' | 'medium' | 'heavy';
-  imageUrl?: string;
-  imageStyle?: {
-    size?: 'cover' | 'contain' | 'auto';
-    position?: string;
-    repeat?: string;
-    opacity?: number;
-  };
-  gradient?: {
-    useMD3Colors?: boolean;
-    colors?: string[];
-    direction?: string;
-  };
-}
-
-export type SeasonalEffectSeason = 'auto' | 'spring' | 'summer' | 'autumn' | 'winter';
-export type VisualEffectDensity = 'low' | 'medium' | 'high';
-export type HomeWaveIntensity = 'low' | 'medium' | 'high';
-
-export interface EffectsConfig {
-  homeWave: {
-    enabled: boolean;
-    intensity: HomeWaveIntensity;
-  };
-  seasonal: {
-    enabled: boolean;
-    /**
-     * auto follows the visitor's current month:
-     * Mar-May spring, Jun-Aug summer, Sep-Nov autumn, Dec-Feb winter.
-     */
-    season: SeasonalEffectSeason;
-    density: VisualEffectDensity;
-    showOnMobile: boolean;
-    respectReducedMotion: boolean;
-    seasons: {
-      spring: boolean;
-      summer: boolean;
-      autumn: boolean;
-      winter: boolean;
-    };
-  };
-}
-
-export interface ThemeConfig extends UserThemeOverrides {
-  background: BackgroundConfig;
-  effects: EffectsConfig;
-}
+export type {
+  BackgroundConfig,
+  BackgroundDecoration,
+  EffectsConfig,
+  HomeWaveIntensity,
+  SeasonalEffectSeason,
+  ThemeConfig,
+  VisualEffectDensity,
+} from './theme.types';
