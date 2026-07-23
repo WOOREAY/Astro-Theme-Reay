@@ -269,9 +269,19 @@ test('public index pages share the compact editorial page contract', async ({ pa
 
 test('editorial details and archives do not regress into card walls', async ({ page }) => {
   await page.goto('/archives');
-  await expect(page.locator('[data-archive-chronicle]')).toHaveCount(1);
-  await expect(page.locator('[data-tag-map]')).toHaveCount(1);
-  expect(await page.locator('[data-series-entry]').count()).toBeGreaterThan(0);
+  await expect(page.locator('[data-archive-explorer]')).toHaveCount(1);
+  await expect(page.locator('[data-archive-year]')).not.toHaveCount(0);
+  await expect(page.locator('[data-archive-topic-panel="all"]')).toBeVisible();
+  await expect(page.locator('.archive-nav')).toHaveCount(0);
+  expect(await page.locator('[data-archive-row][data-archive-kind="blog"]').count()).toBeGreaterThan(0);
+  expect(await page.locator('[data-archive-row][data-archive-kind="plog"]').count()).toBe(6);
+  await expect(page.locator('[data-archive-filter]')).toHaveText(['全部', 'Blog', 'Plog']);
+
+  await page.locator('[data-archive-filter="plog"]').click();
+  await expect(page.locator('[data-archive-row][data-archive-kind="blog"]').first()).toBeHidden();
+  await expect(page.locator('[data-archive-row][data-archive-kind="plog"]').first()).toBeVisible();
+  await expect(page.locator('[data-archive-topic-panel="plog"]')).toBeVisible();
+  await expect(page.locator('[data-archive-topic-panel="all"]')).toBeHidden();
   await expect(page.locator('.archive-main .reay-card, .series-progress')).toHaveCount(0);
 
   await page.goto('/links');

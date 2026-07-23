@@ -1,0 +1,408 @@
+---
+/** Unified retrieval-oriented archive for Blog and Plog content. */
+import type { CollectionEntry } from 'astro:content';
+import type { PlogAlbum } from '@features/gallery/lib/plog';
+import { getPostUrl } from '@features/blog/lib/blog';
+import { useI18n } from '@features/i18n/lib/i18n';
+
+interface Props {
+  posts: CollectionEntry<'blog'>[];
+  plogAlbums: PlogAlbum[];
+}
+
+type ArchiveKind = 'blog' | 'plog';
+
+interface ArchiveRow {
+  id: string;
+  kind: ArchiveKind;
+  title: string;
+  href: string;
+  date: Date;
+  tags: string[];
+  topics: string[];
+  category?: string;
+  series?: string;
+  collection?: string;
+  location?: string;
+  photoCount?: number;
+}
+
+interface TopicItem {
+  key: string;
+  label: string;
+  count: number;
+  type: 'tag' | 'series' | 'collection';
+}
+
+const { posts, plogAlbums } = Astro.props;
+const { currentLang, t } = useI18n();
+const locale = currentLang === 'zh' ? 'zh-CN' : 'en-US';
+const dateFormatter = new Intl.DateTimeFormat(locale, { month: '2-digit', day: '2-digit' });
+
+const rows: ArchiveRow[] = [
+  ...posts.map((post): ArchiveRow => ({
+    id: `blog:${post.id}`,
+    kind: 'blog',
+    title: post.data.title,
+    href: getPostUrl(post),
+    date: post.data.publishDate,
+    tags: post.data.tags,
+    category: post.data.category,
+    series: post.data.series,
+    topics: [
+      ...post.data.tags.flatMap((tag) => [`all-tag:${tag}`, `blog-tag:${tag}`]),
+      ...(post.data.series ? [`series:${post.data.series}`] : []),
+    ],
+  })),
+  ...plogAlbums.map((album): ArchiveRow => ({
+    id: `plog:${album.id}`,
+    kind: 'plog',
+    title: album.title,
+    href: album.href,
+    date: new Date(`${album.date}T00:00:00`),
+    tags: album.tags,
+    collection: album.collectionTitle,
+    location: album.location,
+    photoCount: album.photoCount,
+    topics: [
+      ...album.tags.flatMap((tag) => [`all-tag:${tag}`, `plog-tag:${tag}`]),
+      `collection:${album.collectionId}`,
+    ],
+  })),
+].sort((left, right) => right.date.getTime() - left.date.getTime());
+
+const rowsByYear = new Map<number, ArchiveRow[]>();
+rows.forEach((row) => {
+  const year = row.date.getFullYear();
+  const entries = rowsByYear.get(year) ?? [];
+  entries.push(row);
+  rowsByYear.set(year, entries);
+});
+
+function countTopics(source: Array<{ label: string; key: string; type: TopicItem['type'] }>) {
+  const topics = new Map<string, TopicItem>();
+  source.forEach((item) => {
+    const current = topics.get(item.key);
+    topics.set(item.key, current ? { ...current, count: current.count + 1 } : { ...item, count: 1 });
+  });
+  return [...topics.values()].sort((left, right) => right.count - left.count || left.label.localeCompare(right.label));
+}
+
+const allTopics = countTopics(rows.flatMap((row) => row.tags.map((tag) => ({
+  label: tag,
+  key: `all-tag:${tag}`,
+  type: 'tag' as const,
+}))));
+const blogTopics = countTopics(posts.flatMap((post) => [
+  ...post.data.tags.map((tag) => ({ label: tag, key: `blog-tag:${tag}`, type: 'tag' as const })),
+  ...(post.data.series ? [{ label: post.data.series, key: `series:${post.data.series}`, type: 'series' as const }] : []),
+]));
+const plogTopics = countTopics(plogAlbums.flatMap((album) => [
+  ...album.tags.map((tag) => ({ label: tag, key: `plog-tag:${tag}`, type: 'tag' as const })),
+  { label: album.collectionTitle, key: `collection:${album.collectionId}`, type: 'collection' as const },
+]));
+
+const maxTopicCount = Math.max(...allTopics.map((topic) => topic.count), ...blogTopics.map((topic) => topic.count), ...plogTopics.map((topic) => topic.count), 1);
+const topicWeight = (count: number) => Math.max(0.12, count / maxTopicCount).toFixed(3);
+const panels = [
+  { kind: 'all', titleKey: 'archives.topics.all', descriptionKey: 'archives.topics.allDescription', items: allTopics },
+  { kind: 'blog', titleKey: 'archives.topics.blog', descriptionKey: 'archives.topics.blogDescription', items: blogTopics },
+  { kind: 'plog', titleKey: 'archives.topics.plog', descriptionKey: 'archives.topics.plogDescription', items: plogTopics },
+] as const;
+---
+
+<section class="archive-explorer" data-archive-explorer>
+  <nav class="archive-filters" aria-label={t('archives.filter.label')}>
+    <span data-i18n="archives.filter.label">{t('archives.filter.label')}</span>
+    <div>
+      <button type="button" class="is-active" data-archive-filter="all" aria-pressed="true" data-i18n="archives.filter.all">{t('archives.filter.all')}</button>
+      <button type="button" data-archive-filter="blog" aria-pressed="false">Blog</button>
+      <button type="button" data-archive-filter="plog" aria-pressed="false">Plog</button>
+    </div>
+  </nav>
+
+  <div class="archive-workbench">
+    <div class="archive-ledger" data-archive-ledger>
+      {[...rowsByYear.entries()].map(([year, yearRows]) => (
+        <section class="archive-year" id={`archive-year-${year}`} data-archive-year={year}>
+          <header>
+            <h2>{year}</h2>
+            <span><strong data-year-count>{yearRows.length}</strong> <span data-i18n="archives.entries">{t('archives.entries')}</span></span>
+          </header>
+
+          <div class="archive-year-entries">
+            {yearRows.map((row) => (
+              <article
+                class:list={['archive-entry', `is-${row.kind}`]}
+                data-archive-row
+                data-archive-kind={row.kind}
+                data-archive-topics={JSON.stringify(row.topics)}
+              >
+                <a href={row.href} data-astro-prefetch="hover">
+                  <time datetime={row.date.toISOString()} data-font-role="metadata">{dateFormatter.format(row.date)}</time>
+                  <span class="archive-entry-kind" data-font-role="metadata">
+                    <i class={row.kind === 'blog' ? 'i-carbon:pen-fountain' : 'i-carbon:image'} aria-hidden="true"></i>
+                    {row.kind === 'blog' ? 'Blog' : 'Plog'}
+                  </span>
+                  <span class="archive-entry-copy">
+                    <h3>{row.title}</h3>
+                    <span class="archive-entry-meta" data-font-role="metadata">
+                      {row.kind === 'blog' ? (
+                        <>
+                          {row.category && <span>{row.category}</span>}
+                          {row.series && <span><i class="i-carbon:list-boxes" aria-hidden="true"></i>{row.series}</span>}
+                          {row.tags.slice(0, 3).map((tag) => <span>#{tag}</span>)}
+                        </>
+                      ) : (
+                        <>
+                          {row.collection && <span><i class="i-carbon:folder" aria-hidden="true"></i>{row.collection}</span>}
+                          {row.location && <span><i class="i-carbon:location" aria-hidden="true"></i>{row.location}</span>}
+                          <span><i class="i-carbon:image" aria-hidden="true"></i>{row.photoCount} <span data-i18n="gallery.stats.photos">{t('gallery.stats.photos')}</span></span>
+                        </>
+                      )}
+                    </span>
+                  </span>
+                  <i class="archive-entry-arrow i-carbon:arrow-up-right" aria-hidden="true"></i>
+                </a>
+              </article>
+            ))}
+          </div>
+        </section>
+      ))}
+      <p class="archive-no-results" data-archive-empty hidden data-i18n="archives.empty.filtered">{t('archives.empty.filtered')}</p>
+    </div>
+
+    <aside class="archive-rail">
+      <nav class="archive-year-index" aria-label={t('archives.yearIndex')}>
+        <span data-i18n="archives.yearIndex">{t('archives.yearIndex')}</span>
+        <div>
+          {[...rowsByYear.entries()].map(([year, yearRows]) => (
+            <a href={`#archive-year-${year}`} data-archive-year-link={year}>
+              <strong>{year}</strong><small>{yearRows.length}</small>
+            </a>
+          ))}
+        </div>
+      </nav>
+
+      <div class="archive-topic-surface" data-archive-topic-surface>
+        {panels.map((panel) => (
+          <section data-archive-topic-panel={panel.kind} hidden={panel.kind !== 'all'}>
+            <header>
+              <h2 data-i18n={panel.titleKey}>{t(panel.titleKey)}</h2>
+              <p data-i18n={panel.descriptionKey}>{t(panel.descriptionKey)}</p>
+            </header>
+            <div class="archive-topic-cloud">
+              {panel.items.map((topic) => (
+                <button
+                  type="button"
+                  class:list={[`is-${topic.type}`]}
+                  data-archive-topic={topic.key}
+                  aria-pressed="false"
+                  style={`--topic-weight: ${topicWeight(topic.count)};`}
+                >
+                  <span>{topic.type === 'tag' ? '#' : ''}{topic.label}</span><small>{topic.count}</small>
+                </button>
+              ))}
+            </div>
+          </section>
+        ))}
+      </div>
+    </aside>
+  </div>
+</section>
+
+<style>
+  .archive-explorer { min-width: 0; }
+
+  .archive-filters {
+    display: flex;
+    align-items: end;
+    justify-content: space-between;
+    gap: 1rem;
+    margin: -0.5rem 0 1.5rem;
+    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.5);
+  }
+
+  .archive-filters > span {
+    padding-bottom: 0.72rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-metadata);
+    font-size: 0.65rem;
+    font-weight: 760;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+  }
+
+  .archive-filters > div { display: flex; gap: 1.35rem; }
+  .archive-filters button {
+    position: relative;
+    padding: 0 0 0.72rem;
+    border: 0;
+    background: transparent;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-navigation);
+    font-size: 0.76rem;
+    font-weight: 820;
+    cursor: pointer;
+  }
+  .archive-filters button::after {
+    content: '';
+    position: absolute;
+    right: 0;
+    bottom: -1px;
+    left: 0;
+    height: 2px;
+    background: var(--md-sys-color-primary);
+    transform: scaleX(0);
+  }
+  .archive-filters button:hover,
+  .archive-filters button.is-active { color: var(--md-sys-color-primary); }
+  .archive-filters button.is-active::after { transform: scaleX(1); }
+
+  .archive-workbench {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) minmax(15.5rem, 0.34fr);
+    gap: clamp(2.2rem, 5vw, 4.4rem);
+    align-items: start;
+  }
+
+  .archive-ledger { min-width: 0; }
+  .archive-year {
+    display: grid;
+    grid-template-columns: 4.4rem minmax(0, 1fr);
+    gap: 1.25rem;
+    scroll-margin-top: 6.5rem;
+  }
+  .archive-year + .archive-year { margin-top: 2.5rem; }
+  .archive-year > header { padding-top: 0.9rem; }
+  .archive-year > header h2 {
+    margin: 0;
+    color: var(--md-sys-color-primary);
+    font-family: var(--reay-font-heading);
+    font-size: 1rem;
+    font-weight: 900;
+    line-height: 1;
+  }
+  .archive-year > header span {
+    display: block;
+    margin-top: 0.32rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-metadata);
+    font-size: 0.58rem;
+  }
+  .archive-year-entries { border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.5); }
+  .archive-entry { border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.4); }
+  .archive-entry a {
+    display: grid;
+    grid-template-columns: 3.45rem 3.8rem minmax(0, 1fr) auto;
+    gap: 0.75rem;
+    align-items: center;
+    min-height: 4.35rem;
+    padding: 0.65rem 0.5rem;
+    color: inherit;
+  }
+  .archive-entry a:hover { background: linear-gradient(90deg, rgba(var(--md-sys-color-primary-rgb), 0.07), transparent 82%); }
+  .archive-entry time {
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.64rem;
+    font-weight: 740;
+  }
+  .archive-entry-kind {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.3rem;
+    color: var(--md-sys-color-primary);
+    font-size: 0.61rem;
+    font-weight: 820;
+    text-transform: uppercase;
+  }
+  .archive-entry.is-plog .archive-entry-kind { color: var(--md-sys-color-tertiary); }
+  .archive-entry-copy { min-width: 0; }
+  .archive-entry h3 {
+    margin: 0;
+    overflow: hidden;
+    color: var(--md-sys-color-on-surface);
+    font-size: 0.88rem;
+    font-weight: 840;
+    line-height: 1.35;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+  }
+  .archive-entry-meta {
+    display: flex;
+    flex-wrap: wrap;
+    gap: 0.25rem 0.65rem;
+    margin-top: 0.24rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-size: 0.59rem;
+    line-height: 1.45;
+  }
+  .archive-entry-meta > span { display: inline-flex; align-items: center; gap: 0.25rem; }
+  .archive-entry-arrow { color: var(--md-sys-color-primary); font-size: 0.78rem; }
+
+  .archive-rail { position: sticky; top: 5.6rem; display: grid; gap: 1.3rem; min-width: 0; }
+  .archive-year-index > span {
+    display: block;
+    margin-bottom: 0.55rem;
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-metadata);
+    font-size: 0.62rem;
+    font-weight: 800;
+    letter-spacing: 0.07em;
+    text-transform: uppercase;
+  }
+  .archive-year-index > div { display: flex; flex-wrap: wrap; gap: 0.45rem 0.9rem; }
+  .archive-year-index a { display: inline-flex; gap: 0.3rem; align-items: baseline; color: var(--md-sys-color-on-surface); }
+  .archive-year-index a:hover { color: var(--md-sys-color-primary); }
+  .archive-year-index strong { font-family: var(--reay-font-heading); font-size: 0.76rem; }
+  .archive-year-index small { color: var(--md-sys-color-on-surface-variant); font-family: var(--reay-font-metadata); font-size: 0.54rem; }
+
+  .archive-topic-surface {
+    min-height: 11rem;
+    padding: 1rem;
+    border-radius: 1rem;
+    background: rgba(var(--md-sys-color-surface-container-rgb), 0.52);
+  }
+  .archive-topic-surface header { padding-bottom: 0.7rem; border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.4); }
+  .archive-topic-surface h2 { margin: 0; color: var(--md-sys-color-on-surface); font-size: 0.85rem; }
+  .archive-topic-surface p { margin: 0.3rem 0 0; color: var(--md-sys-color-on-surface-variant); font-size: 0.63rem; line-height: 1.5; }
+  .archive-topic-cloud { display: flex; flex-wrap: wrap; gap: 0.45rem 0.65rem; align-items: baseline; margin-top: 0.78rem; }
+  .archive-topic-cloud button {
+    display: inline-flex;
+    align-items: baseline;
+    gap: 0.25rem;
+    padding: 0.16rem 0;
+    border: 0;
+    background: transparent;
+    color: color-mix(in srgb, var(--md-sys-color-on-surface) 72%, var(--md-sys-color-primary));
+    font-family: var(--reay-font-metadata);
+    font-size: calc(0.64rem + var(--topic-weight) * 0.22rem);
+    font-weight: 730;
+    cursor: pointer;
+  }
+  .archive-topic-cloud button.is-series,
+  .archive-topic-cloud button.is-collection { color: var(--md-sys-color-tertiary); }
+  .archive-topic-cloud button:hover,
+  .archive-topic-cloud button.is-active { color: var(--md-sys-color-primary); text-decoration: underline; text-underline-offset: 0.24rem; }
+  .archive-topic-cloud small { color: var(--md-sys-color-on-surface-variant); font-size: 0.5rem; }
+  .archive-no-results { padding: 2.5rem 0; color: var(--md-sys-color-on-surface-variant); font-size: 0.76rem; text-align: center; }
+
+  @media (max-width: 920px) {
+    .archive-workbench { grid-template-columns: 1fr; }
+    .archive-rail { position: static; grid-template-columns: minmax(10rem, 0.32fr) minmax(0, 1fr); }
+  }
+
+  @media (max-width: 680px) {
+    .archive-filters { align-items: center; }
+    .archive-filters > span { display: none; }
+    .archive-filters > div { width: 100%; justify-content: flex-start; }
+    .archive-year { grid-template-columns: 1fr; gap: 0.55rem; }
+    .archive-year > header { display: flex; align-items: baseline; gap: 0.5rem; padding-top: 0; }
+    .archive-year > header span { margin-top: 0; }
+    .archive-entry a { grid-template-columns: 3.2rem minmax(0, 1fr) auto; gap: 0.6rem; padding-right: 0.15rem; }
+    .archive-entry-kind { display: none; }
+    .archive-entry-meta { flex-wrap: nowrap; overflow: hidden; }
+    .archive-entry-meta > span { flex: 0 0 auto; }
+    .archive-rail { grid-template-columns: 1fr; }
+  }
+</style>

@@ -20,6 +20,7 @@ let seasonalEffectsCleanup: Cleanup | null = null;
 let sectionVisibilityCleanup: Cleanup | null = null;
 let musicDockCleanup: Cleanup | null = null;
 let galleryLightboxCleanup: Cleanup | null = null;
+let archiveExplorerCleanup: Cleanup | null = null;
 let pageRuntimeGeneration = 0;
 
 function initFloatingHeader(): Cleanup | null {
@@ -107,6 +108,9 @@ function cleanupPageRuntime() {
   galleryLightboxCleanup?.();
   galleryLightboxCleanup = null;
 
+  archiveExplorerCleanup?.();
+  archiveExplorerCleanup = null;
+
   typewriterEffect?.destroy();
   typewriterEffect = null;
 }
@@ -154,6 +158,13 @@ function initPageRuntime() {
     void import('@features/gallery/client/gallery-lightbox').then(({ initGalleryLightbox }) => {
       if (!isCurrent()) return;
       galleryLightboxCleanup = initGalleryLightbox();
+    });
+  }
+
+  if (document.querySelector('[data-archive-explorer]')) {
+    void import('@features/archives/client/archive-explorer').then(({ initArchiveExplorer }) => {
+      if (!isCurrent()) return;
+      archiveExplorerCleanup = initArchiveExplorer();
     });
   }
 

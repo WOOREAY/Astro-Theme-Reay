@@ -1,31 +1,26 @@
 ---
 import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
-import ArchiveChronicle from '@features/archives/components/ArchiveChronicle.astro';
-import SeriesCard from '@features/archives/components/SeriesCard.astro';
-import TagCloud from '@features/archives/components/TagCloud.astro';
-import { getAllSeries, getAllTags, getArchiveStats, getPostsByYear, getSortedPosts } from '@features/blog/lib/blog';
+import ArchiveExplorer from '@features/archives/components/ArchiveExplorer.astro';
+import { getSortedPosts } from '@features/blog/lib/blog';
+import { getPlogAlbums } from '@features/gallery/lib/plog';
 import { useI18n } from '@features/i18n/lib/i18n';
-import EditorialSectionHeader from '@shared/components/EditorialSectionHeader.astro';
 
 const { t } = useI18n();
-const [stats, allTags, allSeries, sortedPosts, postsByYear] = await Promise.all([
-  getArchiveStats(),
-  getAllTags(),
-  getAllSeries(),
-  getSortedPosts(),
-  getPostsByYear(),
-]);
-const recentPosts = sortedPosts
-  .filter((post, index, list) => list.findIndex((candidate) => candidate.data.title === post.data.title) === index)
-  .slice(0, 6);
-const topTags = allTags.slice(0, 18);
-const topSeries = allSeries.slice(0, 4);
-const peakYearCount = Math.max(...postsByYear.map(([, posts]) => posts.length), 1);
+const [posts, plogAlbums] = await Promise.all([getSortedPosts(), getPlogAlbums()]);
+const allDates = [
+  ...posts.map((post) => post.data.publishDate),
+  ...plogAlbums.map((album) => new Date(`${album.date}T00:00:00`)),
+];
+const totalYears = new Set(allDates.map((date) => date.getFullYear())).size;
+const totalTopics = new Set([
+  ...posts.flatMap((post) => post.data.tags),
+  ...plogAlbums.flatMap((album) => album.tags),
+]).size;
 const headerStats = [
-  { icon: 'i-carbon:document', labelKey: 'archives.timeline.totalPosts', label: t('archives.timeline.totalPosts'), value: stats.totalPosts },
-  { icon: 'i-carbon:calendar', labelKey: 'archives.timeline.yearsSpan', label: t('archives.timeline.yearsSpan'), value: stats.totalYears },
-  { icon: 'i-carbon:tag', labelKey: 'archives.tags.total', label: t('archives.tags.total'), value: stats.totalTags },
-  { icon: 'i-carbon:pen', labelKey: 'archives.totalWords', label: t('archives.totalWords'), value: new Intl.NumberFormat('zh-CN', { notation: 'compact' }).format(stats.totalWords) },
+  { icon: 'i-carbon:pen-fountain', labelKey: 'archives.stats.blog', label: t('archives.stats.blog'), value: posts.length },
+  { icon: 'i-carbon:image', labelKey: 'archives.stats.plog', label: t('archives.stats.plog'), value: plogAlbums.length },
+  { icon: 'i-carbon:calendar', labelKey: 'archives.stats.years', label: t('archives.stats.years'), value: totalYears },
+  { icon: 'i-carbon:tag-group', labelKey: 'archives.stats.topics', label: t('archives.stats.topics'), value: totalTopics },
 ];
 ---
 
@@ -36,174 +31,5 @@ const headerStats = [
   descriptionKey="archives.subtitle"
   stats={headerStats}
 >
-  <div class="archive-opening-grid">
-    {recentPosts.length > 0 && (
-      <section class="archive-recent">
-        <EditorialSectionHeader
-          title={t('archives.recent.title')}
-          titleKey="archives.recent.title"
-          icon="i-carbon:recently-viewed"
-          actionHref="/archives/timeline"
-          actionLabel={t('archives.timeline')}
-          actionKey="archives.timeline"
-        />
-        <ArchiveChronicle posts={recentPosts} compact />
-      </section>
-    )}
-
-    {postsByYear.length > 0 && (
-      <aside class="archive-rhythm" aria-labelledby="archive-rhythm-title">
-        <EditorialSectionHeader
-          title={t('archives.rhythm.title')}
-          titleKey="archives.rhythm.title"
-          icon="i-carbon:chart-column"
-        />
-        <p data-i18n="archives.rhythm.description">{t('archives.rhythm.description')}</p>
-        <ol>
-          {postsByYear.map(([year, posts]) => (
-            <li>
-              <a href={`/archives/timeline#archive-year-${year}`}>
-                <span>{year}</span>
-                <span class="rhythm-track"><span style={`--rhythm-width: ${(posts.length / peakYearCount) * 100}%;`}></span></span>
-                <strong>{posts.length}</strong>
-              </a>
-            </li>
-          ))}
-        </ol>
-      </aside>
-    )}
-  </div>
-
-  <div class="archive-discovery-grid">
-    {topTags.length > 0 && (
-      <section class="archive-tags">
-        <EditorialSectionHeader
-          title={t('archives.topicMap')}
-          titleKey="archives.topicMap"
-          icon="i-carbon:tag-group"
-          actionHref="/archives/tags"
-          actionLabel={t('archives.viewAllTags')}
-          actionKey="archives.viewAllTags"
-        />
-        <TagCloud tags={topTags} variant="map" />
-      </section>
-    )}
-
-    {topSeries.length > 0 && (
-      <section class="archive-series">
-        <EditorialSectionHeader
-          title={t('archives.readingPaths')}
-          titleKey="archives.readingPaths"
-          icon="i-carbon:roadmap"
-          actionHref="/archives/series"
-          actionLabel={t('archives.viewAllSeries')}
-          actionKey="archives.viewAllSeries"
-        />
-        <div class="archive-series-list">{topSeries.map((item) => <SeriesCard {...item} />)}</div>
-      </section>
-    )}
-  </div>
+  <ArchiveExplorer {posts} {plogAlbums} />
 </ArchiveLayout>
-
-<style>
-  .archive-opening-grid {
-    display: grid;
-    grid-template-columns: minmax(0, 1.38fr) minmax(16rem, 0.62fr);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
-  }
-
-  .archive-recent,
-  .archive-rhythm,
-  .archive-tags,
-  .archive-series {
-    min-width: 0;
-  }
-
-  .archive-rhythm {
-    margin-top: 1.8rem;
-    padding: 1.05rem 1.1rem;
-    border-radius: 1rem;
-    background: rgba(var(--md-sys-color-surface-container-rgb), 0.5);
-  }
-
-  .archive-rhythm :global(.editorial-section-header) {
-    margin-bottom: 0.45rem;
-  }
-
-  .archive-rhythm > p {
-    margin: 0 0 1rem;
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.7rem;
-    line-height: 1.5;
-  }
-
-  .archive-rhythm ol {
-    display: grid;
-    gap: 0.72rem;
-    margin: 0;
-    padding: 0;
-    list-style: none;
-  }
-
-  .archive-rhythm a {
-    display: grid;
-    grid-template-columns: 3.2rem minmax(0, 1fr) 1.4rem;
-    gap: 0.6rem;
-    align-items: center;
-    color: var(--md-sys-color-on-surface-variant);
-    font-family: var(--reay-font-mono);
-    font-size: 0.64rem;
-  }
-
-  .rhythm-track {
-    height: 0.34rem;
-    overflow: hidden;
-    border-radius: 999px;
-    background: rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
-  }
-
-  .rhythm-track > span {
-    display: block;
-    width: var(--rhythm-width);
-    height: 100%;
-    border-radius: inherit;
-    background: var(--md-sys-color-primary);
-  }
-
-  .archive-rhythm strong {
-    color: var(--md-sys-color-primary);
-    text-align: right;
-  }
-
-  .archive-discovery-grid {
-    display: grid;
-    grid-template-columns: minmax(18rem, 0.78fr) minmax(0, 1.22fr);
-    gap: clamp(2rem, 5vw, 4rem);
-    align-items: start;
-    margin-top: clamp(2.8rem, 7vw, 5rem);
-  }
-
-  .archive-series-list {
-    display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
-    column-gap: 1.25rem;
-  }
-
-  @media (max-width: 980px) {
-    .archive-opening-grid,
-    .archive-discovery-grid {
-      grid-template-columns: 1fr;
-    }
-
-    .archive-rhythm {
-      margin-top: 0;
-    }
-  }
-
-  @media (max-width: 680px) {
-    .archive-series-list {
-      grid-template-columns: 1fr;
-    }
-  }
-</style>

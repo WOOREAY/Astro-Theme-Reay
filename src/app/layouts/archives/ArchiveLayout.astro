@@ -13,14 +13,6 @@ interface Props {
 
 const { title, description, titleKey, descriptionKey, stats = [] } = Astro.props;
 const { t } = useI18n();
-const currentPath = Astro.url.pathname.replace(/\/$/, '') || '/';
-const items = [
-  { href: '/archives', icon: 'i-carbon:analytics', key: 'archives.nav.overview' },
-  { href: '/archives/tags', icon: 'i-carbon:tag', key: 'archives.nav.tags' },
-  { href: '/archives/series', icon: 'i-carbon:folder', key: 'archives.nav.series' },
-  { href: '/archives/timeline', icon: 'i-carbon:time', key: 'archives.nav.timeline' },
-] as const;
-const isActive = (href: string) => href === '/archives' ? currentPath === href : currentPath.startsWith(href);
 ---
 
 <EditorialPageLayout {title} {description} pageClass="archive-layout">
@@ -35,62 +27,10 @@ const isActive = (href: string) => href === '/archives' ? currentPath === href :
     {stats}
   />
 
-  <nav class="archive-nav" aria-label={t('page.title.archives')}>
-    {items.map((item) => (
-      <a href={item.href} class:list={[isActive(item.href) && 'active']} aria-current={isActive(item.href) ? 'page' : undefined}>
-        <i class={item.icon} aria-hidden="true"></i>
-        <span data-i18n={item.key}>{t(item.key)}</span>
-      </a>
-    ))}
-  </nav>
-
   <div class="archive-main"><slot /></div>
 </EditorialPageLayout>
 
 <style>
-  .archive-nav {
-    display: flex;
-    gap: 1.35rem;
-    margin: -0.75rem 0 1.75rem;
-    padding-bottom: 0.7rem;
-    overflow-x: auto;
-    border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.46);
-    scrollbar-width: thin;
-  }
-
-  .archive-nav a {
-    position: relative;
-    display: flex;
-    align-items: center;
-    gap: 0.4rem;
-    flex: 0 0 auto;
-    padding: 0.3rem 0;
-    color: var(--md-sys-color-on-surface-variant);
-    font-size: 0.74rem;
-    font-weight: 740;
-  }
-
-  .archive-nav a::after {
-    content: '';
-    position: absolute;
-    right: 0;
-    bottom: -0.74rem;
-    left: 0;
-    height: 2px;
-    background: var(--md-sys-color-primary);
-    transform: scaleX(0);
-    transform-origin: left;
-  }
-
-  .archive-nav a:hover,
-  .archive-nav a.active {
-    color: var(--md-sys-color-primary);
-  }
-
-  .archive-nav a.active::after {
-    transform: scaleX(1);
-  }
-
   .archive-main {
     min-width: 0;
   }
