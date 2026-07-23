@@ -21,7 +21,7 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 - Blog、归档、项目和 About 工具列表使用开放式行、hairline 与轻微 hover tint；Links 卡片优先显示站点截图，失败时用放大头像轻虚化背景与独立头像表达站点身份，不再受旧 `.link-card` 兼容选择器影响。
 - 每个功能区最多使用一个明显 tonal surface。搜索面板、评论 provider、GitHub 热度图和项目 shelf 属于可接受的功能表面。
 - Gallery 以影像为主，可使用圆角 cover、overlay 和有限阴影；overlay 文字必须在 light/dark 下维持足够对比。
-- Archives 是 Blog/Plog 统一检索面：顶部 MD3 tonal 筛选必须是 `全部 / Blog / Plog`，主体按年份混排紧凑条目；全部与 Blog 模式在结果前展示最多 4 个有序系列预览和完整目录入口，Plog 模式提供合集筛选，右栏不复制完整系列列表。热门主题每种内容最多 12 个，完整主题进入可搜索/排序的 dialog。筛选状态写入 URL，主题选择和清除都必须把焦点与视口带回结果；旧 Timeline/Tags/Series URL 兼容但不作为同级主导航。
+- Archives 是 Blog/Plog 统一检索面：顶部 MD3 tonal 筛选必须是 `全部 / Blog / Plog`，主体按年份混排紧凑条目；全部与 Blog 模式在结果前展示最多 4 个有序系列预览和完整目录入口，Plog 模式提供合集筛选，右栏不复制完整系列列表。热门主题每种内容最多 12 个，完整主题进入可搜索/排序且在桌面与移动视口内水平、垂直居中的 dialog。筛选状态写入 URL，主题选择和清除都必须把焦点与视口带回结果；旧 Timeline/Tags/Series URL 兼容但不作为同级主导航。
 - 完整 Tags/Series 目录使用居中的有界内容宽度；Tag map 的字号/字重差异保持克制，序号和计数消费 metadata 字体而不是 mono。
 - Plog 目录把共享 `album.id` 的 entries 组织成 collection，并把每个 entry 视作 moment；详情页渲染 entry Markdown 叙事并让正文/照片说明消费 prose 字体角色；无真实图片时必须显式使用配置 gradient fallback。
 - About 可从 `userContent.story` 展示完整叙事，但教育、经历和公开联系仍只渲染配置中的真实字段；站点统计只使用内容集合可计算的数据。
