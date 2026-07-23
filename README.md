@@ -18,7 +18,7 @@ Astro Theme Reay 面向个人博客、作品集、摄影记录和长期知识沉
 | 能力 | 实现 |
 | --- | --- |
 | 内容系统 | Astro Content Collections、Markdown/MDX、标签、系列、归档、阅读时间 |
-| 视觉系统 | Material Design 3 动态色板、五套主题预设、浅色/深色主题、UnoCSS、组件级样式 |
+| 视觉系统 | Material Design 3 动态色板、十一套主题预设、浅色/深色主题、UnoCSS、组件级样式 |
 | 首页 | 默认无障碍普通滚动，可切换为分屏滚动模式 |
 | Plog 相册 | 合集、图片元数据、响应式图片、灯箱和原图下载 |
 | 项目展示 | GitHub API、构建期缓存、README 渲染和贡献统计 |
@@ -50,7 +50,7 @@ npm run dev
 4. `src/app/config/comments.config.ts`：评论服务。
 5. `SITE`：生产站点的完整 URL，避免 RSS 和 Sitemap 使用示例域名。
 
-`theme.config.ts` 使用一个 `defineTheme({ ... })` 对象：修改 `preset` 即可切换科技、米纸、墨水屏、护眼森林或编辑刊物风格，也能在同一对象直接设置主色、图片/渐变背景、字体、圆角和动效。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
+`theme.config.ts` 使用一个 `defineTheme({ ... })` 对象：修改 `preset` 即可在科技、米纸、墨水屏、护眼森林、编辑刊物、水墨江湖、春日动画、动画夜城、浮世绘、海岸晴空和复古终端之间切换，也能在同一对象直接设置主色、图片/渐变背景、字体、圆角和动效。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
 
 ## 架构
 
@@ -96,7 +96,7 @@ draft: false
 | `src/app/config/features.config.ts` | 首页模式、搜索、Feed 和集成功能开关 |
 | `src/app/config/navigation.config.ts` | Header 与 Footer 导航 |
 | `src/app/config/theme.config.ts` | 单对象主题入口：预设、MD3 配色、字体、背景、shape 和动效 |
-| `presets/themes/` | 可复用的科技、纸张、墨水屏、护眼与刊物视觉预设 |
+| `presets/themes/` | 十一套可复用视觉预设及其 MD3、字体、shape、背景和 effects 参数 |
 | `src/app/config/media.config.ts` | 音乐播放列表 |
 | `src/app/config/comments.config.ts` | 评论 provider 与凭据 |
 | `src/app/config/projects.config.ts` | GitHub 项目 |

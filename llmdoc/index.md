@@ -66,6 +66,7 @@
 - `llmdoc/memory/archive/`：已提炼的原始反思记录，供追溯信号与证据。
 - `llmdoc/memory/doc-gaps.md`：已确认但尚未统一的实现、运维、安全和文档合同，以及各自关闭条件。
 - `llmdoc/memory/reflections/2026-07-23-theme-config-usability.md`：预设能力不应隐藏用户原有直接配置入口的可用性教训。
+- `llmdoc/memory/reflections/2026-07-23-preview-style-cache.md`：逐套重建视觉预览时同时核对场景 computed style，避免旧组件 CSS 造成误判。
 - `llmdoc/memory/reflections/`：执行相似配置或模板工作前主动读取相关条目。
 
 ## Routing Rules

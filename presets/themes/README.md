@@ -9,6 +9,12 @@
 | `eink` | 墨水屏 | 低干扰长文阅读与知识库 |
 | `forest` | 青苔护眼 | 长时间浏览、日常记录和自然主题 |
 | `editorial` | 朱砂刊物 | 独立杂志、作品集和编辑式博客 |
+| `inkwash` | 水墨江湖 | 东方随笔、游记和长篇叙事 |
+| `anime-spring` | 春日动画 | 轻快日常、插画和青春记录 |
+| `anime-night` | 动画夜城 | 夜间创作、城市摄影和霓虹视觉 |
+| `ukiyo` | 浮世绘 | 东方刊物、文化记录和版画气质作品集 |
+| `ocean` | 海岸晴空 | 旅行、摄影与清爽生活记录 |
+| `retro-terminal` | 复古终端 | 开发日志、极客主页和代码笔记 |
 
 ## 一个对象完成配置
 
@@ -31,6 +37,8 @@ export const themeConfig = defineTheme({
 ```
 
 不写其他字段时只需修改 `preset`。填写 `primary` 会从新主色重新生成完整 MD3 配色；填写高级 `source` 时则只采用显式关键色。背景、字体、shape 和 effects 都在同一对象中按层级覆盖。
+
+六套扩展主题的山岚、云层、夜城、版画波纹、海面与扫描线都由 `Background.astro` 使用 MD3 token 和原创 CSS 绘制，不请求外部背景图片；它们会跟随用户覆盖后的配色，并在移动端与 reduced-motion 环境保持静态降级。
 
 完整参数和图片背景示例见 [`docs/THEME-CONFIG.md`](../../docs/THEME-CONFIG.md)。若增加未自托管的字体，请同时在 `DocumentShell.astro` 引入字体资源。
 

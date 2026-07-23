@@ -19,6 +19,12 @@ export const themeConfig = defineTheme({
 | `eink` | 墨水屏 | 单色 MD3、近直角、无抬升阴影与电子纸颗粒 |
 | `forest` | 青苔护眼 | 鼠尾草绿、柔和圆角和低刺激纸面纹理 |
 | `editorial` | 朱砂刊物 | 朱砂红、衬线标题和独立杂志式边界 |
+| `inkwash` | 水墨江湖 | 烟青灰墨、朱砂点题、衬线正文与宣纸远山 |
+| `anime-spring` | 春日动画 | 天空蓝、樱花粉、圆体、云层与静态花瓣 |
+| `anime-night` | 动画夜城 | 靛蓝、霓虹青粉、星点与城市剪影 |
+| `ukiyo` | 浮世绘 | 靛青、赭红、米纸、日轮与版画波纹 |
+| `ocean` | 海岸晴空 | 海蓝、青绿、沙白、海平线与日光水纹 |
+| `retro-terminal` | 复古终端 | 等宽字体、近直角、荧光绿、网格与扫描线 |
 
 ## 同一对象直接修改
 
@@ -131,7 +137,9 @@ background: {
 }
 ```
 
-`decoration` 可为 `aurora | paper | eink | plain`。切换为图片且不希望保留预设纹理时，应同时设置 `decoration: 'plain'`。`type: 'none'` 会关闭全局背景层。
+`decoration` 可为 `aurora | paper | eink | plain | inkwash | anime-spring | anime-night | ukiyo | ocean | terminal`。切换为图片且不希望保留预设纹理时，应同时设置 `decoration: 'plain'`。`type: 'none'` 会关闭全局背景层。
+
+扩展场景不依赖外部图片，而是使用 MD3 RGB token 和原创 CSS 图层绘制；因此覆盖 `primary` 或 `source` 后，场景色彩会与新色板同步。所有场景默认静态，移动端会减少细节，`prefers-reduced-motion` 会关闭背景动画与过渡。
 
 ## 字体
 
