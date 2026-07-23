@@ -27,6 +27,7 @@
 :root[data-theme-preset='retro-terminal'] body::before,
 :root[data-theme-preset='anime-spring'] body::before,
 :root[data-theme-preset='anime-night'] body::before,
+:root[data-theme-preset='cosmic-abyss'] body::before,
 :root[data-theme-preset='ocean'] body::before {
   mask-image: none;
 }
@@ -606,6 +607,133 @@
 
 :root[data-theme-preset='anime-night'] [data-editorial-page-header] {
   border-image: linear-gradient(90deg, var(--md-sys-color-primary), var(--md-sys-color-secondary), transparent) 1;
+}
+
+/* Cosmic abyss ---------------------------------------------------------- */
+
+:root[data-theme-preset='cosmic-abyss'] {
+  --reay-glass-blur: 18px;
+  --reay-hover-lift: -3px;
+  --reay-hover-scale: 1.008;
+  --reay-glow-primary: rgba(var(--md-sys-color-primary-rgb), 0.46);
+  --reay-glow-secondary: rgba(var(--md-sys-color-secondary-rgb), 0.38);
+  --reay-glow-tertiary: rgba(var(--md-sys-color-tertiary-rgb), 0.42);
+  --reay-preset-rule: rgba(var(--md-sys-color-primary-rgb), 0.3);
+  --reay-surface-bg:
+    radial-gradient(circle at 86% 8%, rgba(var(--md-sys-color-tertiary-rgb), 0.12), transparent 32%),
+    linear-gradient(145deg, rgba(var(--md-sys-color-surface-container-low-rgb), 0.76), rgba(var(--md-sys-color-surface-rgb), 0.5));
+  --reay-surface-bg-hover:
+    radial-gradient(circle at 82% 4%, rgba(var(--md-sys-color-tertiary-rgb), 0.19), transparent 34%),
+    linear-gradient(145deg, rgba(var(--md-sys-color-surface-container-rgb), 0.84), rgba(var(--md-sys-color-surface-rgb), 0.58));
+  --reay-surface-border: rgba(var(--md-sys-color-primary-rgb), 0.28);
+  --reay-surface-border-hover: rgba(var(--md-sys-color-tertiary-rgb), 0.68);
+  --reay-surface-shadow:
+    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.08),
+    0 24px 62px -42px rgba(var(--md-sys-color-primary-rgb), 0.56);
+  --reay-surface-shadow-hover:
+    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.12),
+    0 0 32px rgba(var(--md-sys-color-tertiary-rgb), 0.13),
+    0 30px 76px -44px rgba(var(--md-sys-color-secondary-rgb), 0.62);
+  --reay-button-bg: rgba(var(--md-sys-color-surface-container-rgb), 0.62);
+  --reay-button-bg-hover: rgba(var(--md-sys-color-primary-container-rgb), 0.5);
+  --reay-button-border: rgba(var(--md-sys-color-primary-rgb), 0.36);
+  --reay-button-shadow: 0 0 0 1px rgba(var(--md-sys-color-primary-rgb), 0.08);
+  --reay-button-shadow-hover: 0 0 24px rgba(var(--md-sys-color-tertiary-rgb), 0.22);
+  --reay-chip-bg: rgba(var(--md-sys-color-surface-container-low-rgb), 0.58);
+  --reay-chip-border: rgba(var(--md-sys-color-tertiary-rgb), 0.3);
+  --reay-home-rule: rgba(var(--md-sys-color-tertiary-rgb), 0.46);
+  --reay-home-rule-soft: rgba(var(--md-sys-color-primary-rgb), 0.2);
+}
+
+:root[data-theme-preset='cosmic-abyss'] body::before {
+  background:
+    radial-gradient(circle at 17% 23%, rgba(var(--md-sys-color-on-surface-rgb), 0.48) 0 0.7px, transparent 1.4px),
+    radial-gradient(circle at 73% 31%, rgba(var(--md-sys-color-tertiary-rgb), 0.42) 0 0.8px, transparent 1.6px),
+    radial-gradient(circle at 46% 78%, rgba(var(--md-sys-color-secondary-rgb), 0.38) 0 0.7px, transparent 1.5px);
+  background-position: 0 0, 43px 37px, 89px 71px;
+  background-size: 139px 151px, 197px 181px, 251px 233px;
+  opacity: 0.68;
+}
+
+:root[data-theme-preset='cosmic-abyss'] :where(.site-header-inner, .home-profile-status, .home-project-shelf, .home-site-pulse) {
+  border-color: rgba(var(--md-sys-color-primary-rgb), 0.28);
+  background:
+    radial-gradient(circle at 88% 0%, rgba(var(--md-sys-color-tertiary-rgb), 0.12), transparent 32%),
+    linear-gradient(145deg, rgba(var(--md-sys-color-surface-container-low-rgb), 0.72), rgba(var(--md-sys-color-surface-rgb), 0.46));
+  box-shadow:
+    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.1),
+    0 0 0 1px rgba(var(--md-sys-color-primary-rgb), 0.04),
+    0 24px 64px -48px rgba(var(--md-sys-color-secondary-rgb), 0.66);
+}
+
+:root[data-theme-preset='cosmic-abyss'] :where(.hero-section::before, .hero-section::after) {
+  background:
+    radial-gradient(circle at 72% 38%, rgba(var(--md-sys-color-primary-rgb), 0.16), transparent 26%),
+    radial-gradient(ellipse at 20% 70%, rgba(var(--md-sys-color-tertiary-rgb), 0.1), transparent 34%);
+  opacity: 0.86;
+}
+
+:root[data-theme-preset='cosmic-abyss'] .hero-light {
+  opacity: 0.3;
+  filter: blur(38px);
+  mix-blend-mode: screen;
+}
+
+:root[data-theme-preset='cosmic-abyss'] .name-gradient {
+  background: linear-gradient(96deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary) 46%, var(--md-sys-color-secondary));
+  background-clip: text;
+  -webkit-background-clip: text;
+  -webkit-text-fill-color: transparent;
+  filter: drop-shadow(0 0 18px rgba(var(--md-sys-color-primary-rgb), 0.22));
+}
+
+:root[data-theme-preset='cosmic-abyss'] :where(.status-pill, .hero-secondary-btn, .social-button, .avatar-caption) {
+  border-color: rgba(var(--md-sys-color-tertiary-rgb), 0.36);
+  background:
+    linear-gradient(145deg, rgba(var(--md-sys-color-surface-container-rgb), 0.68), rgba(var(--md-sys-color-surface-rgb), 0.48));
+  box-shadow:
+    inset 0 1px 0 rgba(var(--md-sys-color-surface-bright-rgb), 0.1),
+    0 0 20px rgba(var(--md-sys-color-primary-rgb), 0.08);
+}
+
+:root[data-theme-preset='cosmic-abyss'] .hero-primary-btn {
+  border-color: rgba(var(--md-sys-color-tertiary-rgb), 0.62);
+  background:
+    radial-gradient(circle at 84% 12%, rgba(var(--md-sys-color-tertiary-rgb), 0.42), transparent 36%),
+    var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
+  box-shadow:
+    0 0 0 1px rgba(var(--md-sys-color-tertiary-rgb), 0.2),
+    0 0 28px rgba(var(--md-sys-color-primary-rgb), 0.22);
+}
+
+:root[data-theme-preset='cosmic-abyss'] :where(.avatar-holo-frame, .avatar-image-wrap) {
+  border: 1px solid transparent;
+  background:
+    linear-gradient(145deg, rgba(var(--md-sys-color-surface-container-rgb), 0.58), rgba(var(--md-sys-color-surface-rgb), 0.3)) padding-box,
+    conic-gradient(from 210deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary), var(--md-sys-color-secondary), var(--md-sys-color-primary)) border-box;
+  box-shadow:
+    inset 0 0 30px rgba(var(--md-sys-color-primary-rgb), 0.08),
+    0 0 34px rgba(var(--md-sys-color-tertiary-rgb), 0.16),
+    0 30px 82px -48px rgba(var(--md-sys-color-secondary-rgb), 0.74);
+}
+
+:root[data-theme-preset='cosmic-abyss'] .avatar-panel-lines {
+  background:
+    repeating-radial-gradient(ellipse at center, transparent 0 18px, rgba(var(--md-sys-color-tertiary-rgb), 0.16) 19px 20px, transparent 21px 34px),
+    radial-gradient(circle at center, rgba(var(--md-sys-color-primary-rgb), 0.12), transparent 68%);
+  mask-image: radial-gradient(circle, black, transparent 76%);
+  opacity: 0.72;
+  transform: rotate(-12deg);
+}
+
+:root[data-theme-preset='cosmic-abyss'] :where([data-editorial-page-header], .editorial-section-header) {
+  border-image: linear-gradient(90deg, var(--md-sys-color-primary), var(--md-sys-color-tertiary), rgba(var(--md-sys-color-secondary-rgb), 0.28), transparent) 1;
+}
+
+:root[data-theme-preset='cosmic-abyss'] ::selection {
+  background: var(--md-sys-color-primary);
+  color: var(--md-sys-color-on-primary);
 }
 
 /* Ukiyo-e ---------------------------------------------------------------- */

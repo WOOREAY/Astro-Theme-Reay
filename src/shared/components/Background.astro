@@ -213,6 +213,9 @@ if (type === 'gradient') {
   .decoration-anime-night .aurora-field,
   .decoration-anime-night .motion-grid,
   .decoration-anime-night .light-sweep,
+  .decoration-cosmic-abyss .aurora-field,
+  .decoration-cosmic-abyss .motion-grid,
+  .decoration-cosmic-abyss .light-sweep,
   .decoration-ukiyo .aurora-field,
   .decoration-ukiyo .motion-grid,
   .decoration-ukiyo .light-sweep,
@@ -260,6 +263,7 @@ if (type === 'gradient') {
   .decoration-monochrome-ink .scene-layer,
   .decoration-anime-spring .scene-layer,
   .decoration-anime-night .scene-layer,
+  .decoration-cosmic-abyss .scene-layer,
   .decoration-ukiyo .scene-layer,
   .decoration-ocean .scene-layer,
   .decoration-terminal .scene-layer {
@@ -553,6 +557,124 @@ if (type === 'gradient') {
     opacity: 0.72;
   }
 
+  /* 星渊银河：静态星野、银河尘带与黑洞吸积盘。 */
+  .gradient-bg.decoration-cosmic-abyss {
+    --cosmic-core-x: 74%;
+    --cosmic-core-y: 36%;
+    opacity: 0.92;
+    background-size: 100% 100%;
+    background:
+      radial-gradient(circle at var(--cosmic-core-x) var(--cosmic-core-y), rgba(var(--md-sys-color-primary-rgb), 0.18), transparent 18%),
+      radial-gradient(ellipse at 18% 72%, rgba(var(--md-sys-color-tertiary-rgb), 0.13), transparent 34%),
+      linear-gradient(155deg, rgb(var(--md-sys-color-surface-dim-rgb)), rgb(var(--md-sys-color-surface-rgb)) 48%, rgb(var(--md-sys-color-surface-container-lowest-rgb))) !important;
+  }
+
+  .decoration-cosmic-abyss .scene-back {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 8% 14%, rgba(var(--md-sys-color-on-surface-rgb), 0.82) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 18% 38%, rgba(var(--md-sys-color-tertiary-rgb), 0.72) 0 1.2px, transparent 2px),
+      radial-gradient(circle at 31% 9%, rgba(var(--md-sys-color-on-surface-rgb), 0.64) 0 0.8px, transparent 1.7px),
+      radial-gradient(circle at 43% 54%, rgba(var(--md-sys-color-secondary-rgb), 0.62) 0 1.2px, transparent 2.2px),
+      radial-gradient(circle at 56% 18%, rgba(var(--md-sys-color-on-surface-rgb), 0.7) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 67% 67%, rgba(var(--md-sys-color-tertiary-rgb), 0.64) 0 1px, transparent 2px),
+      radial-gradient(circle at 82% 12%, rgba(var(--md-sys-color-on-surface-rgb), 0.76) 0 1.2px, transparent 2.1px),
+      radial-gradient(circle at 92% 58%, rgba(var(--md-sys-color-secondary-rgb), 0.66) 0 1px, transparent 2px),
+      radial-gradient(circle at 12% 82%, rgba(var(--md-sys-color-on-surface-rgb), 0.68) 0 1px, transparent 1.8px),
+      radial-gradient(circle at 48% 88%, rgba(var(--md-sys-color-primary-rgb), 0.72) 0 1.2px, transparent 2px);
+    opacity: 0.78;
+  }
+
+  .decoration-cosmic-abyss .scene-back::before {
+    inset: 0;
+    background:
+      radial-gradient(circle, rgba(var(--md-sys-color-on-surface-rgb), 0.46) 0 0.65px, transparent 1.2px),
+      radial-gradient(circle, rgba(var(--md-sys-color-primary-rgb), 0.42) 0 0.8px, transparent 1.4px),
+      radial-gradient(circle, rgba(var(--md-sys-color-tertiary-rgb), 0.36) 0 0.7px, transparent 1.3px);
+    background-position: 0 0, 47px 31px, 91px 73px;
+    background-size: 137px 149px, 211px 197px, 277px 251px;
+    opacity: 0.66;
+  }
+
+  .decoration-cosmic-abyss .scene-back::after {
+    inset: -18% -12%;
+    background:
+      radial-gradient(ellipse at 13% 72%, rgba(var(--md-sys-color-tertiary-rgb), 0.18), transparent 29%),
+      radial-gradient(ellipse at 40% 54%, rgba(var(--md-sys-color-secondary-rgb), 0.16), transparent 32%),
+      radial-gradient(ellipse at 74% 24%, rgba(var(--md-sys-color-primary-rgb), 0.14), transparent 27%);
+    filter: blur(24px);
+    opacity: 0.72;
+  }
+
+  .decoration-cosmic-abyss .scene-mid {
+    z-index: 1;
+    background:
+      radial-gradient(circle at var(--cosmic-core-x) var(--cosmic-core-y), rgb(var(--md-sys-color-scrim-rgb)) 0 5.4%, rgba(var(--md-sys-color-scrim-rgb), 0.98) 5.6% 7.1%, transparent 7.5%),
+      radial-gradient(circle at var(--cosmic-core-x) var(--cosmic-core-y), rgba(var(--md-sys-color-primary-rgb), 0.2) 0 9%, rgba(var(--md-sys-color-secondary-rgb), 0.1) 11%, transparent 19%);
+    opacity: 0.96;
+  }
+
+  .decoration-cosmic-abyss .scene-mid::before {
+    left: var(--cosmic-core-x);
+    top: var(--cosmic-core-y);
+    width: clamp(22rem, 42vw, 39rem);
+    height: clamp(8.5rem, 16vw, 14rem);
+    border-radius: 50%;
+    background:
+      radial-gradient(
+        ellipse at center,
+        transparent 0 23%,
+        rgba(var(--md-sys-color-surface-bright-rgb), 0.18) 24%,
+        rgba(var(--md-sys-color-tertiary-rgb), 0.9) 29%,
+        rgba(var(--md-sys-color-primary-rgb), 0.76) 36%,
+        rgba(var(--md-sys-color-secondary-rgb), 0.5) 44%,
+        transparent 63%
+      );
+    filter: drop-shadow(0 0 18px rgba(var(--md-sys-color-primary-rgb), 0.28));
+    opacity: 0.9;
+    transform: translate(-50%, -50%) rotate(-13deg);
+  }
+
+  .decoration-cosmic-abyss .scene-mid::after {
+    left: var(--cosmic-core-x);
+    top: var(--cosmic-core-y);
+    width: clamp(7rem, 13vw, 11rem);
+    aspect-ratio: 1;
+    border: 1px solid rgba(var(--md-sys-color-tertiary-rgb), 0.42);
+    border-radius: 50%;
+    box-shadow:
+      0 0 14px rgba(var(--md-sys-color-tertiary-rgb), 0.28),
+      0 0 40px rgba(var(--md-sys-color-primary-rgb), 0.2);
+    opacity: 0.72;
+    transform: translate(-50%, -50%) scaleX(1.08);
+  }
+
+  .decoration-cosmic-abyss .scene-front {
+    z-index: 2;
+    background:
+      linear-gradient(124deg, transparent 10%, rgba(var(--md-sys-color-tertiary-rgb), 0.04) 25%, rgba(var(--md-sys-color-secondary-rgb), 0.14) 39%, rgba(var(--md-sys-color-primary-rgb), 0.09) 50%, transparent 66%),
+      radial-gradient(ellipse at 12% 86%, rgba(var(--md-sys-color-tertiary-rgb), 0.16), transparent 32%),
+      radial-gradient(ellipse at 92% 9%, rgba(var(--md-sys-color-secondary-rgb), 0.1), transparent 24%);
+    opacity: 0.74;
+  }
+
+  .decoration-cosmic-abyss .scene-front::before {
+    left: -8%;
+    top: 66%;
+    width: 48%;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, rgba(var(--md-sys-color-tertiary-rgb), 0.54), rgba(var(--md-sys-color-on-surface-rgb), 0.72), transparent);
+    box-shadow: 0 0 12px rgba(var(--md-sys-color-tertiary-rgb), 0.34);
+    opacity: 0.56;
+    transform: rotate(-17deg);
+  }
+
+  .decoration-cosmic-abyss .scene-front::after {
+    inset: 0;
+    background: radial-gradient(ellipse at center, transparent 42%, rgba(var(--md-sys-color-scrim-rgb), 0.18) 100%);
+    opacity: 0.7;
+  }
+
   /* 浮世绘：日轮、版画波纹与和纸颗粒。 */
   .gradient-bg.decoration-ukiyo {
     opacity: 0.72;
@@ -725,6 +847,23 @@ if (type === 'gradient') {
     opacity: 0.9;
   }
 
+  :global([data-theme='dark']) .gradient-bg.decoration-cosmic-abyss {
+    opacity: 1;
+    background:
+      radial-gradient(circle at var(--cosmic-core-x) var(--cosmic-core-y), rgba(var(--md-sys-color-primary-rgb), 0.22), transparent 20%),
+      radial-gradient(ellipse at 18% 72%, rgba(var(--md-sys-color-tertiary-rgb), 0.15), transparent 35%),
+      linear-gradient(155deg, rgb(var(--md-sys-color-surface-rgb)), rgba(var(--md-sys-color-scrim-rgb), 0.96) 54%, rgb(var(--md-sys-color-surface-container-lowest-rgb))) !important;
+  }
+
+  :global([data-theme='dark']) .decoration-cosmic-abyss .scene-back {
+    opacity: 0.94;
+  }
+
+  :global([data-theme='dark']) .decoration-cosmic-abyss .scene-mid::before,
+  :global([data-theme='dark']) .decoration-cosmic-abyss .scene-front {
+    mix-blend-mode: screen;
+  }
+
   :global([data-theme='dark']) .decoration-ukiyo .scene-back {
     opacity: 0.62;
   }
@@ -885,6 +1024,25 @@ if (type === 'gradient') {
 
     .decoration-anime-night .scene-mid {
       inset-inline: -18%;
+    }
+
+    .gradient-bg.decoration-cosmic-abyss {
+      --cosmic-core-x: 84%;
+      --cosmic-core-y: 29%;
+    }
+
+    .decoration-cosmic-abyss .scene-back::after {
+      inset-inline: -32%;
+      opacity: 0.5;
+    }
+
+    .decoration-cosmic-abyss .scene-mid::before {
+      width: 25rem;
+      height: 9.5rem;
+    }
+
+    .decoration-cosmic-abyss .scene-front::before {
+      width: 70%;
     }
 
     .decoration-ukiyo .scene-back {
