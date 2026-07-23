@@ -283,6 +283,58 @@ test('public index pages share the compact editorial page contract', async ({ pa
   }
 });
 
+test('guestbook keeps the conversation compact and visitor-facing', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/guestbook');
+
+  const flow = page.locator('[data-guestbook-flow]');
+  const commentSection = page.locator('[data-comment-section]');
+  const unavailable = page.locator('[data-comment-unavailable]');
+
+  await expect(flow).toBeVisible();
+  await expect(page.locator('.guestbook-guidelines li')).toHaveCount(3);
+  await expect(commentSection).toHaveAttribute('data-comment-mode', 'guestbook');
+  await expect(commentSection).toHaveAttribute('data-ready', 'false');
+  await expect(unavailable).toContainText('留言簿正在准备中');
+  await expect(page.locator('.comment-fallback-links [data-contact-kind="social"]')).not.toHaveCount(0);
+  await expect(page.locator('.comment-panel, .comment-meta, [data-comment-config]')).toHaveCount(0);
+  await expect(page.locator('body')).not.toContainText(/Provider|Thread|comments\.config\.ts/);
+
+  const desktopLayout = await flow.evaluate((element) => {
+    const root = document.documentElement;
+    const rect = element.getBoundingClientRect();
+    const unavailableRect = element.querySelector<HTMLElement>('[data-comment-unavailable]')!.getBoundingClientRect();
+    return {
+      centerDelta: Math.abs(rect.left + rect.right - root.clientWidth),
+      overflow: root.scrollWidth - root.clientWidth,
+      statusTop: unavailableRect.top,
+    };
+  });
+  expect(desktopLayout.centerDelta).toBeLessThanOrEqual(2);
+  expect(desktopLayout.overflow).toBeLessThanOrEqual(0);
+  expect(desktopLayout.statusTop).toBeLessThan(900);
+
+  await page.getByRole('button', { name: '切换语言' }).click();
+  await expect(unavailable).toContainText('The guestbook is being prepared');
+  await expect(page.locator('.guestbook-guidelines')).toHaveAttribute('aria-label', 'Before leaving a note');
+  await expect(page.locator('.comment-fallback-links')).toHaveAttribute('aria-label', 'Elsewhere');
+
+  await page.setViewportSize({ width: 390, height: 844 });
+  const mobileLayout = await flow.evaluate((element) => {
+    const root = document.documentElement;
+    const rect = element.getBoundingClientRect();
+    const unavailableRect = element.querySelector<HTMLElement>('[data-comment-unavailable]')!.getBoundingClientRect();
+    return {
+      withinViewport: rect.left >= 0 && rect.right <= root.clientWidth,
+      overflow: root.scrollWidth - root.clientWidth,
+      statusTop: unavailableRect.top,
+    };
+  });
+  expect(mobileLayout.withinViewport).toBe(true);
+  expect(mobileLayout.overflow).toBeLessThanOrEqual(0);
+  expect(mobileLayout.statusTop).toBeLessThan(844);
+});
+
 test('editorial details and archives do not regress into card walls', async ({ page }) => {
   await page.goto('/archives');
   await expect(page.locator('[data-archive-explorer]')).toHaveCount(1);
@@ -534,7 +586,7 @@ test('all representative route types remain overflow-free on mobile', async ({ p
   }
 });
 
-for (const path of ['/', '/archives', '/search', '/404']) {
+for (const path of ['/', '/archives', '/guestbook', '/search', '/404']) {
   test(`has no automated WCAG A/AA violations on ${path}`, async ({ page }) => {
     await page.goto(path);
     const results = await new AxeBuilder({ page })

@@ -3,7 +3,11 @@
  * Lazy comment system wrapper.
  * Supports static-site friendly providers used by common personal blog themes.
  */
-import { getCommentsConfig, getFeaturesConfig } from '@app/config/site.config';
+import {
+  getCommentsConfig,
+  getFeaturesConfig,
+  type UserContactLink,
+} from '@app/config/site.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 import type { CommentProvider } from '@app/config/comments.config';
 
@@ -13,6 +17,7 @@ interface Props {
   description?: string;
   mode?: 'article' | 'guestbook';
   enabled?: boolean;
+  fallbackLinks?: UserContactLink[];
 }
 
 const { t } = useI18n();
@@ -23,6 +28,7 @@ const {
   description,
   mode = 'article',
   enabled = true,
+  fallbackLinks = [],
 } = Astro.props;
 
 const provider = config.provider as CommentProvider;
@@ -52,11 +58,21 @@ const isEnabled = Boolean(
   getFeaturesConfig().integrations.comments && config.enabled && modeEnabled && enabled,
 );
 const isConfigured = isEnabled && hasProviderConfig();
-const sectionTitle = mode === 'guestbook' ? t('guestbook.commentsTitle') : t('comments.title');
-const sectionDescription = description ?? (mode === 'guestbook' ? t('guestbook.commentsDesc') : t('comments.description'));
-const loadLabel = mode === 'guestbook' ? t('guestbook.load') : t('comments.load');
+const isGuestbook = mode === 'guestbook';
+const sectionTitle = isGuestbook ? t('guestbook.commentsTitle') : t('comments.title');
+const sectionDescription = description ?? (isGuestbook ? t('guestbook.commentsDesc') : t('comments.description'));
+const sectionEyebrow = isGuestbook ? t('guestbook.commentsEyebrow') : providerLabels[provider];
+const sectionEyebrowKey = isGuestbook ? 'guestbook.commentsEyebrow' : undefined;
+const loadLabel = isGuestbook ? t('guestbook.load') : t('comments.load');
+const loadLabelKey = isGuestbook ? 'guestbook.load' : 'comments.load';
 const loadHint = config.autoLoad ? t('comments.lazyHint') : t('comments.manualHint');
+const loadHintKey = config.autoLoad ? 'comments.lazyHint' : 'comments.manualHint';
 const threadKey = pageKey.replace(/^\/+|\/+$/g, '') || 'home';
+const hostId = `comment-host-${threadKey.replace(/[^a-zA-Z0-9_-]/g, '-')}`;
+const unavailableTitle = isGuestbook ? t('guestbook.unavailableTitle') : t('comments.unavailableTitle');
+const unavailableDescription = isGuestbook ? t('guestbook.unavailableDesc') : t('comments.unavailableDesc');
+const unavailableTitleKey = isGuestbook ? 'guestbook.unavailableTitle' : 'comments.unavailableTitle';
+const unavailableDescriptionKey = isGuestbook ? 'guestbook.unavailableDesc' : 'comments.unavailableDesc';
 
 const clientConfig = {
   provider,
@@ -65,6 +81,12 @@ const clientConfig = {
   pageTitle,
   autoLoad: config.autoLoad,
   lazy: config.lazy,
+  ui: {
+    load: { key: loadLabelKey, fallback: loadLabel },
+    retry: { key: 'comments.retry', fallback: t('comments.retry') },
+    loading: { key: 'comments.loading', fallback: t('comments.loading') },
+    error: { key: 'comments.error', fallback: t('comments.error') },
+  },
   giscus: config.giscus,
   utterances: config.utterances,
   waline: config.waline,
@@ -79,62 +101,67 @@ const clientConfigJson = JSON.stringify(clientConfig).replace(/</g, '\\u003c');
   class:list={['comment-section', mode === 'guestbook' && 'comment-section--guestbook']}
   data-comment-section
   data-ready={String(isConfigured)}
+  data-comment-mode={mode}
 >
-  <span class="comment-grid" aria-hidden="true"></span>
-  <span class="comment-corner comment-corner--tl" aria-hidden="true"></span>
-  <span class="comment-corner comment-corner--br" aria-hidden="true"></span>
   <div class="comment-section__header">
     <div class="comment-section__copy">
       <p class="comment-section__eyebrow">
-        <span class="comment-signal">
-          <i class="i-carbon:chat"></i>
-        </span>
-        <span>{providerLabels[provider]}</span>
+        <i class="i-carbon:chat" aria-hidden="true"></i>
+        <span data-i18n={sectionEyebrowKey}>{sectionEyebrow}</span>
       </p>
-      <h2>{sectionTitle}</h2>
-      <p>{sectionDescription}</p>
-    </div>
-    <div class="comment-panel">
-      <span class:list={['comment-status', isConfigured ? 'is-ready' : 'is-muted']}>
-        <i class={isConfigured ? 'i-carbon:checkmark-outline' : 'i-carbon:warning'}></i>
-        {isConfigured ? t('comments.ready') : t('comments.unconfigured')}
-      </span>
-      <dl class="comment-meta">
-        <div>
-          <dt>{t('comments.provider')}</dt>
-          <dd>{providerLabels[provider]}</dd>
-        </div>
-        <div>
-          <dt>{t('comments.thread')}</dt>
-          <dd title={pageKey}>{threadKey}</dd>
-        </div>
-      </dl>
+      <h2 data-i18n={isGuestbook ? 'guestbook.commentsTitle' : 'comments.title'}>{sectionTitle}</h2>
+      <p data-i18n={isGuestbook ? 'guestbook.commentsDesc' : 'comments.description'}>{sectionDescription}</p>
     </div>
   </div>
 
   {isConfigured ? (
     <>
       <div class="comment-action-row">
-        <button class="comment-load-button" type="button" data-comment-load>
+        <button class="comment-load-button" type="button" data-comment-load aria-controls={hostId}>
           <i class="i-carbon:chat-launch"></i>
-          <span>{loadLabel}</span>
+          <span data-comment-load-label data-i18n={loadLabelKey}>{loadLabel}</span>
         </button>
         <span class="comment-lazy-hint">
-          <i class="i-carbon:timer"></i>
-          {loadHint}
+          <i class="i-carbon:connect" aria-hidden="true"></i>
+          <span data-i18n="comments.poweredBy">{t('comments.poweredBy')}</span>
+          <strong>{providerLabels[provider]}</strong>
+          <span aria-hidden="true">·</span>
+          <span data-i18n={loadHintKey}>{loadHint}</span>
         </span>
       </div>
       <div class="comment-host-shell">
-        <div class="comment-host" data-comment-host aria-live="polite"></div>
+        <p class="comment-feedback" data-comment-feedback aria-live="polite"></p>
+        <div id={hostId} class="comment-host" data-comment-host tabindex="-1"></div>
       </div>
       <script is:inline type="application/json" data-comment-config set:html={clientConfigJson}></script>
     </>
   ) : (
-    <div class="comment-placeholder">
-      <i class="i-carbon:settings-adjust"></i>
-      <div>
-        <strong>{t('comments.setupTitle')}</strong>
-        <p>{t('comments.setupDesc')}</p>
+    <div class="comment-placeholder" data-comment-unavailable>
+      <span class="comment-placeholder__icon" aria-hidden="true"><i class="i-carbon:time"></i></span>
+      <div class="comment-placeholder__copy">
+        <strong data-i18n={unavailableTitleKey}>{unavailableTitle}</strong>
+        <p data-i18n={unavailableDescriptionKey}>{unavailableDescription}</p>
+        {isGuestbook && fallbackLinks.length > 0 && (
+          <nav
+            class="comment-fallback-links"
+            aria-label={t('guestbook.otherWays')}
+            data-i18n="guestbook.otherWays"
+            data-i18n-attr="aria-label"
+          >
+            <span data-i18n="guestbook.otherWays">{t('guestbook.otherWays')}</span>
+            {fallbackLinks.map((link) => (
+              <a
+                href={link.href}
+                data-contact-kind={link.kind}
+                target={link.external ? '_blank' : undefined}
+                rel={link.external ? 'noopener noreferrer' : undefined}
+              >
+                <i class={link.icon} aria-hidden="true"></i>
+                {link.label}
+              </a>
+            ))}
+          </nav>
+        )}
       </div>
     </div>
   )}

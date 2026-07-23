@@ -1,20 +1,19 @@
 ---
 import EditorialPageLayout from '@app/layouts/base/EditorialPageLayout.astro';
-import { getCommentsConfig } from '@app/config/site.config';
+import { getUserContactLinks } from '@app/config/site.config';
 import Comments from '@features/comments/components/Comments.astro';
 import { useI18n } from '@features/i18n/lib/i18n';
 import EditorialPageHeader from '@shared/components/EditorialPageHeader.astro';
 
 const { t } = useI18n();
-const commentsConfig = getCommentsConfig();
-const notes = [
-  { icon: 'i-carbon:chat', title: t('guestbook.card.comments'), titleKey: 'guestbook.card.comments', description: t('guestbook.card.commentsDesc'), descriptionKey: 'guestbook.card.commentsDesc' },
-  { icon: 'i-carbon:user-follow', title: t('guestbook.card.identity'), titleKey: 'guestbook.card.identity', description: t('guestbook.card.identityDesc'), descriptionKey: 'guestbook.card.identityDesc' },
-  { icon: 'i-carbon:email', title: t('guestbook.card.contact'), titleKey: 'guestbook.card.contact', description: t('guestbook.card.contactDesc'), descriptionKey: 'guestbook.card.contactDesc' },
+const guidelines = [
+  { icon: 'i-carbon:chat', label: t('guestbook.guide.open'), labelKey: 'guestbook.guide.open' },
+  { icon: 'i-carbon:favorite', label: t('guestbook.guide.kind'), labelKey: 'guestbook.guide.kind' },
+  { icon: 'i-carbon:locked', label: t('guestbook.guide.private'), labelKey: 'guestbook.guide.private' },
 ];
-const headerStats = [
-  { icon: 'i-carbon:connect', labelKey: 'comments.provider', label: t('comments.provider'), value: commentsConfig.provider },
-];
+const fallbackLinks = getUserContactLinks()
+  .filter((link) => link.kind !== 'website')
+  .slice(0, 3);
 ---
 
 <EditorialPageLayout title={t('page.title.guestbook')} description={t('guestbook.subtitle')} pageClass="guestbook-page">
@@ -26,52 +25,78 @@ const headerStats = [
     eyebrow={t('guestbook.eyebrow')}
     eyebrowKey="guestbook.eyebrow"
     icon="i-carbon:send-alt"
-    stats={headerStats}
   />
 
-  <aside class="guestbook-notes" aria-label={t('guestbook.eyebrow')}>
-    {notes.map((note) => (
-      <div>
-        <i class={note.icon} aria-hidden="true"></i>
-        <span><strong data-i18n={note.titleKey}>{note.title}</strong><small data-i18n={note.descriptionKey}>{note.description}</small></span>
-      </div>
-    ))}
-  </aside>
+  <div class="guestbook-flow" data-guestbook-flow>
+    <aside
+      class="guestbook-guidelines"
+      aria-label={t('guestbook.guide.label')}
+      data-i18n="guestbook.guide.label"
+      data-i18n-attr="aria-label"
+    >
+      <ul>
+        {guidelines.map((item) => (
+          <li>
+            <i class={item.icon} aria-hidden="true"></i>
+            <span data-i18n={item.labelKey}>{item.label}</span>
+          </li>
+        ))}
+      </ul>
+    </aside>
 
-  <Comments
-    mode="guestbook"
-    pageKey="/guestbook"
-    pageTitle={t('guestbook.title')}
-    description={t('guestbook.commentsDesc')}
-  />
+    <Comments
+      mode="guestbook"
+      pageKey="/guestbook"
+      pageTitle={t('guestbook.title')}
+      description={t('guestbook.commentsDesc')}
+      fallbackLinks={fallbackLinks}
+    />
+  </div>
 </EditorialPageLayout>
 
 <style>
-  .guestbook-notes {
-    display: grid;
-    grid-template-columns: repeat(3, minmax(0, 1fr));
-    margin-bottom: 2rem;
+  .guestbook-flow {
+    width: min(100%, 52rem);
+    margin-inline: auto;
+  }
+
+  .guestbook-guidelines {
+    margin-bottom: 1.15rem;
+    padding-block: 0.72rem;
     border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.48);
     border-bottom: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
   }
 
-  .guestbook-notes > div {
+  .guestbook-guidelines ul {
     display: grid;
-    grid-template-columns: 1.4rem minmax(0, 1fr);
-    gap: 0.65rem;
-    padding: 0.9rem 1rem;
-    border-left: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
+    grid-template-columns: repeat(3, minmax(0, 1fr));
+    gap: 0;
+    margin: 0;
+    padding: 0;
+    list-style: none;
   }
 
-  .guestbook-notes > div:first-child { padding-left: 0; border-left: 0; }
-  .guestbook-notes i { color: var(--md-sys-color-primary); font-size: 0.9rem; }
-  .guestbook-notes strong, .guestbook-notes small { display: block; }
-  .guestbook-notes strong { color: var(--md-sys-color-on-surface); font-size: 0.72rem; }
-  .guestbook-notes small { margin-top: 0.22rem; color: var(--md-sys-color-on-surface-variant); font-size: 0.65rem; line-height: 1.45; }
+  .guestbook-guidelines li {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.45rem;
+    min-width: 0;
+    padding-inline: 0.8rem;
+    border-left: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.36);
+    color: var(--md-sys-color-on-surface-variant);
+    font-family: var(--reay-font-metadata);
+    font-size: 0.66rem;
+    line-height: 1.4;
+  }
+
+  .guestbook-guidelines li:first-child { border-left: 0; }
+  .guestbook-guidelines i { flex: 0 0 auto; color: var(--md-sys-color-primary); font-size: 0.78rem; }
 
   @media (max-width: 720px) {
-    .guestbook-notes { grid-template-columns: 1fr; }
-    .guestbook-notes > div:nth-child(n) { padding-right: 0; padding-left: 0; border-left: 0; border-top: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.36); }
-    .guestbook-notes > div:first-child { border-top: 0; }
+    .guestbook-guidelines ul { grid-template-columns: repeat(2, minmax(0, 1fr)); gap: 0.6rem 0; }
+    .guestbook-guidelines li { justify-content: flex-start; padding-inline: 0.55rem; border-left: 0; }
+    .guestbook-guidelines li:nth-child(even) { border-left: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.36); }
+    .guestbook-guidelines li:last-child { grid-column: 1 / -1; }
   }
 </style>

@@ -7,12 +7,23 @@ export interface CommentClientConfig {
   pageTitle: string;
   autoLoad: boolean;
   lazy: boolean;
+  ui: {
+    load: CommentUiLabel;
+    retry: CommentUiLabel;
+    loading: CommentUiLabel;
+    error: CommentUiLabel;
+  };
   giscus: CommentsConfig['giscus'];
   utterances: CommentsConfig['utterances'];
   waline: CommentsConfig['waline'];
   twikoo: CommentsConfig['twikoo'];
   artalk: CommentsConfig['artalk'];
   disqus: CommentsConfig['disqus'];
+}
+
+export interface CommentUiLabel {
+  key: string;
+  fallback: string;
 }
 
 export type CommentProviderLoader = (
