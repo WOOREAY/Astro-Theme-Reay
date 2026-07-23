@@ -76,7 +76,7 @@ Incoming document 在 swap 前翻译一次；after-swap 只同步 document lang/
 
 ## Feature-local Runtimes
 
-MusicDock、Gallery lightbox、Archives explorer、seasonal、fullpage 与通用交互由中心 runtime 按 DOM 动态导入，并在 before-swap cleanup。Archives explorer 同步内容类型、主题、年份可见性、系列/合集辅助面与空状态，把 `type` / `topic` 写入 URL 并响应 `popstate`；系列主栏预览在全部/Blog 可见、Plog 隐藏，完整主题 dialog 支持搜索/排序，选择或清除主题后关闭弹层、聚焦结果锚点并滚回内容。Links 预览只在 fine pointer 悬停或键盘聚焦后加载，并同时监听 load/error、cached complete 与 decode；离开卡片后恢复头像背景，失败也保持头像 fallback。Gallery 在缺少图片时显示显式渐变 fallback，打开时聚焦关闭按钮，关闭后把焦点交还触发按钮。Search 会在换页前 destroy；Comments 会清理 observer、button listener 和 host。TOC 有独立 cleanup；文章与 README 增强依靠 DOM marker 保证幂等，剩余边界见 lifecycle reference 和 doc gaps。
+MusicDock、Gallery lightbox、Archives explorer、seasonal、fullpage 与通用交互由中心 runtime 按 DOM 动态导入，并在 before-swap cleanup。Archives explorer 同步内容类型、主题、年份可见性、系列/合集辅助面与空状态，把 `type` / `topic` 写入 URL 并响应 `popstate`；系列主栏预览在全部/Blog 可见、Plog 隐藏，完整主题 dialog 支持搜索/排序，选择或清除主题后关闭弹层、聚焦结果锚点并滚回内容。Links 预览只在 fine pointer 悬停或键盘聚焦后加载，并同时监听 load/error、cached complete 与 decode；离开卡片后恢复头像背景，失败也保持头像 fallback。Gallery 在缺少图片时显示显式渐变 fallback，打开时聚焦关闭按钮，关闭后把焦点交还触发按钮。Search 会在换页前 destroy；Comments 会清理 observer、button listener 和 host，并用 i18n key + 当前语言 API 更新加载、失败和重试反馈。TOC 有独立 cleanup；文章与 README 增强依靠 DOM marker 保证幂等，剩余边界见 lifecycle reference 和 doc gaps。
 
 ## Related Docs
 

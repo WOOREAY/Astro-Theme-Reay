@@ -25,6 +25,7 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 - 完整 Tags/Series 目录使用居中的有界内容宽度；Tag map 的字号/字重差异保持克制，序号和计数消费 metadata 字体而不是 mono。
 - Plog 目录把共享 `album.id` 的 entries 组织成 collection，并把每个 entry 视作 moment；详情页渲染 entry Markdown 叙事并让正文/照片说明消费 prose 字体角色；无真实图片时必须显式使用配置 gradient fallback。
 - About 可从 `userContent.story` 展示完整叙事，但教育、经历和公开联系仍只渲染配置中的真实字段；站点统计只使用内容集合可计算的数据。
+- Guestbook 使用最多 52rem 的居中内容流、三条线性留言准则和单一 MD3 tonal 对话表面。关闭状态面向访客说明“尚未开放”，并显示从统一用户配置派生的可用联系方式；不得暴露 provider、thread、源码配置路径或重复统计卡。启用状态仍要求显式点击后连接第三方，并提供本地化加载、错误、重试与焦点反馈。
 - Blog 系列文章可展示由 `seriesOrder` 排序后计算出的结构位置、系列目录和上一篇/下一篇，但不得把它描述为用户阅读进度；其他详情页也不虚构完成度、访问量或统计，只展示内容、配置或外部 API 提供的数据。
 - 页面背景、主色和字体仍只消费 theme config -> MD3/Reay token 链，不建立领域级 palette 或页面底色。
 
@@ -41,7 +42,7 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 - 740px 左右把非对称/双栏内容降为单列；横向 tabs 可以自身滚动，但不得扩大页面宽度。
 - 标题保持真实 `h1`，章节保持 `h2`；筛选和归档导航使用语义 nav，列表条目使用 article/list 语义。
 - focus-visible、Pagefind、评论 provider、TOC、Gallery lightbox 和 Astro 页面交换生命周期不得因视觉重构退化。
-- `data-editorial-page`、`data-editorial-page-header`、`data-blog-editorial-index`、`data-archive-explorer`、`data-archive-results`、`data-archive-series-shelf`、`data-post-series-context`、`data-post-series-navigation`、`data-tag-index`、`data-series-entry` 与 `data-project-detail-header` 是自动化合同。
+- `data-editorial-page`、`data-editorial-page-header`、`data-blog-editorial-index`、`data-archive-explorer`、`data-archive-results`、`data-archive-series-shelf`、`data-post-series-context`、`data-post-series-navigation`、`data-tag-index`、`data-series-entry`、`data-project-detail-header`、`data-guestbook-flow`、`data-comment-section` 与 `data-comment-unavailable` 是自动化合同。
 
 ## Sources of Truth
 

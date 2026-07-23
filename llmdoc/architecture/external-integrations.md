@@ -10,7 +10,7 @@
 | --- | --- | --- | --- |
 | GitHub REST/GraphQL | 构建期 | stale cache、匿名请求、近似活动或空数据 | token、远程元数据、README HTML |
 | Pagefind | 构建后 + 浏览器本地 | 无索引则搜索不可用 | 本地生成文件，不发送查询 |
-| Comments | 浏览器显式触发后懒加载 | 默认关闭；显示加载错误，可重试 | 外部脚本、cookies、隐私、provider 数据 |
+| Comments | 浏览器显式触发后懒加载 | 默认关闭时显示访客友好状态与站点联系人；加载失败可重试 | 外部脚本、cookies、隐私、provider 数据 |
 | Microlink preview | fine pointer 悬停或键盘聚焦后加载的远程 screenshot | 默认 `microlink`；显式 screenshot 优先，失败回退 avatar；可改 `none` | 请求会暴露目标 URL/访客网络 |
 | KaTeX CSS | 浏览器 CDN | 数学样式降级 | jsDelivr availability/SRI version |
 | Remote link/avatar assets | 浏览器 | 图片降级 | 第三方资源与跟踪政策 |
@@ -32,7 +32,8 @@
 Comments 先检查全局/模式/组件开关和 provider 必填配置，再把公开配置序列化到 HTML。运行时根据点击或 IntersectionObserver 调用 typed registry：Giscus、Utterances、Waline、Twikoo、Artalk、Disqus。
 
 - provider ID、repo、endpoint 都是公开客户端配置，绝不能放 secret。
-- 当前站点同时关闭 comments 全局配置和 provider 配置；启用后 `autoLoad: false` 要求访客点击按钮才加载第三方脚本。
+- 当前站点保留 comments integration gate，但 `commentsConfig.enabled: false`，因此不序列化 provider 客户端配置，也不显示 provider/thread/源码路径；Guestbook 的替代联系入口只从 `user.config.ts` 规范化联系人派生。
+- 启用后 `autoLoad: false` 要求访客点击按钮才加载第三方脚本；加载、错误和重试状态消费当前 i18n 语言，成功或失败后把焦点交给评论 host 或重试按钮。
 - 外部版本、CSP、cookie、区域可用性、服务端维护和数据政策由部署者负责。
 - loader 当前没有统一 destroy/theme/language update contract。
 

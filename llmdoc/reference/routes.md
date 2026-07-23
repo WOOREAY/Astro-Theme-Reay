@@ -19,7 +19,7 @@
 | `/projects` | `src/pages/projects/index.astro` | 构建期 GitHub API |
 | `/projects/[owner]/[repo]` | `src/pages/projects/[owner]/[repo].astro` | 仓库详情与 README |
 | `/links` | `src/pages/links/index.astro` | links config |
-| `/guestbook` | `src/pages/guestbook/index.astro` | comments provider |
+| `/guestbook` | `src/pages/guestbook/index.astro` | 留言准则、comments provider 或统一联系人派生的未开放状态 |
 | `/about` | `src/pages/about/index.astro` | about config + blog stats |
 | `/search` | `src/pages/search/index.astro` | Pagefind UI/index |
 

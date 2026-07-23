@@ -20,7 +20,7 @@
 ```text
 user.config.ts identity/contact/github/content/site facts
   -> user-contact.ts normalization + site.config.ts getters
-  -> Home / About / Links / Footer / Projects / RSS
+  -> Home / About / Links / Guestbook / Footer / Projects / RSS
 ```
 
 页面不得回写或复制个人字段。Links 只拥有外部链接与交换文案；Projects 只拥有目录过滤/分类/featured；About 只拥有完整档案集合。GitHub URL、站点名/头像/URL/描述和所有公开联系人均由门面派生。
@@ -62,7 +62,7 @@ design-system -> external Material color utility
 - Projects/Project detail 分别约束项目索引与 README 阅读宽度，详情统计采用线性元信息而非统计卡。
 - Links 和 About 直接组合共享编辑式基础与领域 section；Links 使用有界自动换行的 16:9 视觉卡片，默认显示放大头像轻虚化背景，鼠标悬停或键盘聚焦后才按显式 screenshot、Microlink 截图的顺序加载预览，失败时继续保留头像背景。About 从统一用户配置读取个人摘要、完整叙事、工作流、联系人和真实站点统计。
 - Gallery 目录页使用共享编辑式页首，把 Plog entry 按 `album.id` 组织为 collection，再以错落 moment 展示；详情页使用开放式影像与文字双栏、渲染 entry Markdown 叙事并保留灯箱。
-- Guestbook 和 Search 使用共享编辑式页首，只把评论载体和 Pagefind 保留为功能表面。
+- Guestbook 和 Search 使用共享编辑式页首，只把留言载体和 Pagefind 保留为功能表面。Guestbook 在有界居中内容流内先显示三条紧凑准则，再显示单一 MD3 tonal 留言表面；评论未开放时用访客文案说明状态，并从统一联系人门面派生替代入口，不显示 provider、thread 或源码配置路径。
 
 ## Homepage Composition
 

@@ -33,7 +33,7 @@ Page lifetime：
 | --- | --- |
 | `astro:before-swap`, `astro:page-load` | runtime、i18n、search、comments、TOC 等 |
 | `data-theme`, localStorage `theme` | inline bootstrap、toggle、theme-sync、comments |
-| localStorage `language`, `languagechange` | i18n、toggle、typewriter、search |
+| localStorage `language`, `languagechange` | i18n、toggle、typewriter、search、comments feedback |
 | `data-i18n`, `data-i18n-attr(s)`, `data-i18n-date`, `data-page-title-key`, `data-user-content`, `data-text` | static HTML + client translation、属性、日期与标题 |
 | `reay:fullpage-section` | FullPageScroll + floating Header |
 | `data-pagefind-body`, `data-pagefind-ignore` | build-time Pagefind indexing |
@@ -49,6 +49,7 @@ Page lifetime：
 - Playwright 验证语言/主题经过 ClientRouter 导航后保持同步。
 - Gallery E2E 验证 fallback、初始焦点和关闭后的焦点恢复。
 - 移动菜单 E2E 与 Chrome 390×844 复测验证 label、`aria-expanded` 和无横向溢出。
+- Guestbook E2E 与 Chrome 1440×900 / 390×844 复测验证默认关闭状态、统一联系人、双语属性、首屏完成、light/dark MD3 表面和无横向溢出；真实 provider 生命周期仍不在该证据范围内。
 
 ## Sources of Truth
 
