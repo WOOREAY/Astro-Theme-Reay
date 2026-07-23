@@ -31,7 +31,7 @@
 - `giscus.app`, `utteranc.es`, provider Disqus domain。
 - `unpkg.com`: Waline client/CSS。
 - `cdn.jsdelivr.net`: Twikoo、Artalk、KaTeX CSS。
-- `api.microlink.io`: 仅在 `linksConfig.previews.provider = 'microlink'` 时使用；默认不请求。
+- `api.microlink.io`: `linksConfig.previews.provider = 'microlink'` 时在 link 卡片接近 viewport 后请求；当前默认启用，可改为 `none`。
 - Configured remote avatar/link/image origins。
 
 ## Cache

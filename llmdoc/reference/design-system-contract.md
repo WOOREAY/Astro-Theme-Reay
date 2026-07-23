@@ -10,19 +10,20 @@
 
 - `--md-ref-*`: reference/tonal palette。
 - `--md-sys-color-*`: Material system colors。
-- `--reay-font-sans`、`--reay-font-mono` 与 typography/shape variables。
+- `--reay-font-global/brand/navigation/heading/body/metadata/prose/prose-heading/mono` 与 typography/shape variables。
 - `--reay-*`: 组件语义、surface、shadow、motion aliases。
 
 组件优先使用 system/Reay token，不硬编码主题颜色。新增跨功能 token 同时检查 light/dark 和 RGB companion variables。
 
-`--font-sans` 和 `--font-mono` 只保留为兼容别名；UnoCSS preset 也会声明同名变量，应用和 Markdown 样式必须消费 `--reay-font-*`，避免样式加载顺序改变主题字体。
+`--reay-font-sans`、`--font-sans` 和 `--font-mono` 只保留为兼容别名；UnoCSS preset 也会声明部分同名变量，应用和 Markdown 样式必须消费具体的 `--reay-font-*` 语义角色，避免样式加载顺序改变主题字体。
 
 ## Typography Contract
 
 - 默认拉丁字体是自托管 `Nunito Variable`，由 `@fontsource-variable/nunito` 提供并使用 `font-display: swap`。
 - 中文依次回退到 Noto Sans SC、PingFang SC、Microsoft YaHei 和系统 sans-serif，不下载大型 CJK WebFont。
-- `theme.config.ts` 的 `fontFamilies.sans/mono`、`typography.baseSize` 与 `lineHeight` 是唯一用户配置入口；分别生成 `--reay-font-sans`、`--reay-font-mono`、`--text-base` 和 `--leading`。
-- `html` 使用 `--text-base` 作为根字号，因此 rem 组件与正文随配置统一缩放；`body`、Markdown 正文和普通组件继承 `--reay-font-sans`，代码/键盘提示继承 `--reay-font-mono`。
+- `theme.config.ts` 的 `fontFamilies`、`typography.baseSize` 与 `lineHeight` 是唯一用户配置入口；global 是所有空语义角色的回退，mono 独立解析。
+- `html` 使用 `--text-base` 和 `--reay-font-global`；body、品牌、导航、标题、元信息、Markdown/Plog prose 与 prose heading 分别消费对应角色，代码/键盘提示消费 `--reay-font-mono`。
+- 默认 `global` 是自托管 Nunito Variable；`brand/navigation/heading/body/metadata/prose/proseHeading` 默认留空并在主题生成阶段解析为 global，因此只改一次 global 就能覆盖全站。
 - 首页 Hero 使用 `--reay-home-hero-title`；当前 15px 根字号下 Hero 不超过 36px，Showcase 标题不超过约 24.3px，Blog lead 不超过约 22.2px。
 - 组件不自行放大一级标题；新标题先选择语义层级，再选择现有 typography token。
 

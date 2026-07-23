@@ -55,7 +55,7 @@ Plog index.md + sibling images/
 
 ## Markdown Rendering
 
-`src/app/config/markdown.config.ts` 统一 GFM、数学、heading slug、KaTeX、阅读时间与 Shiki transformers。`markdown-style.config.ts` 和生成器管理文章视觉样式，项目 README 也复用该视觉层。
+`src/app/config/markdown.config.ts` 统一 GFM、数学、heading slug、KaTeX、阅读时间与 Shiki transformers。`markdown-style.config.ts` 和生成器管理文章视觉样式，Blog detail、Plog detail 的 entry 叙事与项目 README 复用该视觉层。Blog/Plog 正文消费 `--reay-font-prose`，其中 Markdown heading 消费 `--reay-font-prose-heading`；代码继续消费 `--reay-font-mono`。
 
 ## Publishing Invariants
 

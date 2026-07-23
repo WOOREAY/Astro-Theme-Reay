@@ -58,10 +58,10 @@ design-system -> external Material color utility
 ## Domain Layouts
 
 - Blog detail 组合开放式文章头、正文、TOC、Markdown 样式、增强脚本和评论。
-- Archives 在共享编辑式页首之后添加归档 tabs；概览组合最近写作、年度节奏、主题地图与系列阅读路径，时间线按年/月组织，标签与系列继续由领域组件负责。
+- Archives 在共享编辑式页首之后只保留 `全部 / Blog / Plog` 内容筛选；统一检索工作台按年份混排文章与 Plog 片刻，并以年份索引、Blog 标签/系列和 Plog 标签/合集主题云辅助缩小范围。旧 tags/series/timeline URL 继续兼容，但不再作为同级主导航。
 - Projects/Project detail 分别约束项目索引与 README 阅读宽度，详情统计采用线性元信息而非统计卡。
-- Links 和 About 直接组合共享编辑式基础与领域 section；Links 使用头像虚化背景的视觉卡片，About 从统一用户配置读取个人摘要、完整叙事、工作流、联系人和真实站点统计。
-- Gallery 目录页使用共享编辑式页首，把 Plog entry 按 `album.id` 组织为 collection，再以错落 moment 展示；详情页使用开放式影像与文字双栏并保留灯箱。
+- Links 和 About 直接组合共享编辑式基础与领域 section；Links 按显式 screenshot、Microlink 截图、放大头像轻虚化的顺序生成 160px 视觉卡片，About 从统一用户配置读取个人摘要、完整叙事、工作流、联系人和真实站点统计。
+- Gallery 目录页使用共享编辑式页首，把 Plog entry 按 `album.id` 组织为 collection，再以错落 moment 展示；详情页使用开放式影像与文字双栏、渲染 entry Markdown 叙事并保留灯箱。
 - Guestbook 和 Search 使用共享编辑式页首，只把评论载体和 Pagefind 保留为功能表面。
 
 ## Homepage Composition

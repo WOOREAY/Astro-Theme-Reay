@@ -67,7 +67,7 @@ About 可继续读取同一配置，但应展示更完整的信息；首页只�
 
 ## Typography and Motion
 
-- 字体只由 `theme.config.ts` 的 `fontFamilies.sans/mono`、`typography.baseSize` 和 `lineHeight` 控制。
+- 字体只由 `theme.config.ts` 的角色化 `fontFamilies`、`typography.baseSize` 和 `lineHeight` 控制；空角色回退 global，首页名称消费 brand，普通内容与元信息分别消费 body/metadata。
 - 当前 15px 根字号下 Hero 不超过 36px，Showcase 标题约 24px，Blog lead 不超过约 22.2px，正文保持约 13.2–14.25px，元信息不低于约 10.5px。
 - hover 只使用轻微位移、主题色变化和 Plog 图片短时 scale，不常驻 `will-change` 或大面积 blur。
 - `prefers-reduced-motion` 下移除位移与缩放 transition。

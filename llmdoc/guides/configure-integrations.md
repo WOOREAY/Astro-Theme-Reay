@@ -27,7 +27,7 @@
 
 ## Remote Previews and Assets
 
-- Friend-link preview 默认 `provider: none`；只有显式改为 `microlink` 才请求远程 screenshot。
+- Friend-link preview 默认使用 `microlink`，卡片接近 viewport 时才请求远程 screenshot；显式 `screenshot` 优先，失败回退头像背景。对隐私或 CSP 更敏感的部署可改为 `provider: none`。
 - Blog math CSS 从 jsDelivr 加载。
 - 链接 avatar/图片可来自第三方域名。
 - 部署者负责 CSP、隐私说明、SRI/版本策略和服务条款核对。

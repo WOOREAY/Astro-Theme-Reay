@@ -8,7 +8,7 @@
 | `/404` | `src/pages/404.astro` | 双语自定义未找到页面 |
 | `/blog` | `src/pages/blog/index.astro` | blog collection |
 | `/blog/[...slug]` | `src/pages/blog/[...slug].astro` | 静态文章详情 |
-| `/archives` | `src/pages/archives/index.astro` | 博客聚合 |
+| `/archives` | `src/pages/archives/index.astro` | Blog/Plog 混合年份索引、类型筛选与上下文主题云 |
 | `/archives/timeline` | `src/pages/archives/timeline/index.astro` | 年份分组 |
 | `/archives/tags` | `src/pages/archives/tags/index.astro` | tag 聚合 |
 | `/archives/tags/[tag]` | `src/pages/archives/tags/[tag].astro` | 未编码 static param |

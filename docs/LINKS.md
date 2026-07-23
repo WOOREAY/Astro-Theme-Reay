@@ -7,7 +7,7 @@
 ```ts
 export const linksConfig = {
   previews: {
-    provider: 'none',
+    provider: 'microlink',
     endpoint: 'https://api.microlink.io/',
   },
   friendLinks: [],
@@ -40,7 +40,7 @@ export const linksConfig = {
 - `category` must match the corresponding category id.
 - `featured` enables the featured filter.
 - `screenshot` optionally supplies a local/remote preview image.
-- Keep `previews.provider: 'none'` unless remote Microlink requests are intentional.
+- Preview priority is `screenshot` -> Microlink -> enlarged avatar fallback. Requests start only when cards approach the viewport; set `previews.provider: 'none'` to disable remote screenshot requests.
 
 ## Personal Social Section
 

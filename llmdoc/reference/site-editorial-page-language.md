@@ -18,11 +18,11 @@ Hero 之外的公开页面共享“紧凑编辑式内页”语言：先交代页
 
 - 桌面页首先左后右：左侧标题/说明，右侧线性统计；较窄视口自然叠放。
 - 页首之后直接进入导航、筛选或首组真实内容；不得再插入一层重复 summary cards。
-- Blog、归档、项目和 About 工具列表使用开放式行、hairline 与轻微 hover tint；Links 卡片用放大头像虚化背景、独立头像和轻量 tonal surface 表达站点身份，不再受旧 `.link-card` 兼容选择器影响。
+- Blog、归档、项目和 About 工具列表使用开放式行、hairline 与轻微 hover tint；Links 卡片优先显示站点截图，失败时用放大头像轻虚化背景与独立头像表达站点身份，不再受旧 `.link-card` 兼容选择器影响。
 - 每个功能区最多使用一个明显 tonal surface。搜索面板、评论 provider、GitHub 热度图和项目 shelf 属于可接受的功能表面。
 - Gallery 以影像为主，可使用圆角 cover、overlay 和有限阴影；overlay 文字必须在 light/dark 下维持足够对比。
-- Archives 概览必须回答最近写了什么、年度节奏如何、主题集中在哪里和有哪些系列路径；Timeline 按年/月组织，Series 不虚构完成进度。
-- Plog 目录把共享 `album.id` 的 entries 组织成 collection，并把每个 entry 视作 moment；无真实图片时必须显式使用配置 gradient fallback。
+- Archives 是 Blog/Plog 统一检索面：顶部筛选必须是 `全部 / Blog / Plog`，主体按年份混排紧凑条目，右栏提供年份索引和随类型变化的标签/系列/合集主题云；旧 Timeline/Tags/Series URL 兼容但不作为同级主导航。
+- Plog 目录把共享 `album.id` 的 entries 组织成 collection，并把每个 entry 视作 moment；详情页渲染 entry Markdown 叙事并让正文/照片说明消费 prose 字体角色；无真实图片时必须显式使用配置 gradient fallback。
 - About 可从 `userContent.story` 展示完整叙事，但教育、经历和公开联系仍只渲染配置中的真实字段；站点统计只使用内容集合可计算的数据。
 - 详情页不虚构阅读进度、完成度、访问量或其他统计；只展示内容、配置或外部 API 提供的数据。
 - 页面背景、主色和字体仍只消费 theme config -> MD3/Reay token 链，不建立领域级 palette 或页面底色。
