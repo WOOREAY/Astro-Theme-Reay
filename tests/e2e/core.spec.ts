@@ -321,22 +321,29 @@ test('editorial details and archives do not regress into card walls', async ({ p
   await expect(page.locator('.archive-main .reay-card, .series-progress')).toHaveCount(0);
 
   await page.goto('/links');
-  const linkEntryStyle = await page.locator('[data-link-card]').first().evaluate((element) => {
+  const linkCard = page.locator('[data-link-card]').first();
+  const linkPreview = linkCard.locator('[data-link-preview]');
+  await expect(linkCard).toHaveAttribute('data-preview-ready', 'true');
+  await expect(linkPreview).not.toHaveAttribute('src', /.+/);
+  const linkEntryStyle = await linkCard.evaluate((element) => {
     const style = getComputedStyle(element);
+    const rect = element.getBoundingClientRect();
     return {
       background: style.backgroundColor,
-      height: Number.parseFloat(style.height),
+      width: rect.width,
+      ratio: rect.width / rect.height,
       radius: style.borderRadius,
       shadow: style.boxShadow,
     };
   });
   expect(linkEntryStyle.background).not.toBe('rgba(0, 0, 0, 0)');
-  expect(linkEntryStyle.height).toBe(160);
+  expect(linkEntryStyle.width).toBeLessThanOrEqual(360);
+  expect(linkEntryStyle.ratio).toBeCloseTo(16 / 9, 1);
   expect(Number.parseFloat(linkEntryStyle.radius)).toBeGreaterThan(0);
   expect(linkEntryStyle.shadow).not.toBe('none');
-  await expect(page.locator('[data-link-card] .link-backdrop').first()).toHaveCount(1);
-  await expect(page.locator('[data-link-card]').first()).toHaveAttribute('data-preview-src', /api\.microlink\.io/);
-  const fallbackStyle = await page.locator('[data-link-card] .link-backdrop').first().evaluate((element) => {
+  await expect(linkCard.locator('.link-backdrop')).toHaveCount(1);
+  await expect(linkCard).toHaveAttribute('data-preview-src', /api\.microlink\.io/);
+  const fallbackStyle = await linkCard.locator('.link-backdrop').evaluate((element) => {
     element.closest('[data-link-card]')?.classList.remove('has-preview');
     const image = element.querySelector('img')!;
     return {
@@ -344,8 +351,10 @@ test('editorial details and archives do not regress into card walls', async ({ p
       filter: getComputedStyle(image).filter,
     };
   });
-  expect(fallbackStyle.opacity).toBeGreaterThanOrEqual(0.5);
-  expect(fallbackStyle.filter).toContain('blur(9px)');
+  expect(fallbackStyle.opacity).toBeGreaterThanOrEqual(0.6);
+  expect(fallbackStyle.filter).toContain('blur(7px)');
+  await linkCard.hover();
+  await expect(linkPreview).toHaveAttribute('src', /api\.microlink\.io/);
 
   await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
   await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);

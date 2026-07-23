@@ -111,20 +111,7 @@ function initLinkPreviewLoading(scope: ReturnType<typeof createScope>) {
     document.querySelectorAll<HTMLElement>('[data-link-card][data-preview-src]'),
   );
   if (cards.length === 0) return;
-
-  const previewLoaders = new Map<HTMLElement, () => void>();
-  const observer = 'IntersectionObserver' in window
-    ? new IntersectionObserver((entries) => {
-        entries.forEach((entry) => {
-          if (!entry.isIntersecting) return;
-          const card = entry.target as HTMLElement;
-          previewLoaders.get(card)?.();
-          observer?.unobserve(card);
-        });
-      }, { rootMargin: '180px 0px' })
-    : null;
-
-  if (observer) scope.addCleanup(() => observer.disconnect());
+  const supportsHover = window.matchMedia('(hover: hover) and (pointer: fine)').matches;
 
   cards.forEach((card) => {
     const loadPreview = () => {
@@ -165,16 +152,9 @@ function initLinkPreviewLoading(scope: ReturnType<typeof createScope>) {
       }
     };
 
-    previewLoaders.set(card, loadPreview);
-
-    scope.on(card, 'pointerenter', loadPreview, { passive: true });
+    card.dataset.previewReady = 'true';
+    if (supportsHover) scope.on(card, 'pointerenter', loadPreview, { passive: true });
     scope.on(card, 'focusin', loadPreview);
-
-    if (observer) {
-      observer.observe(card);
-    } else {
-      loadPreview();
-    }
 
     if (card.matches(':hover') || card.matches(':focus-within')) {
       loadPreview();

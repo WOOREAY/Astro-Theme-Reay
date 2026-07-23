@@ -5,8 +5,8 @@
  * 
  * Features:
  * - Group display by type (friends, sites, social)
- * - Card display with background preview
- * - Semi-transparent mask, disappears on hover
+ * - Avatar backdrop by default, screenshot preview on interaction
+ * - Bounded responsive card grid
  * - Category filtering
  * - Responsive layout
  */
@@ -332,7 +332,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
   /* Links grid */
   .links-grid {
     display: grid;
-    grid-template-columns: repeat(2, minmax(0, 1fr));
+    grid-template-columns: repeat(auto-fill, minmax(min(100%, 18.5rem), 1fr));
     gap: 0.9rem;
     margin-top: 0.15rem;
   }
@@ -721,10 +721,6 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
 
   /* Responsive design */
   @media (max-width: 968px) {
-    .links-grid {
-      grid-template-columns: repeat(2, minmax(0, 1fr));
-    }
-
     .apply-grid {
       grid-template-columns: 1fr;
     }
@@ -738,10 +734,6 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
   @media (max-width: 768px) {
     .links-section {
       margin-bottom: 2.5rem;
-    }
-
-    .links-grid {
-      grid-template-columns: 1fr;
     }
 
     .section-title {
