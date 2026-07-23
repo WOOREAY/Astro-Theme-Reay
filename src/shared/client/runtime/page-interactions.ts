@@ -149,6 +149,20 @@ function initLinkPreviewLoading(scope: ReturnType<typeof createScope>) {
       scope.on(image, 'load', handleLoad, { once: true });
       scope.on(image, 'error', handleError, { once: true });
       image.src = source;
+
+      // Cached images may already be complete before the load listener is
+      // observed by every browser. Mirror the resource state explicitly and
+      // use decode as a second signal for freshly fetched screenshots.
+      if (image.complete) {
+        if (image.naturalWidth > 0) handleLoad();
+        else handleError();
+      } else {
+        void image.decode()
+          .then(handleLoad)
+          .catch(() => {
+            if (image.complete && image.naturalWidth === 0) handleError();
+          });
+      }
     };
 
     previewLoaders.set(card, loadPreview);
