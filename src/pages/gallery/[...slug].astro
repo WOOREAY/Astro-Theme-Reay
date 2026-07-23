@@ -81,9 +81,9 @@ const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailIma
   </Fragment>
 
   <div class="album-page">
-    <a class="back-link" href="/gallery">
+    <a class="back-link" href="/gallery" data-history-back>
       <i class="i-carbon:arrow-left"></i>
-      <span data-i18n="gallery.backToAlbums">{t('gallery.backToAlbums')}</span>
+      <span data-i18n="navigation.back">{t('navigation.back')}</span>
     </a>
 
     <header class="moment-header" style={`--album-accent: ${album.accent};`}>

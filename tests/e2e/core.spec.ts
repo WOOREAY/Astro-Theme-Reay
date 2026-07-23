@@ -133,8 +133,41 @@ test('language, theme, and client navigation stay synchronized', async ({ page }
 
 test('Pagefind returns local results', async ({ page }) => {
   await page.goto('/search');
-  await page.getByRole('textbox').fill('Astro');
-  await expect(page.getByRole('link', { name: 'Astro 3.0 新特性详解' })).toBeVisible({ timeout: 15_000 });
+  await expect(page.locator('[data-search-root]')).toHaveAttribute('data-search-state', 'idle');
+  await page.getByRole('searchbox').fill('Astro');
+  await expect(page).toHaveURL(/\?q=Astro/);
+  const expectedResult = page.locator('[data-search-result] > a[href="/blog/astro-3-features/"]');
+  await expect(expectedResult).toHaveCount(1, { timeout: 15_000 });
+  await expect(expectedResult).toContainText('Astro 3.0 新特性详解');
+  await expect(page.locator('[data-search-result]')).not.toHaveCount(0);
+});
+
+test('search falls back to Blog and Plog documents when Pagefind is unavailable', async ({ page }) => {
+  await page.route('**/pagefind/pagefind.js', route => route.abort());
+  await page.goto('/search');
+  await page.getByRole('searchbox').fill('Python');
+
+  await expect(page.locator('[data-search-error]')).toBeVisible();
+  await expect(page.locator('[data-search-status]')).toContainText('轻量索引');
+  await expect(page.locator('[data-search-result] > a[href="/blog/python-tutorial-01"]')).toBeVisible();
+});
+
+test('Blog and Plog detail back links restore the previous archive state', async ({ page }) => {
+  await page.goto('/archives?type=blog');
+  const blogEntry = page.locator('[data-archive-row][data-archive-kind="blog"] > a[href="/blog/test-markdown"]');
+  await expect(blogEntry).toHaveCount(1);
+  await blogEntry.click();
+  await expect(page).toHaveURL(/\/blog\/test-markdown\/?$/);
+  await page.locator('[data-history-back]').click();
+  await expect(page).toHaveURL(/\/archives\?type=blog$/);
+
+  await page.goto('/archives?type=plog');
+  const plogEntry = page.locator('[data-archive-row][data-archive-kind="plog"] > a[href="/gallery/daily/morning-window/"]');
+  await expect(plogEntry).toHaveCount(1);
+  await plogEntry.click();
+  await expect(page).toHaveURL(/\/gallery\/daily\/morning-window\/?$/);
+  await page.locator('[data-history-back]').click();
+  await expect(page).toHaveURL(/\/archives\?type=plog$/);
 });
 
 test('custom 404 title follows the selected language', async ({ page }) => {

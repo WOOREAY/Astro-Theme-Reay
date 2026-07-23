@@ -1,10 +1,13 @@
 ---
 import EditorialPageLayout from '@app/layouts/base/EditorialPageLayout.astro';
 import SearchPanel from '@features/search/components/SearchPanel.astro';
+import { getSearchFallbackDocuments, getSearchSuggestions } from '@features/search/lib/search-data';
 import { useI18n } from '@features/i18n/lib/i18n';
 import EditorialPageHeader from '@shared/components/EditorialPageHeader.astro';
 
 const { t } = useI18n();
+const fallbackDocuments = await getSearchFallbackDocuments();
+const suggestions = getSearchSuggestions(fallbackDocuments);
 ---
 
 <EditorialPageLayout title={t('page.title.search')} description={t('search.description')} pageClass="search-index-page">
@@ -17,5 +20,5 @@ const { t } = useI18n();
     eyebrowKey="search.eyebrow"
     icon="i-carbon:search"
   />
-  <SearchPanel />
+  <SearchPanel documents={fallbackDocuments} suggestions={suggestions} />
 </EditorialPageLayout>

@@ -1,4 +1,5 @@
 import { initMobileMenu, type MobileMenu } from '../mobile-menu';
+import { initHistoryBackLinks, initNavigationHistory } from '../navigation/history-back';
 import type { FullPageScroll } from '../navigation/fullpage-scroll';
 import { initThemeToggle, type ThemeToggle } from '../ui/theme-toggle';
 import type { TypewriterEffect } from '../animations/typewriter-effect';
@@ -21,6 +22,8 @@ let sectionVisibilityCleanup: Cleanup | null = null;
 let musicDockCleanup: Cleanup | null = null;
 let galleryLightboxCleanup: Cleanup | null = null;
 let archiveExplorerCleanup: Cleanup | null = null;
+let searchCleanup: Cleanup | null = null;
+let historyBackCleanup: Cleanup | null = null;
 let pageRuntimeGeneration = 0;
 
 function initFloatingHeader(): Cleanup | null {
@@ -111,6 +114,12 @@ function cleanupPageRuntime() {
   archiveExplorerCleanup?.();
   archiveExplorerCleanup = null;
 
+  searchCleanup?.();
+  searchCleanup = null;
+
+  historyBackCleanup?.();
+  historyBackCleanup = null;
+
   typewriterEffect?.destroy();
   typewriterEffect = null;
 }
@@ -125,6 +134,7 @@ function initPageRuntime() {
   floatingHeaderCleanup = initFloatingHeader();
   sectionVisibilityCleanup = initSectionVisibility();
   initLanguageToggle();
+  historyBackCleanup = initHistoryBackLinks();
 
   if (document.querySelector('#fullpage-container[data-home-layout="snap"]')) {
     void import('../navigation/fullpage-scroll').then(({ initFullPageScroll }) => {
@@ -168,6 +178,13 @@ function initPageRuntime() {
     });
   }
 
+  if (document.querySelector('[data-search-root]')) {
+    void import('@features/search/client/search').then(({ initSearch }) => {
+      if (!isCurrent()) return;
+      searchCleanup = initSearch();
+    });
+  }
+
   if (document.getElementById('name-typewriter')) {
     void import('../animations/typewriter-effect').then(({ initTypewriterEffect }) => {
       if (!isCurrent()) return;
@@ -181,6 +198,7 @@ export function initReayClientRuntime() {
   bootstrapped = true;
 
   initRouteTransitions();
+  initNavigationHistory();
   initThemeSync();
 
   document.addEventListener('astro:before-swap', cleanupPageRuntime);

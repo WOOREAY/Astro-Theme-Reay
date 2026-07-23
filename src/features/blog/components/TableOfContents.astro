@@ -575,7 +575,7 @@ if (!headings || headings.length === 0) {
         const targetHeading = document.getElementById(targetId);
         if (!targetHeading) return;
 
-        window.history.pushState(null, '', `#${encodeURIComponent(targetId)}`);
+        window.history.pushState(window.history.state, '', `#${encodeURIComponent(targetId)}`);
         scrollToTarget(scrollRoot, getElementScrollTarget(targetHeading, scrollRoot));
       };
 

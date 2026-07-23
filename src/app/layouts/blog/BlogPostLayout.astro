@@ -42,9 +42,9 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
     <link rel="stylesheet" href={`${baseUrl}markdown.css`} />
   </Fragment>
   <div class="article-back-row">
-    <a href="/blog" class="article-back-button">
+    <a href="/blog" class="article-back-button" data-history-back>
       <i class="i-carbon:arrow-left"></i>
-      <span data-i18n="blog.back">{t('blog.back')}</span>
+      <span data-i18n="navigation.back">{t('navigation.back')}</span>
     </a>
   </div>
 
@@ -221,7 +221,7 @@ const baseUrl = import.meta.env.BASE_URL.endsWith('/')
 
     const top = getAnchorScrollTarget(target);
     if (updateHistory) {
-      window.history.pushState(null, '', `#${encodeURIComponent(targetId)}`);
+      window.history.pushState(window.history.state, '', `#${encodeURIComponent(targetId)}`);
     }
 
     window.scrollTo({
