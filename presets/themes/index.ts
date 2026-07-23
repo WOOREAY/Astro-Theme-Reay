@@ -6,6 +6,7 @@ import { editorialThemePreset } from './editorial';
 import { einkThemePreset } from './eink';
 import { forestThemePreset } from './forest';
 import { inkwashThemePreset } from './inkwash';
+import { monochromeInkThemePreset } from './monochrome-ink';
 import { oceanThemePreset } from './ocean';
 import { paperThemePreset } from './paper';
 import { retroTerminalThemePreset } from './retro-terminal';
@@ -23,6 +24,7 @@ export const themePresets = {
   forest: forestThemePreset,
   editorial: editorialThemePreset,
   inkwash: inkwashThemePreset,
+  'monochrome-ink': monochromeInkThemePreset,
   'anime-spring': animeSpringThemePreset,
   'anime-night': animeNightThemePreset,
   ukiyo: ukiyoThemePreset,

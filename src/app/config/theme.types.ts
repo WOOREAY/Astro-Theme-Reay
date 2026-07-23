@@ -6,6 +6,7 @@ export type BackgroundDecoration =
   | 'eink'
   | 'plain'
   | 'inkwash'
+  | 'monochrome-ink'
   | 'anime-spring'
   | 'anime-night'
   | 'ukiyo'

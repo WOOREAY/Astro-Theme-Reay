@@ -63,6 +63,7 @@ test('one theme object combines presets with intuitive color and nested override
 test('expressive presets expose complete palettes, identity modes, typography, shapes, and background scenes', () => {
   const expressivePresets = {
     inkwash: { decoration: 'inkwash', mode: 'system' },
+    'monochrome-ink': { decoration: 'monochrome-ink', mode: 'light' },
     'anime-spring': { decoration: 'anime-spring', mode: 'system' },
     'anime-night': { decoration: 'anime-night', mode: 'dark' },
     ukiyo: { decoration: 'ukiyo', mode: 'system' },
@@ -92,6 +93,14 @@ test('expressive presets expose complete palettes, identity modes, typography, s
       gradient: { useMD3Colors: true },
     });
   }
+
+  const monochromeInk = defineTheme({ preset: 'monochrome-ink' });
+  expect(monochromeInk.typography.fontFamilies.global).toContain('Kaiti SC');
+  expect(monochromeInk.source).toMatchObject({
+    primary: '#242321',
+    tertiary: '#A7352A',
+    variant: 'neutral',
+  });
 });
 
 test('language, theme, and client navigation stay synchronized', async ({ page }) => {

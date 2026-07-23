@@ -5,6 +5,8 @@ const roundedLatin = '"Nunito Variable"';
 const roundedCjk = '"寒蝉全圆体"';
 const serifLatin = 'ui-serif, Georgia, Cambria, "Times New Roman"';
 const serifCjk = '"Songti SC", STSong, "Noto Serif CJK SC", "Source Han Serif SC", serif';
+const calligraphicLatin = '"Iowan Old Style", Baskerville, "Times New Roman", ui-serif, serif';
+const calligraphicCjk = '"Kaiti SC", STKaiti, KaiTi, "楷体", serif';
 const cleanSans = `Inter, "Helvetica Neue", Arial, ${fallbackSans}`;
 
 export const fontStacks = {
@@ -18,6 +20,9 @@ export const fontStacks = {
   },
   paper: {
     global: `${serifLatin}, ${serifCjk}`,
+  },
+  ink: {
+    global: `${calligraphicLatin}, ${calligraphicCjk}`,
   },
   clean: {
     global: cleanSans,
