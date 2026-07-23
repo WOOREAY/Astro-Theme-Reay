@@ -8,15 +8,32 @@
 import type { FontFamilyRoles, UserThemeOverrides } from '@design/theme';
 
 /**
+ * Script-aware font sources.
+ *
+ * Latin text uses Nunito's rounded forms while Chinese text uses the locally
+ * hosted Noto Sans SC variable font. Change `latin` and `cjk` independently,
+ * or point both at one family that covers both scripts. Keep quoted family
+ * names here; semantic page roles are configured separately below.
+ */
+export const fontStacks = {
+  latin: '"Nunito Variable"',
+  cjk: '"Noto Sans SC Variable"',
+  fallback: '"PingFang SC", "Microsoft YaHei", ui-rounded, ui-sans-serif, system-ui, sans-serif',
+  mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+} as const;
+
+const globalFontStack = [fontStacks.latin, fontStacks.cjk, fontStacks.fallback].join(', ');
+
+/**
  * Role-based font stacks.
  *
  * `global` is the site-wide fallback. Leave any semantic role empty to inherit
- * `global`; `mono` keeps its own code-oriented fallback. This lets a site owner
- * change one font once, while still allowing deliberate exceptions for brand,
- * navigation, headings, metadata, and Markdown/Plog prose.
+ * `global`; `mono` is reserved for code and keyboard input. This lets a site
+ * owner change both language fonts once, while still allowing deliberate
+ * exceptions for brand, navigation, headings, metadata, and prose.
  */
 export const fontFamilies = {
-  global: '"Nunito Variable", "Noto Sans SC", "PingFang SC", "Microsoft YaHei", ui-rounded, system-ui, sans-serif',
+  global: globalFontStack,
   brand: '',
   navigation: '',
   heading: '',
@@ -24,7 +41,7 @@ export const fontFamilies = {
   metadata: '',
   prose: '',
   proseHeading: '',
-  mono: 'ui-monospace, "SFMono-Regular", Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace',
+  mono: fontStacks.mono,
 } satisfies FontFamilyRoles;
 
 export const themeConfig = {

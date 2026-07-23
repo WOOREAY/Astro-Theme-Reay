@@ -449,7 +449,7 @@
 
 .home-writing-number {
   color: var(--md-sys-color-primary);
-  font-family: var(--reay-font-mono);
+  font-family: var(--reay-font-metadata);
   font-size: 0.7rem;
   font-weight: 760;
 }
