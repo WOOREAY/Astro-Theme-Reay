@@ -4,9 +4,9 @@ import type { ThemePresetDefinition } from './types';
 export const retroTerminalThemePreset = {
   name: 'Retro Terminal',
   nameZh: '复古终端',
-  description: '磷光绿、深灰黑、扫描线和终端网格构成的复古计算机界面，浅色模式同样可读。',
+  description: '固定近黑底、磷光绿、扫描线和终端网格构成的经典复古计算机界面。',
   config: {
-    mode: 'system',
+    mode: 'dark',
     primary: '#287A4B',
     source: {
       primary: '#287A4B',

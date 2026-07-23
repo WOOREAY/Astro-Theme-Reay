@@ -36,7 +36,7 @@ export class ThemeToggle {
   private handleLanguageChange = () => this.updateButtons(this.read(), false);
   private handleSystemThemeChange = () => {
     if (this.read() === 'system') {
-      this.apply('system');
+      this.apply('system', false);
     }
   };
 
@@ -62,7 +62,10 @@ export class ThemeToggle {
    * Initialize theme toggle
    */
   private init() {
-    this.apply(this.read());
+    // Applying a preset default is not an explicit visitor choice. Keep
+    // storage empty until the toggle is used so another preset may supply a
+    // different default mode later.
+    this.apply(this.read(), false);
 
     this.buttons.forEach((button) => {
       if (button.dataset.bound === 'true') return;
@@ -94,7 +97,12 @@ export class ThemeToggle {
    */
   private read(): ThemeMode {
     const v = localStorage.getItem(this.config.storageKey!);
-    return v === 'light' || v === 'dark' || v === 'system' ? v : 'system';
+    if (v === 'light' || v === 'dark' || v === 'system') return v;
+
+    const configured = this.el.dataset.themeDefault;
+    return configured === 'light' || configured === 'dark' || configured === 'system'
+      ? configured
+      : 'system';
   }
 
   /**
@@ -154,7 +162,7 @@ export class ThemeToggle {
    * Apply theme to document
    * @param mode - Theme mode to apply
    */
-  private apply(mode: ThemeMode) {
+  private apply(mode: ThemeMode, persist = true) {
     let resolvedTheme: 'light' | 'dark';
 
     // Set data-theme attribute
@@ -169,8 +177,9 @@ export class ThemeToggle {
     this.el.setAttribute('data-theme', resolvedTheme);
     this.el.style.colorScheme = resolvedTheme;
 
-    // Save to localStorage
-    localStorage.setItem(this.config.storageKey!, mode);
+    if (persist) {
+      localStorage.setItem(this.config.storageKey!, mode);
+    }
 
     this.updateButtons(mode);
   }

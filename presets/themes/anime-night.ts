@@ -6,7 +6,7 @@ export const animeNightThemePreset = {
   nameZh: '动画夜城',
   description: '靛蓝夜空、霓虹青粉与城市剪影构成的原创动画夜景，明暗模式都保持清晰。',
   config: {
-    mode: 'system',
+    mode: 'dark',
     primary: '#5968C7',
     source: {
       primary: '#5968C7',

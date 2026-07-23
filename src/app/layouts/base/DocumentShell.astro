@@ -15,6 +15,7 @@ import '@chinese-fonts/hcqyt/dist/ChillRoundFRegular/result.css';
 import '@fontsource-variable/noto-sans-sc/wght.css';
 import '@design/styles/cards.css';
 import '@design/styles/immersive.css';
+import '@design/styles/preset-identities.css';
 
 interface Props {
   title: string;
@@ -40,8 +41,9 @@ const SeasonalEffects = getFeaturesConfig().integrations.seasonalEffects
   ? (await import('@features/effects/components/SeasonalEffects.astro')).default
   : null;
 
-const themeCssSchemaVersion = 3;
-const themeSignature = `${themeCssSchemaVersion}:${JSON.stringify(getThemeConfig())}`;
+const themeConfig = getThemeConfig();
+const themeCssSchemaVersion = 4;
+const themeSignature = `${themeCssSchemaVersion}:${JSON.stringify(themeConfig)}`;
 let themeHash = 2166136261;
 for (let index = 0; index < themeSignature.length; index += 1) {
   themeHash ^= themeSignature.charCodeAt(index);
@@ -50,15 +52,25 @@ for (let index = 0; index < themeSignature.length; index += 1) {
 const themeStylesheetHref = `/theme.css?v=${(themeHash >>> 0).toString(36)}`;
 ---
 
-<html lang="zh-CN">
+<html
+  lang="zh-CN"
+  data-theme-preset={themeConfig.preset}
+  data-theme-default={themeConfig.mode}
+>
   <head>
     <meta charset="utf-8" />
 
     <script is:inline>
       (() => {
         const storedTheme = localStorage.getItem('theme');
-        const resolvedTheme = storedTheme === 'light' || storedTheme === 'dark'
+        const configuredTheme = document.documentElement.dataset.themeDefault;
+        const requestedTheme = storedTheme === 'light' || storedTheme === 'dark' || storedTheme === 'system'
           ? storedTheme
+          : configuredTheme === 'light' || configuredTheme === 'dark'
+            ? configuredTheme
+            : 'system';
+        const resolvedTheme = requestedTheme === 'light' || requestedTheme === 'dark'
+          ? requestedTheme
           : window.matchMedia('(prefers-color-scheme: dark)').matches ? 'dark' : 'light';
 
         document.documentElement.setAttribute('data-theme', resolvedTheme);

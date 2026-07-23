@@ -10,9 +10,14 @@ type AstroSwapEvent = Event & {
 const THEME_STORAGE_KEY = 'theme';
 let initialized = false;
 
-function getStoredTheme(): ThemeMode {
+function getStoredTheme(targetDocument = document): ThemeMode {
   const value = localStorage.getItem(THEME_STORAGE_KEY);
-  return value === 'light' || value === 'dark' || value === 'system' ? value : 'system';
+  if (value === 'light' || value === 'dark' || value === 'system') return value;
+
+  const configured = targetDocument.documentElement.dataset.themeDefault;
+  return configured === 'light' || configured === 'dark' || configured === 'system'
+    ? configured
+    : 'system';
 }
 
 function resolveTheme(mode = getStoredTheme()): 'light' | 'dark' {
@@ -27,7 +32,10 @@ function onSystemThemeChange(callback: () => void) {
   window.matchMedia('(prefers-color-scheme: dark)').addEventListener('change', callback);
 }
 
-function applyResolvedTheme(targetDocument: Document, theme = resolveTheme()) {
+function applyResolvedTheme(
+  targetDocument: Document,
+  theme = resolveTheme(getStoredTheme(targetDocument)),
+) {
   targetDocument.documentElement.setAttribute('data-theme', theme);
   targetDocument.documentElement.style.colorScheme = theme;
 }

@@ -60,14 +60,14 @@ test('one theme object combines presets with intuitive color and nested override
   });
 });
 
-test('expressive presets expose complete palettes, typography, shapes, and background scenes', () => {
+test('expressive presets expose complete palettes, identity modes, typography, shapes, and background scenes', () => {
   const expressivePresets = {
-    inkwash: 'inkwash',
-    'anime-spring': 'anime-spring',
-    'anime-night': 'anime-night',
-    ukiyo: 'ukiyo',
-    ocean: 'ocean',
-    'retro-terminal': 'terminal',
+    inkwash: { decoration: 'inkwash', mode: 'system' },
+    'anime-spring': { decoration: 'anime-spring', mode: 'system' },
+    'anime-night': { decoration: 'anime-night', mode: 'dark' },
+    ukiyo: { decoration: 'ukiyo', mode: 'system' },
+    ocean: { decoration: 'ocean', mode: 'system' },
+    'retro-terminal': { decoration: 'terminal', mode: 'dark' },
   } as const;
 
   expect(themePresetNames).toEqual([
@@ -79,15 +79,15 @@ test('expressive presets expose complete palettes, typography, shapes, and backg
     ...Object.keys(expressivePresets),
   ]);
 
-  for (const [preset, decoration] of Object.entries(expressivePresets)) {
+  for (const [preset, identity] of Object.entries(expressivePresets)) {
     const theme = defineTheme({ preset: preset as keyof typeof expressivePresets });
-    expect(theme.mode).toBe('system');
+    expect(theme.mode).toBe(identity.mode);
     expect(theme.source?.primary).toBe(theme.primary);
     expect(theme.typography.fontFamilies.global.length).toBeGreaterThan(0);
     expect(theme.shape.radiusLg.length).toBeGreaterThan(0);
     expect(theme.background).toMatchObject({
       type: 'gradient',
-      decoration,
+      decoration: identity.decoration,
       blur: false,
       gradient: { useMD3Colors: true },
     });
@@ -198,6 +198,8 @@ test('homepage exposes the unchanged Hero and asymmetric editorial showcase', as
 test('default technology preset reaches the rendered background and component shape tokens', async ({ page }) => {
   await page.goto('/');
 
+  await expect(page.locator('html')).toHaveAttribute('data-theme-preset', 'technology');
+  await expect(page.locator('html')).toHaveAttribute('data-theme-default', 'system');
   await expect(page.locator('.app-background.decoration-aurora')).toHaveCount(1);
   await expect(page.locator('.app-background .scene-layer')).toHaveCount(3);
 
