@@ -8,7 +8,9 @@
 
 export const linksConfig: LinksConfig = {
   previews: {
-    provider: 'none',
+    // Automatic screenshots are loaded lazily; failed requests fall back to
+    // the enlarged avatar backdrop rendered by LinkCard.
+    provider: 'microlink',
     endpoint: 'https://api.microlink.io/',
   },
   friendLinks: [

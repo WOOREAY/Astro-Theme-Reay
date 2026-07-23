@@ -47,15 +47,17 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
     position: relative;
     isolation: isolate;
     display: grid;
-    grid-template-columns: 3.2rem minmax(0, 1fr) auto;
-    gap: 0.9rem;
-    align-items: center;
-    min-height: 7.2rem;
+    grid-template-columns: 3.3rem minmax(0, 1fr);
+    gap: 0.95rem;
+    align-items: end;
+    min-height: 10rem;
     overflow: hidden;
-    padding: 1rem;
+    padding: 1.05rem;
     border: 1px solid rgba(var(--md-sys-color-outline-variant-rgb), 0.42);
     border-radius: 1.05rem;
-    background: var(--md-sys-color-surface-container-low);
+    background:
+      radial-gradient(circle at 16% 12%, rgba(var(--md-sys-color-primary-rgb), 0.24), transparent 40%),
+      var(--md-sys-color-surface-container-low);
     color: inherit;
     box-shadow: 0 20px 52px -42px rgba(var(--md-sys-color-shadow-rgb), 0.74);
     contain: layout paint;
@@ -79,15 +81,16 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
 
   .link-backdrop {
     overflow: hidden;
-    opacity: 0.28;
+    opacity: 0.58;
+    transition: opacity 0.32s ease;
   }
 
   .link-backdrop img {
     width: 100%;
     height: 100%;
     object-fit: cover;
-    filter: blur(22px) saturate(1.2);
-    transform: scale(1.5);
+    filter: blur(9px) saturate(1.08);
+    transform: scale(1.14);
   }
 
   .link-preview {
@@ -98,25 +101,45 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
   }
 
   .link-portrait-card.has-preview .link-preview {
-    opacity: 0.22;
+    opacity: 0.58;
+  }
+
+  .link-portrait-card.has-preview:hover .link-preview,
+  .link-portrait-card.has-preview:focus-visible .link-preview {
+    opacity: 0.86;
+  }
+
+  .link-portrait-card.has-preview .link-backdrop {
+    opacity: 0.12;
+  }
+
+  .link-portrait-card.preview-error .link-backdrop {
+    opacity: 0.68;
   }
 
   .link-preview img {
     width: 100%;
     height: 100%;
     object-fit: cover;
+    transform: scale(1.04);
+    transition: transform 0.5s ease;
+  }
+
+  .link-portrait-card:hover .link-preview img,
+  .link-portrait-card:focus-visible .link-preview img {
+    transform: scale(1);
   }
 
   .link-scrim {
     z-index: -1;
     background:
-      linear-gradient(100deg, rgba(var(--md-sys-color-surface-rgb), 0.96) 0%, rgba(var(--md-sys-color-surface-rgb), 0.88) 58%, rgba(var(--md-sys-color-surface-rgb), 0.72) 100%),
-      linear-gradient(135deg, rgba(var(--md-sys-color-primary-rgb), 0.08), transparent 62%);
+      linear-gradient(180deg, rgba(var(--md-sys-color-surface-rgb), 0.2) 0%, rgba(var(--md-sys-color-surface-rgb), 0.82) 100%),
+      linear-gradient(105deg, rgba(var(--md-sys-color-surface-rgb), 0.72), transparent 76%);
   }
 
   .link-avatar {
-    width: 3.2rem;
-    height: 3.2rem;
+    width: 3.3rem;
+    height: 3.3rem;
     border: 1px solid rgba(var(--md-sys-color-surface-bright-rgb), 0.28);
     border-radius: 0.95rem;
     object-fit: cover;
@@ -127,6 +150,11 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
   .link-copy,
   .link-heading {
     min-width: 0;
+  }
+
+  .link-copy {
+    align-self: end;
+    padding-right: 2.2rem;
   }
 
   .link-heading {
@@ -161,6 +189,9 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
   }
 
   .link-visit {
+    position: absolute;
+    top: 0.95rem;
+    right: 0.95rem;
     display: grid;
     width: 2rem;
     height: 2rem;
@@ -182,6 +213,12 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
     .link-portrait-card,
     .link-visit {
       transition: none;
+    }
+  }
+
+  @media (max-width: 640px) {
+    .link-portrait-card {
+      min-height: 9.2rem;
     }
   }
 </style>

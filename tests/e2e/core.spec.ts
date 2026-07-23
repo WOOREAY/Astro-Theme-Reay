@@ -287,6 +287,17 @@ test('editorial details and archives do not regress into card walls', async ({ p
   expect(Number.parseFloat(linkEntryStyle.radius)).toBeGreaterThan(0);
   expect(linkEntryStyle.shadow).not.toBe('none');
   await expect(page.locator('[data-link-card] .link-backdrop').first()).toHaveCount(1);
+  await expect(page.locator('[data-link-card]').first()).toHaveAttribute('data-preview-src', /api\.microlink\.io/);
+  const fallbackStyle = await page.locator('[data-link-card] .link-backdrop').first().evaluate((element) => {
+    element.closest('[data-link-card]')?.classList.remove('has-preview');
+    const image = element.querySelector('img')!;
+    return {
+      opacity: Number.parseFloat(getComputedStyle(element).opacity),
+      filter: getComputedStyle(image).filter,
+    };
+  });
+  expect(fallbackStyle.opacity).toBeGreaterThanOrEqual(0.5);
+  expect(fallbackStyle.filter).toContain('blur(9px)');
 
   await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
   await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);
