@@ -66,6 +66,7 @@ test('expressive presets expose complete palettes, identity modes, typography, s
     'monochrome-ink': { decoration: 'monochrome-ink', mode: 'light' },
     'anime-spring': { decoration: 'anime-spring', mode: 'system' },
     'anime-night': { decoration: 'anime-night', mode: 'dark' },
+    'cosmic-abyss': { decoration: 'cosmic-abyss', mode: 'dark' },
     ukiyo: { decoration: 'ukiyo', mode: 'system' },
     ocean: { decoration: 'ocean', mode: 'system' },
     'retro-terminal': { decoration: 'terminal', mode: 'dark' },

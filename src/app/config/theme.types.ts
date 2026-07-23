@@ -9,6 +9,7 @@ export type BackgroundDecoration =
   | 'monochrome-ink'
   | 'anime-spring'
   | 'anime-night'
+  | 'cosmic-abyss'
   | 'ukiyo'
   | 'ocean'
   | 'terminal';

@@ -2,6 +2,7 @@ import type { FontFamilyRoles } from '../../src/design-system/theme';
 import type { ThemeConfig } from '../../src/app/config/theme.types';
 import { animeNightThemePreset } from './anime-night';
 import { animeSpringThemePreset } from './anime-spring';
+import { cosmicAbyssThemePreset } from './cosmic-abyss';
 import { editorialThemePreset } from './editorial';
 import { einkThemePreset } from './eink';
 import { forestThemePreset } from './forest';
@@ -27,6 +28,7 @@ export const themePresets = {
   'monochrome-ink': monochromeInkThemePreset,
   'anime-spring': animeSpringThemePreset,
   'anime-night': animeNightThemePreset,
+  'cosmic-abyss': cosmicAbyssThemePreset,
   ukiyo: ukiyoThemePreset,
   ocean: oceanThemePreset,
   'retro-terminal': retroTerminalThemePreset,
