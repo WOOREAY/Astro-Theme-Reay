@@ -15,7 +15,7 @@
 
 - Astro、@astrojs/mdx/rss/sitemap/check
 - UnoCSS 与 Iconify JSON sets
-- Fontsource Variable Nunito 与 Noto Sans SC（自托管拉丁/简体中文字体，OFL-1.1）
+- Fontsource Variable Nunito/Noto Sans SC 与 `@chinese-fonts/hcqyt` 寒蝉全圆体 Unicode 分片（自托管拉丁、中文圆体与缺字 fallback；字体为 OFL-1.1，Web 分片包为 MIT）
 - TypeScript
 - Material color utilities
 - Pagefind/default UI
