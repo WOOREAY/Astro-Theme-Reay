@@ -74,7 +74,7 @@ export type Palette = {
 
 export type ThemeColorSource = {
   primary: string;
-  variant?: 'tonal-spot' | 'monochrome';
+  variant?: 'tonal-spot' | 'neutral' | 'monochrome';
   secondary?: string;
   tertiary?: string;
   neutral?: string;

@@ -3,6 +3,7 @@ import {
   DynamicScheme,
   Hct,
   SchemeMonochrome,
+  SchemeNeutral,
   SchemeTonalSpot,
   TonalPalette,
   argbFromHex,
@@ -71,7 +72,9 @@ function createScheme(source: ThemeColorSource, isDark: boolean): DynamicScheme 
   const sourceColorHct = Hct.fromInt(sourceColorArgb);
   const baseScheme = source.variant === 'monochrome'
     ? new SchemeMonochrome(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL)
-    : new SchemeTonalSpot(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL);
+    : source.variant === 'neutral'
+      ? new SchemeNeutral(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL)
+      : new SchemeTonalSpot(sourceColorHct, isDark, STANDARD_CONTRAST_LEVEL);
 
   if (!source.secondary && !source.tertiary && !source.neutral && !source.neutralVariant) {
     return baseScheme;

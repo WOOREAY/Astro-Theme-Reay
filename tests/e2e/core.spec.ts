@@ -19,14 +19,14 @@ test('one theme object combines presets with intuitive color and nested override
 
   expect(theme.preset).toBe('paper');
   expect(theme.primary).toBe('#336699');
-  expect(theme.source).toEqual({ primary: '#336699' });
+  expect(theme.source).toEqual({ primary: '#336699', variant: 'neutral' });
   expect(theme.shape.radiusLg).toBe('14px');
   expect(theme.background).toMatchObject({
     type: 'image',
     decoration: 'plain',
     imageUrl: '/images/background.jpg',
     imageStyle: { size: 'cover', opacity: 0.72 },
-    gradient: { useMD3Colors: true, direction: '155deg' },
+    gradient: { useMD3Colors: true, direction: '150deg' },
   });
   expect(theme.typography.fontFamilies.global).toBe('"Example Rounded"');
   expect(theme.typography.fontFamilies.heading).toBe('"Example Rounded"');

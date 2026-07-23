@@ -93,6 +93,13 @@ for (const preset of ['technology', 'paper', 'eink', 'forest', 'editorial']) {
   assert.match(source, /decoration:\s*'(?:aurora|paper|eink|plain)'/, `${preset} must choose an explicit background decoration`);
 }
 
+const [paperPreset, einkPreset] = await Promise.all([
+  readSource('presets/themes/paper.ts'),
+  readSource('presets/themes/eink.ts'),
+]);
+assert.match(paperPreset, /variant:\s*'neutral'/, 'paper should use the low-chroma MD3 Neutral variant');
+assert.match(einkPreset, /variant:\s*'monochrome'/, 'eink should keep the MD3 Monochrome variant');
+
 for (const decoration of ['paper', 'eink', 'plain']) {
   assert.match(backgroundComponent, new RegExp(`decoration-${decoration}`), `Background must implement the ${decoration} decoration`);
 }

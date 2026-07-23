@@ -3,17 +3,14 @@ import type { ThemePresetDefinition } from './types';
 
 export const paperThemePreset = {
   name: 'Paper',
-  nameZh: '暖纸手记',
-  description: '参考纸张与个人手记的温润观感，使用茶褐配色、宋体正文和细微纸纤维。',
+  nameZh: '米纸手记',
+  description: '偏米白的纸张与个人手记观感，使用低饱和灰棕配色、宋体正文和细微纸纤维。',
   config: {
     mode: 'system',
-    primary: '#765B35',
+    primary: '#706A5E',
     source: {
-      primary: '#765B35',
-      secondary: '#756B4E',
-      tertiary: '#8A6047',
-      neutral: '#746F65',
-      neutralVariant: '#7C7162',
+      primary: '#706A5E',
+      variant: 'neutral',
     },
     typography: {
       fontFamilies: createFontRoles(fontStacks.paper.global, {
@@ -41,7 +38,7 @@ export const paperThemePreset = {
       blur: false,
       blurIntensity: 'light',
       imageStyle: { size: 'cover', position: 'center', repeat: 'no-repeat', opacity: 0.72 },
-      gradient: { useMD3Colors: true, direction: '155deg' },
+      gradient: { useMD3Colors: true, direction: '150deg' },
     },
     effects: {
       homeWave: { enabled: false, intensity: 'low' },
