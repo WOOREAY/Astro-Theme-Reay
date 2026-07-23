@@ -115,7 +115,7 @@ const [paperPreset, einkPreset] = await Promise.all([
 assert.match(paperPreset, /variant:\s*'neutral'/, 'paper should use the low-chroma MD3 Neutral variant');
 assert.match(einkPreset, /variant:\s*'monochrome'/, 'eink should keep the MD3 Monochrome variant');
 
-for (const decoration of ['paper', 'eink', 'plain']) {
+for (const decoration of ['paper', 'eink', 'plain', 'inkwash', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'terminal']) {
   assert.match(backgroundComponent, new RegExp(`decoration-${decoration}`), `Background must implement the ${decoration} decoration`);
 }
 

@@ -199,6 +199,7 @@ test('default technology preset reaches the rendered background and component sh
   await page.goto('/');
 
   await expect(page.locator('.app-background.decoration-aurora')).toHaveCount(1);
+  await expect(page.locator('.app-background .scene-layer')).toHaveCount(3);
 
   const theme = await page.evaluate(() => {
     const root = getComputedStyle(document.documentElement);

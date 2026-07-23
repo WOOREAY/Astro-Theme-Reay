@@ -100,6 +100,9 @@ if (type === 'gradient') {
     <div class="motion-grid"></div>
     <div class="light-sweep"></div>
     <div class="texture-layer"></div>
+    <div class="scene-layer scene-back"></div>
+    <div class="scene-layer scene-mid"></div>
+    <div class="scene-layer scene-front"></div>
     {blur && (
       <div 
         class="background-overlay" 
@@ -133,7 +136,8 @@ if (type === 'gradient') {
   .aurora-field,
   .motion-grid,
   .light-sweep,
-  .texture-layer {
+  .texture-layer,
+  .scene-layer {
     position: absolute;
     inset: -20%;
     pointer-events: none;
@@ -179,12 +183,35 @@ if (type === 'gradient') {
     inset: 0;
   }
 
+  .scene-layer {
+    display: none;
+    inset: 0;
+  }
+
   .decoration-paper .aurora-field,
   .decoration-paper .motion-grid,
   .decoration-paper .light-sweep,
   .decoration-eink .aurora-field,
   .decoration-eink .motion-grid,
   .decoration-eink .light-sweep,
+  .decoration-inkwash .aurora-field,
+  .decoration-inkwash .motion-grid,
+  .decoration-inkwash .light-sweep,
+  .decoration-anime-spring .aurora-field,
+  .decoration-anime-spring .motion-grid,
+  .decoration-anime-spring .light-sweep,
+  .decoration-anime-night .aurora-field,
+  .decoration-anime-night .motion-grid,
+  .decoration-anime-night .light-sweep,
+  .decoration-ukiyo .aurora-field,
+  .decoration-ukiyo .motion-grid,
+  .decoration-ukiyo .light-sweep,
+  .decoration-ocean .aurora-field,
+  .decoration-ocean .motion-grid,
+  .decoration-ocean .light-sweep,
+  .decoration-terminal .aurora-field,
+  .decoration-terminal .motion-grid,
+  .decoration-terminal .light-sweep,
   .decoration-plain .aurora-field,
   .decoration-plain .motion-grid,
   .decoration-plain .light-sweep {
@@ -219,6 +246,226 @@ if (type === 'gradient') {
     opacity: 0.16;
   }
 
+  .decoration-inkwash .scene-layer,
+  .decoration-anime-spring .scene-layer,
+  .decoration-anime-night .scene-layer,
+  .decoration-ukiyo .scene-layer,
+  .decoration-ocean .scene-layer,
+  .decoration-terminal .scene-layer {
+    display: block;
+  }
+
+  /* 水墨江湖：宣纸雾气、远山与近景墨痕。 */
+  .gradient-bg.decoration-inkwash {
+    opacity: 0.7;
+    background-size: 100% 100%;
+  }
+
+  .decoration-inkwash .scene-back {
+    z-index: 0;
+    inset: 22% -8% -8%;
+    background:
+      radial-gradient(58% 50% at 4% 75%, rgba(var(--md-sys-color-on-surface-rgb), 0.17) 0 42%, transparent 43%),
+      radial-gradient(48% 46% at 42% 78%, rgba(var(--md-sys-color-on-surface-variant-rgb), 0.13) 0 44%, transparent 45%),
+      radial-gradient(56% 52% at 92% 77%, rgba(var(--md-sys-color-primary-rgb), 0.14) 0 40%, transparent 41%);
+    filter: blur(16px);
+    opacity: 0.68;
+    transform: scale(1.08);
+  }
+
+  .decoration-inkwash .scene-mid {
+    z-index: 1;
+    inset: 38% -3% -4%;
+    background:
+      linear-gradient(102deg, rgba(var(--md-sys-color-on-surface-rgb), 0.13), rgba(var(--md-sys-color-primary-rgb), 0.07) 58%, transparent 88%);
+    clip-path: polygon(0 62%, 8% 52%, 16% 58%, 27% 37%, 38% 60%, 51% 44%, 60% 55%, 72% 28%, 84% 57%, 94% 42%, 100% 53%, 100% 100%, 0 100%);
+    filter: blur(3px);
+    opacity: 0.7;
+  }
+
+  .decoration-inkwash .scene-front {
+    z-index: 2;
+    background:
+      linear-gradient(to bottom, transparent 35%, rgba(var(--md-sys-color-surface-rgb), 0.08) 57%, rgba(var(--md-sys-color-surface-rgb), 0.32) 86%),
+      repeating-linear-gradient(7deg, rgba(var(--md-sys-color-on-surface-rgb), 0.016) 0 1px, transparent 1px 7px),
+      radial-gradient(circle at 82% 18%, rgba(var(--md-sys-color-tertiary-rgb), 0.17) 0 3px, transparent 4px);
+    mix-blend-mode: multiply;
+    opacity: 0.76;
+  }
+
+  /* 春日动画：原创晴空、柔云与静态花瓣。 */
+  .gradient-bg.decoration-anime-spring {
+    opacity: 0.76;
+    background-size: 100% 100%;
+  }
+
+  .decoration-anime-spring .scene-back {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 78% 16%, rgba(var(--md-sys-color-tertiary-fixed-rgb), 0.42) 0 5%, transparent 15%),
+      radial-gradient(ellipse at 10% 24%, rgba(var(--md-sys-color-surface-bright-rgb), 0.68) 0 8%, transparent 19%),
+      radial-gradient(ellipse at 30% 18%, rgba(var(--md-sys-color-surface-bright-rgb), 0.54) 0 7%, transparent 18%),
+      radial-gradient(ellipse at 88% 40%, rgba(var(--md-sys-color-surface-bright-rgb), 0.48) 0 8%, transparent 20%);
+    filter: blur(10px);
+    opacity: 0.9;
+  }
+
+  .decoration-anime-spring .scene-mid {
+    z-index: 1;
+    inset: 48% -8% -16%;
+    border-radius: 48% 52% 0 0 / 28% 32% 0 0;
+    background:
+      linear-gradient(170deg, rgba(var(--md-sys-color-secondary-container-rgb), 0.26), rgba(var(--md-sys-color-primary-container-rgb), 0.2) 42%, rgba(var(--md-sys-color-tertiary-container-rgb), 0.24));
+    transform: rotate(-2deg);
+    opacity: 0.72;
+  }
+
+  .decoration-anime-spring .scene-front {
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at 14% 20%, rgba(var(--md-sys-color-secondary-rgb), 0.24) 0 2px, transparent 3px),
+      radial-gradient(ellipse at 24% 42%, rgba(var(--md-sys-color-secondary-rgb), 0.18) 0 3px, transparent 4px),
+      radial-gradient(ellipse at 70% 29%, rgba(var(--md-sys-color-secondary-rgb), 0.2) 0 2px, transparent 3px),
+      radial-gradient(ellipse at 87% 56%, rgba(var(--md-sys-color-secondary-rgb), 0.18) 0 3px, transparent 4px),
+      linear-gradient(112deg, transparent 22%, rgba(var(--md-sys-color-surface-bright-rgb), 0.13) 42%, transparent 63%);
+    opacity: 0.88;
+  }
+
+  /* 动画夜城：星点、远城剪影与低强度霓虹光晕。 */
+  .gradient-bg.decoration-anime-night {
+    opacity: 0.78;
+    background-size: 100% 100%;
+  }
+
+  .decoration-anime-night .scene-back {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 12% 16%, rgba(var(--md-sys-color-surface-bright-rgb), 0.62) 0 1px, transparent 2px),
+      radial-gradient(circle at 29% 29%, rgba(var(--md-sys-color-tertiary-fixed-rgb), 0.5) 0 1px, transparent 2px),
+      radial-gradient(circle at 48% 12%, rgba(var(--md-sys-color-surface-bright-rgb), 0.58) 0 1.2px, transparent 2.2px),
+      radial-gradient(circle at 71% 24%, rgba(var(--md-sys-color-secondary-fixed-rgb), 0.5) 0 1px, transparent 2px),
+      radial-gradient(circle at 88% 10%, rgba(var(--md-sys-color-surface-bright-rgb), 0.54) 0 1px, transparent 2px),
+      radial-gradient(circle at 61% 42%, rgba(var(--md-sys-color-primary-fixed-rgb), 0.42) 0 1px, transparent 2px);
+    opacity: 0.9;
+  }
+
+  .decoration-anime-night .scene-mid {
+    z-index: 1;
+    inset: 43% -2% -2%;
+    background: rgba(var(--md-sys-color-on-surface-rgb), 0.14);
+    clip-path: polygon(0 63%, 5% 63%, 5% 42%, 10% 42%, 10% 54%, 15% 54%, 15% 31%, 21% 31%, 21% 62%, 27% 62%, 27% 46%, 33% 46%, 33% 21%, 40% 21%, 40% 58%, 47% 58%, 47% 38%, 54% 38%, 54% 52%, 61% 52%, 61% 27%, 68% 27%, 68% 57%, 75% 57%, 75% 41%, 82% 41%, 82% 18%, 89% 18%, 89% 55%, 95% 55%, 95% 36%, 100% 36%, 100% 100%, 0 100%);
+    opacity: 0.82;
+  }
+
+  .decoration-anime-night .scene-front {
+    z-index: 2;
+    background:
+      radial-gradient(circle at 18% 88%, rgba(var(--md-sys-color-tertiary-rgb), 0.22), transparent 22%),
+      radial-gradient(circle at 78% 82%, rgba(var(--md-sys-color-secondary-rgb), 0.22), transparent 24%),
+      linear-gradient(to bottom, transparent 48%, rgba(var(--md-sys-color-scrim-rgb), 0.16));
+    mix-blend-mode: screen;
+    opacity: 0.72;
+  }
+
+  /* 浮世绘：日轮、版画波纹与和纸颗粒。 */
+  .gradient-bg.decoration-ukiyo {
+    opacity: 0.72;
+    background-size: 100% 100%;
+  }
+
+  .decoration-ukiyo .scene-back {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 76% 23%, rgba(var(--md-sys-color-tertiary-rgb), 0.34) 0 8%, transparent 8.4%),
+      linear-gradient(to bottom, transparent 54%, rgba(var(--md-sys-color-secondary-container-rgb), 0.18) 54% 55%, transparent 55%);
+    opacity: 0.88;
+  }
+
+  .decoration-ukiyo .scene-mid {
+    z-index: 1;
+    inset: 44% -8% -12%;
+    background:
+      repeating-radial-gradient(ellipse at 8% 100%, transparent 0 23px, rgba(var(--md-sys-color-primary-rgb), 0.16) 24px 26px, transparent 27px 39px),
+      repeating-radial-gradient(ellipse at 62% 104%, transparent 0 28px, rgba(var(--md-sys-color-primary-rgb), 0.12) 29px 31px, transparent 32px 46px);
+    transform: rotate(-2deg);
+    opacity: 0.56;
+  }
+
+  .decoration-ukiyo .scene-front {
+    z-index: 2;
+    background:
+      repeating-linear-gradient(7deg, rgba(var(--md-sys-color-on-surface-rgb), 0.018) 0 1px, transparent 1px 7px),
+      repeating-linear-gradient(93deg, rgba(var(--md-sys-color-on-surface-rgb), 0.014) 0 1px, transparent 1px 9px),
+      linear-gradient(96deg, transparent 8%, rgba(var(--md-sys-color-secondary-rgb), 0.08) 8.2% 8.5%, transparent 8.7% 100%);
+    mix-blend-mode: multiply;
+    opacity: 0.42;
+  }
+
+  /* 海岸晴空：日光、海平线与静态水纹。 */
+  .gradient-bg.decoration-ocean {
+    opacity: 0.75;
+    background-size: 100% 100%;
+  }
+
+  .decoration-ocean .scene-back {
+    z-index: 0;
+    background:
+      radial-gradient(circle at 78% 18%, rgba(var(--md-sys-color-tertiary-fixed-rgb), 0.38) 0 5%, transparent 15%),
+      linear-gradient(to bottom, rgba(var(--md-sys-color-surface-bright-rgb), 0.16), transparent 48%);
+    opacity: 0.9;
+  }
+
+  .decoration-ocean .scene-mid {
+    z-index: 1;
+    inset: 54% -4% -8%;
+    background:
+      linear-gradient(to bottom, rgba(var(--md-sys-color-primary-rgb), 0.19), rgba(var(--md-sys-color-secondary-rgb), 0.12)),
+      repeating-radial-gradient(ellipse at 12% 12%, transparent 0 26px, rgba(var(--md-sys-color-surface-bright-rgb), 0.17) 27px 29px, transparent 30px 45px);
+    border-top: 1px solid rgba(var(--md-sys-color-primary-rgb), 0.2);
+    opacity: 0.8;
+  }
+
+  .decoration-ocean .scene-front {
+    z-index: 2;
+    inset: 70% -10% -18%;
+    background:
+      repeating-radial-gradient(ellipse at 20% 0, transparent 0 34px, rgba(var(--md-sys-color-surface-bright-rgb), 0.2) 35px 38px, transparent 39px 58px),
+      linear-gradient(to bottom, transparent, rgba(var(--md-sys-color-tertiary-container-rgb), 0.18));
+    transform: rotate(1deg);
+    opacity: 0.84;
+  }
+
+  /* 复古终端：低对比网格、扫描线与屏幕边缘暗角。 */
+  .gradient-bg.decoration-terminal {
+    opacity: 0.7;
+    background-size: 100% 100%;
+  }
+
+  .decoration-terminal .scene-back {
+    z-index: 0;
+    background:
+      linear-gradient(rgba(var(--md-sys-color-primary-rgb), 0.055) 1px, transparent 1px),
+      linear-gradient(90deg, rgba(var(--md-sys-color-primary-rgb), 0.05) 1px, transparent 1px);
+    background-size: 32px 32px;
+    mask-image: linear-gradient(to bottom, transparent, black 16%, black 84%, transparent);
+    opacity: 0.78;
+  }
+
+  .decoration-terminal .scene-mid {
+    z-index: 1;
+    background: repeating-linear-gradient(to bottom, transparent 0 3px, rgba(var(--md-sys-color-on-surface-rgb), 0.028) 3px 4px);
+    mix-blend-mode: multiply;
+    opacity: 0.7;
+  }
+
+  .decoration-terminal .scene-front {
+    z-index: 2;
+    background:
+      radial-gradient(ellipse at center, rgba(var(--md-sys-color-primary-rgb), 0.08), transparent 54%),
+      radial-gradient(ellipse at center, transparent 50%, rgba(var(--md-sys-color-scrim-rgb), 0.14) 100%);
+    opacity: 0.72;
+  }
+
   /* 模糊遮罩层 */
   .background-overlay {
     position: absolute;
@@ -248,6 +495,54 @@ if (type === 'gradient') {
 
   :global([data-theme='dark']) .motion-grid {
     opacity: 0.18;
+  }
+
+  :global([data-theme='dark']) .decoration-inkwash .scene-front,
+  :global([data-theme='dark']) .decoration-ukiyo .scene-front,
+  :global([data-theme='dark']) .decoration-terminal .scene-mid {
+    mix-blend-mode: screen;
+  }
+
+  :global([data-theme='dark']) .decoration-inkwash .scene-back,
+  :global([data-theme='dark']) .decoration-inkwash .scene-mid {
+    opacity: 0.5;
+  }
+
+  :global([data-theme='dark']) .decoration-anime-spring .scene-back {
+    opacity: 0.5;
+  }
+
+  :global([data-theme='dark']) .decoration-anime-spring .scene-front {
+    opacity: 0.58;
+  }
+
+  :global([data-theme='dark']) .decoration-anime-night .scene-mid {
+    background: rgba(var(--md-sys-color-on-surface-rgb), 0.2);
+  }
+
+  :global([data-theme='dark']) .decoration-anime-night .scene-front {
+    opacity: 0.9;
+  }
+
+  :global([data-theme='dark']) .decoration-ukiyo .scene-back {
+    opacity: 0.62;
+  }
+
+  :global([data-theme='dark']) .decoration-ukiyo .scene-mid {
+    opacity: 0.44;
+  }
+
+  :global([data-theme='dark']) .decoration-ocean .scene-mid,
+  :global([data-theme='dark']) .decoration-ocean .scene-front {
+    opacity: 0.58;
+  }
+
+  :global([data-theme='dark']) .decoration-terminal .scene-back {
+    opacity: 0.92;
+  }
+
+  :global([data-theme='dark']) .decoration-terminal .scene-front {
+    opacity: 0.86;
   }
 
   /* 图片背景的额外遮罩 */
@@ -356,6 +651,58 @@ if (type === 'gradient') {
     .aurora-field {
       filter: blur(20px);
       opacity: 0.68;
+    }
+
+    .decoration-inkwash .scene-back {
+      inset-inline: -24%;
+      filter: blur(12px);
+    }
+
+    .decoration-inkwash .scene-mid {
+      inset-inline: -16%;
+    }
+
+    .decoration-anime-spring .scene-back {
+      background:
+        radial-gradient(circle at 78% 14%, rgba(var(--md-sys-color-tertiary-fixed-rgb), 0.38) 0 6%, transparent 18%),
+        radial-gradient(ellipse at 14% 26%, rgba(var(--md-sys-color-surface-bright-rgb), 0.58) 0 10%, transparent 22%),
+        radial-gradient(ellipse at 88% 42%, rgba(var(--md-sys-color-surface-bright-rgb), 0.42) 0 10%, transparent 23%);
+    }
+
+    .decoration-anime-night .scene-back {
+      opacity: 0.66;
+    }
+
+    .decoration-anime-night .scene-mid {
+      inset-inline: -18%;
+    }
+
+    .decoration-ukiyo .scene-back {
+      background:
+        radial-gradient(circle at 76% 20%, rgba(var(--md-sys-color-tertiary-rgb), 0.3) 0 11%, transparent 11.6%),
+        linear-gradient(to bottom, transparent 54%, rgba(var(--md-sys-color-secondary-container-rgb), 0.16) 54% 55%, transparent 55%);
+    }
+
+    .decoration-ukiyo .scene-mid,
+    .decoration-ocean .scene-mid,
+    .decoration-ocean .scene-front {
+      inset-inline: -28%;
+    }
+
+    .decoration-terminal .scene-back {
+      background-size: 24px 24px;
+      opacity: 0.58;
+    }
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    .gradient-bg,
+    .aurora-field,
+    .motion-grid,
+    .light-sweep,
+    .scene-layer {
+      animation: none !important;
+      transition: none !important;
     }
   }
 </style>
