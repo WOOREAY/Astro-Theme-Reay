@@ -42,7 +42,8 @@ const headerStats = [
 </ArchiveLayout>
 
 <style>
-  .tag-page-flow { display: grid; gap: clamp(2.5rem, 6vw, 4rem); }
+  .tag-page-flow { display: grid; width: min(100%, 62rem); margin-inline: auto; gap: clamp(2.5rem, 6vw, 4rem); }
+  .tag-page-flow > section { min-width: 0; }
   .archive-empty { padding: 3rem 0; text-align: center; color: var(--md-sys-color-on-surface-variant); }
   .archive-empty i { color: var(--md-sys-color-outline); font-size: 2rem; }
   .archive-empty h2 { margin: 0.7rem 0 0.35rem; color: var(--md-sys-color-on-surface); font-size: 1rem; }

@@ -20,7 +20,7 @@ const headerStats = [
   stats={headerStats}
 >
   {allSeries.length > 0 ? (
-    <div class="series-index">{allSeries.map((item) => <SeriesCard {...item} />)}</div>
+    <div class="series-index" data-series-index>{allSeries.map((item) => <SeriesCard {...item} />)}</div>
   ) : (
     <div class="archive-empty">
       <i class="i-carbon:folder-off" aria-hidden="true"></i>
@@ -31,7 +31,7 @@ const headerStats = [
 </ArchiveLayout>
 
 <style>
-  .series-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); column-gap: clamp(1.2rem, 3vw, 2.2rem); }
+  .series-index { display: grid; grid-template-columns: repeat(2, minmax(0, 1fr)); width: min(100%, 70rem); margin-inline: auto; column-gap: clamp(1.2rem, 3vw, 2.2rem); }
   @media (max-width: 720px) { .series-index { grid-template-columns: 1fr; } }
   .archive-empty { padding: 3rem 0; text-align: center; color: var(--md-sys-color-on-surface-variant); }
   .archive-empty i { color: var(--md-sys-color-outline); font-size: 2rem; }

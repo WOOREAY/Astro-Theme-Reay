@@ -19,7 +19,6 @@ export function initArchiveExplorer(): Cleanup {
   const dialogPanels = Array.from(root.querySelectorAll<HTMLElement>('[data-archive-topic-dialog-panel]'));
   const topicButtons = Array.from(root.querySelectorAll<HTMLButtonElement>('[data-archive-topic]'));
   const seriesShelf = root.querySelector<HTMLElement>('[data-archive-series-shelf]');
-  const seriesCompact = root.querySelector<HTMLElement>('[data-archive-series-compact]');
   const collectionPanel = root.querySelector<HTMLElement>('[data-archive-collection-panel]');
   const results = root.querySelector<HTMLElement>('[data-archive-results]');
   const resultCount = root.querySelector<HTMLElement>('[data-archive-result-count]');
@@ -124,8 +123,7 @@ export function initArchiveExplorer(): Cleanup {
       button.setAttribute('aria-pressed', String(selected));
     });
 
-    if (seriesShelf) seriesShelf.hidden = activeKind !== 'blog';
-    if (seriesCompact) seriesCompact.hidden = activeKind !== 'all';
+    if (seriesShelf) seriesShelf.hidden = activeKind === 'plog';
     if (collectionPanel) collectionPanel.hidden = activeKind !== 'plog';
     if (resultCount) resultCount.textContent = String(visibleCount);
     if (activeTopicText) {

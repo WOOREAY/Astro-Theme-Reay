@@ -123,6 +123,10 @@ test('homepage applies the compact config-driven typography scale', async ({ pag
   await page.goto('/');
 
   await expect.poll(() => page.evaluate(() => document.fonts.check('15px "Nunito Variable"'))).toBe(true);
+  await expect.poll(() => page.evaluate(async () => {
+    const faces = await document.fonts.load('15px "Noto Sans SC Variable"', '中文归档');
+    return faces.length > 0 && document.fonts.check('15px "Noto Sans SC Variable"', '中文归档');
+  })).toBe(true);
   const typography = await page.evaluate(() => ({
     configuredFamily: getComputedStyle(document.documentElement).getPropertyValue('--reay-font-sans'),
     family: getComputedStyle(document.body).fontFamily,
@@ -133,7 +137,9 @@ test('homepage applies the compact config-driven typography scale', async ({ pag
   }));
 
   expect(typography.configuredFamily).toContain('Nunito Variable');
+  expect(typography.configuredFamily).toContain('Noto Sans SC Variable');
   expect(typography.family).toContain('Nunito Variable');
+  expect(typography.family).toContain('Noto Sans SC Variable');
   expect(typography.root).toBe(15);
   expect(typography.hero).toBeLessThanOrEqual(36);
   expect(typography.section).toBeLessThanOrEqual(24.3);
@@ -150,7 +156,10 @@ test('role-based typography falls back globally and propagates to the intended s
     mono: getComputedStyle(document.documentElement).getPropertyValue('--reay-font-mono'),
   }));
 
-  for (const role of typography.roles) expect(role).toContain('Nunito Variable');
+  for (const role of typography.roles) {
+    expect(role).toContain('Nunito Variable');
+    expect(role).toContain('Noto Sans SC Variable');
+  }
   expect(typography.mono).toContain('SFMono-Regular');
 
   const propagated = await page.evaluate(() => {
@@ -276,12 +285,32 @@ test('editorial details and archives do not regress into card walls', async ({ p
   expect(await page.locator('[data-archive-row][data-archive-kind="blog"]').count()).toBeGreaterThan(0);
   expect(await page.locator('[data-archive-row][data-archive-kind="plog"]').count()).toBe(6);
   await expect(page.locator('[data-archive-filter]')).toHaveText(['全部', 'Blog', 'Plog']);
+  await expect(page.locator('[data-archive-series-shelf]')).toBeVisible();
+  expect(await page.locator('[data-archive-series-entry]').count()).toBeLessThanOrEqual(4);
+  await expect(page.locator('[data-archive-series-compact]')).toHaveCount(0);
+  await expect(page.locator('[data-archive-series-shelf] > header a')).toHaveAttribute('href', '/archives/series');
+
+  const archiveSwitcher = await page.evaluate(() => {
+    const toolbar = getComputedStyle(document.querySelector('[data-archive-toolbar]')!);
+    const active = getComputedStyle(document.querySelector('[data-archive-filter].is-active')!);
+    return {
+      toolbarBackground: toolbar.backgroundColor,
+      toolbarRadius: Number.parseFloat(toolbar.borderRadius),
+      activeBackground: active.backgroundColor,
+      activeWeight: Number.parseFloat(active.fontWeight),
+    };
+  });
+  expect(archiveSwitcher.toolbarBackground).not.toBe('rgba(0, 0, 0, 0)');
+  expect(archiveSwitcher.toolbarRadius).toBeGreaterThan(0);
+  expect(archiveSwitcher.activeBackground).not.toBe('rgba(0, 0, 0, 0)');
+  expect(archiveSwitcher.activeWeight).toBeLessThanOrEqual(700);
 
   await page.locator('[data-archive-filter="plog"]').click();
   await expect(page.locator('[data-archive-row][data-archive-kind="blog"]').first()).toBeHidden();
   await expect(page.locator('[data-archive-row][data-archive-kind="plog"]').first()).toBeVisible();
   await expect(page.locator('[data-archive-topic-panel="plog"]')).toBeVisible();
   await expect(page.locator('[data-archive-topic-panel="all"]')).toBeHidden();
+  await expect(page.locator('[data-archive-series-shelf]')).toBeHidden();
   await expect(page.locator('.archive-main .reay-card, .series-progress')).toHaveCount(0);
 
   await page.goto('/links');
@@ -314,6 +343,40 @@ test('editorial details and archives do not regress into card walls', async ({ p
   await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
   await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);
   await expect(page.locator('.stat-card')).toHaveCount(0);
+});
+
+test('tag and series directories keep a centered, compact editorial rhythm', async ({ page }) => {
+  await page.setViewportSize({ width: 1440, height: 900 });
+  await page.goto('/archives/tags');
+
+  const tagLayout = await page.evaluate(() => {
+    const flow = document.querySelector<HTMLElement>('.tag-page-flow')!;
+    const rect = flow.getBoundingClientRect();
+    const tagLinks = Array.from(document.querySelectorAll<HTMLElement>('[data-tag-map] a'));
+    const rank = document.querySelector<HTMLElement>('.tag-rank')!;
+    return {
+      centerDelta: Math.abs(rect.left + rect.right - document.documentElement.clientWidth),
+      maxFontSize: Math.max(...tagLinks.map((link) => Number.parseFloat(getComputedStyle(link).fontSize))),
+      maxFontWeight: Math.max(...tagLinks.map((link) => Number.parseFloat(getComputedStyle(link).fontWeight))),
+      rankFamily: getComputedStyle(rank).fontFamily,
+      titleWeight: Number.parseFloat(getComputedStyle(document.querySelector('[data-editorial-page-header] h1')!).fontWeight),
+    };
+  });
+  expect(tagLayout.centerDelta).toBeLessThanOrEqual(2);
+  expect(tagLayout.maxFontSize).toBeLessThanOrEqual(16);
+  expect(tagLayout.maxFontWeight).toBeLessThanOrEqual(720);
+  expect(tagLayout.rankFamily).toContain('Nunito Variable');
+  expect(tagLayout.rankFamily).not.toContain('SFMono-Regular');
+  expect(tagLayout.titleWeight).toBeLessThanOrEqual(760);
+
+  await page.goto('/archives/series');
+  await expect(page.locator('[data-series-index]')).toBeVisible();
+  expect(await page.locator('[data-series-entry]').count()).toBeGreaterThan(0);
+  const seriesCenterDelta = await page.locator('[data-series-index]').evaluate((element) => {
+    const rect = element.getBoundingClientRect();
+    return Math.abs(rect.left + rect.right - document.documentElement.clientWidth);
+  });
+  expect(seriesCenterDelta).toBeLessThanOrEqual(2);
 });
 
 test('archives keeps popular topics concise and returns topic discovery to filtered results', async ({ page }) => {

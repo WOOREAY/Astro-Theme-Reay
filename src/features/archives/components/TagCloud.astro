@@ -56,6 +56,7 @@ const getWeight = (count: number) => maxCount === minCount ? 0.5 : (count - minC
     flex-wrap: wrap;
     gap: 0.55rem 0.72rem;
     align-items: baseline;
+    justify-content: center;
     padding: clamp(1rem, 3vw, 1.55rem);
     border-radius: 1rem;
     background: linear-gradient(125deg, rgba(var(--md-sys-color-primary-rgb), 0.1), rgba(var(--md-sys-color-surface-container-rgb), 0.42));
@@ -67,8 +68,8 @@ const getWeight = (count: number) => maxCount === minCount ? 0.5 : (count - minC
     gap: 0.28rem;
     padding: 0.25rem 0;
     color: color-mix(in srgb, var(--md-sys-color-on-surface) calc(72% + var(--tag-weight) * 28%), var(--md-sys-color-primary));
-    font-size: calc(0.72rem + var(--tag-weight) * 0.5rem);
-    font-weight: calc(710 + var(--tag-weight) * 160);
+    font-size: calc(0.76rem + var(--tag-weight) * 0.3rem);
+    font-weight: calc(620 + var(--tag-weight) * 100);
     line-height: 1.2;
   }
 
@@ -78,7 +79,7 @@ const getWeight = (count: number) => maxCount === minCount ? 0.5 : (count - minC
 
   .tag-map small {
     color: var(--md-sys-color-on-surface-variant);
-    font-family: var(--reay-font-mono);
+    font-family: var(--reay-font-metadata);
     font-size: 0.58rem;
     font-weight: 650;
   }
@@ -118,7 +119,7 @@ const getWeight = (count: number) => maxCount === minCount ? 0.5 : (count - minC
 
   .tag-rank {
     color: var(--md-sys-color-outline);
-    font-family: var(--reay-font-mono);
+    font-family: var(--reay-font-metadata);
     font-size: 0.65rem;
   }
 
@@ -126,7 +127,7 @@ const getWeight = (count: number) => maxCount === minCount ? 0.5 : (count - minC
     min-width: 0;
     overflow: hidden;
     font-size: 0.9rem;
-    font-weight: 820;
+    font-weight: 700;
     text-overflow: ellipsis;
     white-space: nowrap;
   }
