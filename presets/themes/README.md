@@ -38,7 +38,7 @@ export const themeConfig = defineTheme({
 
 不写其他字段时只需修改 `preset`。填写 `primary` 会从新主色重新生成完整 MD3 配色；填写高级 `source` 时则只采用显式关键色。背景、字体、shape 和 effects 都在同一对象中按层级覆盖。
 
-六套扩展主题的山岚、云层、夜城、版画波纹、海面与扫描线都由 `Background.astro` 使用 MD3 token 和原创 CSS 绘制，不请求外部背景图片；它们会跟随用户覆盖后的配色，并在移动端与 reduced-motion 环境保持静态降级。
+六套扩展主题的山岚、云层、夜城、版画波纹、海面与扫描线都由 `Background.astro` 使用原创 CSS 绘制，不请求外部背景图片；`preset-identities.css` 再统一改变表面材质、边界、阴影、按钮和 Hero 细节，所以它们不是同一套组件的简单换色。水墨、春日、夜城、浮世绘和海岸会继续消费覆盖后的 MD3 token；复古终端刻意固定经典黑底与磷光绿身份。预设 `mode` 只在访客没有本地选择时作为默认值，显式的 light/dark/system 选择始终优先。
 
 完整参数和图片背景示例见 [`docs/THEME-CONFIG.md`](../../docs/THEME-CONFIG.md)。若增加未自托管的字体，请同时在 `DocumentShell.astro` 引入字体资源。
 

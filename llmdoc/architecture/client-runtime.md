@@ -43,7 +43,7 @@ theme.config.ts
   -> static /theme.css
 ```
 
-首屏 inline script 在绘制前解析 `localStorage.theme` 或系统偏好，并把 `data-theme` 设置为 resolved `light`/`dark`。持久化值还可为 `system`；`theme-sync.ts` 在系统变化和 Astro swap 前后保持 resolved attribute。
+DocumentShell 同时输出 `data-theme-preset` 和 `data-theme-default`。首屏 inline script 在绘制前优先解析 `localStorage.theme`，缺失时采用配置默认 mode，再把 `data-theme` 设置为 resolved `light`/`dark`。持久化值可为 `light | dark | system`；页面初始化只应用默认值而不写入 storage，只有访客实际使用 ThemeToggle 才持久化，因此更换预设后新默认 mode 可以生效，显式选择仍优先。`theme-sync.ts` 在系统变化和 Astro swap 前后保持 resolved attribute。
 
 ## i18n Flow
 

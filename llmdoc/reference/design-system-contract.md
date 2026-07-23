@@ -6,6 +6,8 @@
 
 页面级背景只由最终 `themeConfig.background` 与 `src/shared/components/Background.astro` 解释；`aurora`、`paper`、`eink`、`plain` decoration 分别提供科技光场、纸纤维、电子纸点阵和无装饰背景，`inkwash`、`anime-spring`、`anime-night`、`ukiyo`、`ocean`、`terminal` 使用三层原创 CSS 场景表达远山、云与花瓣、星空与城市、日轮与版画波纹、海平线与水纹、网格与扫描线。所有场景只消费 MD3 RGB token，不依赖外部背景资产；feature 不再建立第二套页面底色配置。
 
+DocumentShell 把最终 preset ID 输出到 `html[data-theme-preset]`，`src/design-system/styles/preset-identities.css` 以此提供独立于 palette 的材质与组件身份层；页面 feature 不得自行读取 preset 或复制身份分支。普通扩展身份继续消费 MD3 token，因此自定义 primary/source 会重着色而保留材质。`retro-terminal` 刻意固定经典近黑/磷光绿 token、CRT 纹理与方角组件，不跟随普通重着色规则。
+
 ## Variable Layers
 
 - `--md-ref-*`: reference/tonal palette。
@@ -87,7 +89,9 @@ UnoCSS 静态扫描无法发现配置对象中的动态 icon classes。`uno.conf
 ## Runtime Theme Contract
 
 - `data-theme` 始终是 resolved `light`/`dark`。
+- `data-theme-preset` 是最终预设身份，`data-theme-default` 是配置默认 mode。
 - localStorage `theme` 可为 `light`、`dark`、`system`。
+- localStorage 缺失时才读取 `data-theme-default`；初始化不得把配置默认值写回 storage，只有显式用户切换可以持久化。anime-night/retro-terminal 默认 dark，其余内置预设默认 system。
 - DocumentShell 必须统一输出主题变量、首屏解析逻辑和带版本的 theme.css 链接。
 - reduced-motion 和背景 fallback behavior 需要保留。
 - `source.variant` 只允许 `tonal-spot`、`neutral` 或 `monochrome`；paper 使用 Neutral 抑制赭黄彩度，eink 使用 Monochrome，二者仍由 MD3 生成成对 on-color，不手写页面色板。
