@@ -11,7 +11,7 @@
 | GitHub REST/GraphQL | 构建期 | stale cache、匿名请求、近似活动或空数据 | token、远程元数据、README HTML |
 | Pagefind | 构建后 + 浏览器本地 | 无索引则搜索不可用 | 本地生成文件，不发送查询 |
 | Comments | 浏览器显式触发后懒加载 | 默认关闭；显示加载错误，可重试 | 外部脚本、cookies、隐私、provider 数据 |
-| Microlink preview | 卡片接近 viewport 时加载的远程 screenshot | 默认 `microlink`；显式 screenshot 优先，失败回退 avatar；可改 `none` | 请求会暴露目标 URL/访客网络 |
+| Microlink preview | fine pointer 悬停或键盘聚焦后加载的远程 screenshot | 默认 `microlink`；显式 screenshot 优先，失败回退 avatar；可改 `none` | 请求会暴露目标 URL/访客网络 |
 | KaTeX CSS | 浏览器 CDN | 数学样式降级 | jsDelivr availability/SRI version |
 | Remote link/avatar assets | 浏览器 | 图片降级 | 第三方资源与跟踪政策 |
 
