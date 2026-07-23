@@ -98,6 +98,7 @@ const presetDecorations = {
   forest: 'paper',
   editorial: 'plain',
   inkwash: 'inkwash',
+  'monochrome-ink': 'monochrome-ink',
   'anime-spring': 'anime-spring',
   'anime-night': 'anime-night',
   ukiyo: 'ukiyo',
@@ -120,11 +121,11 @@ const [paperPreset, einkPreset] = await Promise.all([
 assert.match(paperPreset, /variant:\s*'neutral'/, 'paper should use the low-chroma MD3 Neutral variant');
 assert.match(einkPreset, /variant:\s*'monochrome'/, 'eink should keep the MD3 Monochrome variant');
 
-for (const decoration of ['paper', 'eink', 'plain', 'inkwash', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'terminal']) {
+for (const decoration of ['paper', 'eink', 'plain', 'inkwash', 'monochrome-ink', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'terminal']) {
   assert.match(backgroundComponent, new RegExp(`decoration-${decoration}`), `Background must implement the ${decoration} decoration`);
 }
 
-for (const preset of ['inkwash', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'retro-terminal']) {
+for (const preset of ['inkwash', 'monochrome-ink', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'retro-terminal']) {
   assert.match(
     presetIdentities,
     new RegExp(`data-theme-preset=['\"]${preset}['\"]`),
@@ -138,5 +139,12 @@ assert.match(presetIdentities, /repeating-linear-gradient\(to bottom/, 'retro te
 assert.match(backgroundComponent, /decoration-inkwash \.scene-back/, 'inkwash must render a distant mountain layer');
 assert.match(backgroundComponent, /decoration-inkwash \.scene-mid/, 'inkwash must render a middle mountain layer');
 assert.match(backgroundComponent, /decoration-inkwash \.scene-front/, 'inkwash must render a foreground ink and mist layer');
+assert.match(backgroundComponent, /decoration-monochrome-ink \.scene-back/, 'monochrome ink must render a distant ink mountain layer');
+assert.match(backgroundComponent, /decoration-monochrome-ink \.scene-front::after/, 'monochrome ink must render a vermilion seal');
+assert.match(presetIdentities, /data-theme-preset=['"]monochrome-ink['"]/, 'monochrome ink must define a component identity');
+assert.match(presetIdentities, /--reay-ink-vermilion:\s*var\(--md-sys-color-tertiary\)/, 'monochrome ink must expose a restrained vermilion accent');
+assert.match(presetIdentities, /--md-sys-color-background:\s*#f7f7f4/, 'monochrome ink light mode must keep a neutral paper background');
+assert.match(presetIdentities, /--md-sys-color-background:\s*#101110/, 'monochrome ink dark mode must keep a neutral ink background');
+assert.match(presetIdentities, /font-weight:\s*500\s*!important/, 'monochrome ink headings must keep a restrained calligraphic weight');
 
 console.log('Configuration single-source contracts passed.');
