@@ -167,7 +167,7 @@ test('role-based typography falls back globally and propagates to the intended s
     return {
       brand: family('.brand-link'),
       navigation: family('.site-header nav'),
-      heading: family('.post-title'),
+      heading: family('.post-header h1'),
       body: getComputedStyle(document.body).fontFamily,
       metadata: family('.post-meta time'),
       prose: family('.prose'),
@@ -289,11 +289,13 @@ test('editorial details and archives do not regress into card walls', async ({ p
     const style = getComputedStyle(element);
     return {
       background: style.backgroundColor,
+      height: Number.parseFloat(style.height),
       radius: style.borderRadius,
       shadow: style.boxShadow,
     };
   });
   expect(linkEntryStyle.background).not.toBe('rgba(0, 0, 0, 0)');
+  expect(linkEntryStyle.height).toBe(160);
   expect(Number.parseFloat(linkEntryStyle.radius)).toBeGreaterThan(0);
   expect(linkEntryStyle.shadow).not.toBe('none');
   await expect(page.locator('[data-link-card] .link-backdrop').first()).toHaveCount(1);
