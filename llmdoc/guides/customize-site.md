@@ -8,7 +8,7 @@
 ## Steps
 
 1. 编辑 `src/app/config/user.config.ts`：在 `user` 设置姓名、头像、可选地点、`contact.email/website/additionalLinks` 与 GitHub；在 `userContent` 设置双语 role/tagline/bio/status/focus/description；在 `site` 与 `aboutConfig` 设置站点事实和完整档案。空的可选公开字段会在 Home、About、Links、Footer 同时隐藏；不要在其他配置复制联系人、GitHub URL、头像或站点名。
-2. 编辑 `theme.config.ts`：先在 `fontStacks.latin/cjk/fallback` 更换全站多语言字体，或让 latin/cjk 指向同一个覆盖两种文字的字体；`fontFamilies.brand/navigation/heading/body/metadata/prose/proseHeading` 留空时自动继承组合后的 global，需要差异化时再填写完整字体栈。`fontStacks.mono` 只控制代码与键盘提示。内置 Nunito、寒蝉全圆体和 Noto Sans SC fallback 已在 DocumentShell 自托管；圆体只加载 Unicode 分片的 Regular，较高 CSS 字重由浏览器合成，避免再下载一套中文 Bold 分片。新增其他 WebFont 时还需安装并导入对应字体资源。`typography.baseSize/lineHeight` 调整全站排版尺度，主色、背景、首页波浪和季节效果继续由同一文件管理。
+2. 编辑 `theme.config.ts`：先在 `activeThemePreset` 选择 technology/paper/eink/forest/editorial，再只在 `themeOverrides` 填写站点差异。预设位于 `presets/themes/`，统一包含 MD3 source/variant、九类字体角色、字号、shape、背景纹理和 effects；覆盖器会深度合并 source、fontFamilies/scale、shape、background 和 seasonal seasons。内置 Nunito、寒蝉全圆体和 Noto Sans SC fallback 已在 DocumentShell 自托管；纸张/刊物使用系统衬线回退，不增加网络请求。新增其他 WebFont 时还需安装并导入对应字体资源。
 3. 选择 `features.config.ts` 的首页 `flow` 或 `snap`，并按需调整 `home.showcase` 的 Blog/项目/Plog 数量；区分只控制入口的 `show*` 与控制集成加载的 `integrations.*`。
 4. 编辑 `navigation.config.ts`；若新增 translation key，同时更新 `i18n.config.ts` 两种字典。
 5. 按需编辑 projects、comments、links、media 配置；projects 只设置过滤/分类/featured，links 只设置外部链接/分类/交换文案，GitHub 身份与个人联系仍只改 user config。
@@ -25,6 +25,7 @@
 ## Common Failures
 
 - 只改 `site.config.ts`：该文件是聚合门面，不是主要用户编辑入口。
+- 复制整套个人配置来换外观：主题预设只负责视觉，不应复制 user/navigation/content/credentials；优先改 `activeThemePreset` 和 `themeOverrides`。
 - 在 `links.config.ts` 添加 contacts/mySiteInfo，或在 `projects.config.ts` 添加 githubUsername：这些值已经从 user config 派生，会重新制造配置分叉。
 - 只在一个语言字典添加 key：TypeScript 或运行时会出现缺失文案。
 - 开启 music 但没有真实音频文件。

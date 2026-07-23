@@ -47,7 +47,7 @@
 
 ### 自动化测试仍不是全站与真实集成证明
 
-- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、首页错位编辑橱窗、个人/站点信息、配置化 Blog/项目/Plog 数量与热度表结构、九类字体角色的回退和 computed-style 传播、自托管 Nunito/寒蝉全圆体/Noto fallback 加载、UI/代码字体边界、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、Archives Blog/Plog 混合条目与 URL 筛选、MD3 tonal 筛选器、最多 4 个系列主栏预览、每种内容最多 12 个热门主题、完整主题 dialog 在桌面/移动视口的居中与搜索/排序/选择/清除/结果焦点回归、居中有界的 Tag/Series 目录、Blog 文章 `3 / 5` 结构位置/相邻章节、Plog collection/moment 与 Markdown 叙事、About 配置化叙事、Links 有界 16:9 卡片/交互后截图加载/头像兜底、Guestbook 默认关闭状态/统一联系人/双语属性/桌面移动首屏，以及代表路由的移动端溢出和五个页面的 Axe WCAG A/AA；仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
+- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、首页错位编辑橱窗、个人/站点信息、配置化 Blog/项目/Plog 数量与热度表结构、九类字体角色的回退和 computed-style 传播、自托管 Nunito/寒蝉全圆体/Noto fallback 加载、五套主题预设注册/显式背景 decoration/默认 technology 合同及其实际背景/shape token 传播、UI/代码字体边界、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、Archives Blog/Plog 混合条目与 URL 筛选、MD3 tonal 筛选器、最多 4 个系列主栏预览、每种内容最多 12 个热门主题、完整主题 dialog 在桌面/移动视口的居中与搜索/排序/选择/清除/结果焦点回归、居中有界的 Tag/Series 目录、Blog 文章 `3 / 5` 结构位置/相邻章节、Plog collection/moment 与 Markdown 叙事、About 配置化叙事、Links 有界 16:9 卡片/交互后截图加载/头像兜底、Guestbook 默认关闭状态/统一联系人/双语属性/桌面移动首屏，以及代表路由的移动端溢出和五个页面的 Axe WCAG A/AA；替代预设仍只有类型/配置合同门禁，本轮 paper/eink 经过 Chrome 视觉复测、五套均手动完成构建，但 CI 尚未逐套执行完整 E2E。仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
 - 影响：现有门禁不证明全部动态路由、视觉像素、真实第三方服务和线上托管行为正确。
 - 来源：`package.json`、`scripts/`、`tests/e2e/core.spec.ts`、`.github/workflows/`。
 - 关闭条件：按风险补充全站 link crawl、关键 viewport visual baseline、键盘/屏幕阅读器人工清单、至少一个 live provider 测试，以及真实 Pages 部署验收。

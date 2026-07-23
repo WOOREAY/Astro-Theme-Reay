@@ -1,499 +1,184 @@
-# Theme Configuration
+# 主题与预设配置
 
-Customize the visual appearance of your site using Material Design 3.
+Astro Theme Reay 使用 Material Design 3（MD3）从少量关键色生成完整浅色、深色调色板。主题入口是 `src/app/config/theme.config.ts`，可复用预设位于 `presets/themes/`。
 
-## Configuration File
+## 快速选择预设
 
-Theme settings are in `src/app/config/theme.config.ts`
+只需修改一行：
 
-## Basic Theme Configuration
-
-```typescript
-export const themeConfig = {
-  // Theme mode
-  mode: 'system',  // 'light' | 'dark' | 'system'
-  
-  // Primary color (main brand color)
-  primary: '#5B8CFF',
-  
-  // Enable smooth transitions
-  enableTransitions: true,
-  
-  // Animation duration
-  transitionDuration: '0.3s',
-}
+```ts
+export const activeThemePreset = 'paper' satisfies ThemePresetName;
 ```
 
-## Theme Modes
+内置预设：
 
-### Light Mode
-```typescript
-mode: 'light'
-```
-Always shows light theme, regardless of system preference.
+| ID | 中文名 | 视觉特点 |
+| --- | --- | --- |
+| `technology` | 科技流光 | 默认青蓝配色、圆体、柔和光晕与轻网格 |
+| `paper` | 暖纸手记 | 茶褐色、宋体正文、纸纤维与克制阴影 |
+| `eink` | 墨水屏 | 低彩度、近直角、无抬升阴影与电子纸颗粒 |
+| `forest` | 青苔护眼 | 鼠尾草绿、柔和圆角和低刺激纸面纹理 |
+| `editorial` | 朱砂刊物 | 朱砂红、衬线标题和独立杂志式边界 |
 
-### Dark Mode
-```typescript
-mode: 'dark'
-```
-Always shows dark theme, regardless of system preference.
+预设只包含视觉参数，不会覆盖姓名、联系方式、导航、文章、项目或第三方凭据。
 
-### System Mode (Recommended)
-```typescript
-mode: 'system'
-```
-Automatically matches user's system preference.
+## 在预设上局部修改
 
-**User can override** with the theme toggle button.
+`themeOverrides` 会深度合并常用嵌套配置：
 
-## Primary Color
-
-The primary color is your brand color. All other colors are generated from it.
-
-### Changing Primary Color
-
-```typescript
-primary: '#FF6B6B'  // Red
-primary: '#4ECDC4'  // Teal
-primary: '#95E1D3'  // Mint
-primary: '#F38181'  // Pink
-primary: '#5B8CFF'  // Blue (default)
-```
-
-### Material Design 3 Color System
-
-From your primary color, the theme automatically generates:
-
-**Light Mode Palette:**
-- Primary (your chosen color)
-- Primary Container (lighter variant)
-- Secondary (harmonious complement)
-- Secondary Container
-- Tertiary (accent color)
-- Tertiary Container
-- Surface colors (backgrounds)
-- Error colors
-
-**Dark Mode Palette:**
-- Automatically adjusted for dark backgrounds
-- Proper contrast ratios
-- WCAG AAA compliance
-
-### Color Preview
-
-To see your colors:
-
-1. Change `primary` in `theme.config.ts`
-2. Restart dev server
-3. Check homepage and toggle dark mode
-4. All components update automatically
-
-## Advanced Color Customization
-
-For complete control, edit `src/design-system/theme/config.ts`:
-
-```typescript
-export function createTheme(overrides?: UserThemeOverrides): ThemeConfig {
-  return {
-    mode: overrides?.mode || 'system',
-    
-    // Customize light mode palette
-    paletteLight: {
-      primary: '#5B8CFF',
-      onPrimary: '#FFFFFF',
-      primaryContainer: '#DBE6FF',
-      onPrimaryContainer: '#123060',
-      // ... more colors
-    },
-    
-    // Customize dark mode palette
-    paletteDark: {
-      primary: '#B3C7FF',
-      onPrimary: '#0A2948',
-      primaryContainer: '#2B4B7F',
-      onPrimaryContainer: '#DBE6FF',
-      // ... more colors
-    },
-    
-    // Typography
-    typography: {
-      fontFamily: 'Inter, sans-serif',
-      baseSize: 16,
-      lineHeight: 1.7,
-    },
-    
-    // Shape
-    shape: {
-      radiusSm: '8px',
-      radiusMd: '16px',
-      radiusLg: '24px',
-    }
-  }
-}
-```
-
-## Typography
-
-### Font Families
-
-**Default Stack:**
-```css
--apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, sans-serif
-```
-
-**Customize:**
-```typescript
-typography: {
-  fontFamily: '"Your Font", -apple-system, sans-serif',
-  fontFamilyMono: '"Fira Code", "JetBrains Mono", monospace',
-}
-```
-
-**Loading Custom Fonts:**
-
-Add to `src/app/layouts/base/BaseLayout.astro`:
-```html
-<link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=Your+Font&display=swap" rel="stylesheet">
-```
-
-### Type Scale
-
-```typescript
-typography: {
-  baseSize: 16,      // Base font size in px
-  lineHeight: 1.7,   // Line height multiplier
-  
-  scale: {
-    xs: 0.75,    // 12px
-    sm: 0.875,   // 14px
-    md: 1,       // 16px (base)
-    lg: 1.125,   // 18px
-    xl: 1.25,    // 20px
-    '2xl': 1.5,  // 24px
-    '3xl': 1.875 // 30px
-  }
-}
-```
-
-## Shape and Borders
-
-### Border Radius
-
-```typescript
-shape: {
-  radiusSm: '4px',   // Small components (buttons, inputs)
-  radiusMd: '12px',  // Medium components (cards)
-  radiusLg: '24px',  // Large components (dialogs)
-}
-```
-
-**Sharp Corners:**
-```typescript
-radiusSm: '0px',
-radiusMd: '0px',
-radiusLg: '0px',
-```
-
-**Extra Rounded:**
-```typescript
-radiusSm: '12px',
-radiusMd: '24px',
-radiusLg: '32px',
-```
-
-### Border Width
-
-```typescript
-shape: {
-  borderWidth: '1px',  // Standard border thickness
-}
-```
-
-### Shadows
-
-```typescript
-shape: {
-  shadowSm: '0 1px 2px rgba(0,0,0,.06)',
-  shadowMd: '0 8px 30px rgba(0,0,0,.08)',
-  shadowLg: '0 18px 40px rgba(0,0,0,.12)',
-}
-```
-
-**No Shadows (Flat Design):**
-```typescript
-shadowSm: 'none',
-shadowMd: 'none',
-shadowLg: 'none',
-```
-
-## Transitions and Animations
-
-### Global Transitions
-
-```typescript
-enableTransitions: true,          // Enable smooth transitions
-transitionDuration: '0.3s',       // Transition speed
-transitionTimingFunction: 'ease', // Easing function
-```
-
-**Faster Animations:**
-```typescript
-transitionDuration: '0.15s',
-```
-
-**Slower Animations:**
-```typescript
-transitionDuration: '0.5s',
-```
-
-**Disable Animations:**
-```typescript
-enableTransitions: false,
-```
-
-### Reduced Motion
-
-Automatically respects user's `prefers-reduced-motion` setting.
-
-## Component Customization
-
-### Header
-
-Edit `src/shared/components/Header.astro`:
-
-```typescript
-// Height
-const headerHeight = '64px'
-
-// Background opacity
-const bgOpacity = 0.95
-
-// Blur effect
-const backdropBlur = '10px'
-```
-
-### Footer
-
-Edit `src/shared/components/Footer.astro`:
-
-```typescript
-// Show powered by
-const showPoweredBy = true
-
-// Link style
-const linkColor = 'primary'
-```
-
-### Cards
-
-Global card styles in `src/design-system/styles/global.css`:
-
-```css
-.card {
-  background: var(--md-sys-color-surface-container);
-  border-radius: var(--md-sys-shape-corner-medium);
-  padding: 1.5rem;
-}
-```
-
-## Color Reference
-
-### Using CSS Variables
-
-All theme colors are available as CSS variables:
-
-```css
-/* Primary */
-var(--md-sys-color-primary)
-var(--md-sys-color-on-primary)
-var(--md-sys-color-primary-container)
-var(--md-sys-color-on-primary-container)
-
-/* Secondary */
-var(--md-sys-color-secondary)
-var(--md-sys-color-on-secondary)
-
-/* Surface */
-var(--md-sys-color-surface)
-var(--md-sys-color-on-surface)
-var(--md-sys-color-surface-variant)
-
-/* Background */
-var(--md-sys-color-background)
-var(--md-sys-color-on-background)
-
-/* Error */
-var(--md-sys-color-error)
-var(--md-sys-color-on-error)
-```
-
-See [MD3 Color Guide](./MD3-COLOR-GUIDE.md) for complete reference.
-
-## Preset Themes
-
-### Minimal Blue (Default)
-```typescript
-primary: '#5B8CFF'
-```
-
-### Vibrant Purple
-```typescript
-primary: '#A78BFA'
-```
-
-### Nature Green
-```typescript
-primary: '#10B981'
-```
-
-### Warm Orange
-```typescript
-primary: '#F59E0B'
-```
-
-### Ocean Teal
-```typescript
-primary: '#14B8A6'
-```
-
-### Sunset Pink
-```typescript
-primary: '#EC4899'
-```
-
-## Dark Mode Customization
-
-### Separate Dark Palette
-
-For full control over dark mode:
-
-```typescript
-paletteDark: {
-  primary: '#B3C7FF',           // Lighter for dark bg
-  onPrimary: '#0A2948',         // Darker text
-  surface: '#1A1C1E',           // Dark surface
-  onSurface: '#E3E2E6',         // Light text
-  background: '#131416',        // Darker background
-  // ...
-}
-```
-
-### Dark Mode Adjustments
-
-Common tweaks for dark mode:
-
-**Higher Contrast:**
-```typescript
-surface: '#000000',
-onSurface: '#FFFFFF',
-```
-
-**Softer Contrast:**
-```typescript
-surface: '#242424',
-onSurface: '#E0E0E0',
-```
-
-**True Black (OLED):**
-```typescript
-background: '#000000',
-surface: '#000000',
-```
-
-## Testing Your Theme
-
-### Checklist
-
-- [ ] Check light mode on all pages
-- [ ] Check dark mode on all pages
-- [ ] Toggle theme switches properly
-- [ ] All text is readable
-- [ ] Links are distinguishable
-- [ ] Focus states are visible
-- [ ] Hover states work
-- [ ] Cards have proper contrast
-- [ ] Code blocks are readable
-- [ ] Images look good in both modes
-
-### Contrast Ratio
-
-Ensure WCAG AAA compliance:
-- **Normal text**: 7:1 contrast ratio
-- **Large text**: 4.5:1 contrast ratio
-
-Use browser dev tools or online checkers.
-
-## Common Customizations
-
-### Corporate Branding
-
-```typescript
-export const themeConfig = {
-  primary: '#003DA5',  // Company blue
+```ts
+export const themeOverrides = {
+  primary: '#5F7355',
   typography: {
-    fontFamily: '"Corporate Font", sans-serif',
+    baseSize: 16,
+    lineHeight: 1.72,
   },
   shape: {
-    radiusSm: '0px',
-    radiusMd: '0px',
-    radiusLg: '0px',
-  }
+    radiusLg: '18px',
+  },
+  background: {
+    decoration: 'paper',
+  },
+} satisfies ThemePresetOverrides;
+```
+
+未填写的值继续继承当前预设。修改 `primary` 时，合并器也会同步 MD3 `source.primary`，确保新主色真正进入调色板。
+
+## MD3 关键色
+
+只设置 `primary` 即可生成完整配色。需要更细控制时覆盖 `source`：
+
+```ts
+export const themeOverrides = {
+  source: {
+    primary: '#765B35',
+    variant: 'tonal-spot', // 墨水屏可使用 'monochrome'
+    secondary: '#756B4E',
+    tertiary: '#8A6047',
+    neutral: '#746F65',
+    neutralVariant: '#7C7162',
+  },
+} satisfies ThemePresetOverrides;
+```
+
+生成结果包含 `primary`、`secondary`、`tertiary`、surface/container、outline、error 及对应 on-color，组件只消费这些语义角色。
+
+## 字体角色
+
+字体按用途拆分，空缺时由预设提供完整回退栈：
+
+| 角色 | 使用位置 |
+| --- | --- |
+| `global` | 全站基础回退 |
+| `brand` | 品牌名和 Hero 姓名 |
+| `navigation` | Header、Footer 和按钮 |
+| `heading` | 页面与章节标题 |
+| `body` | 普通界面正文 |
+| `metadata` | 日期、统计和标签 |
+| `prose` | Blog/Plog Markdown 正文 |
+| `proseHeading` | Markdown 内部标题 |
+| `mono` | 代码和键盘输入 |
+
+示例：保留纸张预设，只把界面改回圆体：
+
+```ts
+export const themeOverrides = {
+  typography: {
+    fontFamilies: {
+      global: fontStacks.rounded.global,
+      navigation: fontStacks.rounded.global,
+      body: fontStacks.rounded.global,
+    },
+  },
+} satisfies ThemePresetOverrides;
+```
+
+当前仓库自托管 Nunito Variable、寒蝉全圆体和 Noto Sans SC Variable。纸张/刊物预设使用系统衬线字体回退，不增加网络字体请求。引入新字体时需同时在 `DocumentShell.astro` 加载相应资源。
+
+## 背景与纹理
+
+```ts
+background: {
+  type: 'gradient',       // 'gradient' | 'image' | 'none'
+  decoration: 'paper',   // 'aurora' | 'paper' | 'eink' | 'plain'
+  blur: false,
+  blurIntensity: 'light',
+  gradient: {
+    useMD3Colors: true,
+    direction: '155deg',
+  },
 }
 ```
 
-### Personal Blog
+- `aurora`：光晕和轻量网格，适合科技风。
+- `paper`：细微纤维和颗粒，适合暖纸或护眼主题。
+- `eink`：低对比点阵与扫描纹理，适合墨水屏主题。
+- `plain`：不叠加装饰，只保留背景色或渐变。
 
-```typescript
-export const themeConfig = {
-  primary: '#FF6B9D',  // Playful pink
-  shape: {
-    radiusSm: '12px',
-    radiusMd: '20px',
-    radiusLg: '28px',
-  }
+图片背景可填写 `imageUrl` 与 `imageStyle`。`blur` 会增加合成成本，默认关闭；移动端和长页面优先使用无模糊方案。
+
+## 圆角与阴影
+
+```ts
+shape: {
+  radiusXs: '2px',
+  radiusSm: '5px',
+  radiusMd: '9px',
+  radiusLg: '14px',
+  radiusXl: '18px',
+  radiusPill: '999px',
+  borderWidth: '1px',
+  shadowSm: 'none',
+  shadowMd: 'none',
+  shadowLg: 'none',
 }
 ```
 
-### Portfolio
+这些值会输出为共享 CSS 变量，并由 Reay 卡片、按钮和功能表面消费。墨水屏预设使用近直角和无阴影；科技与护眼预设使用更圆润的层级。
 
-```typescript
-export const themeConfig = {
-  mode: 'dark',        // Dark by default
-  primary: '#00F5FF',  // Cyan accent
-  enableTransitions: true,
+## 动效
+
+```ts
+effects: {
+  homeWave: {
+    enabled: false,
+    intensity: 'low',
+  },
+  seasonal: {
+    enabled: false,
+    season: 'auto',
+    density: 'low',
+    showOnMobile: false,
+    respectReducedMotion: true,
+    seasons: {
+      spring: true,
+      summer: true,
+      autumn: true,
+      winter: true,
+    },
+  },
 }
 ```
 
-## Troubleshooting
+预设默认关闭持续动效。重新启用时保留 `respectReducedMotion: true`，并单独检查移动端性能。
 
-### Colors not updating
+## 创建自己的预设
 
-1. Restart dev server
-2. Clear browser cache
-3. Check browser console for errors
+1. 复制 `presets/themes/` 中最接近的一套 `.ts` 文件。
+2. 修改名称、说明和 `config`。
+3. 在 `presets/themes/index.ts` 的 `themePresets` 注册新 ID。
+4. 在 `theme.config.ts` 选择它。
+5. 运行验证。
 
-### Theme toggle not working
+所有已注册预设都会被 TypeScript 校验，即使当前没有启用。预设目录的简表见 [`presets/themes/README.md`](../presets/themes/README.md)。
 
-1. Verify JavaScript is enabled
-2. Check console for errors
-3. Test in different browser
+## 验证
 
-### Fonts not loading
+```bash
+npm run check
+npm run test:config
+npm run build
+npm run test:e2e:dist
+```
 
-1. Check font file paths
-2. Verify preconnect links
-3. Check network tab in dev tools
-
-### Contrast issues
-
-1. Use contrast checker
-2. Adjust color brightness
-3. Test with actual users
-
-## Related Documentation
-
-- [MD3 Color Guide](./MD3-COLOR-GUIDE.md)
-- [Markdown Styles](./MARKDOWN-CUSTOM-GUIDE.md)
-- [User Configuration](./USER-CONFIG.md)
-- [Project Structure](./PROJECT-STRUCTURE.md)
+至少检查首页、Blog 详情、归档和相册，并分别验证浅色、深色、1440×900 与 390×844。确认 `scrollWidth <= clientWidth`、字体资源正常加载，背景纹理不会遮挡文字。

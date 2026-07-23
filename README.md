@@ -18,7 +18,7 @@ Astro Theme Reay 面向个人博客、作品集、摄影记录和长期知识沉
 | 能力 | 实现 |
 | --- | --- |
 | 内容系统 | Astro Content Collections、Markdown/MDX、标签、系列、归档、阅读时间 |
-| 视觉系统 | Material Design 3 动态色板、浅色/深色主题、UnoCSS、组件级样式 |
+| 视觉系统 | Material Design 3 动态色板、五套主题预设、浅色/深色主题、UnoCSS、组件级样式 |
 | 首页 | 默认无障碍普通滚动，可切换为分屏滚动模式 |
 | Plog 相册 | 合集、图片元数据、响应式图片、灯箱和原图下载 |
 | 项目展示 | GitHub API、构建期缓存、README 渲染和贡献统计 |
@@ -49,6 +49,8 @@ npm run dev
 3. `src/app/config/projects.config.ts`：GitHub 项目来源。
 4. `src/app/config/comments.config.ts`：评论服务。
 5. `SITE`：生产站点的完整 URL，避免 RSS 和 Sitemap 使用示例域名。
+
+`theme.config.ts` 默认使用 `technology` 科技流光预设；也可一行切换为暖纸、墨水屏、护眼森林或编辑刊物风格。预设说明见 [`presets/themes/`](./presets/themes/README.md)。
 
 ## 架构
 
@@ -93,7 +95,8 @@ draft: false
 | `src/app/config/user.config.ts` | 身份与联系方式的单一来源、双语简介、关于页和站点信息 |
 | `src/app/config/features.config.ts` | 首页模式、搜索、Feed 和集成功能开关 |
 | `src/app/config/navigation.config.ts` | Header 与 Footer 导航 |
-| `src/app/config/theme.config.ts` | 主题、背景和动效 |
+| `src/app/config/theme.config.ts` | 主题预设选择、局部覆盖、背景和动效 |
+| `presets/themes/` | 可复用的科技、纸张、墨水屏、护眼与刊物视觉预设 |
 | `src/app/config/media.config.ts` | 音乐播放列表 |
 | `src/app/config/comments.config.ts` | 评论 provider 与凭据 |
 | `src/app/config/projects.config.ts` | GitHub 项目 |

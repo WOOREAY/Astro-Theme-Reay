@@ -2,16 +2,16 @@
 
 ## Theme Pipeline
 
-`src/app/config/theme.config.ts` 提供 source colors、typography、shape、背景和 effects。`createTheme()` 调用 Material utilities 生成 light/dark palette，`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`。DocumentShell 根据完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
+`presets/themes/` 提供完整可复用视觉参数；`src/app/config/theme.config.ts` 选择一个预设并深度合并站点 overrides。`createTheme()` 调用 Material utilities，以 Tonal Spot 或 Monochrome variant 生成 light/dark palette，`themeToCSSVars()` 由 `src/pages/theme.css.ts` 输出可缓存 `/theme.css`。DocumentShell 根据完整主题配置和 CSS schema version 生成查询版本号，配置变化后不复用旧主题缓存。
 
-页面级背景只由 `theme.config.ts.background` 与 `src/shared/components/Background.astro` 解释；feature 不再建立第二套页面底色配置。
+页面级背景只由选中预设/`themeOverrides.background` 与 `src/shared/components/Background.astro` 解释；`aurora`、`paper`、`eink`、`plain` decoration 分别提供科技光场、纸纤维、电子纸点阵和无装饰背景，feature 不再建立第二套页面底色配置。
 
 ## Variable Layers
 
 - `--md-ref-*`: reference/tonal palette。
 - `--md-sys-color-*`: Material system colors。
 - `--reay-font-global/brand/navigation/heading/body/metadata/prose/prose-heading/mono` 与 typography/shape variables。
-- `--reay-*`: 组件语义、surface、shadow、motion aliases。
+- `--reay-*`: 组件语义、surface、shadow、motion aliases；radius/shadow aliases 由预设 shape 输出，不再固化默认科技风。
 
 组件优先使用 system/Reay token，不硬编码主题颜色。新增跨功能 token 同时检查 light/dark 和 RGB companion variables。
 
@@ -20,9 +20,9 @@
 ## Typography Contract
 
 - 默认拉丁字体是自托管 `Nunito Variable`，默认中文字体是更圆润的自托管 `寒蝉全圆体` Regular；中文圆体通过 `@chinese-fonts/hcqyt` 按 Unicode range 切分并使用 `font-display: swap`，缺字依次回退到 `Noto Sans SC Variable`、PingFang SC、Microsoft YaHei 和系统 sans-serif。
-- `theme.config.ts` 的 `fontStacks` 统一组合 latin/cjk/fallback/mono，`fontFamilies` 再划分 semantic roles；`typography.baseSize` 与 `lineHeight` 继续控制全站尺度。global 是所有空语义角色的回退，mono 独立解析。
+- 主题预设的 `fontStacks` 组合 rounded/paper/clean/mono，`fontFamilies` 再划分 semantic roles；`themeOverrides.typography` 可只覆盖单一角色、`baseSize`、`lineHeight` 或 scale。global 是未覆盖角色的基线，mono 独立解析。
 - `html` 使用 `--text-base` 和 `--reay-font-global`；body、品牌、导航、标题、元信息、Markdown/Plog prose 与 prose heading 分别消费对应角色，代码/键盘提示消费 `--reay-font-mono`。
-- 默认 `global` 是 Nunito Variable + 寒蝉全圆体 + Noto Sans SC Variable fallback；`brand/navigation/heading/body/metadata/prose/proseHeading` 默认留空并在主题生成阶段解析为 global，因此修改一次 script stack 就能覆盖全站，单独填写角色时仍应提供完整语言回退栈。
+- `technology` 的 `global` 是 Nunito Variable + 寒蝉全圆体 + Noto Sans SC Variable fallback；`createFontRoles()` 默认让 brand/navigation/heading/body/metadata/prose/proseHeading 继承同一 global 栈，因此修改预设的 global 即可覆盖整套角色，单独填写角色时仍应提供完整语言回退栈。
 - UI 序号、日期、统计与标签使用 metadata/global，不借用 mono 制造第二套界面字体；mono 只用于代码、键盘输入等技术文本。
 - 首页 Hero 使用 `--reay-home-hero-title`；当前 15px 根字号下 Hero 不超过 36px，Showcase 标题不超过约 24.3px，Blog lead 不超过约 22.2px。
 - 组件不自行放大一级标题；新标题先选择语义层级，再选择现有 typography token。
@@ -89,10 +89,12 @@ UnoCSS 静态扫描无法发现配置对象中的动态 icon classes。`uno.conf
 - localStorage `theme` 可为 `light`、`dark`、`system`。
 - DocumentShell 必须统一输出主题变量、首屏解析逻辑和带版本的 theme.css 链接。
 - reduced-motion 和背景 fallback behavior 需要保留。
+- `source.variant` 只允许 `tonal-spot` 或 `monochrome`；单色模式仍必须由 MD3 生成成对 on-color，不手写灰度页面色。
 
 ## Sources of Truth
 
 - `src/design-system/theme/`
+- `presets/themes/`
 - `src/app/config/theme.config.ts`
 - `src/shared/components/Background.astro`
 - `src/design-system/styles/`
