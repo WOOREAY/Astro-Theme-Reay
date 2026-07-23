@@ -33,7 +33,7 @@
 
 `user-contact.ts` 把 email、website、派生 GitHub URL 和 additionalLinks 规范化为同一联系人集合并按 URL 去重。Home、About、Links、Footer 都通过 getter 读取；Links 的个人 social cards 和站点交换卡也在页面层从同一数据生成。
 
-`theme.config.ts` 的 `fontFamilies` 是全站字体唯一用户配置入口。`global` 是基线；`brand/navigation/heading/body/metadata/prose/proseHeading` 为空时在 `createTheme()` 中回退到 global，`mono` 保留独立等宽栈。Header 品牌与 Hero 名称、Header 导航、页面/section 标题、普通正文、日期/统计/标签、Blog/Plog Markdown 正文及其内部标题分别消费对应角色。`typography.baseSize` 设定根字号并缩放 rem 布局，`lineHeight` 设定正文基线；当前所有非 mono 角色默认解析为自托管 Nunito Variable 与本地中文回退。
+`theme.config.ts` 是全站字体唯一用户配置入口：`fontStacks.latin/cjk/fallback` 组合全局多语言栈，`fontStacks.mono` 只服务代码/键盘输入；`fontFamilies.global` 是语义基线，`brand/navigation/heading/body/metadata/prose/proseHeading` 为空时在 `createTheme()` 中回退到 global。Header 品牌与 Hero 名称、Header 导航、页面/section 标题、普通正文、日期/统计/标签、Blog/Plog Markdown 正文及其内部标题分别消费对应角色。`typography.baseSize` 设定根字号并缩放 rem 布局，`lineHeight` 设定正文基线；当前所有非 mono 角色默认解析为自托管 Nunito Variable（拉丁）+ Noto Sans SC Variable（中文）。
 
 ## site.config.ts Getters
 

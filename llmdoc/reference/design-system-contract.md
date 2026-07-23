@@ -19,11 +19,11 @@
 
 ## Typography Contract
 
-- 默认拉丁字体是自托管 `Nunito Variable`，由 `@fontsource-variable/nunito` 提供并使用 `font-display: swap`。
-- 中文依次回退到 Noto Sans SC、PingFang SC、Microsoft YaHei 和系统 sans-serif，不下载大型 CJK WebFont。
-- `theme.config.ts` 的 `fontFamilies`、`typography.baseSize` 与 `lineHeight` 是唯一用户配置入口；global 是所有空语义角色的回退，mono 独立解析。
+- 默认拉丁字体是自托管 `Nunito Variable`，默认中文字体是自托管 `Noto Sans SC Variable`；二者由 Fontsource variable packages 提供并使用 `font-display: swap`，中文缺字再回退到 PingFang SC、Microsoft YaHei 和系统 sans-serif。
+- `theme.config.ts` 的 `fontStacks` 统一组合 latin/cjk/fallback/mono，`fontFamilies` 再划分 semantic roles；`typography.baseSize` 与 `lineHeight` 继续控制全站尺度。global 是所有空语义角色的回退，mono 独立解析。
 - `html` 使用 `--text-base` 和 `--reay-font-global`；body、品牌、导航、标题、元信息、Markdown/Plog prose 与 prose heading 分别消费对应角色，代码/键盘提示消费 `--reay-font-mono`。
-- 默认 `global` 是自托管 Nunito Variable；`brand/navigation/heading/body/metadata/prose/proseHeading` 默认留空并在主题生成阶段解析为 global，因此只改一次 global 就能覆盖全站。
+- 默认 `global` 是自托管 Nunito Variable + Noto Sans SC Variable；`brand/navigation/heading/body/metadata/prose/proseHeading` 默认留空并在主题生成阶段解析为 global，因此修改一次 script stack 就能覆盖全站，单独填写角色时仍应提供完整语言回退栈。
+- UI 序号、日期、统计与标签使用 metadata/global，不借用 mono 制造第二套界面字体；mono 只用于代码、键盘输入等技术文本。
 - 首页 Hero 使用 `--reay-home-hero-title`；当前 15px 根字号下 Hero 不超过 36px，Showcase 标题不超过约 24.3px，Blog lead 不超过约 22.2px。
 - 组件不自行放大一级标题；新标题先选择语义层级，再选择现有 typography token。
 

@@ -58,7 +58,7 @@ design-system -> external Material color utility
 ## Domain Layouts
 
 - Blog detail 组合开放式文章头、正文、TOC、Markdown 样式、增强脚本和评论；属于系列的文章还在元信息附近显示真实章节位置，并在文末提供系列目录与上一篇/下一篇。
-- Archives 在共享编辑式页首之后只保留 sticky `全部 / Blog / Plog` 内容筛选；统一检索工作台按年份混排文章与 Plog 片刻，Blog 模式把有序系列书架提升为首要发现入口，侧栏热门主题最多显示 12 个，完整主题通过可搜索/排序 dialog 选择并直接返回筛选结果。旧 tags/series/timeline URL 继续兼容，但不再作为同级主导航。
+- Archives 在共享编辑式页首之后只保留 sticky `全部 / Blog / Plog` MD3 tonal 筛选；统一检索工作台按年份混排文章与 Plog 片刻，全部与 Blog 模式在主栏展示最多 4 个有序系列预览并提供完整目录入口，Plog 模式改为合集辅助面。侧栏不再复制无上限系列列表，热门主题每种内容最多显示 12 个，完整主题通过可搜索/排序 dialog 选择并直接返回筛选结果。旧 tags/series/timeline URL 继续兼容，但不再作为同级主导航。
 - Projects/Project detail 分别约束项目索引与 README 阅读宽度，详情统计采用线性元信息而非统计卡。
 - Links 和 About 直接组合共享编辑式基础与领域 section；Links 按显式 screenshot、Microlink 截图、放大头像轻虚化的顺序生成 160px 视觉卡片，About 从统一用户配置读取个人摘要、完整叙事、工作流、联系人和真实站点统计。
 - Gallery 目录页使用共享编辑式页首，把 Plog entry 按 `album.id` 组织为 collection，再以错落 moment 展示；详情页使用开放式影像与文字双栏、渲染 entry Markdown 叙事并保留灯箱。
