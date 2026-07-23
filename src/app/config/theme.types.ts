@@ -1,6 +1,16 @@
 import type { FontFamilyRoles, Shape, UserThemeOverrides } from '@design/theme';
 
-export type BackgroundDecoration = 'aurora' | 'paper' | 'eink' | 'plain';
+export type BackgroundDecoration =
+  | 'aurora'
+  | 'paper'
+  | 'eink'
+  | 'plain'
+  | 'inkwash'
+  | 'anime-spring'
+  | 'anime-night'
+  | 'ukiyo'
+  | 'ocean'
+  | 'terminal';
 
 export interface BackgroundConfig {
   type: 'gradient' | 'image' | 'none';

@@ -1,6 +1,10 @@
 import AxeBuilder from '@axe-core/playwright';
 import { expect, test } from '@playwright/test';
-import { defineTheme, fontStacks } from '../../presets/themes';
+import {
+  defineTheme,
+  fontStacks,
+  themePresetNames,
+} from '../../presets/themes';
 
 test('one theme object combines presets with intuitive color and nested overrides', () => {
   const theme = defineTheme({
@@ -54,6 +58,40 @@ test('one theme object combines presets with intuitive color and nested override
     secondary: '#777777',
     variant: 'monochrome',
   });
+});
+
+test('expressive presets expose complete palettes, typography, shapes, and background scenes', () => {
+  const expressivePresets = {
+    inkwash: 'inkwash',
+    'anime-spring': 'anime-spring',
+    'anime-night': 'anime-night',
+    ukiyo: 'ukiyo',
+    ocean: 'ocean',
+    'retro-terminal': 'terminal',
+  } as const;
+
+  expect(themePresetNames).toEqual([
+    'technology',
+    'paper',
+    'eink',
+    'forest',
+    'editorial',
+    ...Object.keys(expressivePresets),
+  ]);
+
+  for (const [preset, decoration] of Object.entries(expressivePresets)) {
+    const theme = defineTheme({ preset: preset as keyof typeof expressivePresets });
+    expect(theme.mode).toBe('system');
+    expect(theme.source?.primary).toBe(theme.primary);
+    expect(theme.typography.fontFamilies.global.length).toBeGreaterThan(0);
+    expect(theme.shape.radiusLg.length).toBeGreaterThan(0);
+    expect(theme.background).toMatchObject({
+      type: 'gradient',
+      decoration,
+      blur: false,
+      gradient: { useMD3Colors: true },
+    });
+  }
 });
 
 test('language, theme, and client navigation stay synchronized', async ({ page }) => {

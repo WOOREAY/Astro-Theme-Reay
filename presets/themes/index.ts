@@ -1,10 +1,16 @@
 import type { FontFamilyRoles } from '../../src/design-system/theme';
 import type { ThemeConfig } from '../../src/app/config/theme.types';
+import { animeNightThemePreset } from './anime-night';
+import { animeSpringThemePreset } from './anime-spring';
 import { editorialThemePreset } from './editorial';
 import { einkThemePreset } from './eink';
 import { forestThemePreset } from './forest';
+import { inkwashThemePreset } from './inkwash';
+import { oceanThemePreset } from './ocean';
 import { paperThemePreset } from './paper';
+import { retroTerminalThemePreset } from './retro-terminal';
 import { technologyThemePreset } from './technology';
+import { ukiyoThemePreset } from './ukiyo';
 import type { ThemePresetOverrides } from './types';
 
 export { fontStacks } from './fonts';
@@ -16,6 +22,12 @@ export const themePresets = {
   eink: einkThemePreset,
   forest: forestThemePreset,
   editorial: editorialThemePreset,
+  inkwash: inkwashThemePreset,
+  'anime-spring': animeSpringThemePreset,
+  'anime-night': animeNightThemePreset,
+  ukiyo: ukiyoThemePreset,
+  ocean: oceanThemePreset,
+  'retro-terminal': retroTerminalThemePreset,
 } as const;
 
 export type ThemePresetName = keyof typeof themePresets;

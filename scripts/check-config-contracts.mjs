@@ -86,11 +86,26 @@ assert.doesNotMatch(themeConfig, /export const themeOverrides/, 'theme settings 
 assert.match(themeConfig, /background:\s*\{[\s\S]*?type:\s*'image'/, 'theme config should expose a discoverable background example');
 assert.match(presetIndex, /export function defineTheme/, 'the preset registry must expose the unified theme builder');
 
-for (const preset of ['technology', 'paper', 'eink', 'forest', 'editorial']) {
+const presetDecorations = {
+  technology: 'aurora',
+  paper: 'paper',
+  eink: 'eink',
+  forest: 'paper',
+  editorial: 'plain',
+  inkwash: 'inkwash',
+  'anime-spring': 'anime-spring',
+  'anime-night': 'anime-night',
+  ukiyo: 'ukiyo',
+  ocean: 'ocean',
+  'retro-terminal': 'terminal',
+};
+
+for (const [preset, decoration] of Object.entries(presetDecorations)) {
   const source = await readSource(`presets/themes/${preset}.ts`);
-  assert.match(presetIndex, new RegExp(`\\b${preset}:`), `${preset} must be exported by the theme preset registry`);
+  const registryKey = preset.includes('-') ? `'${preset}'` : preset;
+  assert.match(presetIndex, new RegExp(`${registryKey}:`), `${preset} must be exported by the theme preset registry`);
   assert.match(source, /satisfies ThemePresetDefinition/, `${preset} must satisfy the shared preset contract`);
-  assert.match(source, /decoration:\s*'(?:aurora|paper|eink|plain)'/, `${preset} must choose an explicit background decoration`);
+  assert.match(source, new RegExp(`decoration:\\s*'${decoration}'`), `${preset} must choose the ${decoration} background decoration`);
 }
 
 const [paperPreset, einkPreset] = await Promise.all([
