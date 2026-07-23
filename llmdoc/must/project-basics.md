@@ -28,7 +28,7 @@ Astro Theme Reay 是内容优先、配置驱动的静态个人网站主题，面
 
 ## 当前站点状态
 
-当前仓库已使用 `WOOREAY`、`https://wooreay.github.io` 和公开 GitHub 主页完成基础个性化；未知邮箱、位置、教育和社交字段保持为空，不用虚构值填充。视觉默认使用 `defineTheme({ preset: 'technology' })`；`presets/themes/` 另提供 paper/eink/forest/editorial/inkwash/monochrome-ink/anime-spring/anime-night/ukiyo/ocean/retro-terminal，主色、字体、shape、背景和 effects 都在同一个 `theme.config.ts` 对象中按层级覆盖。七套扩展场景使用 MD3 token 与原创 CSS，不依赖外部背景图片；monochrome-ink 使用系统楷体回退栈并固定中性黑白与朱砂身份。评论、音乐和季节效果默认关闭。Links 默认用放大头像轻虚化作为卡片背景，仅在鼠标悬停或键盘聚焦时通过 Microlink 请求并显示远程截图，失败后继续保留头像兜底。`npm run check:production` 会阻止缺失生产 `SITE`、非根部署和已知模板占位值进入发布流程；派生主题仍需替换为自己的真实信息。
+当前仓库已使用 `WOOREAY`、`https://wooreay.github.io` 和公开 GitHub 主页完成基础个性化；未知邮箱、位置、教育和社交字段保持为空，不用虚构值填充。视觉默认使用 `defineTheme({ preset: 'technology' })`；`presets/themes/` 另提供 paper/eink/forest/editorial/inkwash/monochrome-ink/anime-spring/anime-night/cosmic-abyss/ukiyo/ocean/retro-terminal，主色、字体、shape、背景和 effects 都在同一个 `theme.config.ts` 对象中按层级覆盖。八套扩展场景使用 MD3 token 与原创 CSS，不依赖外部背景图片；cosmic-abyss 默认深色并用静态星野、银河尘带与黑洞吸积盘形成独立身份，monochrome-ink 使用系统楷体回退栈并固定中性黑白与朱砂身份。评论、音乐和季节效果默认关闭。Links 默认用放大头像轻虚化作为卡片背景，仅在鼠标悬停或键盘聚焦时通过 Microlink 请求并显示远程截图，失败后继续保留头像兜底。`npm run check:production` 会阻止缺失生产 `SITE`、非根部署和已知模板占位值进入发布流程；派生主题仍需替换为自己的真实信息。
 
 ## Sources of Truth
 
