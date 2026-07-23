@@ -76,7 +76,7 @@ Incoming document 在 swap 前翻译一次；after-swap 只同步 document lang/
 
 ## Feature-local Runtimes
 
-MusicDock、Gallery lightbox、Archives explorer、seasonal、fullpage 与通用交互由中心 runtime 按 DOM 动态导入，并在 before-swap cleanup。Archives explorer 同步内容类型、主题、年份可见性与空状态；Links 预览通过 IntersectionObserver 延迟加载，并同时监听 load/error、cached complete 与 decode，失败保持头像 fallback。Gallery 在缺少图片时显示显式渐变 fallback，打开时聚焦关闭按钮，关闭后把焦点交还触发按钮。Search 会在换页前 destroy；Comments 会清理 observer、button listener 和 host。TOC 有独立 cleanup；文章与 README 增强依靠 DOM marker 保证幂等，剩余边界见 lifecycle reference 和 doc gaps。
+MusicDock、Gallery lightbox、Archives explorer、seasonal、fullpage 与通用交互由中心 runtime 按 DOM 动态导入，并在 before-swap cleanup。Archives explorer 同步内容类型、主题、年份可见性、系列/合集辅助面与空状态，把 `type` / `topic` 写入 URL 并响应 `popstate`；完整主题 dialog 支持搜索/排序，选择或清除主题后关闭弹层、聚焦结果锚点并滚回内容。Links 预览通过 IntersectionObserver 延迟加载，并同时监听 load/error、cached complete 与 decode，失败保持头像 fallback。Gallery 在缺少图片时显示显式渐变 fallback，打开时聚焦关闭按钮，关闭后把焦点交还触发按钮。Search 会在换页前 destroy；Comments 会清理 observer、button listener 和 host。TOC 有独立 cleanup；文章与 README 增强依靠 DOM marker 保证幂等，剩余边界见 lifecycle reference 和 doc gaps。
 
 ## Related Docs
 

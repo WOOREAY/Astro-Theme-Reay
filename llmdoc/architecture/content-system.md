@@ -30,9 +30,9 @@ Markdown/MDX
 - `getPostUrl()` 负责链接编码；动态 `getStaticPaths()` 参数保持未编码。
 - `getAllPosts()` 在生产排除 `draft` 和 `published:false`，开发环境显示全部以便预览。
 - 标签和系列都从已发布集合聚合；系列内部按 `seriesOrder` 排序，缺失顺序放在后面。
+- Blog detail 对有 `series` 的文章调用 `getPostsBySeries()`，用当前 entry 在有序集合中的真实索引显示 `3 / 5` 一类结构位置，并通过 `getPostUrl()` / `getSeriesUrl()` 生成相邻章节和系列目录入口。
 - `remarkReadingTime` 在 Markdown processor 中写入渲染 frontmatter。
-
-已知不一致：文章详情的静态路径当前只排除 `draft`，未排除 `published:false`。稳定行为以 `memory/doc-gaps.md` 的关闭结果为准。
+- 文章详情静态路径与列表入口共用 `isPublishableContentVisible()`，生产环境同时排除 `draft` 与 `published:false`。
 
 ## Plog Flow
 

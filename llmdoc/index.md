@@ -30,9 +30,9 @@
 
 ## Architecture
 
-- `llmdoc/architecture/frontend-composition.md`：薄路由、共享 DocumentShell、feature/shared/design-system 的组合边界。
+- `llmdoc/architecture/frontend-composition.md`：薄路由、共享 DocumentShell、feature/shared/design-system 的组合边界，以及 Archive/Blog 系列阅读组合。
 - `llmdoc/architecture/content-system.md`：Blog、Plog、slug、可见性、归档和构建期图片处理。
-- `llmdoc/architecture/client-runtime.md`：Astro 页面交换、主题、增强 i18n、首页/图库交互和清理模型。
+- `llmdoc/architecture/client-runtime.md`：Astro 页面交换、主题、增强 i18n、首页/图库/归档交互和清理模型。
 - `llmdoc/architecture/external-integrations.md`：Pagefind、GitHub、评论 provider 与外部信任边界。
 - `llmdoc/architecture/build-and-release.md`：静态构建、Pagefind、安全/E2E 门禁、CI、Pages 部署和生产 URL 流程。
 
@@ -54,7 +54,7 @@
 - `llmdoc/reference/client-lifecycle-contract.md`：文档级单例、页面级 disposer 和 Astro 事件合同。
 - `llmdoc/reference/design-system-contract.md`：MD3 token、CSS 变量、模式与主题生成合同。
 - `llmdoc/reference/home-editorial-design-language.md`：首页个人摘要、错位内容橱窗、Home/About 边界、GitHub 热度表、主题所有权与响应式合同。
-- `llmdoc/reference/site-editorial-page-language.md`：Hero 之外的共享编辑式页首、开放列表、详情页、功能表面、密度与响应式合同。
+- `llmdoc/reference/site-editorial-page-language.md`：Hero 之外的共享编辑式页首、开放列表、归档检索、系列详情路径、功能表面、密度与响应式合同。
 - `llmdoc/reference/environment-and-dependencies.md`：环境变量、Node/npm、依赖角色与外部安全边界。
 
 ## Memory
