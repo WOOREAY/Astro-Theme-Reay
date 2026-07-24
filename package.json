@@ -14,7 +14,7 @@
     "preview": "astro preview",
     "astro": "astro",
     "check": "astro check",
-    "check:production": "node scripts/check-production-config.mjs",
+    "check:production": "node --env-file-if-exists=.env scripts/check-production-config.mjs",
     "lint": "eslint .",
     "test:routes": "node scripts/check-routes.mjs",
     "test:performance": "node scripts/check-performance-budget.mjs",

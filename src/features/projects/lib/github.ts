@@ -101,6 +101,7 @@ const GITHUB_TOKEN = rawGitHubToken && !/^your[_-]?github[_-]?token$/i.test(rawG
   ? rawGitHubToken
   : '';
 const REQUEST_TIMEOUT_MS = 6500;
+const TEMPLATE_GITHUB_USERNAME = 'yourusername';
 
 const pendingRequests = new Map<string, Promise<unknown>>();
 
@@ -336,6 +337,10 @@ export async function getGitHubContributionCalendar(
   username: string,
   repos: GitHubRepo[] = []
 ): Promise<GitHubContributionCalendar> {
+  if (!username || username === TEMPLATE_GITHUB_USERNAME) {
+    return buildContributionCalendar(username, new Map(), 'empty');
+  }
+
   const cacheKey = `contributions:${username}`;
   const cached = githubCache.get<GitHubContributionCalendar>(cacheKey);
   const staleCached = githubCache.getStale<GitHubContributionCalendar>(cacheKey);
@@ -457,6 +462,8 @@ export async function getGitHubRepo(owner: string, repo: string): Promise<GitHub
  * Results are cached and concurrent requests are deduplicated
  */
 export async function getUserRepos(username: string): Promise<GitHubRepo[]> {
+  if (!username || username === TEMPLATE_GITHUB_USERNAME) return [];
+
   const cacheKey = `user-repos:${username}`;
 
   // Check cache first

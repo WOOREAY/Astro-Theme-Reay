@@ -14,8 +14,14 @@ if (!siteValue) {
     if (site.pathname !== '/' || site.search || site.hash) {
       failures.push('SITE must be an origin without a path, query, or hash.');
     }
-    if (site.hostname === 'example.com' || site.hostname.endsWith('.example.com')) {
-      failures.push('SITE still points to example.com.');
+    if (
+      site.hostname === 'example.com'
+      || site.hostname.endsWith('.example.com')
+      || site.hostname.endsWith('.example')
+      || site.hostname.endsWith('.invalid')
+      || site.hostname.includes('yourusername')
+    ) {
+      failures.push('SITE still points to a template placeholder.');
     }
   } catch {
     failures.push('SITE is not a valid absolute URL.');
@@ -30,26 +36,19 @@ const sourceContracts = [
   {
     file: 'src/app/config/user.config.ts',
     patterns: [
-      ['Your Name', 'user name'],
-      ['yourusername', 'GitHub/social username'],
-      ['your.email@example.com', 'email address'],
-    ],
-  },
-  {
-    file: 'src/app/config/links.config.ts',
-    patterns: [
-      ['yourusername', 'links username'],
-      ['your.email@example.com', 'links email address'],
-      ['your-site.example.com', 'site link'],
+      [/templateMode:\s*true/, 'template mode'],
+      [/\bYOUR_[A-Z0-9_]+\b/, 'template content'],
+      [/yourusername/i, 'GitHub/social username'],
+      [/your\.email@example\.com/i, 'email address'],
     ],
   },
 ];
 
 for (const contract of sourceContracts) {
   const body = await readFile(resolve(process.cwd(), contract.file), 'utf8');
-  for (const [placeholder, label] of contract.patterns) {
-    if (body.includes(placeholder)) {
-      failures.push(`${contract.file} still contains the placeholder ${label}: ${placeholder}`);
+  for (const [pattern, label] of contract.patterns) {
+    if (pattern.test(body)) {
+      failures.push(`${contract.file} still contains ${label} placeholders.`);
     }
   }
 }

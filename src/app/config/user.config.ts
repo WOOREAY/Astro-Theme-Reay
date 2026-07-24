@@ -15,26 +15,26 @@ import { defaultLang, type Language } from './i18n.config';
 // ---------------------------------------------------------------------------
 
 export const user = {
-  name: 'WOOREAY',
+  name: 'YOUR_NAME',
   avatar: '/images/profile/avatar.png',
   /** Optional public profile detail. Leave empty to hide it everywhere. */
-  location: '',
+  location: 'YOUR_LOCATION',
 
   /**
    * The only source for public contact details.
    * Home, About, Links, and Footer all consume these values through site.config.
    */
   contact: {
-    email: '',
+    email: 'your.email@example.com',
     /** Full public Twitter/X profile URL. Leave empty to hide it everywhere. */
-    twitter: '',
-    website: 'https://wooreay.github.io',
+    twitter: 'https://x.com/yourusername',
+    website: 'https://yourusername.github.io',
     additionalLinks: [] as AdditionalContactLink[],
   },
 
   /** The GitHub profile URL is derived from this username. */
   github: {
-    username: 'WOOREAY',
+    username: 'yourusername',
     token: '',
   },
 } satisfies User;
@@ -45,40 +45,34 @@ export const user = {
 
 export const userContent = {
   en: {
-    role: 'Open-source maker and technical writer',
-    tagline: 'Open Source · Technical Notes · Project Practice',
-    bio: 'Building Astro Theme Reay and documenting reusable engineering ideas, project choices, and lessons worth revisiting.',
-    status: 'Currently refining Astro Theme Reay into a clearer, faster, and more reusable personal-site system.',
-    focus: ['Open Source', 'Web Engineering', 'Technical Writing', 'Design Systems'],
+    role: 'YOUR_ROLE',
+    tagline: 'YOUR_TAGLINE',
+    bio: 'YOUR_SHORT_BIO',
+    status: 'YOUR_CURRENT_STATUS',
+    focus: ['YOUR_FOCUS_1', 'YOUR_FOCUS_2', 'YOUR_FOCUS_3', 'YOUR_FOCUS_4'],
     story: {
-      title: 'Making room for things worth remembering',
-      lead: 'I use this site to keep a visible thread between learning, making, and writing—three practices that continually reshape one another.',
-      body: [
-        'It is less an online résumé than a long-running notebook. Projects preserve what became usable; articles preserve what became clear; photographs preserve the ordinary moments that would otherwise fade first.',
-        'Most pages begin with a question or an unfinished detail. I return to revise and connect them over time, so the archive can show not only conclusions, but also how they slowly took shape.',
-      ],
-      principles: ['Write for revisiting', 'Build for reuse', 'Leave room for ordinary life'],
+      title: 'YOUR_STORY_TITLE',
+      lead: 'YOUR_STORY_LEAD',
+      body: ['YOUR_STORY_PARAGRAPH_1', 'YOUR_STORY_PARAGRAPH_2'],
+      principles: ['YOUR_PRINCIPLE_1', 'YOUR_PRINCIPLE_2', 'YOUR_PRINCIPLE_3'],
     },
-    greeting: 'Hello, I am',
-    description: 'A personal site for open-source work, technical notes, and long-term learning.',
+    greeting: 'YOUR_GREETING',
+    description: 'YOUR_SITE_DESCRIPTION',
   },
   zh: {
-    role: '开源实践者与技术写作者',
-    tagline: '开源实践 · 技术笔记 · 项目复盘',
-    bio: '持续打磨 Astro Theme Reay，并记录可复用的工程经验、项目取舍与值得重读的学习所得。',
-    status: '目前正在把 Astro Theme Reay 打磨成更清晰、更快速，也更容易复用的个人网站系统。',
-    focus: ['开源实践', 'Web 工程', '技术写作', '设计系统'],
+    role: '你的身份或职业',
+    tagline: '你的个人标语',
+    bio: '你的个人简介',
+    status: '你的当前状态',
+    focus: ['你的关注方向 1', '你的关注方向 2', '你的关注方向 3', '你的关注方向 4'],
     story: {
-      title: '为值得记住的事，留下一点位置',
-      lead: '我用这座小站，保存学习、构建与写作之间那条看得见的线——三件事彼此推动，也彼此改变。',
-      body: [
-        '它不像一份在线简历，更像一本持续书写的笔记：项目留下已经成为作品的想法，文章留下终于想清楚的问题，照片则留下最容易先被忘记的寻常片刻。',
-        '这里的大多数页面，都从一个疑问或尚未完成的细节开始。我愿意不断回来修改、补充和连接，让归档记录的不只是结论，还有它们慢慢成形的过程。',
-      ],
-      principles: ['写给未来重读', '构建可复用之物', '为寻常生活留白'],
+      title: '你的故事标题',
+      lead: '你的故事引言',
+      body: ['你的故事正文 1', '你的故事正文 2'],
+      principles: ['你的原则 1', '你的原则 2', '你的原则 3'],
     },
-    greeting: '你好，我是',
-    description: '一个记录开源实践、技术笔记与长期学习的个人站点。',
+    greeting: '你的问候语',
+    description: '你的站点简介',
   },
 } satisfies UserContent;
 
@@ -87,8 +81,10 @@ export const userContent = {
 // ---------------------------------------------------------------------------
 
 export const site = {
+  /** Keep true while this repository still contains template placeholders. */
+  templateMode: true,
   builtWith: 'site.tech.description',
-  since: '2025',
+  since: 'YYYY',
   techStack: [
     { name: 'Astro', description: 'about.tool.astro', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
     { name: 'UnoCSS', description: 'about.tool.unocss', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
@@ -153,10 +149,7 @@ export const aboutConfig = {
 
   experience: [] as Experience[],
 
-  timeline: [
-    { year: '2026', event: 'about.timeline.2026.title', description: 'about.timeline.2026.desc' },
-    { year: '2025', event: 'about.timeline.2025.title', description: 'about.timeline.2025.desc' },
-  ],
+  timeline: [] as TimelineEvent[],
 } satisfies AboutConfig;
 
 // ---------------------------------------------------------------------------
@@ -277,6 +270,7 @@ export interface TechStackItem {
 }
 
 export interface SiteDetails {
+  templateMode: boolean;
   builtWith: string;
   since: string;
   techStack: TechStackItem[];

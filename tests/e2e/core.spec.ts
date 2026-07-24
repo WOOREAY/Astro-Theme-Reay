@@ -107,14 +107,14 @@ test('expressive presets expose complete palettes, identity modes, typography, s
 test('language, theme, and client navigation stay synchronized', async ({ page }) => {
   await page.goto('/');
 
-  await expect(page.getByRole('heading', { level: 1 })).toContainText('WOOREAY');
+  await expect(page.getByRole('heading', { level: 1 })).toContainText('YOUR_NAME');
   await expect(page.getByText('about.hobbies.title')).toHaveCount(0);
 
   const languageButton = page.getByRole('button', { name: '切换语言' });
   await languageButton.click();
   await expect(page.locator('html')).toHaveAttribute('lang', 'en');
-  await expect(page.locator('[data-user-content="role"]')).toHaveText('Open-source maker and technical writer');
-  await expect(page.locator('[data-user-content="focus.0"]')).toHaveText('Open Source');
+  await expect(page.locator('[data-user-content="role"]')).toHaveText('YOUR_ROLE');
+  await expect(page.locator('[data-user-content="focus.0"]')).toHaveText('YOUR_FOCUS_1');
   await expect(
     page.locator('header').getByRole('link', { name: 'Search', exact: true }),
   ).toBeVisible();
@@ -309,7 +309,7 @@ test('blog table of contents keeps its reading percentage centered in a complete
 });
 
 test('configured contact and site identity propagate across public surfaces', async ({ page }) => {
-  const website = 'https://wooreay.github.io';
+  const website = 'https://yourusername.github.io';
 
   await page.goto('/');
   await expect(page.locator('[data-home-now] [data-contact-kind="website"]')).toHaveAttribute('href', website);
@@ -317,11 +317,11 @@ test('configured contact and site identity propagate across public surfaces', as
 
   await page.goto('/about');
   await expect(page.locator('.socials-section [data-contact-kind="website"]')).toHaveAttribute('href', website);
-  await expect(page.locator('[data-about-intro] h2')).toHaveText('WOOREAY');
+  await expect(page.locator('[data-about-intro] h2')).toHaveText('YOUR_NAME');
 
   await page.goto('/links');
   await expect(page.locator('.contact-buttons [data-contact-kind="website"]')).toHaveAttribute('href', website);
-  await expect(page.locator('.site-info-card [data-copy="WOOREAY"]')).toHaveCount(1);
+  await expect(page.locator('.site-info-card [data-copy="YOUR_NAME"]')).toHaveCount(1);
   await expect(page.locator(`.site-info-card [data-copy="${website}"]`)).toHaveCount(1);
 });
 
@@ -614,8 +614,8 @@ test('editorial details and archives do not regress into card walls', async ({ p
   await linkCard.hover();
   await expect(linkPreview).toHaveAttribute('src', /api\.microlink\.io/);
 
-  await page.goto('/projects/WOOREAY/Astro-Theme-Reay');
-  await expect(page.locator('[data-project-detail-header]')).toHaveCount(1);
+  await page.goto('/projects');
+  await expect(page.locator('[data-editorial-page-header]')).toHaveCount(1);
   await expect(page.locator('.stat-card')).toHaveCount(0);
 });
 
@@ -771,7 +771,6 @@ test('all representative route types remain overflow-free on mobile', async ({ p
     '/guestbook',
     '/search',
     '/blog/test-markdown',
-    '/projects/WOOREAY/Astro-Theme-Reay',
     '/gallery/daily/morning-window',
     '/404',
   ];
