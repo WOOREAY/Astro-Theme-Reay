@@ -76,7 +76,7 @@ const headerStats = [
 
   {otherSeries.length > 0 && (
     <section class="other-series">
-      <EditorialSectionHeader title={t('archives.series.other')} titleKey="archives.series.other" icon="i-carbon:folders" actionHref="/archives/series" actionLabel={t('archives.viewAllSeries')} actionKey="archives.viewAllSeries" />
+      <EditorialSectionHeader title={t('archives.series.other')} titleKey="archives.series.other" icon="i-carbon:folders" actionHref="/archives/series/" actionLabel={t('archives.viewAllSeries')} actionKey="archives.viewAllSeries" />
       <div>{otherSeries.map((item) => <SeriesCard {...item} />)}</div>
     </section>
   )}

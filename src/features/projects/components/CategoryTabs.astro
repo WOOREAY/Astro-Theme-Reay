@@ -23,7 +23,7 @@ const getCategoryKey = (id: string) => `projects.category.${id}` as keyof typeof
 
     return (
       <a
-        href={`/projects?category=${category.id}`}
+        href={`/projects/?category=${category.id}`}
         class={`category-tab ${currentCategory === category.id ? 'active' : ''}`}
         data-category={category.id}
       >

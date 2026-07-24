@@ -42,15 +42,15 @@ export function encodePathSegments(path: string): string {
  * Generate blog post URL
  */
 export function getPostUrl(post: CollectionEntry<'blog'>): string {
-  return `/blog/${encodePathSegments(getPostSlug(post))}`
+  return `/blog/${encodePathSegments(getPostSlug(post))}/`
 }
 
 export function getTagUrl(tag: string): string {
-  return `/archives/tags/${encodeURIComponent(encodeRouteParam(tag))}`
+  return `/archives/tags/${encodeURIComponent(encodeRouteParam(tag))}/`
 }
 
 export function getSeriesUrl(series: string): string {
-  return `/archives/series/${encodeURIComponent(encodeRouteParam(series))}`
+  return `/archives/series/${encodeURIComponent(encodeRouteParam(series))}/`
 }
 
 /**
