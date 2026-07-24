@@ -233,7 +233,8 @@ test('homepage exposes the unchanged Hero and asymmetric editorial showcase', as
   await expect(page.locator('[data-home-wayfinder]')).toHaveCount(0);
   await expect(page.locator('[data-home-heatmap]')).toHaveCount(1);
   await expect(page.locator('[data-home-showcase-post]')).toHaveCount(4);
-  await expect(page.locator('[data-home-showcase-project]')).toHaveCount(2);
+  await expect(page.locator('.home-project-shelf')).toHaveCount(0);
+  await expect(page.locator('[data-home-showcase-project]')).toHaveCount(0);
   await expect(page.locator('[data-home-showcase-plog]')).toHaveCount(2);
   expect(await page.locator('.home-heatmap-grid .home-heatmap-day').count()).toBeGreaterThanOrEqual(365);
 });
