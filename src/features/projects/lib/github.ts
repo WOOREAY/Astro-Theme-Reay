@@ -51,6 +51,49 @@ interface GitHubReadme {
   encoding: string;
 }
 
+interface GitHubApiRepo {
+  owner: { login: string };
+  name: string;
+  description: string | null;
+  html_url: string;
+  homepage: string | null;
+  stargazers_count: number;
+  forks_count: number;
+  language: string | null;
+  topics?: string[];
+  created_at: string;
+  updated_at: string;
+  pushed_at: string;
+  archived: boolean;
+  fork: boolean;
+  license?: { spdx_id?: string } | null;
+}
+
+interface GitHubContributionResponse {
+  data?: {
+    user?: {
+      contributionsCollection?: {
+        contributionCalendar?: {
+          weeks?: Array<{
+            contributionDays?: Array<{
+              date: string;
+              contributionCount?: number;
+            }>;
+          }>;
+        };
+      };
+    };
+  };
+}
+
+interface GitHubEvent {
+  created_at?: string;
+  type?: string;
+  payload?: {
+    commits?: unknown[];
+  };
+}
+
 const GITHUB_API = 'https://api.github.com';
 const githubConfig = getGitHubConfig();
 const rawGitHubToken = githubConfig.token || import.meta.env.GITHUB_TOKEN;
@@ -59,7 +102,7 @@ const GITHUB_TOKEN = rawGitHubToken && !/^your[_-]?github[_-]?token$/i.test(rawG
   : '';
 const REQUEST_TIMEOUT_MS = 6500;
 
-const pendingRequests = new Map<string, Promise<any>>();
+const pendingRequests = new Map<string, Promise<unknown>>();
 
 const getHeaders = (etag?: string, includeToken = true) => {
   const headers: Record<string, string> = {
@@ -237,13 +280,13 @@ async function getContributionCalendarFromGraphQL(username: string) {
 
   if (!response.ok) return null;
 
-  const data = await response.json();
+  const data = await response.json() as GitHubContributionResponse;
   const calendar = data?.data?.user?.contributionsCollection?.contributionCalendar;
   if (!calendar?.weeks) return null;
 
   const counts = new Map<string, number>();
-  calendar.weeks.forEach((week: any) => {
-    (week.contributionDays ?? []).forEach((day: any) => {
+  calendar.weeks.forEach((week) => {
+    (week.contributionDays ?? []).forEach((day) => {
       counts.set(day.date, day.contributionCount ?? 0);
     });
   });
@@ -258,10 +301,10 @@ async function getContributionCalendarFromEvents(username: string) {
     const response = await fetchGitHub(`${GITHUB_API}/users/${username}/events/public?per_page=100&page=${page}`);
     if (!response.ok) break;
 
-    const events = await response.json();
+    const events = await response.json() as GitHubEvent[];
     if (!Array.isArray(events) || events.length === 0) break;
 
-    events.forEach((event: any) => {
+    events.forEach((event) => {
       const date = event?.created_at ? toDateKey(new Date(event.created_at)) : null;
       if (!date) return;
 
@@ -341,7 +384,7 @@ export async function getGitHubRepo(owner: string, repo: string): Promise<GitHub
 
   if (pendingRequests.has(cacheKey)) {
     console.log(`⏳ Reusing pending request: ${owner}/${repo}`);
-    return pendingRequests.get(cacheKey);
+    return pendingRequests.get(cacheKey) as Promise<GitHubRepo | null>;
   }
 
   const requestPromise = (async () => {
@@ -365,7 +408,7 @@ export async function getGitHubRepo(owner: string, repo: string): Promise<GitHub
         return staleCached;
       }
 
-      const data = await response.json();
+      const data = await response.json() as GitHubApiRepo;
       const newEtag = response.headers.get('etag') || undefined;
 
       const repoData: GitHubRepo = {
@@ -427,7 +470,7 @@ export async function getUserRepos(username: string): Promise<GitHubRepo[]> {
   // Deduplicate concurrent requests
   if (pendingRequests.has(cacheKey)) {
     console.log(`⏳ Reusing pending request: user repos for ${username}`);
-    return pendingRequests.get(cacheKey);
+    return pendingRequests.get(cacheKey) as Promise<GitHubRepo[]>;
   }
 
   // Make new request
@@ -460,12 +503,12 @@ export async function getUserRepos(username: string): Promise<GitHubRepo[]> {
           return staleCached || [];
         }
 
-        const data = await response.json();
+        const data = await response.json() as GitHubApiRepo[];
         
         if (data.length === 0) {
           hasMore = false;
         } else {
-          repos.push(...data.map((repo: any) => ({
+          repos.push(...data.map((repo) => ({
             owner: repo.owner.login,
             name: repo.name,
             description: repo.description,
@@ -528,7 +571,7 @@ export async function getRepoReadme(owner: string, repo: string): Promise<string
   // Deduplicate concurrent requests
   if (pendingRequests.has(cacheKey)) {
     console.log(`⏳ Reusing pending request: README for ${owner}/${repo}`);
-    return pendingRequests.get(cacheKey);
+    return pendingRequests.get(cacheKey) as Promise<string | null>;
   }
 
   // Make new request
@@ -553,7 +596,7 @@ export async function getRepoReadme(owner: string, repo: string): Promise<string
         return staleCached;
       }
 
-      const data: GitHubReadme = await response.json();
+      const data = await response.json() as GitHubReadme;
       const newEtag = response.headers.get('etag') || undefined;
 
       // GitHub API returns base64-encoded content - decode to UTF-8

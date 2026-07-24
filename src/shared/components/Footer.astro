@@ -11,6 +11,7 @@ import {
   getUserContactLinks,
   getUserProfile,
 } from '@app/config/site.config';
+import type { TranslationKey } from '@app/config/i18n.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
 const { t, currentLang } = useI18n();
@@ -18,7 +19,7 @@ const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const site = getSiteProfile(currentLang);
 const builtWithKey = site.builtWith.startsWith('site.') ? site.builtWith : undefined;
-const builtWith = builtWithKey ? t(builtWithKey as any) : site.builtWith;
+const builtWith = builtWithKey ? t(builtWithKey as TranslationKey) : site.builtWith;
 const contactLinks = getUserContactLinks();
 const navigation = getNavigationConfig();
 const features = getFeaturesConfig();

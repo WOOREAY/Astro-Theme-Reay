@@ -1,6 +1,7 @@
 ---
 /** Configurable About section using the shared editorial split layout. */
 import { useI18n } from '@features/i18n/lib/i18n';
+import type { TranslationKey } from '@app/config/i18n.config';
 
 interface Item {
   name: string;
@@ -25,10 +26,10 @@ const { id, title, description, icon, items, columns = 3, compact = false, color
 const { t } = useI18n();
 const isTitleKey = title.startsWith('about.') && title.includes('.title');
 const isDescriptionKey = Boolean(description?.startsWith('about.'));
-const displayTitle = isTitleKey ? t(title as any) : title;
-const displayDescription = isDescriptionKey ? t(description as any) : description;
+const displayTitle = isTitleKey ? t(title as TranslationKey) : title;
+const displayDescription = isDescriptionKey ? t(description as TranslationKey) : description;
 const visibleColumns = Math.min(columns, 3);
-const getItemText = (value?: string) => value?.startsWith('about.') ? t(value as any) : value;
+const getItemText = (value?: string) => value?.startsWith('about.') ? t(value as TranslationKey) : value;
 const getItemKey = (value?: string) => value?.startsWith('about.') ? value : undefined;
 ---
 

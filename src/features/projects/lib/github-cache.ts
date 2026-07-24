@@ -23,7 +23,7 @@ const DEFAULT_TTL = Number.isFinite(envTtl) && envTtl > 0
 const DEFAULT_CACHE_DIR = '.cache/github';
 
 class GitHubCache {
-  private memoryCache: Map<string, CacheEntry<any>> = new Map();
+  private memoryCache: Map<string, CacheEntry<unknown>> = new Map();
   private cacheDir: string;
   private ttl: number;
 
@@ -166,7 +166,7 @@ class GitHubCache {
       if (!fs.existsSync(filePath)) return undefined;
 
       const content = fs.readFileSync(filePath, 'utf-8');
-      const diskEntry: CacheEntry<any> = JSON.parse(content);
+      const diskEntry: CacheEntry<unknown> = JSON.parse(content);
       return diskEntry.etag;
     } catch {
       return undefined;

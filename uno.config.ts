@@ -1,4 +1,5 @@
 import { defineConfig, presetWind4, presetIcons } from 'unocss'
+import type { IconifyJSON } from '@iconify/types'
 import { aboutConfig, site, user } from './src/app/config/user.config'
 import { mediaConfig } from './src/app/config/media.config'
 
@@ -38,8 +39,8 @@ export default defineConfig({
     presetIcons({
       scale: 1.2,
       collections: {
-        carbon: () => import('@iconify-json/carbon/icons.json').then(i => i.default as any),
-        'simple-icons': () => import('@iconify-json/simple-icons/icons.json').then(i => i.default as any),
+        carbon: () => import('@iconify-json/carbon/icons.json').then(i => i.default as IconifyJSON),
+        'simple-icons': () => import('@iconify-json/simple-icons/icons.json').then(i => i.default as IconifyJSON),
       },
     }),
   ],

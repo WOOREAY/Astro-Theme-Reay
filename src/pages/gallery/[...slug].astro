@@ -69,7 +69,7 @@ const album = {
 };
 const featuredPhoto = album.photos.find(photo => photo.featured) ?? album.photos[0];
 const heroCover = album.cover || featuredPhoto?.image;
-const photoPayload = JSON.stringify(album.photos.map(({ imageAsset, thumbnailImage, previewImage, ...photo }) => ({
+const photoPayload = JSON.stringify(album.photos.map(({ imageAsset: _imageAsset, thumbnailImage: _thumbnailImage, previewImage, ...photo }) => ({
   ...photo,
   image: previewImage || photo.image,
 }))).replace(/</g, '\\u003c');

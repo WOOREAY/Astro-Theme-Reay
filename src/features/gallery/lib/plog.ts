@@ -3,8 +3,7 @@
  * Content collection helpers for photo albums and album photo aggregation.
  */
 
-import { getCollection } from 'astro:content';
-import type { CollectionEntry } from 'astro:content';
+import { getCollection, type CollectionEntry } from 'astro:content';
 import type { ImageMetadata } from 'astro';
 
 const PLOG_FILE_EXTENSION_PATTERN = /\.(md|mdx)$/i;

@@ -1,5 +1,6 @@
 ---
 import { useI18n } from '@features/i18n/lib/i18n';
+import type { TranslationKey } from '@app/config/i18n.config';
 
 interface Props {
   site: {
@@ -17,7 +18,7 @@ const { t } = useI18n();
 const getCopyKey = (value: string) => (
   value.startsWith('site.') || value.startsWith('about.') ? value : undefined
 );
-const getCopy = (value: string) => getCopyKey(value) ? t(value as any) : value;
+const getCopy = (value: string) => getCopyKey(value) ? t(value as TranslationKey) : value;
 ---
 
 <section class="site-info-section">

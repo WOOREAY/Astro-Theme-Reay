@@ -71,11 +71,6 @@ export const projectsConfig: ProjectsConfig = {
   ],
 };
 
-// Backward-compatible exports for older custom code.
-export const projectCategories = projectsConfig.categories;
-export const projectDisplaySettings = projectsConfig.displaySettings;
-export const featuredRepos = projectsConfig.featuredRepos;
-
 export interface ProjectCategory {
   id: string;
   name: string;

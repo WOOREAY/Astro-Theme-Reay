@@ -1118,8 +1118,4 @@ export const translations = {
   },
 } as const;
 
-export function useTranslation(lang: Language = defaultLang) {
-  return function t(key: keyof typeof translations['en']) {
-    return translations[lang][key] || translations[defaultLang][key] || key;
-  };
-}
+export type TranslationKey = keyof typeof translations.en;

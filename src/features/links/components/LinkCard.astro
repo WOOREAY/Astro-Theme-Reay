@@ -1,6 +1,7 @@
 ---
 /** Visual link portrait with a blurred avatar backdrop and optional site preview. */
 import { getLinksConfig } from '@app/config/site.config';
+import type { TranslationKey } from '@app/config/i18n.config';
 import type { FriendLink } from '@app/config/links.config';
 import { useI18n } from '@features/i18n/lib/i18n';
 
@@ -9,7 +10,7 @@ const { link } = Astro.props;
 const { t } = useI18n();
 const previews = getLinksConfig().previews;
 const descriptionKey = link.description.startsWith('links.') ? link.description : undefined;
-const description = descriptionKey ? t(descriptionKey as any) : link.description;
+const description = descriptionKey ? t(descriptionKey as TranslationKey) : link.description;
 const previewUrl = link.screenshot || (previews.provider === 'microlink'
   ? `${previews.endpoint}?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`
   : '');

@@ -81,11 +81,6 @@ export const linksConfig: LinksConfig = {
   },
 };
 
-// Backward-compatible exports for older custom code.
-export const friendLinks = linksConfig.friendLinks;
-export const linkCategories = linksConfig.linkCategories;
-export const linkApplicationInfo = linksConfig.linkApplicationInfo;
-
 export interface LinkPreviewConfig {
   provider: 'none' | 'microlink';
   endpoint: string;

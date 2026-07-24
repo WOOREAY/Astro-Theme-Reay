@@ -128,7 +128,7 @@ for (const decoration of ['paper', 'eink', 'plain', 'inkwash', 'monochrome-ink',
 for (const preset of ['inkwash', 'monochrome-ink', 'anime-spring', 'anime-night', 'ukiyo', 'ocean', 'retro-terminal']) {
   assert.match(
     presetIdentities,
-    new RegExp(`data-theme-preset=['\"]${preset}['\"]`),
+    new RegExp(`data-theme-preset=['"]${preset}['"]`),
     `${preset} must define a component-level visual identity`,
   );
 }

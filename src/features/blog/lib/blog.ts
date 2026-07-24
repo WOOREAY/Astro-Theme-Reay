@@ -3,8 +3,7 @@
  * Helper functions for blog post management and retrieval
  */
 
-import { getCollection } from 'astro:content'
-import type { CollectionEntry } from 'astro:content'
+import { getCollection, type CollectionEntry } from 'astro:content'
 import { isPublishableContentVisible } from './visibility'
 
 const BLOG_FILE_EXTENSION_PATTERN = /\.(md|mdx)$/i

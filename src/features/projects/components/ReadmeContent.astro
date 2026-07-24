@@ -57,9 +57,8 @@ const markdownStyles = generateMarkdownStyles(currentMarkdownStyle);
       if (!codeElement) return;
       
       // 检测语言
-      let language = '';
-      language = pre.getAttribute('data-language') || 
-                 codeElement.getAttribute('data-language') || '';
+      let language = pre.getAttribute('data-language') ||
+                     codeElement.getAttribute('data-language') || '';
       
       if (!language) {
         const patterns = [

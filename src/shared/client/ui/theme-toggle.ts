@@ -13,6 +13,11 @@ type I18nWindow = Window & {
   };
 };
 
+type LegacyMediaQueryList = Omit<MediaQueryList, 'addListener' | 'removeListener'> & {
+  addListener?: (listener: (event: MediaQueryListEvent) => void) => void;
+  removeListener?: (listener: (event: MediaQueryListEvent) => void) => void;
+};
+
 export interface ThemeToggleConfig {
   btnId?: string;
   iconId?: string;
@@ -87,8 +92,8 @@ export class ThemeToggle {
 
     if (this.mediaQueryList.addEventListener) {
       this.mediaQueryList.addEventListener('change', this.handleSystemThemeChange);
-    } else if ((this.mediaQueryList as any).addListener) {
-      (this.mediaQueryList as any).addListener(this.handleSystemThemeChange);
+    } else {
+      (this.mediaQueryList as LegacyMediaQueryList).addListener?.(this.handleSystemThemeChange);
     }
   }
 
@@ -215,8 +220,8 @@ export class ThemeToggle {
 
     if (this.mediaQueryList?.removeEventListener) {
       this.mediaQueryList.removeEventListener('change', this.handleSystemThemeChange);
-    } else if (this.mediaQueryList && (this.mediaQueryList as any).removeListener) {
-      (this.mediaQueryList as any).removeListener(this.handleSystemThemeChange);
+    } else if (this.mediaQueryList) {
+      (this.mediaQueryList as LegacyMediaQueryList).removeListener?.(this.handleSystemThemeChange);
     }
   }
 }

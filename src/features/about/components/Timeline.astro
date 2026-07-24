@@ -1,12 +1,13 @@
 ---
 import { useI18n } from '@features/i18n/lib/i18n';
+import type { TranslationKey } from '@app/config/i18n.config';
 
 interface TimelineEvent { year: string; event: string; description?: string; }
 interface Props { events: TimelineEvent[]; }
 
 const { events } = Astro.props;
 const { t } = useI18n();
-const getEventText = (value?: string) => value?.startsWith('about.') ? t(value as any) : value;
+const getEventText = (value?: string) => value?.startsWith('about.') ? t(value as TranslationKey) : value;
 const getEventKey = (value?: string) => value?.startsWith('about.') ? value : undefined;
 ---
 

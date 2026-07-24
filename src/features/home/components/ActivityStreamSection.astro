@@ -8,6 +8,7 @@ import {
   getUserProfile,
   getUserSocialLinks,
 } from '@app/config/site.config';
+import type { TranslationKey } from '@app/config/i18n.config';
 import {
   calculateReadingTime,
   getArchiveStats,
@@ -30,7 +31,7 @@ const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const site = getSiteProfile(currentLang);
 const builtWithKey = site.builtWith.startsWith('site.') ? site.builtWith : undefined;
-const builtWith = builtWithKey ? t(builtWithKey as any) : site.builtWith;
+const builtWith = builtWithKey ? t(builtWithKey as TranslationKey) : site.builtWith;
 const contactLinks = getUserContactLinks();
 const socialLinks = getUserSocialLinks();
 const features = getFeaturesConfig();
