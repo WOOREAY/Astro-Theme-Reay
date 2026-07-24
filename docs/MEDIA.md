@@ -69,7 +69,7 @@ photos:
   - file: 'DSC_1695.jpg'
     title: '云下的路'
     caption: '驶向高原深处的一段路。'
-    signature: 'WOOREAY'
+    signature: 'YOUR_SIGNATURE'
     alt: '西藏公路与云'
     featured: true
     downloadName: 'xizang-road.jpg'
@@ -124,7 +124,7 @@ export const musicConfig = {
       id: 'background-music',
       playlistId: 'background',
       title: 'Background Music',
-      artist: 'Your Name',
+      artist: 'YOUR_ARTIST_NAME',
       album: 'Personal Mix',
       duration: '03:30',
       durationSeconds: 210,

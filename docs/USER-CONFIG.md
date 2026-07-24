@@ -1,39 +1,38 @@
-# User Configuration Guide
+# 用户配置
 
-`src/app/config/user.config.ts` is the single editable source for personal identity, public contact details, GitHub identity, localized introduction copy, and site facts. Application code reads normalized values through `src/app/config/site.config.ts`.
+`src/app/config/user.config.ts` 是个人身份、公开联系方式、GitHub 账号、双语简介、About 内容和站点事实的唯一编辑源。应用通过 `src/app/config/site.config.ts` 读取规范化后的值。
 
-## Ownership
+## 模板模式
 
-| Value | Edit here | Reused by |
-| --- | --- | --- |
-| Name and avatar | `user.name`, `user.avatar` | Header, Hero, About, Links site card, Footer, RSS |
-| Location | `user.location` | Home profile |
-| Email | `user.contact.email` | Home, About contacts, Links application, Footer |
-| Website | `user.contact.website` | Home, About contacts, Links application/site card, Footer |
-| GitHub username | `user.github.username` | Hero, Home, About, Links, Footer, Projects, comment defaults |
-| Other public profiles | `user.contact.additionalLinks` | Hero, Home, About, Links, Footer |
-| Site name | derived from `user.name` | Home, About, Links, RSS |
-| Site description | `userContent.<lang>.description` | Home, About, Links, RSS |
+仓库默认保留语义占位值：
 
-Do not copy these values into `links.config.ts`, `projects.config.ts`, About data, or page components.
+```ts
+export const site = {
+  templateMode: true,
+  // ...
+};
+```
 
-## Identity and Contact
+替换完 `YOUR_*`、`yourusername`、示例邮箱/域名和中文占位文案后，将 `templateMode` 改为 `false`。`npm run check:production` 会同时检查模板模式、常见占位值和生产 `SITE`，避免未初始化站点被发布。
+
+## 身份与联系
 
 ```ts
 export const user = {
-  name: 'Your Name',
+  name: 'YOUR_NAME',
   avatar: '/images/profile/avatar.png',
-  location: '',
+  location: 'YOUR_LOCATION',
 
   contact: {
-    email: 'you@example.com',
-    website: 'https://example.com',
+    email: 'your.email@example.com',
+    twitter: 'https://x.com/yourusername',
+    website: 'https://yourusername.github.io',
     additionalLinks: [
       {
         id: 'mastodon',
         label: 'Mastodon',
-        url: 'https://social.example/@you',
-        displayValue: '@you',
+        url: 'https://social.example/@yourusername',
+        displayValue: '@yourusername',
         icon: 'i-simple-icons:mastodon',
       },
     ],
@@ -43,65 +42,76 @@ export const user = {
     username: 'yourusername',
     token: '',
   },
-}
+};
 ```
 
-Empty optional values are hidden everywhere. GitHub is not repeated in `additionalLinks`: its public URL is derived automatically from `github.username`. `additionalLinks[].id` must be stable and each icon must be an UnoCSS/Iconify class.
+- 空的可选字段会在所有消费页面隐藏。
+- GitHub URL 由 `github.username` 自动生成，不要再放入 `additionalLinks`。
+- `additionalLinks[].id` 应稳定且唯一；`icon` 使用 UnoCSS/Iconify 类名。
+- `github.token` 在提交代码中保持空字符串。真实 token 只放 `.env` 或 CI Secret。
 
-Keep `github.token` empty in committed code. Use `GITHUB_TOKEN` in `.env` or CI secrets when a higher API limit is needed.
+## 单一来源传播
 
-## Localized Personal Content
+| 值 | 全站消费者 |
+| --- | --- |
+| `user.name` / `avatar` | Header、Hero、About、Links 站点卡、Footer、RSS |
+| `user.location` | Home / About 个人摘要 |
+| `contact.email` / `twitter` / `website` | Hero、Home、About、Links、Guestbook、Footer |
+| `github.username` | Hero、Home、Projects、About、Links、Footer、评论默认仓库 |
+| `userContent.<lang>.description` | Home、About、Links、RSS 与 SEO |
+
+不要在 `links.config.ts`、`projects.config.ts`、About 数据或页面组件中复制这些值。
+
+## 双语简介
 
 ```ts
 export const userContent = {
   en: {
-    role: 'Software developer and technical writer',
-    tagline: 'Open Source · Technical Notes · Project Practice',
-    bio: 'A short introduction.',
-    status: 'What you are working on now.',
-    focus: ['Open Source', 'Web Engineering'],
-    greeting: 'Hello, I am',
-    description: 'A personal site for notes, projects, and long-term learning.',
+    role: 'YOUR_ROLE',
+    tagline: 'YOUR_TAGLINE',
+    bio: 'YOUR_SHORT_BIO',
+    status: 'YOUR_CURRENT_STATUS',
+    focus: ['YOUR_FOCUS_1', 'YOUR_FOCUS_2'],
+    story: {
+      title: 'YOUR_STORY_TITLE',
+      lead: 'YOUR_STORY_LEAD',
+      body: ['YOUR_STORY_PARAGRAPH_1'],
+      principles: ['YOUR_PRINCIPLE_1'],
+    },
+    greeting: 'YOUR_GREETING',
+    description: 'YOUR_SITE_DESCRIPTION',
   },
   zh: {
-    role: '软件开发者与技术写作者',
-    tagline: '开源实践 · 技术笔记 · 项目复盘',
-    bio: '一段简短的个人介绍。',
-    status: '当前正在做的事情。',
-    focus: ['开源实践', 'Web 工程'],
-    greeting: '你好，我是',
-    description: '一个记录技术笔记、项目实践与长期学习的个人站点。',
+    // 填写对应中文内容，字段结构必须一致
   },
-}
+};
 ```
 
-`description` is also the localized site description. Do not add another site-description field.
+`description` 同时是本语言的站点描述，不再维护第二份 SEO/site description。
 
-## Site Facts
+## 站点事实
 
 ```ts
 export const site = {
-  builtWith: 'Built with Astro, UnoCSS, and TypeScript',
-  since: '2025',
-  stats: {
-    visitors: 0,
-  },
+  templateMode: true,
+  builtWith: 'site.tech.description',
+  since: 'YYYY',
   techStack: [
     {
       name: 'Astro',
-      description: 'Modern static site generator',
+      description: 'about.tool.astro',
       url: 'https://astro.build/',
       icon: 'i-carbon:rocket',
     },
   ],
-}
+};
 ```
 
-Article and word counts are calculated from real content at build time. Only an externally measured visitor count remains configurable.
+文章、标签、字数和写作年份由内容集合在构建期计算，不在 config 中手填。`builtWith` 和技术说明可以使用 `site.*` / `about.*` i18n key，也可以写普通自定义字符串。
 
-## About Content
+## About 内容
 
-`aboutConfig` owns only About-specific collections:
+`aboutConfig` 只保存 About 专属集合：
 
 ```ts
 export const aboutConfig = {
@@ -109,31 +119,30 @@ export const aboutConfig = {
   education: [],
   experience: [],
   timeline: [],
-}
+};
 ```
 
-Contacts and site identity are intentionally absent. About receives them from the same normalized getters as the other pages.
+联系方式和站点身份刻意不在其中。教育、经历和时间线为空时，对应区块自动隐藏。
 
-## App-facing Getters
+## 应用读取入口
 
-Components should import from `@app/config/site.config`:
+业务代码从 `@app/config/site.config` 导入：
 
 ```ts
 const user = getUserProfile();
-const contact = getUserContact();
 const contactLinks = getUserContactLinks();
 const socialLinks = getUserSocialLinks();
 const content = getLocalizedUserContent(currentLang);
-const site = getSiteProfile(currentLang);
+const siteProfile = getSiteProfile(currentLang);
 const github = getGitHubConfig();
 ```
 
-- `getUserContactLinks()` normalizes email, website, GitHub, and additional profiles and removes duplicate URLs.
-- `getUserSocialLinks()` returns GitHub and additional public profiles for social-only UI.
-- `getSiteProfile()` derives name, avatar, URL, and localized description instead of storing copies.
-- `getGitHubConfig()` combines the one GitHub identity with project filtering options.
+- `getUserContactLinks()` 规范化 email、Twitter/X、website、GitHub 和 additional links，并按 URL 去重。
+- `getUserSocialLinks()` 返回社交类入口。
+- `getSiteProfile()` 从 user/contact/userContent 派生站点名、头像、URL 与描述。
+- `getGitHubConfig()` 将唯一 GitHub 身份与项目过滤选项组合。
 
-## Verification
+## 验证
 
 ```bash
 npm run test:config
@@ -141,12 +150,4 @@ npm run check
 npm run verify
 ```
 
-`test:config` proves the normalizer handles a fixture email/website/GitHub profile once and asserts that Home, About, Links, and Footer consume the central getter.
-
-## Common Failures
-
-- Adding GitHub to `additionalLinks`: this duplicates the URL derived from `github.username`.
-- Adding contact buttons to `links.config.ts`: the Links page already reads `getUserContactLinks()`.
-- Adding `githubUsername` to `projects.config.ts`: Projects already reads `getGitHubConfig()`.
-- Adding name or description to About site data: both are derived from `user` and `userContent`.
-- Committing a GitHub token: use `.env` or CI secrets.
+生产前再使用真实 `SITE` 运行 `npm run check:production`。

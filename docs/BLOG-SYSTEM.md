@@ -121,7 +121,7 @@ See [Blog Frontmatter Reference](./BLOG-FRONTMATTER.md) for complete details.
 
 [Link text](https://example.com)
 
-![Image alt](/ images/example.jpg)
+![Image alt](/images/example.jpg)
 ```
 
 ### Code Blocks

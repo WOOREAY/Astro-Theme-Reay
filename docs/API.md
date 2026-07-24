@@ -25,7 +25,11 @@ import Header from '@shared/components/Header.astro';
 
 ```ts
 getUserProfile()
+getUserContact()
+getUserContactLinks()
+getUserSocialLinks()
 getLocalizedUserContent(lang?)
+getSiteProfile(lang?)
 getAboutConfig()
 getThemeConfig()
 getBackgroundConfig()
@@ -135,7 +139,7 @@ formatNumber(value)
 getLanguageColor(language)
 ```
 
-构建期调用包含内存缓存、磁盘缓存、请求去重、超时和无 token 降级。配置读取顺序为环境变量 `GITHUB_TOKEN`，随后是用户配置；生产环境应始终使用环境变量或 CI Secret。
+构建期调用包含内存缓存、磁盘缓存、请求去重、超时和无 token 降级。兼容实现仍会读取非空的用户配置 token，但提交代码时必须保持为空，真实 token 只使用环境变量 `GITHUB_TOKEN` 或 CI Secret。
 
 ## i18n API
 
