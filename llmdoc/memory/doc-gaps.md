@@ -8,17 +8,12 @@
 
 ### 真实 GitHub Pages 部署尚未验收
 
-- 现状：deploy workflow 已从仓库变量读取 `SITE`、固定 `BASE=/`，并运行 production check、完整 verify 和 audit；本地以 `SITE=https://wooreay.github.io` 验证通过，但本轮没有读取一次真实 Pages run 和线上产物。
+- 现状：deploy workflow 已从派生仓库变量读取 `SITE`、固定 `BASE=/`，并运行 production check、完整 verify 和 audit；模板仓库不保存真实站点 origin，本轮也没有读取某个派生站点的真实 Pages run 和线上产物。
 - 影响：无法仅凭 workflow 源码证明仓库变量已配置、Pages 环境授权正确，或线上 canonical/RSS/robots/Sitemap 与预期完全一致。
 - 来源：`.github/workflows/deploy.yml`、`scripts/check-production-config.mjs`、GitHub Pages 仓库设置。
-- 关闭条件：一次 main/manual Pages run 成功，并核对部署后的首页 HTML、404、RSS、robots、Sitemap 和 canonical 均使用 `https://wooreay.github.io`。
+- 关闭条件：任一使用真实配置的派生站点完成一次 main/manual Pages run，并核对部署后的首页 HTML、404、RSS、robots、Sitemap 和 canonical 均使用该站点的真实 `SITE`。
 
-### 旧版使用文档仍有环境变量漂移
-
-- 现状：主 README、`.env.example` 和 llmdoc 已统一到 Node 22、`SITE` 与根路径部署；部分 `docs/` 仍使用不受支持的 `SITE_URL`、项目子路径 `BASE` 或旧工作流片段。
-- 影响：绕过主入口直接阅读旧文档时，可能配置无效变量或尝试不受支持的项目子路径部署。
-- 来源：`docs/INSTALLATION.md`、`docs/DEPLOYMENT.md`、`docs/GITHUB-ACTIONS.md`、`docs/DEPLOYMENT-CHECKLIST.md`、`docs/QUICK-START.md`。
-- 关闭条件：逐篇核对并统一旧 docs 的环境变量、根路径合同、命令和 workflow 示例；增加文档命令/链接检查，防止再次漂移。
+本轮已关闭旧版使用文档漂移：安装、快速开始、部署、FAQ、项目配置和文档导航已按 Node 22、`SITE`、`BASE=/` 与当前 workflow 重写；重复的 GitHub Actions/部署清单和历史迁移说明已删除，`scripts/check-docs.mjs` 进入 `verify` 并拒绝缺失的本地 Markdown 链接。
 
 ## 外部内容、安全与隐私
 
@@ -47,7 +42,7 @@
 
 ### 自动化测试仍不是全站与真实集成证明
 
-- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、Pagefind 全站结果与查询 URL、索引失败后的 Blog/Plog 回退、Blog/Plog 详情返回归档筛选状态、首页错位编辑橱窗、个人/站点信息、配置化 Blog/项目/Plog 数量与热度表结构、九类字体角色的回退和 computed-style 传播、自托管 Nunito/寒蝉全圆体/Noto fallback 加载、十三套主题预设注册/显式背景 decoration/默认 technology 合同、paper/monochrome-ink Neutral 与 eink Monochrome variant、单对象 `defineTheme` 的 primary/source 优先级与嵌套覆盖、preset identity/default mode DOM 合同、实际背景/shape token 传播、Blog TOC 正文 0%/100% 边界与居中完整圆环、UI/代码字体边界、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、Archives Blog/Plog 混合条目与 URL 筛选、MD3 tonal 筛选器、最多 4 个系列主栏预览、每种内容最多 12 个热门主题、完整主题 dialog 在桌面/移动视口的居中与搜索/排序/选择/清除/结果焦点回归、居中有界的 Tag/Series 目录、Blog 文章 `3 / 5` 结构位置/相邻章节、Plog collection/moment 与 Markdown 叙事、About 配置化叙事、Links 有界 16:9 卡片/交互后截图加载/头像兜底、Guestbook 默认关闭状态/统一联系人/双语属性/桌面移动首屏，以及代表路由的移动端溢出和五个页面的 Axe WCAG A/AA；Search 额外完成 Chrome 1440×900/390×844、生产 Pagefind、开发轻量回退、无溢出/无控制台错误与归档历史返回复测；替代预设仍只有类型/配置合同门禁，八套扩展主题均完成独立构建；monochrome-ink 额外完成 Chrome light/dark、1440×900/390×844、首页与 Blog 正文的楷体/字重/中性表面/朱砂色/无溢出复测，cosmic-abyss 额外完成 Chrome light/dark、1440×900/390×844、首页与 Blog 正文的星野/吸积盘/观测舷窗材质/无溢出复测，但 CI 尚未逐套执行完整 E2E。仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
+- 现状：`verify` 已覆盖类型/内容、完整构建、关键产物、性能预算、发布可见性、恶意 README、核心浏览器流程、Pagefind 全站结果与查询 URL、索引失败后的 Blog/Plog 回退、Blog/Plog 详情返回归档筛选状态、首页错位编辑橱窗、占位身份不生成虚构项目、个人/站点信息、配置化 Blog/Plog 数量与热度表结构、九类字体角色的回退和 computed-style 传播、自托管 Nunito/寒蝉全圆体/Noto fallback 加载、十三套主题预设注册/显式背景 decoration/默认 technology 合同、paper/monochrome-ink Neutral 与 eink Monochrome variant、单对象 `defineTheme` 的 primary/source 优先级与嵌套覆盖、preset identity/default mode DOM 合同、实际背景/shape token 传播、Blog TOC 正文 0%/100% 边界与居中完整圆环、UI/代码字体边界、Hero 视口高度、内容区自然流、全部主要目录页的共享编辑式页首、Archives Blog/Plog 混合条目与 URL 筛选、MD3 tonal 筛选器、最多 4 个系列主栏预览、每种内容最多 12 个热门主题、完整主题 dialog 在桌面/移动视口的居中与搜索/排序/选择/清除/结果焦点回归、居中有界的 Tag/Series 目录、Blog 文章 `3 / 5` 结构位置/相邻章节、Plog collection/moment 与 Markdown 叙事、About 配置化叙事、Links 有界 16:9 卡片/交互后截图加载/头像兜底、Guestbook 默认关闭状态/统一联系人/双语属性/桌面移动首屏，以及代表路由的移动端溢出和五个页面的 Axe WCAG A/AA；Search 额外完成 Chrome 1440×900/390×844、生产 Pagefind、开发轻量回退、无溢出/无控制台错误与归档历史返回复测；替代预设仍只有类型/配置合同门禁，八套扩展主题均完成独立构建；monochrome-ink 额外完成 Chrome light/dark、1440×900/390×844、首页与 Blog 正文的楷体/字重/中性表面/朱砂色/无溢出复测，cosmic-abyss 额外完成 Chrome light/dark、1440×900/390×844、首页与 Blog 正文的星野/吸积盘/观测舷窗材质/无溢出复测，但 CI 尚未逐套执行完整 E2E。仍没有 HTTP 全站 link crawl、像素级 visual regression、人工无障碍、真实评论 provider 或线上部署测试。
 - 影响：现有门禁不证明全部动态路由、视觉像素、真实第三方服务和线上托管行为正确。
 - 来源：`package.json`、`scripts/`、`tests/e2e/core.spec.ts`、`.github/workflows/`。
 - 关闭条件：按风险补充全站 link crawl、关键 viewport visual baseline、键盘/屏幕阅读器人工清单、至少一个 live provider 测试，以及真实 Pages 部署验收。

@@ -10,11 +10,12 @@
 
 ```bash
 npm ci
-SITE=https://wooreay.github.io npm run check:production
-SITE=https://wooreay.github.io npm run verify
+npm run verify
 npm run audit
 npm run preview -- --host 127.0.0.1
 ```
+
+真实部署再运行 `SITE=<真实 HTTPS origin> npm run check:production`；不要把文档中的 `.example`、`.invalid` 或 `yourusername` 占位值当作可发布配置。
 
 `test:e2e:dist` 固定在 `127.0.0.1:4322` 启动独立生产 preview，不复用常见于 4321 的 Astro dev server。Pagefind 索引只存在于完整 `dist`，因此不要把 dev server 成功响应误当作生产 E2E 就绪。
 

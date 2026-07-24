@@ -31,6 +31,6 @@
 
 ## 完成标准
 
-- 至少运行 `npm run check`；影响构建或路由时运行 `npm run verify`。
+- 至少运行 `npm run lint` 与 `npm run check`；影响构建、路由或公开文档时运行 `npm run verify`。
 - 依赖或发布变更额外运行 `npm run audit`。
 - 结构、流程、配置合同或重要缺口变化后运行 `llmdoc-update`，并同步 `memory/doc-gaps.md`。

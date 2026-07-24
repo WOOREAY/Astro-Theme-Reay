@@ -27,7 +27,7 @@ npm run verify
 npm run audit
 ```
 
-- `verify`: `astro check` -> 个人配置单一来源合同 -> 完整构建 -> 16 个关键产物 smoke test -> 静态性能预算 -> 发布可见性/README 净化安全合同 -> Playwright/Axe E2E。
+- `verify`: ESLint -> `astro check` -> 文档本地链接 -> 个人配置单一来源合同 -> 完整构建 -> 16 个关键产物 smoke test -> 静态性能预算 -> 发布可见性/README 净化安全合同 -> Playwright/Axe E2E。
 - `verify` 不包含安全审计，必须显式运行 `npm run audit`。
 - E2E 覆盖核心导航、主题/语言持久化、Pagefind、404、图库兜底、移动菜单和三个页面的 WCAG A/AA 自动检查；它仍不等价于全站链接 crawl、视觉回归或真实 provider 测试。
 
@@ -35,4 +35,4 @@ npm run audit
 
 - PR/develop CI 安装 Chromium，运行完整 `verify` 和 `audit`。
 - main 部署工作流从仓库变量读取 `SITE`、固定 `BASE=/`，先运行 `check:production`，再运行完整 `verify`、`audit` 和 Pages 部署。
-- 仓库必须在 GitHub Actions variables 中配置 `SITE=https://wooreay.github.io`；未配置时生产检查会阻止部署。
+- 派生仓库必须在 GitHub Actions variables 中把 `SITE` 配置为自己的真实 HTTPS origin；未配置、示例域名或占位身份会被生产检查阻止部署。

@@ -28,6 +28,7 @@
 - `user.github.username/token` 是 GitHub 唯一来源；公开主页 URL 从 username 派生，token 应保持为空并优先使用环境变量。
 - `userContent` 提供本地化 `role/status/focus/tagline/bio/greeting/description/story`；`story` 保存 About 的标题、引言、正文和原则，其中 `description` 同时作为本地化站点描述。
 - `site` 只保存 `since/builtWith/techStack` 等不应从身份或内容统计重复推导的事实；站点名、头像、URL、描述分别从 user/contact/userContent 派生，文章、主题、字数和写作年份在构建期从内容集合计算。
+- `site.templateMode` 是模板发布保护标记；占位内容替换完成后才改为 `false`，生产检查还会独立扫描常见占位 token。
 - `aboutConfig` 只保存 sections、education、experience、timeline，不再保存 socialNetworks 或第二份 site identity。
 
 About section/item、timeline、`site.builtWith`/tech description 与 Links curated description 可保存对应的 `about.*`、`site.*`、`links.*` translation key；消费者只对这些命名空间解析词典，普通自定义字符串仍原样展示。Links 分类继续由稳定 `id` 派生 `links.category.<id>`，因此新增分类时需要同时补齐中英文 key。

@@ -9,7 +9,7 @@
 | `BASE` | 生产检查/Actions | 必须为 `/`；Astro `base` 固定为根路径 |
 | `GITHUB_TOKEN` | GitHub build integration | optional; env loses to non-empty user config token |
 | `GITHUB_CACHE_TTL_MS` | GitHub cache | optional, undocumented in example env |
-`SITE_URL` 出现在部分旧 docs，但不是源码支持变量；`.env.example` 已移除无消费者的 `PUBLIC_GA_ID`。
+`SITE_URL` 和 `PUBLIC_GA_ID` 不是源码支持变量；公开部署文档只把它们作为不应配置的旧名称说明。`check:production` 通过 Node `--env-file-if-exists=.env` 自动读取本地环境文件，CI 仍可显式传入变量。
 
 ## Core Open-source Packages
 

@@ -9,7 +9,9 @@
 ```text
 npm ci
   -> SITE=<origin> npm run check:production (release only)
+  -> ESLint
   -> npm run check
+  -> Markdown local-link validation
   -> astro build
   -> pagefind --site dist
   -> scripts/check-routes.mjs
@@ -19,7 +21,7 @@ npm ci
   -> npm audit (separate)
 ```
 
-`npm run verify` 包含 check、完整 build、route smoke、静态性能预算、安全合同和 Playwright/Axe E2E，但不包含 audit。生产部署在 verify 前额外运行 `check:production`。
+`npm run verify` 包含 lint、Astro check、文档链接、配置合同、完整 build、route smoke、静态性能预算、安全合同和 Playwright/Axe E2E，但不包含 audit。生产部署在 verify 前额外运行 `check:production`。
 
 ## Astro Build
 
@@ -42,6 +44,8 @@ npm ci
 `scripts/check-performance-budget.mjs` 约束首页/Blog 列表 HTML、首页 inline 资源、`data-astro-rerun` 和共享 CSS 合同。它是静态回归门禁，不测 FPS、INP、LCP、内存或 layer。
 
 `scripts/check-security-contracts.mjs` 验证 `draft/published` 的统一生产可见性和远程 README 净化。Playwright suite 验证核心导航/持久化、Pagefind、404、图库、移动菜单与 Axe WCAG A/AA。
+
+`scripts/check-docs.mjs` 遍历 README、CONTRIBUTING、公开 docs、llmdoc 与预设说明，拒绝缺失的本地 Markdown 链接；它不验证外部 URL 可用性或标题锚点。
 
 现有门禁仍不 crawl 全站内链、不验证全部 canonical/OG、不测试真实 provider，也不替代视觉回归或人工可访问性检查。
 

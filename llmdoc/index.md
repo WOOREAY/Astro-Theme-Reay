@@ -34,7 +34,7 @@
 - `llmdoc/architecture/content-system.md`：Blog、Plog、slug、可见性、归档、搜索回退文档和构建期图片处理。
 - `llmdoc/architecture/client-runtime.md`：Astro 页面交换、主题、增强 i18n、搜索、历史返回、首页/图库/归档交互和清理模型。
 - `llmdoc/architecture/external-integrations.md`：Pagefind、GitHub、评论 provider 与外部信任边界。
-- `llmdoc/architecture/build-and-release.md`：静态构建、Pagefind、安全/E2E 门禁、CI、Pages 部署和生产 URL 流程。
+- `llmdoc/architecture/build-and-release.md`：静态构建、Pagefind、lint/文档/安全/E2E 门禁、CI、Pages 部署和生产 URL 流程。
 
 ## Guides
 
