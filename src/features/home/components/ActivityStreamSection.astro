@@ -29,6 +29,8 @@ const { currentLang, t } = useI18n();
 const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const site = getSiteProfile(currentLang);
+const builtWithKey = site.builtWith.startsWith('site.') ? site.builtWith : undefined;
+const builtWith = builtWithKey ? t(builtWithKey as any) : site.builtWith;
 const contactLinks = getUserContactLinks();
 const socialLinks = getUserSocialLinks();
 const features = getFeaturesConfig();
@@ -372,7 +374,7 @@ const emailContact = contactLinks.find((link) => link.kind === 'email');
           <span data-i18n="home.site.since">{t('home.site.since')}</span>
           {site.since}
         </span>
-        <span>{site.builtWith}</span>
+        <span data-i18n={builtWithKey}>{builtWith}</span>
       </div>
     </header>
 

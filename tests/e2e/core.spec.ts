@@ -173,11 +173,11 @@ test('Blog and Plog detail back links restore the previous archive state', async
 test('custom 404 title follows the selected language', async ({ page }) => {
   const response = await page.goto('/definitely-missing-page');
   expect(response?.status()).toBe(404);
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('这个页面暂时走丢了');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('这一页漂到了地图之外');
 
   await page.getByRole('button', { name: '切换语言' }).click();
-  await expect(page).toHaveTitle('This page wandered away');
-  await expect(page.getByRole('heading', { level: 1 })).toHaveText('This page wandered away');
+  await expect(page).toHaveTitle('This page drifted beyond the map');
+  await expect(page.getByRole('heading', { level: 1 })).toHaveText('This page drifted beyond the map');
 });
 
 test('gallery lightbox renders an image or an explicit fallback', async ({ page }) => {

@@ -1,19 +1,22 @@
 ---
+import { useI18n } from '@features/i18n/lib/i18n';
+
 interface Props {
   author?: string;
   postUrl: string;
 }
 
 const { author, postUrl } = Astro.props;
+const { t } = useI18n();
 ---
 
 <footer class="post-footer">
   <div>
-    <span class="post-footer-label">Author</span>
-    <strong>{author || '博主'}</strong>
+    <span class="post-footer-label" data-i18n="blog.footer.author">{t('blog.footer.author')}</span>
+    <strong data-i18n={author ? undefined : 'blog.footer.defaultAuthor'}>{author || t('blog.footer.defaultAuthor')}</strong>
   </div>
   <div class="post-footer-source">
-    <span class="post-footer-label">Permalink</span>
+    <span class="post-footer-label" data-i18n="blog.footer.permalink">{t('blog.footer.permalink')}</span>
     <a href={postUrl}>{postUrl}</a>
   </div>
   <p>

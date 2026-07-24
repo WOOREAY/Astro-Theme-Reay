@@ -47,15 +47,15 @@ export const userContent = {
   en: {
     role: 'Open-source maker and technical writer',
     tagline: 'Open Source · Technical Notes · Project Practice',
-    bio: 'Building Astro Theme Reay and documenting reusable engineering ideas, project decisions, and long-term learning.',
+    bio: 'Building Astro Theme Reay and documenting reusable engineering ideas, project choices, and lessons worth revisiting.',
     status: 'Currently refining Astro Theme Reay into a clearer, faster, and more reusable personal-site system.',
     focus: ['Open Source', 'Web Engineering', 'Technical Writing', 'Design Systems'],
     story: {
       title: 'Making room for things worth remembering',
-      lead: 'I use this site to keep a visible thread between learning, building, and writing—three practices that continually reshape one another.',
+      lead: 'I use this site to keep a visible thread between learning, making, and writing—three practices that continually reshape one another.',
       body: [
-        'It is less an online résumé than a long-running notebook. Projects preserve what became usable; articles preserve what became clear; photographs preserve the moments that would otherwise fade first.',
-        'Most pages begin with a question or an unfinished detail. I prefer to return, revise, and connect them over time, so the archive can show not only conclusions, but also how they slowly took shape.',
+        'It is less an online résumé than a long-running notebook. Projects preserve what became usable; articles preserve what became clear; photographs preserve the ordinary moments that would otherwise fade first.',
+        'Most pages begin with a question or an unfinished detail. I return to revise and connect them over time, so the archive can show not only conclusions, but also how they slowly took shape.',
       ],
       principles: ['Write for revisiting', 'Build for reuse', 'Leave room for ordinary life'],
     },
@@ -65,19 +65,19 @@ export const userContent = {
   zh: {
     role: '开源实践者与技术写作者',
     tagline: '开源实践 · 技术笔记 · 项目复盘',
-    bio: '持续打磨 Astro Theme Reay，并记录可复用的工程经验、项目决策与长期学习成果。',
+    bio: '持续打磨 Astro Theme Reay，并记录可复用的工程经验、项目取舍与值得重读的学习所得。',
     status: '目前正在把 Astro Theme Reay 打磨成更清晰、更快速，也更容易复用的个人网站系统。',
     focus: ['开源实践', 'Web 工程', '技术写作', '设计系统'],
     story: {
       title: '为值得记住的事，留下一点位置',
       lead: '我用这座小站，保存学习、构建与写作之间那条看得见的线——三件事彼此推动，也彼此改变。',
       body: [
-        '它不像一份在线简历，更像一本持续书写的手册：项目留下已经成为作品的想法，文章留下终于想清楚的问题，照片则留下最容易先被忘记的寻常片刻。',
+        '它不像一份在线简历，更像一本持续书写的笔记：项目留下已经成为作品的想法，文章留下终于想清楚的问题，照片则留下最容易先被忘记的寻常片刻。',
         '这里的大多数页面，都从一个疑问或尚未完成的细节开始。我愿意不断回来修改、补充和连接，让归档记录的不只是结论，还有它们慢慢成形的过程。',
       ],
       principles: ['写给未来重读', '构建可复用之物', '为寻常生活留白'],
     },
-    greeting: '你好,我是',
+    greeting: '你好，我是',
     description: '一个记录开源实践、技术笔记与长期学习的个人站点。',
   },
 } satisfies UserContent;
@@ -87,12 +87,12 @@ export const userContent = {
 // ---------------------------------------------------------------------------
 
 export const site = {
-  builtWith: 'Built with Astro, UnoCSS, and TypeScript',
+  builtWith: 'site.tech.description',
   since: '2025',
   techStack: [
-    { name: 'Astro', description: 'Modern static site generator', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
-    { name: 'UnoCSS', description: 'Atomic CSS engine', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
-    { name: 'TypeScript', description: 'Type-safe JavaScript', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
+    { name: 'Astro', description: 'about.tool.astro', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+    { name: 'UnoCSS', description: 'about.tool.unocss', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
+    { name: 'TypeScript', description: 'about.tool.typescript', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
   ],
 } satisfies SiteDetails;
 
@@ -111,10 +111,10 @@ export const aboutConfig = {
       compact: false,
       colorTheme: 'primary',
       items: [
-        { name: 'Astro', description: 'Static-first web framework', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
-        { name: 'TypeScript', description: 'Type-safe application code', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
-        { name: 'UnoCSS', description: 'On-demand atomic CSS', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
-        { name: 'GitHub', description: 'Open-source collaboration', url: 'https://github.com/', icon: 'i-carbon:logo-github' },
+        { name: 'Astro', description: 'about.tool.astro', url: 'https://astro.build/', icon: 'i-carbon:rocket' },
+        { name: 'TypeScript', description: 'about.tool.typescript', url: 'https://www.typescriptlang.org/', icon: 'i-carbon:code' },
+        { name: 'UnoCSS', description: 'about.tool.unocss', url: 'https://unocss.dev/', icon: 'i-carbon:color-palette' },
+        { name: 'GitHub', description: 'about.tool.github', url: 'https://github.com/', icon: 'i-carbon:logo-github' },
       ],
     },
     {
@@ -126,10 +126,10 @@ export const aboutConfig = {
       compact: true,
       colorTheme: 'secondary',
       items: [
-        { name: 'Git', description: 'Version control', url: 'https://git-scm.com/', icon: 'i-carbon:branch' },
-        { name: 'Markdown', description: 'Portable technical writing', url: 'https://commonmark.org/', icon: 'i-carbon:document' },
-        { name: 'Pagefind', description: 'Static local search', url: 'https://pagefind.app/', icon: 'i-carbon:search' },
-        { name: 'Playwright', description: 'Browser verification', url: 'https://playwright.dev/', icon: 'i-carbon:test-tool' },
+        { name: 'Git', description: 'about.tool.git', url: 'https://git-scm.com/', icon: 'i-carbon:branch' },
+        { name: 'Markdown', description: 'about.tool.markdown', url: 'https://commonmark.org/', icon: 'i-carbon:document' },
+        { name: 'Pagefind', description: 'about.tool.pagefind', url: 'https://pagefind.app/', icon: 'i-carbon:search' },
+        { name: 'Playwright', description: 'about.tool.playwright', url: 'https://playwright.dev/', icon: 'i-carbon:test-tool' },
       ],
     },
     {
@@ -141,10 +141,10 @@ export const aboutConfig = {
       compact: true,
       colorTheme: 'accent',
       items: [
-        { name: 'Open Source', description: 'Reusable public work', icon: 'i-carbon:logo-github' },
-        { name: 'Technical Writing', description: 'Durable engineering notes', icon: 'i-carbon:book' },
-        { name: 'Web Design', description: 'Clear and expressive interfaces', icon: 'i-carbon:color-palette' },
-        { name: 'Performance', description: 'Fast, resilient experiences', icon: 'i-carbon:chart-line' },
+        { name: 'about.interest.openSource', description: 'about.tool.openSource', icon: 'i-carbon:logo-github' },
+        { name: 'about.interest.technicalWriting', description: 'about.tool.technicalWriting', icon: 'i-carbon:book' },
+        { name: 'about.interest.webDesign', description: 'about.tool.webDesign', icon: 'i-carbon:color-palette' },
+        { name: 'about.interest.performance', description: 'about.tool.performance', icon: 'i-carbon:chart-line' },
       ],
     },
   ],
@@ -154,8 +154,8 @@ export const aboutConfig = {
   experience: [] as Experience[],
 
   timeline: [
-    { year: '2026', event: 'Evolving Astro Theme Reay', description: 'Improving architecture, accessibility, and release confidence' },
-    { year: '2025', event: 'Started Astro Theme Reay', description: 'Built a configuration-driven personal site theme with Astro' },
+    { year: '2026', event: 'about.timeline.2026.title', description: 'about.timeline.2026.desc' },
+    { year: '2025', event: 'about.timeline.2025.title', description: 'about.timeline.2025.desc' },
   ],
 } satisfies AboutConfig;
 

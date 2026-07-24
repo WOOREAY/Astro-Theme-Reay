@@ -2,10 +2,14 @@
 /** Visual link portrait with a blurred avatar backdrop and optional site preview. */
 import { getLinksConfig } from '@app/config/site.config';
 import type { FriendLink } from '@app/config/links.config';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 interface Props { link: FriendLink; }
 const { link } = Astro.props;
+const { t } = useI18n();
 const previews = getLinksConfig().previews;
+const descriptionKey = link.description.startsWith('links.') ? link.description : undefined;
+const description = descriptionKey ? t(descriptionKey as any) : link.description;
 const previewUrl = link.screenshot || (previews.provider === 'microlink'
   ? `${previews.endpoint}?url=${encodeURIComponent(link.url)}&screenshot=true&meta=false&embed=screenshot.url`
   : '');
@@ -33,9 +37,9 @@ const previewUrl = link.screenshot || (previews.provider === 'microlink'
   <span class="link-copy">
     <span class="link-heading">
       <strong>{link.name}</strong>
-      {link.featured && <i class="i-carbon:star-filled" aria-label="Featured"></i>}
+      {link.featured && <i class="i-carbon:star-filled" aria-label={t('links.featured')}></i>}
     </span>
-    <span>{link.description}</span>
+    <span data-i18n={descriptionKey}>{description}</span>
   </span>
   <span class="link-visit" aria-hidden="true">
     <i class="i-carbon:arrow-up-right"></i>

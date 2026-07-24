@@ -17,6 +17,8 @@ const { t, currentLang } = useI18n();
 const user = getUserProfile();
 const userContent = getLocalizedUserContent(currentLang);
 const site = getSiteProfile(currentLang);
+const builtWithKey = site.builtWith.startsWith('site.') ? site.builtWith : undefined;
+const builtWith = builtWithKey ? t(builtWithKey as any) : site.builtWith;
 const contactLinks = getUserContactLinks();
 const navigation = getNavigationConfig();
 const features = getFeaturesConfig();
@@ -33,6 +35,12 @@ const resourceLinks = navigation.resources.filter((link) => {
   if (link.href === '/sitemap-index.xml') return features.discovery.showSitemapLink;
   return true;
 });
+const getResourceLabelKey = (href: string) => {
+  if (href === '/search') return 'footer.search' as const;
+  if (href === '/rss.xml') return 'footer.rss' as const;
+  if (href === '/sitemap-index.xml') return 'footer.sitemap' as const;
+  return undefined;
+};
 ---
 
 <footer class:list={['site-footer', variant === 'seamless' && 'site-footer--seamless']}>
@@ -77,21 +85,22 @@ const resourceLinks = navigation.resources.filter((link) => {
         </div>
 
         <nav class="footer-resources" aria-label={t('footer.subscribe')}>
-          {resourceLinks.map(link => (
-            <a
-              href={link.href}
-            >
-              <i class={link.icon}></i>
-              <span>{link.label}</span>
-            </a>
-          ))}
+          {resourceLinks.map((link) => {
+            const labelKey = getResourceLabelKey(link.href);
+            return (
+              <a href={link.href}>
+                <i class={link.icon}></i>
+                <span data-i18n={labelKey}>{labelKey ? t(labelKey) : link.label}</span>
+              </a>
+            );
+          })}
         </nav>
       </div>
     </div>
 
     <div class="footer-bottom">
       <span>&copy; {yearText} {user.name}</span>
-      <span class="footer-stack">{site.builtWith}</span>
+      <span class="footer-stack" data-i18n={builtWithKey}>{builtWith}</span>
     </div>
   </div>
 </footer>

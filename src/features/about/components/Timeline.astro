@@ -6,6 +6,8 @@ interface Props { events: TimelineEvent[]; }
 
 const { events } = Astro.props;
 const { t } = useI18n();
+const getEventText = (value?: string) => value?.startsWith('about.') ? t(value as any) : value;
+const getEventKey = (value?: string) => value?.startsWith('about.') ? value : undefined;
 ---
 
 <section class="timeline-section">
@@ -19,8 +21,10 @@ const { t } = useI18n();
       <li>
         <time>{event.year}</time>
         <div>
-          <h3>{event.event}</h3>
-          {event.description && <p>{event.description}</p>}
+          <h3 data-i18n={getEventKey(event.event)}>{getEventText(event.event)}</h3>
+          {event.description && (
+            <p data-i18n={getEventKey(event.description)}>{getEventText(event.description)}</p>
+          )}
         </div>
       </li>
     ))}

@@ -29,6 +29,12 @@ const { friendLinks, linkCategories, linkApplicationInfo } = getLinksConfig();
 const user = getUserProfile();
 const mySiteInfo = getSiteProfile(currentLang);
 const contactLinks = getUserContactLinks();
+const applicationDescriptionKey = linkApplicationInfo.description.startsWith('links.')
+  ? linkApplicationInfo.description
+  : undefined;
+const applicationDescription = applicationDescriptionKey
+  ? t(applicationDescriptionKey as any)
+  : linkApplicationInfo.description;
 
 // Group by type
 const friendsLinks = friendLinks.filter(link => link.type === 'friend');
@@ -89,7 +95,8 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
     description={t('links.subtitle')}
     titleKey="links.title"
     descriptionKey="links.subtitle"
-    eyebrow="Network"
+    eyebrow={t('links.eyebrow')}
+    eyebrowKey="links.eyebrow"
     icon="i-carbon:link"
     stats={headerStats}
   />
@@ -187,7 +194,7 @@ console.log(`📊 Loaded ${totalLinks} links: ${friendsLinks.length} friends, ${
           <h3 data-i18n="links.apply.requirements">{t('links.apply.requirements')}</h3>
         </div>
         <div class="apply-card-content">
-          <p class="apply-intro">{linkApplicationInfo.description}</p>
+          <p class="apply-intro" data-i18n={applicationDescriptionKey}>{applicationDescription}</p>
 
           <div class="requirements-list">
             <div class="requirement-item">

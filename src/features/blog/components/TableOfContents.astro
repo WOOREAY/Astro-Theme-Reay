@@ -4,11 +4,14 @@
  * Article outline navigation with progress tracking
  * Features: fixed height, internal scroll, progress indicator, auto-follow
  */
+import { useI18n } from '@features/i18n/lib/i18n';
+
 interface Props {
   headings: Array<{ depth: number; text: string; slug: string }>;
 }
 
 const { headings } = Astro.props;
+const { t } = useI18n();
 
 if (!headings || headings.length === 0) {
   return null;
@@ -18,18 +21,19 @@ if (!headings || headings.length === 0) {
 <aside class="toc-sidebar hidden lg:block sticky top-24 self-start">
   <div class="toc-container">
     <div class="toc-header">
-      <h2 class="toc-title">
-        Table of Contents
-      </h2>
+      <h2 class="toc-title" data-i18n="blog.tableOfContents">{t('blog.tableOfContents')}</h2>
       <div
         class="toc-progress-circle"
         data-toc-progress-circle
         role="progressbar"
-        aria-label="Article reading progress"
+        aria-labelledby="toc-progress-label"
         aria-valuemin="0"
         aria-valuemax="100"
         aria-valuenow="0"
       >
+        <span id="toc-progress-label" class="sr-only" data-i18n="blog.toc.progressLabel">
+          {t('blog.toc.progressLabel')}
+        </span>
         <svg class="progress-ring" viewBox="0 0 44 44" aria-hidden="true">
           <circle
             class="progress-ring-bg"

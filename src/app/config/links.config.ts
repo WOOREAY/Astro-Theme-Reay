@@ -18,7 +18,7 @@ export const linksConfig: LinksConfig = {
       name: 'Astro',
       url: 'https://astro.build',
       avatar: 'https://astro.build/assets/press/astro-icon-light-gradient.svg',
-      description: 'Modern static site generator',
+      description: 'links.catalog.astro',
       category: 'framework',
       type: 'friend',
       featured: true,
@@ -27,7 +27,7 @@ export const linksConfig: LinksConfig = {
       name: 'Vue.js',
       url: 'https://vuejs.org',
       avatar: 'https://vuejs.org/images/logo.png',
-      description: 'Progressive JavaScript framework',
+      description: 'links.catalog.vue',
       category: 'framework',
       type: 'friend',
       featured: true,
@@ -36,7 +36,7 @@ export const linksConfig: LinksConfig = {
       name: 'MDN Web Docs',
       url: 'https://developer.mozilla.org',
       avatar: 'https://developer.mozilla.org/favicon-48x48.png',
-      description: 'Web developer documentation',
+      description: 'links.catalog.mdn',
       category: 'resource',
       type: 'site',
     },
@@ -44,7 +44,7 @@ export const linksConfig: LinksConfig = {
       name: 'GitHub',
       url: 'https://github.com',
       avatar: 'https://github.githubassets.com/favicons/favicon.png',
-      description: 'Code hosting platform',
+      description: 'links.catalog.github',
       category: 'tool',
       type: 'site',
     },
@@ -52,7 +52,7 @@ export const linksConfig: LinksConfig = {
       name: 'Stack Overflow',
       url: 'https://stackoverflow.com',
       avatar: 'https://cdn.sstatic.net/Sites/stackoverflow/Img/apple-touch-icon.png',
-      description: 'Developer Q&A community',
+      description: 'links.catalog.stackOverflow',
       category: 'community',
       type: 'site',
     },
@@ -77,7 +77,7 @@ export const linksConfig: LinksConfig = {
   },
 
   linkApplicationInfo: {
-    description: 'Share a personal site, technical blog, or useful resource.',
+    description: 'links.apply.intro',
   },
 };
 

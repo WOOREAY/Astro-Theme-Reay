@@ -1,6 +1,7 @@
 ---
 /** GitHub activity summarized as one editorial data surface. */
 import type { GitHubContributionCalendar } from '@features/projects/lib/github';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 interface Props {
   calendar: GitHubContributionCalendar;
@@ -8,20 +9,22 @@ interface Props {
 }
 
 const { calendar, languages } = Astro.props;
-const sourceLabel = {
-  graphql: 'Contribution Calendar',
-  events: 'Public Activity',
-  repos: 'Repository Updates',
-  cache: 'Cached Activity',
-  empty: 'No Activity',
-}[calendar.source];
+const { t } = useI18n();
+const sourceKey = ({
+  graphql: 'home.heatmap.source.graphql',
+  events: 'home.heatmap.source.events',
+  repos: 'home.heatmap.source.repos',
+  cache: 'home.heatmap.source.cache',
+  empty: 'home.heatmap.source.empty',
+} as const)[calendar.source];
+const sourceLabel = t(sourceKey);
 ---
 
 <section class="github-activity" data-project-activity>
   <header class="activity-header">
     <div>
-      <p data-i18n="projects.activity.eyebrow">GitHub Activity</p>
-      <h2 data-i18n="projects.activity.title">Contribution Heatmap</h2>
+      <p data-i18n="projects.activity.eyebrow">{t('projects.activity.eyebrow')}</p>
+      <h2 data-i18n="projects.activity.title">{t('projects.activity.title')}</h2>
     </div>
     <a href={`https://github.com/${calendar.username}`} target="_blank" rel="noopener noreferrer">
       <i class="i-carbon:logo-github" aria-hidden="true"></i>
@@ -35,11 +38,11 @@ const sourceLabel = {
       <div class="heatmap-summary">
         <div>
           <strong>{calendar.totalContributions}</strong>
-          <span data-i18n="projects.activity.contributions">contributions</span>
+          <span data-i18n="projects.activity.contributions">{t('projects.activity.contributions')}</span>
         </div>
-        <span class="activity-source">{sourceLabel}</span>
+        <span class="activity-source" data-i18n={sourceKey}>{sourceLabel}</span>
       </div>
-      <div class="heatmap-scroll" aria-label="GitHub contribution heatmap">
+      <div class="heatmap-scroll" aria-label={t('home.heatmap.gridLabel')}>
         <div class="heatmap" aria-hidden="true">
           {calendar.weeks.map((week) => (
             <div class="heatmap-week">
@@ -51,20 +54,20 @@ const sourceLabel = {
         </div>
       </div>
       <div class="heatmap-legend">
-        <span data-i18n="projects.activity.less">Less</span>
+        <span data-i18n="projects.activity.less">{t('projects.activity.less')}</span>
         {[0, 1, 2, 3, 4].map((level) => <span class={`legend-cell level-${level}`}></span>)}
-        <span data-i18n="projects.activity.more">More</span>
+        <span data-i18n="projects.activity.more">{t('projects.activity.more')}</span>
       </div>
     </div>
 
     <aside class="activity-summary">
       <dl class="activity-stats">
-        <div><dt data-i18n="projects.activity.activeDays">Active Days</dt><dd>{calendar.activeDays}</dd></div>
-        <div><dt data-i18n="projects.activity.longestStreak">Longest Streak</dt><dd>{calendar.longestStreak}</dd></div>
-        <div><dt data-i18n="projects.activity.currentStreak">Current Streak</dt><dd>{calendar.currentStreak}</dd></div>
+        <div><dt data-i18n="projects.activity.activeDays">{t('projects.activity.activeDays')}</dt><dd>{calendar.activeDays}</dd></div>
+        <div><dt data-i18n="projects.activity.longestStreak">{t('projects.activity.longestStreak')}</dt><dd>{calendar.longestStreak}</dd></div>
+        <div><dt data-i18n="projects.activity.currentStreak">{t('projects.activity.currentStreak')}</dt><dd>{calendar.currentStreak}</dd></div>
       </dl>
       <div class="language-panel">
-        <h3><i class="i-carbon:code" aria-hidden="true"></i><span data-i18n="projects.activity.languages">Language Mix</span></h3>
+        <h3><i class="i-carbon:code" aria-hidden="true"></i><span data-i18n="projects.activity.languages">{t('projects.activity.languages')}</span></h3>
         <div class="language-list">
           {languages.length > 0 ? languages.map((language) => (
             <div class="language-row">
@@ -72,7 +75,7 @@ const sourceLabel = {
               <span>{language.name}</span>
               <strong>{language.count}</strong>
             </div>
-          )) : <p data-i18n="projects.activity.noLanguages">No language data yet</p>}
+          )) : <p data-i18n="projects.activity.noLanguages">{t('projects.activity.noLanguages')}</p>}
         </div>
       </div>
     </aside>

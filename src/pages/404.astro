@@ -9,12 +9,12 @@ const { t } = useI18n();
   <section class="not-found" aria-labelledby="not-found-title" data-page-title-key="notFound.title">
     <div class="not-found-number" aria-hidden="true">404</div>
     <div class="not-found-copy">
-      <p class="not-found-eyebrow" data-i18n="notFound.eyebrow">Page not found</p>
-      <h1 id="not-found-title" data-i18n="notFound.title">This page wandered away</h1>
-      <p data-i18n="notFound.description">The address may have changed, or the content is no longer available.</p>
+      <p class="not-found-eyebrow" data-i18n="notFound.eyebrow">{t('notFound.eyebrow')}</p>
+      <h1 id="not-found-title" data-i18n="notFound.title">{t('notFound.title')}</h1>
+      <p data-i18n="notFound.description">{t('notFound.description')}</p>
       <div class="not-found-actions">
-        <a href="/" class="primary"><span data-i18n="notFound.home">Return home</span><i class="i-carbon:arrow-right" aria-hidden="true"></i></a>
-        <a href="/archives" data-i18n="notFound.archives">Browse archives</a>
+        <a href="/" class="primary"><span data-i18n="notFound.home">{t('notFound.home')}</span><i class="i-carbon:arrow-right" aria-hidden="true"></i></a>
+        <a href="/archives" data-i18n="notFound.archives">{t('notFound.archives')}</a>
       </div>
     </div>
   </section>

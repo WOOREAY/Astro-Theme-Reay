@@ -5,6 +5,7 @@
  */
 import { formatNumber, formatDate, getLanguageColor } from '@features/projects/lib/github';
 import { getProjectsConfig } from '@app/config/site.config';
+import { useI18n } from '@features/i18n/lib/i18n';
 
 interface Props {
   project: {
@@ -25,6 +26,7 @@ interface Props {
 
 const { project } = Astro.props;
 const { displaySettings } = getProjectsConfig();
+const { t } = useI18n();
 const showStats = displaySettings.showStars || displaySettings.showForks || displaySettings.showLastUpdate;
 ---
 
@@ -44,7 +46,7 @@ const showStats = displaySettings.showStars || displaySettings.showForks || disp
       {project.featured && (
         <span class="featured-badge">
           <i class="i-carbon:star-filled"></i>
-          精选
+          <span data-i18n="projects.featured">{t('projects.featured')}</span>
         </span>
       )}
     </div>

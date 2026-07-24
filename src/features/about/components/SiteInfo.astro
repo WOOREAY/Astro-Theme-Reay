@@ -14,6 +14,10 @@ interface Props {
 
 const { site } = Astro.props;
 const { t } = useI18n();
+const getCopyKey = (value: string) => (
+  value.startsWith('site.') || value.startsWith('about.') ? value : undefined
+);
+const getCopy = (value: string) => getCopyKey(value) ? t(value as any) : value;
 ---
 
 <section class="site-info-section">
@@ -26,7 +30,7 @@ const { t } = useI18n();
   <div class="site-content">
     <div class="site-summary">
       <div>
-        <p class="site-kicker">{site.builtWith}</p>
+        <p class="site-kicker" data-i18n={getCopyKey(site.builtWith)}>{getCopy(site.builtWith)}</p>
         <h3>{site.name}</h3>
         <p class="site-description">{site.description}</p>
       </div>
@@ -42,7 +46,10 @@ const { t } = useI18n();
       {site.techStack.map((tech) => (
         <a href={tech.url} target="_blank" rel="noopener noreferrer">
           <i class={tech.icon} aria-hidden="true"></i>
-          <span><strong>{tech.name}</strong><small>{tech.description}</small></span>
+          <span>
+            <strong>{tech.name}</strong>
+            <small data-i18n={getCopyKey(tech.description)}>{getCopy(tech.description)}</small>
+          </span>
           <i class="i-carbon:arrow-up-right arrow" aria-hidden="true"></i>
         </a>
       ))}
