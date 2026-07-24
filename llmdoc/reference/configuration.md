@@ -13,7 +13,7 @@
 | `presets/themes/` | 十三套可复用视觉参数与注册表，不包含个人或内容数据；默认 technology，扩展含彩墨、黑白水墨、动画、宇宙、浮世绘、海岸和终端风格 |
 | `features.config.ts` | 首页模式、入口显示与 comments/GitHub/music/seasonal 集成 gate |
 | `navigation.config.ts` | Header 主导航与 Footer resources |
-| `i18n.config.ts` | 默认语言、中英文 UI 字典 |
+| `i18n.config.ts` | 默认语言、中英文 UI 字典，以及 About/Links/站点技术说明使用的配置化展示文案 |
 | `projects.config.ts` | 项目过滤、分类、显示设置与 featured 仓库；不重复 GitHub 身份或 token |
 | `comments.config.ts` | provider、lazy/autoLoad、article/guestbook 和公开 provider 参数 |
 | `links.config.ts` | friend/resource links、分类、交换文案与可选远程预览 provider；不重复个人联系方式或站点卡片 |
@@ -29,6 +29,8 @@
 - `userContent` 提供本地化 `role/status/focus/tagline/bio/greeting/description/story`；`story` 保存 About 的标题、引言、正文和原则，其中 `description` 同时作为本地化站点描述。
 - `site` 只保存 `since/builtWith/techStack` 等不应从身份或内容统计重复推导的事实；站点名、头像、URL、描述分别从 user/contact/userContent 派生，文章、主题、字数和写作年份在构建期从内容集合计算。
 - `aboutConfig` 只保存 sections、education、experience、timeline，不再保存 socialNetworks 或第二份 site identity。
+
+About section/item、timeline、`site.builtWith`/tech description 与 Links curated description 可保存对应的 `about.*`、`site.*`、`links.*` translation key；消费者只对这些命名空间解析词典，普通自定义字符串仍原样展示。Links 分类继续由稳定 `id` 派生 `links.category.<id>`，因此新增分类时需要同时补齐中英文 key。
 
 客户端 `data-user-content` 支持 `focus.0` 形式的点路径。
 
