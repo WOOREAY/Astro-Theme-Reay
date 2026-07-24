@@ -1,13 +1,13 @@
 ---
 import ArchiveLayout from '@app/layouts/archives/ArchiveLayout.astro';
 import SeriesCard from '@features/archives/components/SeriesCard.astro';
-import { calculateReadingTime, decodeRouteParam, getAllSeries, getPostUrl, getPostsBySeries } from '@features/blog/lib/blog';
+import { calculateReadingTime, decodeRouteParam, encodeRouteParam, getAllSeries, getPostUrl, getPostsBySeries } from '@features/blog/lib/blog';
 import { useI18n } from '@features/i18n/lib/i18n';
 import EditorialSectionHeader from '@shared/components/EditorialSectionHeader.astro';
 
 export async function getStaticPaths() {
   const series = await getAllSeries();
-  return series.map(({ series: seriesName }) => ({ params: { series: seriesName } }));
+  return series.map(({ series: seriesName }) => ({ params: { series: encodeRouteParam(seriesName) } }));
 }
 
 const series = decodeRouteParam(Astro.params.series);
